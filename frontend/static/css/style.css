@@ -122,6 +122,34 @@ button:hover,
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
+.quick-action-btn {
+    padding: 0.8rem 1.5rem;
+    font-size: 1.1rem;
+    border-radius: 6px;
+    background-color: #5cb85c;
+    color: white;
+}
+
+.quick-action-btn:hover {
+    background-color: #4cae4c;
+}
+
+.quick-action-btn.active-session-btn {
+    background-color: #3367D6;
+}
+
+.quick-action-btn.active-session-btn:hover {
+    background-color: #2851A7;
+}
+
+.quick-action-btn#quick-start-session-btn {
+    background-color: #f0ad4e;
+}
+
+.quick-action-btn#quick-start-session-btn:hover {
+    background-color: #ec971f;
+}
+
 .danger-btn {
     background-color: #dc3545;
 }
@@ -202,7 +230,7 @@ button:hover,
     display: flex;
     justify-content: center;
     gap: 1rem;
-    margin-bottom: 2rem;
+    margin: 1.5rem 0 2.5rem;
     flex-wrap: wrap;
 }
 
@@ -216,6 +244,14 @@ button:hover,
 
 .quick-action-btn:hover {
     background-color: #4cae4c;
+}
+
+.quick-action-btn.active-session-btn {
+    background-color: #3367D6;
+}
+
+.quick-action-btn.active-session-btn:hover {
+    background-color: #2851A7;
 }
 
 .quick-action-btn#quick-start-session-btn {
@@ -967,46 +1003,53 @@ footer {
 /* Update notification styles */
 .update-notification {
     position: fixed;
-    bottom: 20px;
-    right: 20px;
+    bottom: 30px;
+    right: 30px;
+    left: auto;
+    top: auto;
+    margin: 0;
     background-color: #3367D6;
     color: white;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    z-index: 1000;
+    border-radius: 12px;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.18);
+    z-index: 2002; /* Above nav bar */
     overflow: hidden;
     animation: slidein 0.3s ease-out;
-    max-width: 300px;
+    max-width: 340px;
+    width: 90vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: auto;
+}
+
+@media (max-width: 700px) {
+    .update-notification {
+        bottom: 80px; /* Above mobile nav bar */
+        right: 2vw;
+        left: auto;
+        max-width: 96vw;
+        border-radius: 12px;
+    }
+}
+
+@keyframes slidein-down {
+    from { transform: translateY(-100%); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
 }
 
 .update-content {
-    padding: 15px 20px;
+    padding: 18px 24px 18px 24px;
+    text-align: center;
 }
 
-.update-content strong {
-    display: block;
-    margin-bottom: 5px;
-    font-size: 16px;
-}
-
-.update-content p {
-    margin: 0 0 12px;
-    font-size: 14px;
-}
-
-#update-app-btn {
-    background-color: white;
-    color: #3367D6;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: 500;
-    transition: background-color 0.2s;
-}
-
-#update-app-btn:hover {
-    background-color: #f0f0f0;
+@media (max-width: 700px) {
+    .update-notification {
+        max-width: 98vw;
+        border-radius: 0 0 8px 8px;
+        left: 1vw;
+        right: 1vw;
+    }
 }
 
 @keyframes slidein {
@@ -1014,28 +1057,35 @@ footer {
     to { transform: translateX(0); opacity: 1; }
 }
 
-/* Bottom navigation bar for mobile */
+/* Modernize bottom nav bar */
 .bottom-nav {
   display: none;
   position: fixed;
   left: 0;
   right: 0;
   bottom: 0;
-  height: 60px;
-  background: #222;
-  border-top: 1px solid #444;
+  height: 60px; /* Reduced height */
+  background: linear-gradient(90deg, #3367D6 60%, #2851A7 100%);
+  box-shadow: 0 -4px 18px rgba(0, 0, 0, 0.13);
   z-index: 1001;
   flex-direction: row;
-  justify-content: space-around;
+  justify-content: center; /* Center the navigation items */
   align-items: center;
-  width: 100vw;
+  width: 99; /* Reduced from 100vw to make it centered */
+  max-width: 600px; /* Maximum width for larger screens */
+  border-radius: 18px 18px 0 0;
+  padding: 0 8px;
+  transition: background 0.3s;
+  margin: 0 auto; /* Center the navbar */
+  left: 50%; /* Position from center */
+  transform: translateX(-50%); /* Adjust to truly center */
 }
+
 .bottom-nav .nav-btn {
   background: none;
   border: none;
-  color: #fff;
-  font-size: 1.1rem;
-  flex: 1 1 0;
+  color: rgba(255, 255, 255, 0.92);
+  flex: 1 1 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1043,18 +1093,36 @@ footer {
   height: 100%;
   cursor: pointer;
   padding: 0;
+  border-radius: 12px;
+  margin: 0 10px; /* Increased margin for better spacing */
+  transition: background 0.18s, color 0.18s;
+  min-width: 40px; /* Minimum width instead of fixed width */
 }
+
 .bottom-nav .nav-btn:active, .bottom-nav .nav-btn.active {
-  background: #333;
-  color: #ffd700;
+  background: rgba(255, 255, 255, 0.13);
+  color: #fff;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.25); /* Add highlight for active button */
 }
+
 .bottom-nav .nav-icon {
-  font-size: 1.4em;
+  font-size: 1.3em;
   display: block;
+  line-height: 1;
 }
+
 .bottom-nav .nav-label {
-  font-size: 0.8em;
-  margin-top: 2px;
+  display: none; /* Hide the text labels */
+}
+
+@media (max-width: 700px) {
+  .bottom-nav {
+    display: flex;
+    border-radius: 18px 18px 0 0;
+    padding-bottom: env(safe-area-inset-bottom, 0);
+    width: 98%; /* Maintain width consistency */
+    max-width: 700px; /* Maximum width for better aesthetics */
+  }
 }
 
 /* Show bottom nav only on mobile, hide on desktop */
@@ -1066,8 +1134,8 @@ footer {
   .top-nav, .desktop-nav, .main-nav, .header-links {
     display: none !important;
   }
-  /* Optionally add padding to body/app-content to avoid overlap */
+  /* Add padding to body/app-content to avoid overlap with bottom nav */
   #app-content {
-    padding-bottom: 70px;
+    padding-bottom: 75px;
   }
 }

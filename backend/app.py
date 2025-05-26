@@ -26,8 +26,24 @@ STATIC_DIR_CALC = os.path.join(FRONTEND_DIR_CALC, 'static')
 TEMPLATE_DIR_CALC = os.path.join(FRONTEND_DIR_CALC, 'templates')
 IMAGE_PATH_EXPECTED = os.path.join(STATIC_DIR_CALC, 'images', 'icon-192x192.png')
 
-# App version for cache busting
-APP_VERSION = '1.0.1'  # Update this when making changes
+# App version is managed in frontend/.env file
+ENV_FILE_PATH = os.path.join(FRONTEND_DIR_CALC, '.env')
+
+# Helper function to get APP_VERSION from .env file
+def get_app_version():
+    try:
+        with open(ENV_FILE_PATH, 'r') as f:
+            for line in f:
+                if line.strip() and not line.strip().startswith('#'):
+                    if '=' in line:
+                        key, value = line.strip().split('=', 1)
+                        if key.strip() == 'APP_VERSION':
+                            return value.strip()
+    except Exception as e:
+        print(f"Error reading .env file: {e}")
+    return '1.0.5'  # Default fallback version
+
+APP_VERSION = get_app_version()
 
 # --- Conditional Debug Path Printing ---
 if args.debug_paths:
@@ -121,8 +137,13 @@ def decrement_seven_two_wins_api(player_id):
     return jsonify({"error": "Failed to decrement 7-2 wins count"}), 500
 
 @app.route('/api/sessions', methods=['GET'])
-def get_sessions():
+def get_sessions_api():
     sessions = dm.get_all_sessions()
+    return jsonify(sessions)
+
+@app.route('/api/sessions/active', methods=['GET'])
+def get_active_sessions_api():
+    sessions = dm.get_active_sessions()
     return jsonify(sessions)
 
 @app.route('/api/sessions', methods=['POST'])
@@ -251,6 +272,14 @@ def serve_sw():
     response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
     response.headers['Pragma'] = 'no-cache'
     response.headers['Expires'] = '0'
+    return response
+
+@app.route('/.env')
+def serve_env():
+    response = send_from_directory(FRONTEND_DIR_CALC, '.env')
+    # Set headers to ensure it's treated as text
+    response.headers['Content-Type'] = 'text/plain'
+    response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
     return response
 
 # Flask's default static file handling will use the `static_folder` parameter
