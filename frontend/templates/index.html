@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#3367D6" />
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <title>Gamble King</title>    <link rel="stylesheet" href="{{ versioned_url('css/style.css') }}">
+    <link rel="manifest" href="{{ url_for('serve_manifest') }}">
+
+    <meta name="mobile-web-app-capable" content="yes">    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="Gamble King">
+    <link rel="apple-touch-icon" href="{{ versioned_url('images/icon-192x192.png') }}">    <link rel="icon" type="image/png" sizes="192x192"
+        href="{{ versioned_url('images/icon-192x192.png') }}">
+    <link rel="icon" type="image/png" sizes="512x512"
+        href="{{ versioned_url('images/icon-512x512.png') }}">
+</head>
+
+<body>    <header>
+        <h1>Gamble King</h1>
+        <nav>
+            <a href="#dashboard">Dashboard</a>
+            <a href="#players">Players</a>
+            <a href="#sessions">Sessions</a>
+        </nav>
+    </header>
+
+    <main id="app-content">
+        <p>Loading...</p>
+    </main>    <footer>
+        <p>&copy; 2025 Gamble King</p>    </footer>
+
+    <div id="new-session-modal" class="modal-overlay">
+        <div class="modal-content">
+            <span class="modal-close-btn">&times;</span>
+            <h3>Create New Poker Session</h3>
+            <div class="modal-form-group">
+                <label for="modal-session-date">Session Date:</label>
+                <input type="date" id="modal-session-date">
+                <button id="modal-today-btn" class="small-btn">Today</button>
+            </div>
+            <div class="modal-form-group">
+                <label for="modal-session-buyin">Default Buy-in ($):</label>
+                <input type="number" id="modal-session-buyin" value="20" min="0" step="0.01">
+            </div>
+            <div class="modal-actions">
+                <button id="modal-create-session-btn" class="primary-btn">Create Session</button>
+                <button id="modal-cancel-session-btn" class="secondary-btn">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ versioned_url('js/app.js') }}"></script>
+</body>
+
+</html>
