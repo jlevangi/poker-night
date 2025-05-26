@@ -1000,28 +1000,7 @@ footer {
     }
 }
 
-/* Update notification styles */
-.update-notification {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    left: auto;
-    top: auto;
-    margin: 0;
-    background-color: #3367D6;
-    color: white;
-    border-radius: 12px;
-    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.18);
-    z-index: 2002; /* Above nav bar */
-    overflow: hidden;
-    animation: slidein 0.3s ease-out;
-    max-width: 340px;
-    width: 90vw;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    pointer-events: auto;
-}
+
 
 @media (max-width: 700px) {
     .update-notification {
