@@ -105,6 +105,12 @@ def get_session_by_id(session_id):
             return s
     return None
 
+def get_active_sessions():
+    """Returns all active sessions."""
+    sessions = load_data(SESSIONS_FILE)
+    active_sessions = [s for s in sessions if s['is_active']]
+    return active_sessions
+
 def get_all_sessions():
     sessions = load_data(SESSIONS_FILE)
     sessions.sort(key=lambda s: s['date'], reverse=True)

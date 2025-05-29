@@ -11,7 +11,7 @@ build/
 # Virtual environment
 venv/
 .venv/
-
+source/
 # IDE / Editor specific
 .vscode/
 .idea/

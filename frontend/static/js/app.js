@@ -16,50 +16,52 @@ document.addEventListener('DOMContentLoaded', () => {
     const modalCloseBtn = newSessionModal ? newSessionModal.querySelector('.modal-close-btn') : null;
     const modalCancelBtn = document.getElementById('modal-cancel-session-btn');
     const modalCreateBtn = document.getElementById('modal-create-session-btn');
-    const modalSessionDateInput = document.getElementById('modal-session-date');
-    const modalSessionBuyinInput = document.getElementById('modal-session-buyin');
-    const modalTodayBtn = document.getElementById('modal-today-btn');    // Initialize service worker with version checking and cache busting
-    const APP_VERSION = '1.0.1'; // Keep this in sync with the service worker version
+    const modalSessionDateInput = document.getElementById('modal-session-date');    const modalSessionBuyinInput = document.getElementById('modal-session-buyin');
+    const modalTodayBtn = document.getElementById('modal-today-btn');    
+    
+    // Initialize configuration from config.js
+    let APP_VERSION = '1.0.5'; // Default until config loads
     
     // Function to show update notification
     const showUpdateNotification = () => {
+        // Remove any existing notification to avoid duplicates
+        const existingNotification = document.querySelector('.update-notification');
+        if (existingNotification) existingNotification.remove();
+
         const notification = document.createElement('div');
         notification.className = 'update-notification';
+        notification.setAttribute('role', 'alert');
+        notification.setAttribute('aria-live', 'assertive');
         notification.innerHTML = `
             <div class="update-content">
                 <strong>New version available!</strong>
-                <p>A new version of the app is available.</p>
-                <button id="update-app-btn">Update Now</button>
+                <p>A new version of the app is available. Please refresh the page.</p>
             </div>
         `;
         document.body.appendChild(notification);
-        
-        // Add event listener to update button
-        document.getElementById('update-app-btn').addEventListener('click', () => {
-            // Clear all caches and reload
-            if ('caches' in window) {
-                caches.keys().then(cacheNames => {
-                    return Promise.all(
-                        cacheNames.map(cacheName => {
-                            return caches.delete(cacheName);
-                        })
-                    );
-                }).then(() => {
-                    window.location.reload(true);
-                });
-            } else {
-                window.location.reload(true);
-            }
-        });
     };
-      if ('serviceWorker' in navigator) {
+    
+    if ('serviceWorker' in navigator) {
+        // Check if we're coming from an update process
+        const isUpdating = sessionStorage.getItem('app_updating') === 'true';
+        if (isUpdating) {
+            console.log('Update in progress, cleaning up...');
+            sessionStorage.removeItem('app_updating');
+        }
+        
         // Add a cache-busting query parameter to ensure fresh service worker
-        const swUrl = `/sw.js?v=${APP_VERSION}`;
+        const swUrl = `/sw.js?v=${APP_VERSION}${isUpdating ? '&forceUpdate=' + Date.now() : ''}`;
         
         // Register the service worker
         navigator.serviceWorker.register(swUrl)
             .then(registration => {
                 console.log('Service Worker registered with scope:', registration.scope);
+                
+                // If we're coming from an update, force activate the new service worker
+                if (isUpdating && registration.waiting) {
+                    console.log('Forcing new service worker to activate after update');
+                    registration.waiting.postMessage({type: 'SKIP_WAITING'});
+                }
                 
                 // Check for updates
                 registration.addEventListener('updatefound', () => {
@@ -85,7 +87,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 showUpdateNotification();
             }
         });
-    }function showNewSessionModal() {
+        
+        // If there's a controlling service worker already, make sure we're using the latest
+        if (navigator.serviceWorker.controller && isUpdating) {
+            navigator.serviceWorker.controller.postMessage({
+                type: 'CHECK_VERSION',
+                version: APP_VERSION
+            });
+        }
+    }
+    
+    function showNewSessionModal() {
         try {
             if (!newSessionModal) {
                 console.error("Modal element not found");
@@ -142,7 +154,9 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error("Error showing modal:", e);
             alert("There was a problem showing the new session form. Please try again later.");
         }
-    }    function hideNewSessionModal() {
+    }
+    
+    function hideNewSessionModal() {
         try {
             if (newSessionModal) {
                 console.log("Hiding modal");
@@ -166,7 +180,9 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch(e) {
             console.error("Error hiding modal:", e);
         }
-    }// Add event listeners with proper error checking
+    }
+    
+    // Add event listeners with proper error checking
     if (modalCloseBtn) {
         console.log("Adding close button listener");
         modalCloseBtn.addEventListener('click', hideNewSessionModal);
@@ -270,12 +286,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         <h2>Welcome to Gamble King!</h2>
                         <p>No player data available yet.</p>
                      </div>`;
-        }
-
-        html += `</div><div class="quick-actions">
-                    <button class="quick-action-btn" data-hash="#sessions">View Sessions</button>
-                    <button class="quick-action-btn" data-hash="#players">Manage Players</button>
-                    <button class="quick-action-btn" id="quick-start-session-btn">Start New Session</button>
+        }        html += `</div><div class="quick-actions">
+                    <button class="quick-action-btn" id="session-action-btn">Start New Session</button>
                 </div>`;
 
         html += '<h3>Player Standings Overview</h3>';
@@ -323,18 +335,49 @@ document.addEventListener('DOMContentLoaded', () => {
             button.addEventListener('click', (e) => {
                 window.location.hash = e.target.dataset.hash;
             });
-        });        const quickStartBtn = document.getElementById('quick-start-session-btn');
-        if (quickStartBtn) {
-            console.log("Adding quick start button listener");
-            quickStartBtn.addEventListener('click', (e) => {
-                console.log("Quick start button clicked");
-                e.preventDefault(); // Prevent default in case it's a link
-                showNewSessionModal();
+        });        const sessionActionBtn = document.getElementById('session-action-btn');
+        if (sessionActionBtn) {
+            console.log("Adding session action button listener");
+            
+            // First, check if there's an active session
+            fetchData('/api/sessions/active').then(activeSessions => {
+                if (activeSessions && activeSessions.length > 0) {
+                    // There is an active session, change button style and text
+                    const activeSession = activeSessions[0];
+                    sessionActionBtn.textContent = "Open Active Session";
+                    sessionActionBtn.classList.add("active-session-btn");
+                    
+                    // On click, navigate to the active session
+                    sessionActionBtn.addEventListener('click', (e) => {
+                        console.log("Navigating to active session");
+                        e.preventDefault();
+                        window.location.hash = `#session/${activeSession.session_id}`;
+                    });
+                } else {
+                    // No active session, keep "Start New Session" functionality
+                    sessionActionBtn.textContent = "Start New Session";
+                    
+                    sessionActionBtn.addEventListener('click', (e) => {
+                        console.log("Start new session button clicked");
+                        e.preventDefault();
+                        showNewSessionModal();
+                    });
+                }
+            }).catch(error => {
+                console.error("Error fetching active sessions:", error);
+                // Default to "Start New Session" in case of error
+                sessionActionBtn.textContent = "Start New Session";
+                sessionActionBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    showNewSessionModal();
+                });
             });
         } else {
-            console.error("Quick start button not found in DOM");
+            console.error("Session action button not found in DOM");
         }
-    }    async function loadPlayers() {
+    }
+    
+    async function loadPlayers() {
         // Fetch both player details and player stats
         const players = await fetchData('/api/players/details');
         const playerStats = await fetchData('/api/players');
@@ -843,4 +886,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
     window.addEventListener('hashchange', router);
     router(); // Initial load
+
+    // Handle mobile bottom navigation clicks
+    document.querySelectorAll('.bottom-nav .nav-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            // Update active states
+            document.querySelectorAll('.bottom-nav .nav-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            
+            // Navigate to the page
+            window.location.hash = this.dataset.hash;
+        });
+    });
+
+    // Set active nav button based on current hash
+    function updateActiveNavButton() {
+        const currentHash = window.location.hash || '#dashboard';
+        document.querySelectorAll('.bottom-nav .nav-btn').forEach(btn => {
+            if (btn.dataset.hash === currentHash) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+        });
+    }
+
+    // Update active button on page load and hash change
+    updateActiveNavButton();
+    window.addEventListener('hashchange', updateActiveNavButton);
 });

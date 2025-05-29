@@ -1,9 +1,12 @@
-const APP_VERSION = '1.0.1'; // Increment this version whenever making substantial changes
+const APP_VERSION = '1.0.6'; // Increment this version whenever making substantial changes
 const CACHE_NAME = `gamble-king-cache-v${APP_VERSION}`;
+
+// Assets that should be cached for offline use
 const URLS_TO_CACHE = [
     '/',
     '/static/css/style.css',
     '/static/js/app.js',
+    '/static/js/config.js',
     '/static/images/icon-192x192.png',
     '/static/images/icon-512x512.png',
     '/manifest.json',
@@ -12,14 +15,21 @@ const URLS_TO_CACHE = [
 
 // Install event: Cache core assets
 self.addEventListener('install', event => {
+    console.log(`Service worker v${APP_VERSION} installing...`);
+    
+    // Immediately take control of all clients
+    self.skipWaiting();
+    
     event.waitUntil(
         caches.open(CACHE_NAME)
             .then(cache => {
                 console.log('Opened cache');
                 return cache.addAll(URLS_TO_CACHE);
             })
+            .catch(error => {
+                console.error('Failed to cache assets:', error);
+            })
     );
-    self.skipWaiting(); // Force the waiting service worker to become the active service worker.
 });
 
 // Activate event: Clean up old caches and take immediate control
@@ -35,6 +45,7 @@ self.addEventListener('activate', event => {
                         console.log('Deleting old cache:', cacheName);
                         return caches.delete(cacheName);
                     }
+                    return Promise.resolve();
                 })
             );
         })
@@ -50,10 +61,14 @@ self.addEventListener('activate', event => {
                 });
             });
         })
+        .then(() => {
+            // Take control of all open clients immediately
+            return self.clients.claim();
+        })
+        .catch(error => {
+            console.error('Error during service worker activation:', error);
+        })
     );
-    
-    // Take control of all open clients immediately 
-    return self.clients.claim();
 });
 
 // Fetch event: Serve cached content when offline, or fetch from network
@@ -135,4 +150,33 @@ self.addEventListener('fetch', event => {
                 });
             })
     );
+});
+
+// Add message event handler for update requests
+self.addEventListener('message', event => {
+    console.log('Service Worker received message:', event.data);
+    
+    if (event.data.type === 'SKIP_WAITING') {
+        // This triggers the service worker to activate immediately
+        console.log('Skip waiting and activate immediately');
+        self.skipWaiting();
+    }
+    
+    if (event.data.type === 'CHECK_VERSION') {
+        // Report back if versions don't match
+        if (event.data.version !== APP_VERSION) {
+            console.log(`Version mismatch: SW=${APP_VERSION}, Client=${event.data.version}`);
+            // Notify the client about the version mismatch
+            self.clients.matchAll().then(clients => {
+                clients.forEach(client => {
+                    client.postMessage({
+                        type: 'NEW_VERSION',
+                        version: APP_VERSION
+                    });
+                });
+            });
+        } else {
+            console.log('Versions match, no update needed');
+        }
+    }
 });
