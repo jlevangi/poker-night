@@ -33,7 +33,7 @@
     <main id="app-content">
         <p>Loading...</p>
     </main>    <footer>
-        <p>&copy; 2025 Gamble King</p>    </footer>
+        <p>&copy; 2025 The Gamble King</p>    </footer>
 
     <div id="new-session-modal" class="modal-overlay">
         <div class="modal-content">
@@ -97,13 +97,6 @@
                     console.error('Service Worker registration failed:', error);
                 });
             
-            // Keep listening for messages but don't show notifications
-            navigator.serviceWorker.addEventListener('message', event => {
-                if (event.data && event.data.type === 'NEW_VERSION') {
-                    console.log(`New version available: ${event.data.version}`);
-                    // Silent update - no notification
-                }
-            });
         }
     </script>
     <script src="{{ versioned_url('js/app.js') }}"></script>
