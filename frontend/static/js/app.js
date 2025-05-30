@@ -22,25 +22,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize configuration from config.js
     let APP_VERSION = '1.0.5'; // Default until config loads
     
-    // Function to show update notification
-    const showUpdateNotification = () => {
-        // Remove any existing notification to avoid duplicates
-        const existingNotification = document.querySelector('.update-notification');
-        if (existingNotification) existingNotification.remove();
-
-        const notification = document.createElement('div');
-        notification.className = 'update-notification';
-        notification.setAttribute('role', 'alert');
-        notification.setAttribute('aria-live', 'assertive');
-        notification.innerHTML = `
-            <div class="update-content">
-                <strong>New version available!</strong>
-                <p>A new version of the app is available. Please refresh the page.</p>
-            </div>
-        `;
-        document.body.appendChild(notification);
-    };
-    
     if ('serviceWorker' in navigator) {
         // Check if we're coming from an update process
         const isUpdating = sessionStorage.getItem('app_updating') === 'true';
@@ -259,7 +240,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const gambleKing = sortedPlayers[0];            if (gambleKing && gambleKing.net_profit > 0) {
                 const profitClass = gambleKing.net_profit >= 0 ? 'profit-positive' : 'profit-negative';
                 html += `<div class="gamble-king-container">
-                            <h2>👑 The Gamble King 👑</h2>
+                            <h2>Current Crown Holder</h2>
                             <p class="gamble-king-name gamble-king-name-dash">${gambleKing.name}</p>
                             <div class="gamble-king-stats">
                                 <p>Games: ${gambleKing.games_played} | Net Profit: <span class="${profitClass}">$${gambleKing.net_profit.toFixed(2)}</span></p>
@@ -313,8 +294,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 html += `
                     <tr${isGambleKing ? ' class="gamble-king-row"' : ''}>
                         <td>
-                            ${isGambleKing ? '<span class="crown-icon">👑</span> ' : ''}
                             <a href="#player/${player.player_id}">${player.name}</a>
+                            ${isGambleKing ? '<span class="crown-icon">👑</span> ' : ''}
                             ${isGambleKing ? '<div class="gamble-king-label-container"><span class="gamble-king-label">Gamble King</span></div>' : ''}
                         </td>
                         <td>${player.games_played}</td>
