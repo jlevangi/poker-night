@@ -110,57 +110,6 @@
                 }
             });
             
-            // Function to show update notification
-            function showUpdateNotification() {
-                // Remove any existing notification first
-                const existingNotification = document.querySelector('.update-notification');
-                if (existingNotification) {
-                    existingNotification.remove();
-                }
-                
-                const notification = document.createElement('div');
-                notification.className = 'update-notification';
-                notification.innerHTML = `
-                    <div class="update-content">
-                        <strong>New version available!</strong>
-                        <p>A new version of the app is available.</p>
-                        <button id="update-app-btn">Update Now</button>
-                    </div>
-                `;
-                document.body.appendChild(notification);
-                
-                // Add event listener to update button
-                document.getElementById('update-app-btn').addEventListener('click', async () => {
-                    try {
-                        // First, unregister all service workers
-                        const registrations = await navigator.serviceWorker.getRegistrations();
-                        for (const registration of registrations) {
-                            await registration.unregister();
-                            console.log('ServiceWorker unregistered');
-                        }
-                        
-                        // Then clear all caches
-                        if ('caches' in window) {
-                            const cacheNames = await caches.keys();
-                            await Promise.all(
-                                cacheNames.map(cacheName => caches.delete(cacheName))
-                            );
-                            console.log('All caches cleared');
-                        }
-                        
-                        // For PWAs on mobile
-                        if (window.matchMedia('(display-mode: standalone)').matches) {
-                            alert('Please close and reopen the app to complete the update');
-                        }
-                        
-                        // Force reload the page
-                        window.location.href = `/?forceupdate=${Date.now()}`;
-                    } catch (error) {
-                        console.error('Error during update:', error);
-                        window.location.reload();
-                    }
-                });
-            }
         }
     </script>
     <script src="{{ versioned_url('js/app.js') }}"></script>
