@@ -290,7 +290,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <button class="quick-action-btn" id="session-action-btn">Start New Session</button>
                 </div>`;
 
-        html += '<h3>Player Standings Overview</h3>';
+        html += '<div class="dashboard-content"><h3>Player Standings Overview</h3>';
         if (playersSummary.length === 0) {
             html += '<p>No players yet. Go to the "Players" section to add some!</p>';
         } else {
@@ -315,7 +315,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <td>
                             ${isGambleKing ? '<span class="crown-icon">👑</span> ' : ''}
                             <a href="#player/${player.player_id}">${player.name}</a>
-                            ${isGambleKing ? ' <span class="gamble-king-label">Gamble King</span>' : ''}
+                            ${isGambleKing ? '<div class="gamble-king-label-container"><span class="gamble-king-label">Gamble King</span></div>' : ''}
                         </td>
                         <td>${player.games_played}</td>
                         <td class="${profitClass}">$${player.net_profit.toFixed(2)}</td>
@@ -326,6 +326,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         </tbody>
                     </table>
                 </div>
+            </div>
             `;
         }
 
@@ -471,9 +472,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 html += `
                     <tr${isGambleKing ? ' class="gamble-king-row"' : ''}>
                         <td>
-                            ${isGambleKing ? '<span class="crown-icon">👑</span> ' : ''}
+                            
                             <a href="#player/${player.player_id}">${player.name}</a>
-                            ${isGambleKing ? ' <span class="gamble-king-label">Gamble King</span>' : ''}
+                            ${isGambleKing ? '<span class="crown-icon">👑</span> ' : ''}
+                            ${isGambleKing ? '<div class="gamble-king-label-container"><span class="gamble-king-label">Gamble King</span></div>' : ''}
                         </td>
                         <td>${stats.games_played}</td>
                         <td class="${profitClass}">$${stats.net_profit.toFixed(2)}</td>

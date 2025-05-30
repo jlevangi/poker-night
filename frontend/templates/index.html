@@ -9,6 +9,7 @@
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
     <title>Gamble King</title>    <link rel="stylesheet" href="{{ versioned_url('css/style.css') }}">
+    <link rel="stylesheet" href="{{ versioned_url('css/responsive-fixes.css') }}">
     <link rel="manifest" href="{{ url_for('serve_manifest') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
@@ -22,7 +23,11 @@
 </head>
 
 <body>    <header>
-        <h1>Poker Night Tracker</h1>
+        <div class="royal-header">
+            <span class="royal-crown left">👑</span>
+            <h1>Poker Night !</h1>
+            <span class="royal-crown right">👑</span>
+        </div>
         <nav class="desktop-nav">
             <a href="#dashboard">Dashboard</a>
             <a href="#players">Players</a>
