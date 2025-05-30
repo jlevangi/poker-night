@@ -15,9 +15,24 @@ header {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+/* Royal header basic styles - more details in responsive-fixes.css */
+.royal-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.royal-crown {
+    font-size: 1.5rem;
+    margin: 0 10px;
+    flex-shrink: 0;
+}
+
 header h1 {
     margin: 0;
     font-size: 1.8rem;
+    text-align: center;
 }
 
 nav {
@@ -203,7 +218,7 @@ button:hover,
 .gamble-king-container h2 {
     margin-top: 0;
     color: #3367D6;
-    font-size: 2rem;
+    font-size: 1.5rem;
 }
 
 .gamble-king-name {
@@ -517,6 +532,14 @@ footer {
         margin: 0.5rem;
         padding: 1rem;
     }
+}
+
+/* Dynamic header text size for different screen widths */
+@media (max-width: 400px) {
+    header h1 {
+        font-size: 1.3rem;
+    }
+
 
     input[type="text"],
     input[type="number"],
@@ -605,7 +628,7 @@ footer {
 
 .players-dashboard-table th,
 .players-dashboard-table td {
-    padding: 0.75rem;
+    padding: 0.75rem 0.5rem;
     border-bottom: 1px solid #e9ecef;
     text-align: left;
 }
@@ -658,7 +681,7 @@ footer {
 
 .players-stats-table th,
 .players-stats-table td {
-    padding: 0.75rem;
+    padding: 0.75rem 0.5rem;
     border-bottom: 1px solid #e9ecef;
     text-align: left;
 }
@@ -732,6 +755,10 @@ footer {
     margin-right: 0.25rem;
 }
 
+.gamble-king-label-container {
+    margin-top: 0.25rem;
+}
+
 .gamble-king-label {
     font-size: 0.75rem;
     background-color: #ffc107;
@@ -739,8 +766,8 @@ footer {
     padding: 0.15rem 0.4rem;
     border-radius: 12px;
     font-weight: bold;
-    margin-left: 0.5rem;
-    vertical-align: middle;
+    white-space: nowrap;
+    display: inline-block;
 }
 
 /* Improved player list styling for mobile */
@@ -1050,9 +1077,9 @@ footer {
   flex-direction: row;
   justify-content: center; /* Center the navigation items */
   align-items: center;
-  width: 99; /* Reduced from 100vw to make it centered */
+  width: 75vw; /* Reduced from 100vw to make it centered */
   max-width: 600px; /* Maximum width for larger screens */
-  border-radius: 18px 18px 0 0;
+  border-radius: 25px 25px 25px 25px;
   padding: 0 8px;
   transition: background 0.3s;
   margin: 0 auto; /* Center the navbar */
@@ -1097,10 +1124,11 @@ footer {
 @media (max-width: 700px) {
   .bottom-nav {
     display: flex;
-    border-radius: 18px 18px 0 0;
+    border-radius: 25px 25px 25px 25px; /* Rounded corners for mobile */
     padding-bottom: env(safe-area-inset-bottom, 0);
-    width: 98%; /* Maintain width consistency */
+    width: 75%; /* Maintain width consistency */
     max-width: 700px; /* Maximum width for better aesthetics */
+    margin-bottom: 10px;
   }
 }
 
@@ -1115,6 +1143,6 @@ footer {
   }
   /* Add padding to body/app-content to avoid overlap with bottom nav */
   #app-content {
-    padding-bottom: 75px;
+    padding-bottom: 20px;
   }
 }

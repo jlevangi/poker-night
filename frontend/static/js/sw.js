@@ -32,44 +32,6 @@ self.addEventListener('install', event => {
     );
 });
 
-// Activate event: Clean up old caches and take immediate control
-self.addEventListener('activate', event => {
-    console.log(`Service worker v${APP_VERSION} activating...`);
-    
-    // Delete all old caches
-    event.waitUntil(
-        caches.keys().then(cacheNames => {
-            return Promise.all(
-                cacheNames.map(cacheName => {
-                    if (cacheName !== CACHE_NAME) {
-                        console.log('Deleting old cache:', cacheName);
-                        return caches.delete(cacheName);
-                    }
-                    return Promise.resolve();
-                })
-            );
-        })
-        .then(() => {
-            console.log(`Service worker v${APP_VERSION} now active and controlling all clients`);
-            // Send a message to all clients that a new version is available
-            return self.clients.matchAll().then(clients => {
-                clients.forEach(client => {
-                    client.postMessage({
-                        type: 'NEW_VERSION',
-                        version: APP_VERSION
-                    });
-                });
-            });
-        })
-        .then(() => {
-            // Take control of all open clients immediately
-            return self.clients.claim();
-        })
-        .catch(error => {
-            console.error('Error during service worker activation:', error);
-        })
-    );
-});
 
 // Fetch event: Serve cached content when offline, or fetch from network
 self.addEventListener('fetch', event => {

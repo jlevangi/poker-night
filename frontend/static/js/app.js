@@ -21,7 +21,63 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Initialize configuration from config.js
     let APP_VERSION = '1.0.5'; // Default until config loads
-
+    
+    if ('serviceWorker' in navigator) {
+        // Check if we're coming from an update process
+        const isUpdating = sessionStorage.getItem('app_updating') === 'true';
+        if (isUpdating) {
+            console.log('Update in progress, cleaning up...');
+            sessionStorage.removeItem('app_updating');
+        }
+        
+        // Add a cache-busting query parameter to ensure fresh service worker
+        const swUrl = `/sw.js?v=${APP_VERSION}${isUpdating ? '&forceUpdate=' + Date.now() : ''}`;
+        
+        // Register the service worker
+        navigator.serviceWorker.register(swUrl)
+            .then(registration => {
+                console.log('Service Worker registered with scope:', registration.scope);
+                
+                // If we're coming from an update, force activate the new service worker
+                if (isUpdating && registration.waiting) {
+                    console.log('Forcing new service worker to activate after update');
+                    registration.waiting.postMessage({type: 'SKIP_WAITING'});
+                }
+                
+                // Check for updates
+                registration.addEventListener('updatefound', () => {
+                    const newWorker = registration.installing;
+                    console.log('New service worker installing...');
+                    
+                    newWorker.addEventListener('statechange', () => {
+                        if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                            console.log('New service worker installed, update available');
+                            showUpdateNotification();
+                        }
+                    });
+                });
+            })
+            .catch(error => {
+                console.error('Service Worker registration failed:', error);
+            });
+            
+        // Listen for messages from service worker
+        navigator.serviceWorker.addEventListener('message', (event) => {
+            if (event.data && event.data.type === 'NEW_VERSION') {
+                console.log(`New app version available: ${event.data.version}`);
+                showUpdateNotification();
+            }
+        });
+        
+        // If there's a controlling service worker already, make sure we're using the latest
+        if (navigator.serviceWorker.controller && isUpdating) {
+            navigator.serviceWorker.controller.postMessage({
+                type: 'CHECK_VERSION',
+                version: APP_VERSION
+            });
+        }
+    }
+    
     function showNewSessionModal() {
         try {
             if (!newSessionModal) {
@@ -184,7 +240,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const gambleKing = sortedPlayers[0];            if (gambleKing && gambleKing.net_profit > 0) {
                 const profitClass = gambleKing.net_profit >= 0 ? 'profit-positive' : 'profit-negative';
                 html += `<div class="gamble-king-container">
-                            <h2>👑 The Gamble King 👑</h2>
+                            <h2>Current Crown Holder</h2>
                             <p class="gamble-king-name gamble-king-name-dash">${gambleKing.name}</p>
                             <div class="gamble-king-stats">
                                 <p>Games: ${gambleKing.games_played} | Net Profit: <span class="${profitClass}">$${gambleKing.net_profit.toFixed(2)}</span></p>
@@ -215,7 +271,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <button class="quick-action-btn" id="session-action-btn">Start New Session</button>
                 </div>`;
 
-        html += '<h3>Player Standings Overview</h3>';
+        html += '<div class="dashboard-content"><h3>Player Standings Overview</h3>';
         if (playersSummary.length === 0) {
             html += '<p>No players yet. Go to the "Players" section to add some!</p>';
         } else {
@@ -238,9 +294,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 html += `
                     <tr${isGambleKing ? ' class="gamble-king-row"' : ''}>
                         <td>
-                            ${isGambleKing ? '<span class="crown-icon">👑</span> ' : ''}
                             <a href="#player/${player.player_id}">${player.name}</a>
-                            ${isGambleKing ? ' <span class="gamble-king-label">Gamble King</span>' : ''}
+                            ${isGambleKing ? '<span class="crown-icon">👑</span> ' : ''}
+                            ${isGambleKing ? '<div class="gamble-king-label-container"><span class="gamble-king-label">Gamble King</span></div>' : ''}
                         </td>
                         <td>${player.games_played}</td>
                         <td class="${profitClass}">$${player.net_profit.toFixed(2)}</td>
@@ -251,6 +307,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         </tbody>
                     </table>
                 </div>
+            </div>
             `;
         }
 
@@ -396,9 +453,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 html += `
                     <tr${isGambleKing ? ' class="gamble-king-row"' : ''}>
                         <td>
-                            ${isGambleKing ? '<span class="crown-icon">👑</span> ' : ''}
+                            
                             <a href="#player/${player.player_id}">${player.name}</a>
-                            ${isGambleKing ? ' <span class="gamble-king-label">Gamble King</span>' : ''}
+                            ${isGambleKing ? '<span class="crown-icon">👑</span> ' : ''}
+                            ${isGambleKing ? '<div class="gamble-king-label-container"><span class="gamble-king-label">Gamble King</span></div>' : ''}
                         </td>
                         <td>${stats.games_played}</td>
                         <td class="${profitClass}">$${stats.net_profit.toFixed(2)}</td>
