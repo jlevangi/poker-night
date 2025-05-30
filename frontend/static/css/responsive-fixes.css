@@ -1,0 +1,207 @@
+/* Responsive fixes for poker night tracker application */
+
+/* Player name in statistics tables - prevent wrapping */
+.players-stats-table td:first-child,
+.players-dashboard-table td:first-child {
+    white-space: nowrap;
+}
+
+/* Ensure Gamble King label doesn't wrap */
+.gamble-king-label {
+    white-space: nowrap;
+    display: inline-block;
+}
+
+/* Improve table responsiveness on small screens */
+@media (max-width: 600px) {
+    .table-responsive {
+        margin-bottom: 1rem;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* Make dashboard player standings table fully responsive at all sizes */
+    .dashboard-content .players-stats-table {
+        min-width: 100%;
+        width: 100%;
+    }
+    
+    /* Keep other tables scrollable if needed */
+    .players-stats-table,
+    .players-dashboard-table {
+        min-width: 500px; /* Ensure tables are wide enough to display properly */
+    }
+    
+    /* Add horizontal padding to fix table content getting cut off at edges */
+    #app-content {
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+    }
+    
+    /* Improve spacing in tables on mobile */
+    .players-stats-table th,
+    .players-stats-table td,
+    .players-dashboard-table th,
+    .players-dashboard-table td {
+        padding: 0.5rem 0.35rem;
+    }
+    
+    /* Further reduce table column spacing on mobile */
+    .players-stats-table td:not(:first-child),
+    .players-dashboard-table td:not(:first-child) {
+        padding-left: 0.25rem;
+        padding-right: 0.25rem;
+    }
+    
+    /* Special styling for dashboard table - more compact layout */
+    .dashboard-content .players-stats-table th,
+    .dashboard-content .players-stats-table td {
+        padding: 0.4rem 0.2rem;
+    }
+    
+    /* Adjust column widths for dashboard table */
+    .dashboard-content .players-stats-table td:first-child {
+        width: 60%; /* Give more space to player names */
+    }
+    
+    .dashboard-content .players-stats-table td:nth-child(2),
+    .dashboard-content .players-stats-table td:nth-child(3) {
+        width: 20%; /* Split remaining space between other columns */
+        text-align: center;
+    }
+}
+
+/* Media Queries for responsive design */
+/* Enhanced royal header styling */
+.royal-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(to right, rgba(0,0,0,0), rgba(255,215,0,0.1), rgba(0,0,0,0));
+    padding: 0.25rem 0;
+    border-bottom: 1px solid rgba(255,215,0,0.3);
+    margin-bottom: 0.5rem;
+}
+
+.royal-crown {
+    color: gold;
+    text-shadow: 0 0 5px rgba(255,215,0,0.7);
+    animation: crown-glow 2s infinite alternate;
+    flex-shrink: 0; /* Prevent crowns from shrinking */
+    min-width: 1.5rem; /* Ensure minimum width for crowns */
+    text-align: center;
+}
+
+.royal-crown.left {
+    transform: rotate(-10deg);
+}
+
+.royal-crown.right {
+    transform: rotate(10deg);
+}
+
+@keyframes crown-glow {
+    0% { text-shadow: 0 0 5px rgba(255,215,0,0.7); }
+    100% { text-shadow: 0 0 15px rgba(255,215,0,1); }
+}
+
+@media (max-width: 500px) {
+    header h1 {
+        font-size: 1.5rem;
+        padding: 0;
+        margin: 0;
+    }
+    
+    /* Make header more compact on small screens */
+    header {
+        padding: 0.8rem 0.5rem;
+    }
+    
+    .royal-header {
+        padding: 0.15rem 0;
+    }
+    
+    .royal-crown {
+        font-size: 1.25rem;
+        margin: 0 8px;
+        min-width: 1.25rem;
+    }
+    
+    /* Adjust spacing for the desktop nav links */
+    .desktop-nav {
+        display: flex;
+        justify-content: center;
+        margin-top: 0.3rem;
+    }
+    
+    .desktop-nav a {
+        margin: 0 0.5rem;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 400px) {
+    header h1 {
+        font-size: 1.2rem;
+    }
+    
+    /* Further reduce spacing in the header */
+    header {
+        padding: 0.6rem 0.2rem;
+    }
+    
+    .royal-crown {
+        font-size: 1.1rem;
+        margin: 0 6px;
+        min-width: 1.1rem;
+    }
+    
+    .desktop-nav a {
+        font-size: 0.85rem;
+        margin: 0 0.4rem;
+    }
+    
+    /* Make sure bottom nav doesn't interfere with content */
+    footer {
+        margin-bottom: 60px;
+        padding-bottom: 1rem;
+    }
+    
+    /* Additional padding for app content on very small screens */
+    #app-content {
+        padding: 1rem 0.5rem;
+    }
+    
+    /* More compact headers on very small screens */
+    .dashboard-content .players-stats-table th {
+        font-size: 0.9rem;
+        padding: 0.35rem 0.2rem;
+    }
+    
+    /* Slightly smaller text for table content */
+    .dashboard-content .players-stats-table td {
+        font-size: 0.95rem;
+    }
+    
+    /* Make Gamble King label smaller on tiny screens */
+    .dashboard-content .gamble-king-label {
+        font-size: 0.7rem;
+        padding: 0.1rem 0.3rem;
+    }
+}
+
+/* Dashboard content specific styling */
+.dashboard-content {
+    width: 100%;
+}
+
+.dashboard-content .table-responsive {
+    margin-bottom: 1rem;
+}
+
+@media (max-width: 600px) {
+    .dashboard-content .table-responsive {
+        margin: 0 -0.5rem; /* Extend table to the edge of the screen */
+        width: calc(100% + 1rem);
+    }
+}
