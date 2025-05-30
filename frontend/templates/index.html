@@ -38,7 +38,7 @@
     <main id="app-content">
         <p>Loading...</p>
     </main>    <footer>
-        <p>&copy; 2025 Gamble King</p>    </footer>
+        <p>&copy; 2025 The Gamble King</p>    </footer>
 
     <div id="new-session-modal" class="modal-overlay">
         <div class="modal-content">
@@ -85,7 +85,7 @@
                 .then(registration => {
                     console.log('Service Worker registered with scope:', registration.scope);
                     
-                    // Check for updates on page load
+                    // Check for updates silently without showing notifications
                     registration.addEventListener('updatefound', () => {
                         const newWorker = registration.installing;
                         console.log('New service worker found, installing...');
@@ -93,7 +93,7 @@
                         newWorker.addEventListener('statechange', () => {
                             if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
                                 console.log('New service worker installed and waiting to activate');
-                                showUpdateNotification();
+                                // Silent update - no notification
                             }
                         });
                     });
@@ -101,14 +101,6 @@
                 .catch(error => {
                     console.error('Service Worker registration failed:', error);
                 });
-                
-            // Listen for messages from service worker
-            navigator.serviceWorker.addEventListener('message', event => {
-                if (event.data && event.data.type === 'NEW_VERSION') {
-                    console.log(`New version available: ${event.data.version}`);
-                    showUpdateNotification();
-                }
-            });
             
         }
     </script>
