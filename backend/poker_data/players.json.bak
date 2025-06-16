@@ -1,0 +1,82 @@
+[
+    {
+        "entry_id": "eid_0001",
+        "session_id": "sid_20250524_1",
+        "player_id": "pid_001",
+        "player_name": "Pierce",
+        "buy_in_count": 2,
+        "total_buy_in_amount": 40.0,
+        "payout": 0.0,
+        "profit": -40.0
+    },
+    {
+        "entry_id": "eid_0002",
+        "session_id": "sid_20250524_1",
+        "player_id": "pid_003",
+        "player_name": "Timmy",
+        "buy_in_count": 1,
+        "total_buy_in_amount": 20.0,
+        "payout": 36.85,
+        "profit": 16.85
+    },
+    {
+        "entry_id": "eid_0003",
+        "session_id": "sid_20250524_1",
+        "player_id": "pid_002",
+        "player_name": "Matty Ice",
+        "buy_in_count": 1,
+        "total_buy_in_amount": 20.0,
+        "payout": 85.1,
+        "profit": 65.1
+    },
+    {
+        "entry_id": "eid_0004",
+        "session_id": "sid_20250524_1",
+        "player_id": "pid_008",
+        "player_name": "Liv",
+        "buy_in_count": 2,
+        "total_buy_in_amount": 40.0,
+        "payout": 27.5,
+        "profit": -12.5
+    },
+    {
+        "entry_id": "eid_0006",
+        "session_id": "sid_20250524_1",
+        "player_id": "pid_007",
+        "player_name": "Cassie",
+        "buy_in_count": 1,
+        "total_buy_in_amount": 20.0,
+        "payout": 59.35,
+        "profit": 39.35
+    },
+    {
+        "entry_id": "eid_0007",
+        "session_id": "sid_20250524_1",
+        "player_id": "pid_011",
+        "player_name": "Elijah",
+        "buy_in_count": 2,
+        "total_buy_in_amount": 40.0,
+        "payout": 0.0,
+        "profit": -40.0
+    },
+    {
+        "entry_id": "eid_0008",
+        "session_id": "sid_20250524_1",
+        "player_id": "pid_005",
+        "player_name": "Colin",
+        "buy_in_count": 2,
+        "total_buy_in_amount": 40.0,
+        "payout": 0.0,
+        "profit": -40.0
+    },
+    {
+        "entry_id": "eid_0009",
+        "session_id": "sid_20250524_1",
+        "player_id": "pid_006",
+        "player_name": "Brantley",
+        "buy_in_count": 1,
+        "total_buy_in_amount": 20.0,
+        "payout": 31.2,
+        "profit": 11.2
+    }
+]

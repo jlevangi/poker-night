@@ -1,0 +1,72 @@
+[
+    {
+        "player_id": "pid_001",
+        "name": "Pierce",
+        "seven_two_wins": 1
+    },
+    {
+        "player_id": "pid_002",
+        "name": "Matty Ice",
+        "seven_two_wins": 2
+    },
+    {
+        "player_id": "pid_003",
+        "name": "Timmy",
+        "seven_two_wins": 1
+    },
+    {
+        "player_id": "pid_004",
+        "name": "Mariah",
+        "seven_two_wins": 0
+    },
+    {
+        "player_id": "pid_005",
+        "name": "Colin",
+        "seven_two_wins": 0
+    },
+    {
+        "player_id": "pid_006",
+        "name": "Brantley",
+        "seven_two_wins": 1
+    },
+    {
+        "player_id": "pid_007",
+        "name": "Cassie",
+        "seven_two_wins": 0
+    },
+    {
+        "player_id": "pid_008",
+        "name": "Liv",
+        "seven_two_wins": 0
+    },
+    {
+        "player_id": "pid_009",
+        "name": "Corey",
+        "seven_two_wins": 0
+    },
+    {
+        "player_id": "pid_010",
+        "name": "Jacob C.",
+        "seven_two_wins": 0
+    },
+    {
+        "player_id": "pid_011",
+        "name": "Elijah",
+        "seven_two_wins": 0
+    },
+    {
+        "player_id": "pid_012",
+        "name": "Daulton W.",
+        "seven_two_wins": 1
+    },
+    {
+        "player_id": "pid_013",
+        "name": "Griff",
+        "seven_two_wins": 0
+    },
+    {
+        "player_id": "pid_014",
+        "name": "Mike M",
+        "seven_two_wins": 1
+    }
+]
