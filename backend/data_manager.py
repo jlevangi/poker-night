@@ -3,7 +3,8 @@ from datetime import datetime
 import os
 
 # --- DATA FILE PATHS ---
-DATA_DIR = "poker_data" # Store JSON files in a sub-directory
+# Use the poker_data directory in the root project folder
+DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "poker_data")
 PLAYERS_FILE = os.path.join(DATA_DIR, 'players.json')
 SESSIONS_FILE = os.path.join(DATA_DIR, 'sessions.json')
 ENTRIES_FILE = os.path.join(DATA_DIR, 'entries.json')
@@ -146,6 +147,27 @@ def reactivate_session(session_id):
         print(f"Session {session_id} has been reactivated.")
         return True
     print(f"Error: Session {session_id} not found to reactivate.")
+    return False
+
+def update_session(session_id, updated_session_data):
+    """Updates a session with new data, preserving the session ID."""
+    sessions = load_data(SESSIONS_FILE)
+    session_found = False
+    
+    for i, session in enumerate(sessions):
+        if session['session_id'] == session_id:
+            # Ensure the session_id doesn't change
+            updated_session_data['session_id'] = session_id
+            sessions[i] = updated_session_data
+            session_found = True
+            break
+    
+    if session_found:
+        save_data(sessions, SESSIONS_FILE)
+        print(f"Session {session_id} has been updated with new data.")
+        return True
+    
+    print(f"Error: Session {session_id} not found to update.")
     return False
 
 # --- ENTRY (BUY-IN/PROFIT) MANAGEMENT ---

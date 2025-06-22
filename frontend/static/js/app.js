@@ -617,7 +617,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function loadSessionDetail(sessionId) {
         appContent.innerHTML = `<p>Loading session ${sessionId} details...</p>`;
-        try {            const data = await fetchData(`/api/sessions/${sessionId}`);
+        try {
+            const data = await fetchData(`/api/sessions/${sessionId}`);
             const sessionInfo = data.session_info;
             const entries = data.entries;
             const sessionDate = new Date(sessionInfo.date + 'T00:00:00');
@@ -638,6 +639,59 @@ document.addEventListener('DOMContentLoaded', () => {
                         <p class="session-total-value"><strong>Total Session Value:</strong> $${totalSessionValue.toFixed(2)} (${totalBuyInCount} buy-ins)</p>
                         <p class="session-unpaid-value ${isPaidOut ? 'paid-out' : ''}"><strong>Amount Not Yet Paid Out:</strong> $${amountNotPaidOut.toFixed(2)}</p>
                     </div>`;
+                    
+            // Add chip distribution section
+            if (sessionInfo.chip_distribution) {
+                console.log("Chip distribution found:", sessionInfo.chip_distribution);
+                const chipDistribution = sessionInfo.chip_distribution;
+                const totalChips = sessionInfo.total_chips || Object.values(chipDistribution).reduce((sum, count) => sum + count, 0);
+                const buyInValue = sessionInfo.default_buy_in_value;
+                
+                // Define colors for styling
+                const chipColors = {
+                    'Black': '#000000',
+                    'Blue': '#0000FF',
+                    'Green': '#008000',
+                    'Red': '#FF0000',
+                    'White': '#FFFFFF'
+                };
+                
+                // Sort chips by value (highest first)
+                const chipOrder = ['Black', 'Blue', 'Green', 'Red', 'White'];
+                
+                let chipHtml = '';
+                
+                // Create a chip element for each type
+                for (const chipColor of chipOrder) {
+                    if (chipDistribution[chipColor] && chipDistribution[chipColor] > 0) {
+                        const backgroundColor = chipColors[chipColor];
+                        const textColor = ['White', 'Blue'].includes(chipColor) ? '#000000' : '#FFFFFF';
+                        
+                        chipHtml += `
+                            <div class="chip" style="background-color: ${backgroundColor}; color: ${textColor}; border: ${chipColor === 'White' ? '2px solid #ccc' : '3px dashed rgba(255, 255, 255, 0.3)'}">
+                                <span class="chip-count">${chipDistribution[chipColor]}</span>
+                                <span class="chip-name">${chipColor}</span>
+                            </div>`;
+                    }
+                }
+                
+                html += `
+                    <div class="chip-distribution">
+                        <h3>Chip Distribution</h3>
+                        <p class="chip-description">For a buy-in of $${buyInValue.toFixed(2)}, 
+                           use the following chip distribution (${totalChips} total chips):</p>
+                        <div class="chip-container">
+                            ${chipHtml}
+                        </div>
+                    </div>
+                `; 
+            } else {
+                console.warn("No chip distribution found in session data");
+                html += `<div class="chip-distribution">
+                    <h3>Chip Distribution</h3>
+                    <p>No chip distribution data available for this session.</p>
+                </div>`;
+            }
             
             html += sessionInfo.is_active ? `<p class="session-status status-active" style="display: inline-block; margin-bottom: 1rem;"><strong>Status: Active</strong></p>` : `<p class="session-status status-ended" style="display: inline-block; margin-bottom: 1rem;"><strong>Status: Ended</strong></p>`;            if (sessionInfo.is_active) {
                 html += `

@@ -27,8 +27,72 @@ export default class SessionDetailPage {
         }
     }
     
+    // Helper method to render chip distribution
+    renderChipDistribution(session) {
+        console.log("renderChipDistribution called with:", session);
+        
+        // Check if session and chip_distribution exist
+        if (!session || !session.session_info || !session.session_info.chip_distribution) {
+            console.error("No chip distribution found in session data:", session);
+            return `<div class="chip-distribution">
+                <h3>Chip Distribution</h3>
+                <p>No chip distribution data available.</p>
+            </div>`;
+        }
+        
+        // Get chip distribution from session data
+        const chipDistribution = session.session_info.chip_distribution;
+        const buyInValue = session.session_info.default_buy_in_value || 20.00;
+        const totalChips = session.session_info.total_chips || Object.values(chipDistribution).reduce((sum, count) => sum + count, 0);
+        
+        console.log("Chip distribution data:", chipDistribution);
+        console.log("Buy-in value:", buyInValue);
+        console.log("Total chips:", totalChips);
+        
+        // Define colors for styling
+        const chipColors = {
+            'Black': '#000000',
+            'Blue': '#0000FF',
+            'Green': '#008000',
+            'Red': '#FF0000',
+            'White': '#FFFFFF'
+        };
+        
+        // Sort chips by value (highest first)
+        const chipOrder = ['Black', 'Blue', 'Green', 'Red', 'White'];
+        
+        let html = `
+            <div class="chip-distribution">
+                <h3>Chip Distribution</h3>
+                <p class="chip-description">For a buy-in of $${buyInValue.toFixed(2)}, 
+                   use the following chip distribution (${totalChips} total chips):</p>
+                <div class="chip-container">`;
+        
+        // Create a chip element for each type
+        for (const chipColor of chipOrder) {
+            if (chipDistribution[chipColor] && chipDistribution[chipColor] > 0) {
+                const backgroundColor = chipColors[chipColor];
+                const textColor = ['White', 'Blue'].includes(chipColor) ? '#000000' : '#FFFFFF';
+                
+                html += `
+                    <div class="chip" style="background-color: ${backgroundColor}; color: ${textColor}; border: ${chipColor === 'White' ? '2px solid #ccc' : '3px dashed rgba(255, 255, 255, 0.3)'}">
+                        <span class="chip-count">${chipDistribution[chipColor]}</span>
+                        <span class="chip-name">${chipColor}</span>
+                    </div>`;
+            }
+        }
+        
+        html += `
+                </div>
+            </div>`;
+        
+        return html;
+    }
+
     // Render session detail content
     render(session, sessionId) {
+        console.log("Full session in render:", session);
+        
         const isActive = session.status === 'ACTIVE';
         let html = `
             <h2>Session Details</h2>            <p><strong>Date:</strong> ${this.formatDate(session.date)}</p>
@@ -45,6 +109,11 @@ export default class SessionDetailPage {
                 ${isActive ? 
                     `<button id="end-session-btn" class="action-btn danger-btn">End Session</button>` : 
                     `<button id="reactivate-session-btn" class="action-btn reactivate-session-btn">Reactivate Session</button>`}
+            </div>
+
+            <!-- Chip Distribution Section -->
+            <div id="chip-distribution-container">
+            ${this.renderChipDistribution(session)}
             </div>
             
             <h3>Players</h3>
