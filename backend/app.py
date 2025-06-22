@@ -1,8 +1,15 @@
 import os
 import argparse # Import argparse
+import sys
 from flask import Flask, jsonify, request, send_from_directory, render_template, url_for
 # Assuming data_manager.py is in the same directory as app.py (the 'backend' directory)
 import data_manager as dm
+
+# Add scripts directory to Python path for importing chip_calculator
+scripts_dir = os.path.join(os.path.dirname(__file__), 'scripts')
+sys.path.append(scripts_dir)
+# Import the chip calculator
+from chip_calculator import calculate_chip_distribution, display_distribution
 
 # --- Argument Parsing for Debug Path Prints ---
 parser = argparse.ArgumentParser(description="Run the Poker Night PWA Flask backend.")
@@ -10,6 +17,12 @@ parser.add_argument(
     '--debug-paths',
     action='store_true', # Sets to True if flag is present
     help="Enable verbose printing of calculated paths for debugging static/template folder setup."
+)
+parser.add_argument(
+    '--port',
+    type=int,
+    default=5000,
+    help="Port number to run the Flask server on."
 )
 args = parser.parse_args()
 # --- End Argument Parsing ---
@@ -157,8 +170,26 @@ def create_session_api():
         buy_in_float = float(buy_in_value)
     except ValueError:
         return jsonify({"error": "Invalid buy-in value"}), 400
+    
+    # Calculate chip distribution for the session
+    chip_distribution = calculate_chip_distribution(buy_in_float)
+    
+    # Create the session
     session = dm.create_session(date_str, buy_in_float)
     if session:
+        # Add chip distribution to the session data
+        if chip_distribution:
+            session['chip_distribution'] = chip_distribution
+            # Calculate total chip count for convenience
+            total_chips = sum(chip_distribution.values())
+            session['total_chips'] = total_chips
+            
+            # Update the session in the data store to persist the chip distribution
+            dm.update_session(session['session_id'], session)
+            
+            # Session created with chip distribution
+            print(f"Session data being returned: {session}")
+            
         return jsonify(session), 201
     return jsonify({"error": "Failed to create session"}), 500
 
@@ -167,8 +198,26 @@ def get_session_details_api(session_id):
     session = dm.get_session_by_id(session_id)
     if not session:
         return jsonify({"error": "Session not found"}), 404
+    
     entries = dm.get_entries_for_session(session_id)
-    return jsonify({"session_info": session, "entries": entries})
+    
+    # Check if chip distribution is already in the session data
+    # If not, calculate it based on the session's buy-in value
+    if 'chip_distribution' not in session:
+        buy_in_value = session.get('default_buy_in_value', 20.00)
+        chip_distribution = calculate_chip_distribution(buy_in_value)
+        if chip_distribution:
+            session['chip_distribution'] = chip_distribution
+            session['total_chips'] = sum(chip_distribution.values())
+            
+            # Save the updated session with chip distribution
+            dm.update_session(session['session_id'], session)
+    # else: use existing chip distribution
+    
+    # Prepare response
+    response_data = {"session_info": session, "entries": entries}
+    
+    return jsonify(response_data)
 
 @app.route('/api/sessions/<string:session_id>/end', methods=['PUT'])
 def end_session_api(session_id):
@@ -249,6 +298,33 @@ def record_payout_api(session_id, player_id):
         return jsonify({"error": f"Player {player_id} not found in session {session_id}"}), 404
     return jsonify({"error": "Failed to record payout for an unknown reason"}), 500
 
+@app.route('/api/chip-calculator/<float:buy_in>', methods=['GET'])
+def get_chip_distribution_api(buy_in):
+    """API endpoint to calculate chip distribution for a specific buy-in amount"""
+    try:
+        # Validate buy-in amount
+        if buy_in <= 0:
+            return jsonify({"error": "Buy-in amount must be positive"}), 400
+            
+        # Calculate chip distribution
+        chip_distribution = calculate_chip_distribution(buy_in)
+        
+        if not chip_distribution:
+            return jsonify({"error": "Failed to calculate chip distribution"}), 500
+            
+        # Calculate total chip count
+        total_chips = sum(chip_distribution.values())
+        
+        # Return the distribution data
+        return jsonify({
+            "buy_in": buy_in,
+            "chip_distribution": chip_distribution,
+            "total_chips": total_chips
+        })
+        
+    except Exception as e:
+        return jsonify({"error": f"An error occurred: {str(e)}"}), 500
+
 
 # --- Serve Frontend ---
 @app.route('/')
@@ -282,6 +358,11 @@ def serve_env():
     response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
     return response
 
+@app.route('/test-chips')
+def test_chips():
+    """A test endpoint to verify chip styles are working"""
+    return send_from_directory(STATIC_DIR_CALC, 'test-chips.html')
+
 # Flask's default static file handling will use the `static_folder` parameter
 # (STATIC_DIR_CALC) and the default `static_url_path` which is '/static'.
 # So, a request to '/static/images/icon-192x192.png' will automatically be looked for in
@@ -299,4 +380,4 @@ if __name__ == '__main__':
     else:
         print(f"Flask app starting with FLASK_DEBUG_MODE={FLASK_DEBUG_MODE}. Use --debug-paths to see path calculations.")
 
-    app.run(debug=FLASK_DEBUG_MODE, host='0.0.0.0', port=5000)
+    app.run(debug=FLASK_DEBUG_MODE, host='0.0.0.0', port=args.port)
