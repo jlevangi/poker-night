@@ -19,3 +19,4 @@ source/
 
 secrets.json
 .env
+poker_data/
