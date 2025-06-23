@@ -100,8 +100,6 @@ export default class SessionDetailPage {
         // Check if session is active based on multiple possible indicators
         // If is_active is explicitly false OR status is explicitly ENDED, then it's not active
         
-        // Check if session is active based on multiple possible indicators
-        // If is_active is explicitly false OR status is explicitly ENDED, then it's not active
         const isActive = !(sessionData.is_active === false || sessionData.status === 'ENDED');
         
         console.log("Session active calculation:",

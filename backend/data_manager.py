@@ -18,6 +18,7 @@ ARCHIVED_ENTRIES_FILE = os.path.join(ARCHIVE_DIR, 'archived_entries.json')
 def initialize_data_files():
     """Creates the data directory and empty JSON files if they don't exist."""
     os.makedirs(DATA_DIR, exist_ok=True)
+    os.makedirs(ARCHIVE_DIR, exist_ok=True)
     for file_path in [PLAYERS_FILE, SESSIONS_FILE, ENTRIES_FILE, ARCHIVED_SESSIONS_FILE, ARCHIVED_ENTRIES_FILE]:
         if not os.path.exists(file_path):
             with open(file_path, 'w') as f:
