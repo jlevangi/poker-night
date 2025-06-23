@@ -100,7 +100,12 @@ export default class ApiService {
     async reactivateSession(id) {
         return this.put(`sessions/${id}/reactivate`);
     }
-      async addPlayerToSession(sessionId, data) {
+      
+    async deleteSession(id) {
+        return this.delete(`sessions/${id}/delete`);
+    }
+      
+    async addPlayerToSession(sessionId, data) {
         return this.post(`sessions/${sessionId}/entries`, data);
     }
       async updatePlayerInSession(sessionId, playerId, data) {

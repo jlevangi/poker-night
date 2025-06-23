@@ -231,6 +231,23 @@ def reactivate_session_api(session_id):
         return jsonify({"message": "Session reactivated successfully"})
     return jsonify({"error": "Failed to reactivate session or session not found"}), 404
 
+@app.route('/api/sessions/<string:session_id>/delete', methods=['DELETE'])
+def delete_session_api(session_id):
+    # First check if the session exists
+    session = dm.get_session_by_id(session_id)
+    if not session:
+        return jsonify({"error": "Session not found"}), 404
+    
+    # Check if session is active - can't delete active sessions
+    if session.get('is_active', False):
+        return jsonify({"error": "Cannot delete an active session. End the session first."}), 400
+    
+    # Delete (archive) the session
+    if dm.delete_session(session_id):
+        return jsonify({"message": "Session deleted successfully and data archived"})
+    else:
+        return jsonify({"error": "Failed to delete session"}), 500
+
 @app.route('/api/sessions/<string:session_id>/entries', methods=['POST'])
 def add_player_to_session_api(session_id):
     data = request.get_json()

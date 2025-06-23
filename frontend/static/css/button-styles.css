@@ -1,0 +1,115 @@
+/* Button styles for the Poker Night application */
+
+.action-btn {
+    padding: 8px 16px;
+    border-radius: 4px;
+    border: none;
+    background-color: #3367D6; /* Default blue for action buttons */
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    margin-right: 8px;
+    transition: background-color 0.2s;
+}
+
+.action-btn:hover {
+    background-color: #4285F4;
+}
+
+.action-btn:active {
+    background-color: #2A56B5;
+}
+
+.danger-btn {
+    background-color: #E53935; /* Red for dangerous actions */
+    color: white;
+    font-weight: bold;
+    display: inline-block;
+    margin: 10px 0;
+}
+
+.danger-btn:hover {
+    background-color: #F44336;
+}
+
+.danger-btn:active {
+    background-color: #C62828;
+}
+
+.reactivate-session-btn {
+    background-color: #388E3C; /* Green for positive actions */
+}
+
+.reactivate-session-btn:hover {
+    background-color: #4CAF50;
+}
+
+.reactivate-session-btn:active {
+    background-color: #2E7D32;
+}
+
+/* Button spacing in session actions */
+.session-action-buttons {
+    margin: 20px 0;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+.session-action-buttons button {
+    margin-bottom: 10px;
+}
+
+/* Delete session button */
+#delete-session-btn {
+    background-color: #E53935; /* Red for dangerous actions */
+    color: white;
+    font-weight: bold;
+    margin: 10px 0;
+    padding: 10px 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: inline-block;
+    width: auto;
+    min-width: 200px;
+}
+
+#delete-session-btn:hover {
+    background-color: #D32F2F;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    transform: translateY(-1px);
+}
+
+/* Session ended actions container */
+.session-ended-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 15px 0;
+}
+
+/* Ensure icons in buttons have proper spacing */
+.action-btn i {
+    margin-right: 6px;
+}
+
+/* Style for end session button */
+#end-session-btn {
+    width: fit-content;
+    min-width: 140px;
+}
+
+@media (max-width: 600px) {
+    /* Stack buttons vertically on mobile */
+    .session-ended-actions {
+        flex-direction: column;
+    }
+    
+    /* Full width buttons on small screens */
+    .session-ended-actions button {
+        width: 100%;
+    }
+}

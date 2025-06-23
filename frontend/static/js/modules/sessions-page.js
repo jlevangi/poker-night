@@ -46,6 +46,8 @@ export default class SessionsPage {    constructor(appContent, apiService) {
                                 (fullyPaidOut ? `<span class="session-unpaid-value paid-out">Fully Paid Out</span>` : '')}
                         </a>                        <span class="session-status status-${session.status && typeof session.status === 'string' ? session.status.toLowerCase() : 'unknown'}">
                             ${session.status || 'Unknown'}
+                            ${session.status === 'ENDED' ? 
+                                `<span class="session-action-dot" title="This session can be deleted">•</span>` : ''}
                         </span>
                     </li>
                 `;

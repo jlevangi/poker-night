@@ -52,7 +52,7 @@ export default class SessionDetailPage {
         // Define colors for styling
         const chipColors = {
             'Black': '#000000',
-            'Blue': '#0000FF',
+            'Blue': '#0e1b63',
             'Green': '#008000',
             'Red': '#FF0000',
             'White': '#FFFFFF'
@@ -72,7 +72,7 @@ export default class SessionDetailPage {
         for (const chipColor of chipOrder) {
             if (chipDistribution[chipColor] && chipDistribution[chipColor] > 0) {
                 const backgroundColor = chipColors[chipColor];
-                const textColor = ['White', 'Blue'].includes(chipColor) ? '#000000' : '#FFFFFF';
+                const textColor = ['White'].includes(chipColor) ? '#000000' : '#FFFFFF';
                 
                 html += `
                     <div class="chip" style="background-color: ${backgroundColor}; color: ${textColor}; border: ${chipColor === 'White' ? '2px solid #ccc' : '3px dashed rgba(255, 255, 255, 0.3)'}">
@@ -91,24 +91,48 @@ export default class SessionDetailPage {
 
     // Render session detail content
     render(session, sessionId) {
-        console.log("Full session in render:", session);
+        console.log("Full session in render:", JSON.stringify(session, null, 2));
         
-        const isActive = session.status === 'ACTIVE';
+        // Extract the session data from the response structure
+        const sessionData = session.session_info || session;
+        console.log("Session data extracted:", JSON.stringify(sessionData, null, 2));
+        
+        // Check if session is active based on multiple possible indicators
+        // If is_active is explicitly false OR status is explicitly ENDED, then it's not active
+        
+        // Check if session is active based on multiple possible indicators
+        // If is_active is explicitly false OR status is explicitly ENDED, then it's not active
+        const isActive = !(sessionData.is_active === false || sessionData.status === 'ENDED');
+        
+        console.log("Session active calculation:",
+            "is_active =", sessionData.is_active,
+            "status =", sessionData.status,
+            "final isActive =", isActive);
+        
         let html = `
-            <h2>Session Details</h2>            <p><strong>Date:</strong> ${this.formatDate(session.date)}</p>
-            <p><strong>Default Buy-in:</strong> $${session.buyin ? session.buyin.toFixed(2) : '0.00'}</p>
-            <p><strong>Status:</strong> <span class="session-status status-${session.status && typeof session.status === 'string' ? session.status.toLowerCase() : 'unknown'}">${session.status || 'Unknown'}</span></p>
+            <h2>Session Details</h2>
+            <p><strong>Date:</strong> ${this.formatDate(sessionData.date)}</p>
+            <p><strong>Default Buy-in:</strong> $${sessionData.default_buy_in_value ? sessionData.default_buy_in_value.toFixed(2) : '0.00'}</p>
+            <p><strong>Status:</strong> <span class="session-status status-${isActive ? 'active' : 'ended'}">${isActive ? 'ACTIVE' : 'ENDED'}</span></p>
               <div class="session-value-summary">
                 <p class="session-total-value">Total Value: $${session.totalValue ? session.totalValue.toFixed(2) : '0.00'}</p>
                 ${session.unpaidValue && session.unpaidValue > 0 ? 
                     `<p class="session-unpaid-value">Unpaid Amount: $${session.unpaidValue.toFixed(2)}</p>` : 
-                    (session.status === 'ENDED' ? `<p class="session-unpaid-value paid-out">Fully Paid Out</p>` : '')}
+                    (!isActive ? `<p class="session-unpaid-value paid-out">Fully Paid Out</p>` : '')}
             </div>
             
             <div class="session-action-buttons">
+                <!-- Always show End/Reactivate button based on session state -->
                 ${isActive ? 
                     `<button id="end-session-btn" class="action-btn danger-btn">End Session</button>` : 
-                    `<button id="reactivate-session-btn" class="action-btn reactivate-session-btn">Reactivate Session</button>`}
+                    `<button id="reactivate-session-btn" class="action-btn reactivate-session-btn">
+                        Reactivate Session
+                     </button>`
+                }
+                <!-- Always show Delete button regardless of session state -->
+                <button id="delete-session-btn" class="action-btn danger-btn" style="margin-left: 10px; background-color: #f44336; color: white;">
+                    Delete Session
+                </button>
             </div>
 
             <!-- Chip Distribution Section -->
@@ -180,18 +204,81 @@ export default class SessionDetailPage {
         
         html += `<p><a href="#sessions">&laquo; Back to Sessions</a></p>`;
         
+        // Log the HTML about to be rendered
+        console.log("Full HTML being set:", html);
+        
         this.appContent.innerHTML = html;
         
+        // Enhanced button debugging
+        setTimeout(() => {
+            // Simple check to verify buttons are rendered
+            console.log("Button check after render:");
+            console.log("- Delete button exists:", !!document.getElementById('delete-session-btn'));
+            console.log("- Reactivate button exists:", !!document.getElementById('reactivate-session-btn'));
+            console.log("- End button exists:", !!document.getElementById('end-session-btn'));
+        }, 100); // Small timeout to ensure DOM is ready
+        
+        console.log("Before setting up event listeners, isActive:", isActive);
         // Add event listeners
-        this.setupEventListeners(session, sessionId, isActive);
+        this.setupEventListeners(sessionData, sessionId, isActive);
     }
     
     // Setup event listeners for the page
     setupEventListeners(session, sessionId, isActive) {
+        console.log("Setting up event listeners, isActive:", isActive);
+        
+        // DEBUG: Find buttons manually
+        const deleteBtn = document.getElementById('delete-session-btn');
+        const reactivateBtn = document.getElementById('reactivate-session-btn');
+        const endBtn = document.getElementById('end-session-btn');
+        
+        console.log("Manual button check:");
+        console.log("- Delete button:", deleteBtn);
+        console.log("- Reactivate button:", reactivateBtn);
+        console.log("- End button:", endBtn);
+        
+        // Set up the Delete button event listener regardless of session state
+        if (deleteBtn) {
+            console.log("Setting up event listener for delete button");
+            deleteBtn.addEventListener('click', async () => {
+                console.log("Delete button clicked");
+                // Strong confirmation to prevent accidental deletion
+                if (confirm("Are you sure you want to delete this session? This action cannot be undone, although data will be archived.")) {
+                    // Double confirmation with session date for clarity
+                    const sessionDate = session.date || 'unknown date';
+                    if (confirm(`FINAL WARNING: This will permanently remove the session from ${sessionDate} from view. The data will be archived but no longer visible in the app. Continue?`)) {
+                        try {
+                            // Show loading state
+                            deleteBtn.disabled = true;
+                            deleteBtn.textContent = 'Deleting...';
+                            
+                            console.log(`Calling delete API for session ${sessionId}`);
+                            await this.api.delete(`sessions/${sessionId}/delete`);
+                            
+                            // Success message with session date
+                            alert(`Session from ${sessionDate} deleted successfully and data archived!`);
+                            // Navigate back to the sessions list
+                            window.location.hash = '#sessions';
+                        } catch (error) {
+                            console.error('Error deleting session:', error);
+                            alert(`Error: ${error.message}`);
+                            // Restore button state
+                            deleteBtn.disabled = false;
+                            deleteBtn.textContent = 'Delete Session';
+                        }
+                    }
+                }
+            });
+        } else {
+            console.error("Delete session button not found!");
+        }
+        
         if (isActive) {
             // End session button
             const endSessionBtn = document.getElementById('end-session-btn');
-            if (endSessionBtn) {                endSessionBtn.addEventListener('click', async () => {
+            if (endSessionBtn) {
+                console.log("Found end session button");
+                endSessionBtn.addEventListener('click', async () => {
                     if (confirm("Are you sure you want to end this session? This will finalize profits.")) {
                         try {
                             await this.api.put(`sessions/${sessionId}/end`);
@@ -300,11 +387,12 @@ export default class SessionDetailPage {
                 });
             });
         } else {
-            // Reactivate session button
+            // Reactivate session button - only set up if session is not active
             const reactivateSessionBtn = document.getElementById('reactivate-session-btn');
             if (reactivateSessionBtn) {
                 reactivateSessionBtn.addEventListener('click', async () => {
-                    if (confirm("Are you sure you want to reactivate this session?")) {                        try {
+                    if (confirm("Are you sure you want to reactivate this session?")) {
+                        try {
                             await this.api.put(`sessions/${sessionId}/reactivate`);
                             
                             alert("Session reactivated successfully!");

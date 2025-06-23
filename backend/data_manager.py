@@ -9,11 +9,16 @@ PLAYERS_FILE = os.path.join(DATA_DIR, 'players.json')
 SESSIONS_FILE = os.path.join(DATA_DIR, 'sessions.json')
 ENTRIES_FILE = os.path.join(DATA_DIR, 'entries.json')
 
+# --- ARCHIVE FILE PATHS ---
+ARCHIVE_DIR = os.path.join(DATA_DIR, 'archives')
+ARCHIVED_SESSIONS_FILE = os.path.join(ARCHIVE_DIR, 'archived_sessions.json')
+ARCHIVED_ENTRIES_FILE = os.path.join(ARCHIVE_DIR, 'archived_entries.json')
+
 # --- UTILITY: ENSURE DATA DIRECTORY AND FILES EXIST ---
 def initialize_data_files():
     """Creates the data directory and empty JSON files if they don't exist."""
     os.makedirs(DATA_DIR, exist_ok=True)
-    for file_path in [PLAYERS_FILE, SESSIONS_FILE, ENTRIES_FILE]:
+    for file_path in [PLAYERS_FILE, SESSIONS_FILE, ENTRIES_FILE, ARCHIVED_SESSIONS_FILE, ARCHIVED_ENTRIES_FILE]:
         if not os.path.exists(file_path):
             with open(file_path, 'w') as f:
                 json.dump([], f) # Initialize with an empty list
@@ -91,7 +96,8 @@ def create_session(date_str, default_buy_in_value=20.00):
         "session_id": session_id,
         "date": date_str,
         "default_buy_in_value": float(default_buy_in_value),
-        "is_active": True # Flag to indicate if session is ongoing
+        "is_active": True, # Flag to indicate if session is ongoing
+        "status": "ACTIVE"  # Explicit status field for consistency 
     }
     sessions.append(new_session)
     sessions.sort(key=lambda s: s['date'], reverse=True) # Sort by date, newest first
@@ -124,6 +130,7 @@ def end_session(session_id):
     for s in sessions:
         if s['session_id'] == session_id:
             s['is_active'] = False
+            s['status'] = 'ENDED'  # Add explicit status field for consistency
             session_found = True
             break
     if session_found:
@@ -140,6 +147,7 @@ def reactivate_session(session_id):
     for s in sessions:
         if s['session_id'] == session_id:
             s['is_active'] = True
+            s['status'] = 'ACTIVE'  # Add explicit status field for consistency
             session_found = True
             break
     if session_found:
@@ -452,6 +460,8 @@ if __name__ == "__main__":
     save_data([], PLAYERS_FILE)
     save_data([], SESSIONS_FILE)
     save_data([], ENTRIES_FILE)
+    save_data([], ARCHIVED_SESSIONS_FILE)
+    save_data([], ARCHIVED_ENTRIES_FILE)
     initialize_data_files() # Ensure they are recreated if deleted manually for testing
 
     # Add players
@@ -515,3 +525,11 @@ if __name__ == "__main__":
         print("\n--- Entries for Session 1 (After Bob's potential removal) ---")
         for entry in get_entries_for_session(session1['session_id']):
             print(entry)
+
+    # Archive and delete session tests
+    if session1:
+        archive_session(session1['session_id']) # Test archiving
+        print("\n--- Archived Sessions ---")
+        print(get_archived_sessions())
+
+        # delete_session(session1['session_id']) # Uncomment to test deletion
