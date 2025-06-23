@@ -1,20 +1,5 @@
 [
     {
-        "session_id": "sid_20250622_3",
-        "date": "2025-06-22",
-        "default_buy_in_value": 20.0,
-        "is_active": false,
-        "chip_distribution": {
-            "Black": 10,
-            "Blue": 10,
-            "Green": 13,
-            "Red": 14,
-            "White": 20
-        },
-        "total_chips": 67,
-        "status": "ENDED"
-    },
-    {
         "session_id": "sid_20250614_2",
         "date": "2025-06-14",
         "default_buy_in_value": 20.0,

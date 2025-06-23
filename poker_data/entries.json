@@ -158,15 +158,5 @@
         "total_buy_in_amount": 20.0,
         "payout": 26.3,
         "profit": 6.300000000000001
-    },
-    {
-        "entry_id": "eid_0017",
-        "session_id": "sid_20250622_3",
-        "player_id": "pid_001",
-        "player_name": "Pierce",
-        "buy_in_count": 1,
-        "total_buy_in_amount": 20.0,
-        "payout": 0.0,
-        "profit": -20.0
     }
 ]

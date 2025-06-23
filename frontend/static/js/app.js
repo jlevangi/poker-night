@@ -650,7 +650,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Define colors for styling
                 const chipColors = {
                     'Black': '#000000',
-                    'Blue': '#0000FF',
+                    'Blue': '#0e1b63',
                     'Green': '#008000',
                     'Red': '#FF0000',
                     'White': '#FFFFFF'
@@ -665,7 +665,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 for (const chipColor of chipOrder) {
                     if (chipDistribution[chipColor] && chipDistribution[chipColor] > 0) {
                         const backgroundColor = chipColors[chipColor];
-                        const textColor = ['White', 'Blue'].includes(chipColor) ? '#000000' : '#FFFFFF';
+                        const textColor = ['White'].includes(chipColor) ? '#000000' : '#FFFFFF';
                         
                         chipHtml += `
                             <div class="chip" style="background-color: ${backgroundColor}; color: ${textColor}; border: ${chipColor === 'White' ? '2px solid #ccc' : '3px dashed rgba(255, 255, 255, 0.3)'}">
