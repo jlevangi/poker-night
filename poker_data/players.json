@@ -68,5 +68,50 @@
         "player_id": "pid_014",
         "name": "Mike M",
         "seven_two_wins": 1
+    },
+    {
+        "player_id": "pid_015",
+        "name": "Gabe",
+        "seven_two_wins": 0
+    },
+    {
+        "player_id": "pid_016",
+        "name": "Nick",
+        "seven_two_wins": 0
+    },
+    {
+        "player_id": "pid_017",
+        "name": "Jessica",
+        "seven_two_wins": 0
+    },
+    {
+        "player_id": "pid_018",
+        "name": "kaiden",
+        "seven_two_wins": 0
+    },
+    {
+        "player_id": "pid_019",
+        "name": "Brandon",
+        "seven_two_wins": 0
+    },
+    {
+        "player_id": "pid_020",
+        "name": "Robbie",
+        "seven_two_wins": 0
+    },
+    {
+        "player_id": "pid_021",
+        "name": "Eli L.",
+        "seven_two_wins": 0
+    },
+    {
+        "player_id": "pid_022",
+        "name": "Seth",
+        "seven_two_wins": 0
+    },
+    {
+        "player_id": "pid_023",
+        "name": "Larry",
+        "seven_two_wins": 0
     }
 ]

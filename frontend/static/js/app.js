@@ -201,13 +201,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         try {
+            console.log("Creating new session...");
             const response = await fetch('/api/sessions', {
-                method: 'POST',
+                method: 'POST', // Ensure the correct HTTP method is used
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ date: date, default_buy_in_value: buyin })
             });
             if (!response.ok) {
-                const errorData = await response.json();
+                const errorData = await response.json().catch(() => ({ error: response.statusText }));
                 throw new Error(errorData.error || "Failed to create session");
             }
             const newSession = await response.json();
@@ -616,275 +617,55 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function loadSessionDetail(sessionId) {
-        appContent.innerHTML = `<p>Loading session ${sessionId} details...</p>`;
+        // Use the SessionDetailPage module instead of inline code
         try {
-            const data = await fetchData(`/api/sessions/${sessionId}`);
-            const sessionInfo = data.session_info;
-            const entries = data.entries;
-            const sessionDate = new Date(sessionInfo.date + 'T00:00:00');
-            const friendlyDate = sessionDate.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });            // Calculate total value of the session (sum of all buy-ins)
-            const totalSessionValue = entries.reduce((sum, entry) => sum + entry.total_buy_in_amount, 0);
-            const totalBuyInCount = entries.reduce((sum, entry) => sum + entry.buy_in_count, 0);
-            
-            // Calculate total amount paid out
-            const totalPaidOut = entries.reduce((sum, entry) => sum + entry.payout, 0);
-            
-            // Calculate amount not yet paid out (money still in play)
-            const amountNotPaidOut = totalSessionValue - totalPaidOut;
-
-            let html = `<h2>Session: ${friendlyDate} (Buy-in: $${sessionInfo.default_buy_in_value.toFixed(2)})</h2>`;
-              // Add session total value display
-            const isPaidOut = amountNotPaidOut === 0;
-            html += `<div class="session-value-summary">
-                        <p class="session-total-value"><strong>Total Session Value:</strong> $${totalSessionValue.toFixed(2)} (${totalBuyInCount} buy-ins)</p>
-                        <p class="session-unpaid-value ${isPaidOut ? 'paid-out' : ''}"><strong>Amount Not Yet Paid Out:</strong> $${amountNotPaidOut.toFixed(2)}</p>
-                    </div>`;
-                    
-            // Add chip distribution section
-            if (sessionInfo.chip_distribution) {
-                console.log("Chip distribution found:", sessionInfo.chip_distribution);
-                const chipDistribution = sessionInfo.chip_distribution;
-                const totalChips = sessionInfo.total_chips || Object.values(chipDistribution).reduce((sum, count) => sum + count, 0);
-                const buyInValue = sessionInfo.default_buy_in_value;
-                
-                // Define colors for styling
-                const chipColors = {
-                    'Black': '#000000',
-                    'Blue': '#0e1b63',
-                    'Green': '#008000',
-                    'Red': '#FF0000',
-                    'White': '#FFFFFF'
-                };
-                
-                // Sort chips by value (highest first)
-                const chipOrder = ['Black', 'Blue', 'Green', 'Red', 'White'];
-                
-                let chipHtml = '';
-                
-                // Create a chip element for each type
-                for (const chipColor of chipOrder) {
-                    if (chipDistribution[chipColor] && chipDistribution[chipColor] > 0) {
-                        const backgroundColor = chipColors[chipColor];
-                        const textColor = ['White'].includes(chipColor) ? '#000000' : '#FFFFFF';
-                        
-                        chipHtml += `
-                            <div class="chip" style="background-color: ${backgroundColor}; color: ${textColor}; border: ${chipColor === 'White' ? '2px solid #ccc' : '3px dashed rgba(255, 255, 255, 0.3)'}">
-                                <span class="chip-count">${chipDistribution[chipColor]}</span>
-                                <span class="chip-name">${chipColor}</span>
-                            </div>`;
+            // Import module dynamically
+            const SessionDetailPage = (await import('./modules/session-detail-page.js')).default;
+            const apiService = {
+                get: async (endpoint) => fetchData(`/api/${endpoint}`),
+                post: async (endpoint, data) => {
+                    const response = await fetch(`/api/${endpoint}`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(data)
+                    });
+                    if (!response.ok) {
+                        const errorData = await response.json().catch(() => ({ error: `Server returned ${response.status}: ${response.statusText}` }));
+                        throw new Error(errorData.error || `API error: ${response.status}`);
                     }
+                    return response.json();
+                },
+                put: async (endpoint, data = {}) => {
+                    const response = await fetch(`/api/${endpoint}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: Object.keys(data).length ? JSON.stringify(data) : undefined
+                    });
+                    if (!response.ok) {
+                        const errorData = await response.json().catch(() => ({ error: `Server returned ${response.status}: ${response.statusText}` }));
+                        throw new Error(errorData.error || `API error: ${response.status}`);
+                    }
+                    return response.json();
+                },
+                delete: async (endpoint) => ApiService.delete(endpoint),
+                deleteSession: async (id) => {
+                    // Use the correct endpoint and method for session deletion
+                    const url = `/api/sessions/${id}/delete`;
+                    console.log(`Deleting session via: ${url}`);
+                    const response = await fetch(url, { method: 'DELETE' });
+                    if (!response.ok) {
+                        const errorText = await response.text();
+                        throw new Error(`Server returned ${response.status}: ${errorText}`);
+                    }
+                    return response.json().catch(() => ({}));
                 }
-                
-                html += `
-                    <div class="chip-distribution">
-                        <h3>Chip Distribution</h3>
-                        <p class="chip-description">For a buy-in of $${buyInValue.toFixed(2)}, 
-                           use the following chip distribution (${totalChips} total chips):</p>
-                        <div class="chip-container">
-                            ${chipHtml}
-                        </div>
-                    </div>
-                `; 
-            } else {
-                console.warn("No chip distribution found in session data");
-                html += `<div class="chip-distribution">
-                    <h3>Chip Distribution</h3>
-                    <p>No chip distribution data available for this session.</p>
-                </div>`;
-            }
+            };
+
+            // Create and use the SessionDetailPage module
+            const sessionDetailPage = new SessionDetailPage(appContent, apiService);
+            await sessionDetailPage.load(sessionId);
             
-            html += sessionInfo.is_active ? `<p class="session-status status-active" style="display: inline-block; margin-bottom: 1rem;"><strong>Status: Active</strong></p>` : `<p class="session-status status-ended" style="display: inline-block; margin-bottom: 1rem;"><strong>Status: Ended</strong></p>`;            if (sessionInfo.is_active) {
-                html += `
-                    <div class="session-controls">
-                        <h3>Add Player / Record Buy-in</h3>
-                        <div class="session-add-player">
-                            <select id="select-player-for-session">
-                                <option value="">-- Select Player --</option>
-                            </select>
-                            <button id="add-player-entry-btn" class="primary-btn">Add Buy-in</button>
-                        </div>
-                        <div class="session-action-buttons">
-                            <button id="end-session-btn" class="danger-btn">End Session</button>
-                        </div>
-                    </div>
-                `;
-            } else {
-                // Add reactivate button for ended sessions
-                html += `
-                    <div class="session-action-buttons">
-                        <button id="reactivate-session-btn" class="reactivate-session-btn">Reactivate Session</button>
-                    </div>
-                `;
-            }
-            html += `<h3>Players in Session:</h3>`;
-            if (entries.length === 0) {
-                html += "<p>No players have bought into this session yet.</p>";
-            } else {
-                // Get player details to show 7-2 wins
-                const playerDetails = await fetchData('/api/players/details');
-                const playerStatsData = await fetchData('/api/players');
-                
-                // Create a map of player stats by player_id for easier lookup
-                const statsMap = {};
-                playerStatsData.forEach(stat => {
-                    statsMap[stat.player_id] = stat;
-                });
-                
-                html += "<ul class='session-players-list'>";
-                entries.sort((a, b) => a.player_name.localeCompare(b.player_name)).forEach(entry => {
-                    // Get the player's 7-2 wins count
-                    const playerStats = statsMap[entry.player_id] || {};
-                    const sevenTwoWins = playerStats.seven_two_wins || 0;
-                    
-                    html += `<li>
-                                <div class="session-player-details">
-                                    <strong>${entry.player_name}</strong>: 
-                                    ${entry.buy_in_count} Buy-in(s) ($${entry.total_buy_in_amount.toFixed(2)})
-                                    | Payout: $${entry.payout.toFixed(2)}
-                                    | Profit: <span class="${entry.profit >= 0 ? 'profit-positive' : 'profit-negative'}">$${entry.profit.toFixed(2)}</span>
-                                    ${sessionInfo.is_active ? 
-                                        `<div class="session-player-actions">
-                                            <button class="set-payout-btn small-btn" data-player-id="${entry.player_id}" data-player-name="${entry.player_name}" style="background-color: #ffc107; color: #212529;">Set Payout</button>
-                                        </div>` : ''}
-                                </div>
-                                <div class="session-seven-two-controls">
-                                    <span class="seven-two-label">7-2 Wins:</span>
-                                    <span class="seven-two-value">${sevenTwoWins}</span>
-                                    <div class="seven-two-buttons">
-                                        <button class="seven-two-increment-btn" data-player-id="${entry.player_id}" title="Add a 7-2 win">+</button>
-                                        <button class="seven-two-decrement-btn" data-player-id="${entry.player_id}" title="Remove a 7-2 win">-</button>
-                                    </div>
-                                </div>
-                             </li>`;
-                });
-                html += "</ul>";
-            }
-            appContent.innerHTML = html;
-
-            if (sessionInfo.is_active) {
-                const players = await fetchData('/api/players/details');
-                const selectPlayerEl = document.getElementById('select-player-for-session');
-                if (selectPlayerEl) { // Ensure element exists
-                    players.forEach(p => {
-                        selectPlayerEl.innerHTML += `<option value="${p.player_id}">${p.name}</option>`;
-                    });
-                }
-
-                const addPlayerEntryBtn = document.getElementById('add-player-entry-btn');                if (addPlayerEntryBtn) addPlayerEntryBtn.addEventListener('click', async () => {
-                    const playerId = document.getElementById('select-player-for-session').value;
-                    if (!playerId) { alert("Please select a player."); return; }
-                    
-                    // Always use 1 as the number of buy-ins
-                    const numBuyIns = 1;
-
-                    try {
-                        const response = await fetch(`/api/sessions/${sessionId}/entries`, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ player_id: playerId, num_buy_ins: numBuyIns })
-                        });
-                        if (!response.ok) throw new Error((await response.json()).error || "Failed to add entry");
-                        loadSessionDetail(sessionId);
-                    } catch (err) { alert(`Error: ${err.message}`); }
-                });document.querySelectorAll('.set-payout-btn').forEach(button => {
-                    button.addEventListener('click', async (e) => {
-                        const playerId = e.target.dataset.playerId;
-                        const playerName = e.target.dataset.playerName;
-                        const payoutStr = prompt(`Enter final payout for ${playerName}:`);
-                        if (payoutStr !== null) {
-                            const payoutAmount = parseFloat(payoutStr);
-                            if (isNaN(payoutAmount) || payoutAmount < 0) {
-                                alert("Invalid payout amount."); return;
-                            }
-                            try {
-                                const response = await fetch(`/api/sessions/${sessionId}/entries/${playerId}/payout`, {
-                                    method: 'PUT',
-                                    headers: { 'Content-Type': 'application/json' },
-                                    body: JSON.stringify({ payout_amount: payoutAmount })
-                                });
-                                if (!response.ok) throw new Error((await response.json()).error || "Failed to set payout");
-                                loadSessionDetail(sessionId);
-                            } catch (err) { alert(`Error: ${err.message}`); }
-                        }
-                    });
-                });
-                
-                // Add event listeners for 7-2 wins increment buttons
-                document.querySelectorAll('.seven-two-increment-btn').forEach(button => {
-                    button.addEventListener('click', async (e) => {
-                        const playerId = e.target.dataset.playerId;
-                        
-                        try {
-                            const response = await fetch(`/api/players/${playerId}/seven-two-wins`, {
-                                method: 'PUT',
-                                headers: { 'Content-Type': 'application/json' }
-                            });
-                            
-                            if (!response.ok) {
-                                const errorData = await response.json();
-                                throw new Error(errorData.error || "Failed to increment 7-2 wins");
-                            }
-                            
-                            // Reload the session detail page to show updated stats
-                            loadSessionDetail(sessionId);
-                        } catch (error) {
-                            console.error('Error updating 7-2 wins:', error);
-                            alert(`Error: ${error.message}`);
-                        }
-                    });
-                });
-                
-                // Add event listeners for 7-2 wins decrement buttons
-                document.querySelectorAll('.seven-two-decrement-btn').forEach(button => {
-                    button.addEventListener('click', async (e) => {
-                        const playerId = e.target.dataset.playerId;
-                        
-                        try {
-                            const response = await fetch(`/api/players/${playerId}/seven-two-wins/decrement`, {
-                                method: 'PUT',
-                                headers: { 'Content-Type': 'application/json' }
-                            });
-                            
-                            if (!response.ok) {
-                                const errorData = await response.json();
-                                throw new Error(errorData.error || "Failed to decrement 7-2 wins");
-                            }
-                            
-                            // Reload the session detail page to show updated stats
-                            loadSessionDetail(sessionId);
-                        } catch (error) {
-                            console.error('Error decrementing 7-2 wins:', error);
-                            alert(`Error: ${error.message}`);
-                        }
-                    });
-                });
-
-                const endSessionBtn = document.getElementById('end-session-btn');
-                if (endSessionBtn) endSessionBtn.addEventListener('click', async () => {
-                    if (confirm("Are you sure you want to end this session? This will finalize profits.")) {
-                        try {
-                            const response = await fetch(`/api/sessions/${sessionId}/end`, { method: 'PUT' });
-                            if (!response.ok) throw new Error((await response.json()).error || "Failed to end session");
-                            alert("Session ended successfully!");
-                            loadSessionDetail(sessionId);
-                        } catch (err) { alert(`Error: ${err.message}`); }
-                    }
-                });
-            } else {
-                // Add event listener for reactivate session button
-                const reactivateSessionBtn = document.getElementById('reactivate-session-btn');
-                if (reactivateSessionBtn) reactivateSessionBtn.addEventListener('click', async () => {
-                    if (confirm("Are you sure you want to reactivate this session?")) {
-                        try {
-                            const response = await fetch(`/api/sessions/${sessionId}/reactivate`, { method: 'PUT' });
-                            if (!response.ok) throw new Error((await response.json()).error || "Failed to reactivate session");
-                            alert("Session reactivated successfully!");
-                            loadSessionDetail(sessionId);
-                        } catch (err) { alert(`Error: ${err.message}`); }
-                    }
-                });
-            }
-
+            console.log("Session detail page loaded via module");
         } catch (error) {
             console.error(`Error loading session details for ${sessionId}:`, error);
             appContent.innerHTML = `<p>Could not load details for session ${sessionId}. ${error.message}</p>`;

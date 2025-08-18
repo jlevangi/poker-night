@@ -1,4 +1,6 @@
 // Session detail page module
+import ApiService from './api-service.js';
+
 export default class SessionDetailPage {
     constructor(appContent, apiService) {
         this.appContent = appContent;
@@ -18,6 +20,41 @@ export default class SessionDetailPage {
         try {
             // Fetch session data using API service
             const session = await this.api.get(`sessions/${sessionId}`);
+            
+            // Fetch available players for the dropdown
+            const availablePlayers = await this.api.get('players/details');
+            
+            // Add available players to the session object
+            session.availablePlayers = availablePlayers || [];
+
+            // Calculate total value and unpaid value
+            if (session.entries) {
+                session.totalValue = session.entries.reduce((sum, entry) => sum + entry.total_buy_in_amount, 0);
+                const totalPayout = session.entries.reduce((sum, entry) => sum + entry.payout, 0);
+                session.unpaidValue = session.totalValue - totalPayout;
+                
+                // Map entries to players for easier display
+                session.players = session.entries.map(entry => ({
+                    id: entry.player_id,
+                    name: entry.player_name,
+                    buyIn: entry.total_buy_in_amount,
+                    cashOut: entry.payout,
+                    sevenTwoWins: entry.seven_two_wins || 0
+                }));
+            } else {
+                session.totalValue = 0;
+                session.unpaidValue = 0;
+                session.players = [];
+            }
+            
+            // Ensure the buy-in value is available for the form
+            if (session.session_info && session.session_info.default_buy_in_value) {
+                session.buyin = session.session_info.default_buy_in_value;
+            } else if (session.default_buy_in_value) {
+                session.buyin = session.default_buy_in_value;
+            } else {
+                session.buyin = 20.00; // Default value
+            }
             
             // Render session details
             this.render(session, sessionId);
@@ -99,7 +136,6 @@ export default class SessionDetailPage {
         
         // Check if session is active based on multiple possible indicators
         // If is_active is explicitly false OR status is explicitly ENDED, then it's not active
-        
         const isActive = !(sessionData.is_active === false || sessionData.status === 'ENDED');
         
         console.log("Session active calculation:",
@@ -119,19 +155,15 @@ export default class SessionDetailPage {
                     (!isActive ? `<p class="session-unpaid-value paid-out">Fully Paid Out</p>` : '')}
             </div>
             
-            <div class="session-action-buttons">
-                <!-- Always show End/Reactivate button based on session state -->
-                ${isActive ? 
-                    `<button id="end-session-btn" class="action-btn danger-btn">End Session</button>` : 
-                    `<button id="reactivate-session-btn" class="action-btn reactivate-session-btn">
+            <!-- Only show Reactivate button if session is not active -->
+            ${!isActive ? 
+                `<div class="session-reactivate-container" style="text-align: center; margin: 20px 0;">
+                    <button id="reactivate-session-btn" class="action-btn reactivate-session-btn">
                         Reactivate Session
-                     </button>`
-                }
-                <!-- Always show Delete button regardless of session state -->
-                <button id="delete-session-btn" class="action-btn danger-btn" style="margin-left: 10px; background-color: #f44336; color: white;">
-                    Delete Session
-                </button>
-            </div>
+                    </button>
+                </div>` : 
+                '' // Nothing if active
+            }
 
             <!-- Chip Distribution Section -->
             <div id="chip-distribution-container">
@@ -142,14 +174,18 @@ export default class SessionDetailPage {
         `;
         
         if (isActive) {
+            // Log available players to debug
+            console.log("Available players for dropdown:", session.availablePlayers);
+            
             html += `
                 <div class="add-player-form">
                     <select id="add-player-select">
-                        <option value="">-- Select Player --</option>                        ${(session.availablePlayers || []).map(player => 
-                            `<option value="${player.id}">${player.name}</option>`
+                        <option value="">-- Select Player --</option>
+                        ${(session.availablePlayers || []).map(player => 
+                            `<option value="${player.player_id}">${player.name}</option>`
                         ).join('')}
                     </select>
-                    <input type="number" id="player-buyin" placeholder="Buy-in Amount ($)" value="${session.buyin ? session.buyin.toFixed(2) : '0.00'}" step="0.01">
+                    <input type="number" id="player-buyin" placeholder="Buy-in Amount ($)" value="${sessionData.default_buy_in_value ? sessionData.default_buy_in_value.toFixed(2) : '20.00'}" step="0.01">
                     <button id="add-player-to-session-btn" class="action-btn">Add Player</button>
                 </div>
             `;
@@ -158,7 +194,7 @@ export default class SessionDetailPage {
         // Render players list
         if (session.players && session.players.length > 0) {
             html += `<ul class="session-players-list">`;
-              session.players.forEach(player => {
+            session.players.forEach(player => {
                 // Ensure buyIn and cashOut are defined before calculating profit
                 const buyIn = player.buyIn || 0;
                 const cashOut = player.cashOut || 0;
@@ -175,7 +211,7 @@ export default class SessionDetailPage {
                         
                         <div class="session-player-actions">
                             ${isActive ?
-                                `<button class="update-player-btn action-btn" data-player-id="${player.id}">Update</button>` :
+                                `<button class="cash-out-player-btn action-btn success-btn" data-player-id="${player.id}">Cash Out</button>` :
                                 ''
                             }
                         </div>
@@ -200,12 +236,87 @@ export default class SessionDetailPage {
             html += `<p>No players in this session yet.</p>`;
         }
         
+        // Add session control buttons at the bottom
+        html += `
+            <div class="session-bottom-controls">
+                ${isActive ? 
+                    `<button id="end-session-btn" class="action-btn danger-btn">
+                        End Session
+                    </button>` : 
+                    ''
+                }
+                <!-- Always show Delete button regardless of session state -->
+                <button id="delete-session-btn" class="action-btn danger-btn">
+                    Delete Session
+                </button>
+            </div>
+        `;
+        
         html += `<p><a href="#sessions">&laquo; Back to Sessions</a></p>`;
         
         // Log the HTML about to be rendered
         console.log("Full HTML being set:", html);
         
         this.appContent.innerHTML = html;
+        
+        // Add styling for the session bottom controls
+        const styleElement = document.createElement('style');
+        styleElement.textContent = `
+            .session-bottom-controls {
+                margin: 20px 0;
+                padding: 15px;
+                border-top: 1px solid #ddd;
+                text-align: center;
+            }
+            
+            #end-session-btn, #delete-session-btn {
+                background-color: #E53935;
+                color: white;
+                font-weight: bold;
+                padding: 10px 20px;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+                border-radius: 4px;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                display: inline-block;
+                width: auto;
+                min-width: 200px;
+                margin: 10px 5px;
+            }
+            
+            #end-session-btn:hover, #delete-session-btn:hover {
+                background-color: #D32F2F;
+                box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+                transform: translateY(-1px);
+            }
+            
+            /* Ensure proper spacing for session reactivate button */
+            .session-reactivate-container {
+                text-align: center;
+                margin: 20px 0;
+            }
+            
+            /* Style for Cash Out button */
+            .cash-out-player-btn {
+                background-color: #4CAF50 !important;
+                color: white !important;
+                font-weight: bold;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            }
+            
+            .cash-out-player-btn:hover {
+                background-color: #45a049 !important;
+                box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+                transform: translateY(-1px);
+            }
+            
+            /* Generic success button style */
+            .success-btn {
+                background-color: #4CAF50;
+                color: white;
+            }
+        `;
+        document.head.appendChild(styleElement);
         
         // Enhanced button debugging
         setTimeout(() => {
@@ -214,6 +325,8 @@ export default class SessionDetailPage {
             console.log("- Delete button exists:", !!document.getElementById('delete-session-btn'));
             console.log("- Reactivate button exists:", !!document.getElementById('reactivate-session-btn'));
             console.log("- End button exists:", !!document.getElementById('end-session-btn'));
+            console.log("- Add player button exists:", !!document.getElementById('add-player-to-session-btn'));
+            console.log("- Cash Out buttons count:", document.querySelectorAll('.cash-out-player-btn').length);
         }, 100); // Small timeout to ensure DOM is ready
         
         console.log("Before setting up event listeners, isActive:", isActive);
@@ -225,7 +338,6 @@ export default class SessionDetailPage {
     setupEventListeners(session, sessionId, isActive) {
         console.log("Setting up event listeners, isActive:", isActive);
         
-        // DEBUG: Find buttons manually
         const deleteBtn = document.getElementById('delete-session-btn');
         const reactivateBtn = document.getElementById('reactivate-session-btn');
         const endBtn = document.getElementById('end-session-btn');
@@ -240,27 +352,19 @@ export default class SessionDetailPage {
             console.log("Setting up event listener for delete button");
             deleteBtn.addEventListener('click', async () => {
                 console.log("Delete button clicked");
-                // Strong confirmation to prevent accidental deletion
                 if (confirm("Are you sure you want to delete this session? This action cannot be undone, although data will be archived.")) {
-                    // Double confirmation with session date for clarity
                     const sessionDate = session.date || 'unknown date';
                     if (confirm(`FINAL WARNING: This will permanently remove the session from ${sessionDate} from view. The data will be archived but no longer visible in the app. Continue?`)) {
                         try {
-                            // Show loading state
                             deleteBtn.disabled = true;
                             deleteBtn.textContent = 'Deleting...';
-                            
-                            console.log(`Calling delete API for session ${sessionId}`);
-                            await this.api.delete(`sessions/${sessionId}/delete`);
-                            
-                            // Success message with session date
+
+                            await this.api.deleteSession(sessionId); // Now this will work
                             alert(`Session from ${sessionDate} deleted successfully and data archived!`);
-                            // Navigate back to the sessions list
                             window.location.hash = '#sessions';
                         } catch (error) {
                             console.error('Error deleting session:', error);
-                            alert(`Error: ${error.message}`);
-                            // Restore button state
+                            alert(`Error deleting session. The server might be temporarily unavailable. Please try again later or contact support if the problem persists.\nDetails: ${error.message}`);
                             deleteBtn.disabled = false;
                             deleteBtn.textContent = 'Delete Session';
                         }
@@ -279,13 +383,21 @@ export default class SessionDetailPage {
                 endSessionBtn.addEventListener('click', async () => {
                     if (confirm("Are you sure you want to end this session? This will finalize profits.")) {
                         try {
+                            // Show loading state
+                            endSessionBtn.disabled = true;
+                            endSessionBtn.textContent = 'Ending...';
+                            
                             await this.api.put(`sessions/${sessionId}/end`);
                             
-                            alert("Session ended successfully!");
+                            // Reload the page to show updated session state
                             this.load(sessionId);
                         } catch (error) {
                             console.error('Error ending session:', error);
                             alert(`Error: ${error.message}`);
+                            
+                            // Restore button state
+                            endSessionBtn.disabled = false;
+                            endSessionBtn.textContent = 'End Session';
                         }
                     }
                 });
@@ -296,7 +408,8 @@ export default class SessionDetailPage {
             const playerSelect = document.getElementById('add-player-select');
             const buyinInput = document.getElementById('player-buyin');
             
-            if (addPlayerBtn && playerSelect && buyinInput) {                addPlayerBtn.addEventListener('click', async () => {
+            if (addPlayerBtn && playerSelect && buyinInput) {
+                addPlayerBtn.addEventListener('click', async () => {
                     const playerId = playerSelect.value;
                     const buyin = parseFloat(buyinInput.value);
                     
@@ -311,26 +424,44 @@ export default class SessionDetailPage {
                     }
                     
                     // Calculate number of buy-ins based on entered amount and session default buy-in
-                    const defaultBuyin = session.session_info?.buyin || 20;
+                    const defaultBuyin = session.default_buy_in_value || 20;
                     const numBuyIns = Math.round(buyin / defaultBuyin);
                     
                     if (numBuyIns <= 0) {
                         alert('Buy-in amount must result in at least one buy-in');
                         return;
                     }
-                      try {                        await this.api.post(`sessions/${sessionId}/entries`, { player_id: playerId, num_buy_ins: numBuyIns });
+                    
+                    try {
+                        // Show loading state
+                        addPlayerBtn.disabled = true;
+                        addPlayerBtn.textContent = 'Adding...';
                         
-                        // Reload the session detail page
+                        // Use the API service to add player to session
+                        await this.api.post(`sessions/${sessionId}/entries`, { 
+                            player_id: playerId, 
+                            num_buy_ins: numBuyIns 
+                        });
+                        
+                        // Reset form fields
+                        playerSelect.value = '';
+                        buyinInput.value = defaultBuyin.toFixed(2);
+                        
+                        // Reload the session detail page to show updated players
                         this.load(sessionId);
                     } catch (error) {
                         console.error('Error adding player to session:', error);
                         alert(`Error: ${error.message}`);
+                        
+                        // Restore button state
+                        addPlayerBtn.disabled = false;
+                        addPlayerBtn.textContent = 'Add Player';
                     }
                 });
             }
             
-            // Update player buttons
-            document.querySelectorAll('.update-player-btn').forEach(button => {
+            // Cash out player buttons (formerly Update buttons)
+            document.querySelectorAll('.cash-out-player-btn').forEach(button => {
                 button.addEventListener('click', async (e) => {
                     const playerId = e.target.dataset.playerId;
                     const cashOut = prompt('Enter cash-out amount ($):');
@@ -343,13 +474,25 @@ export default class SessionDetailPage {
                         alert('Please enter a valid cash-out amount');
                         return;
                     }
-                      try {                        await this.api.put(`sessions/${sessionId}/entries/${playerId}/payout`, { payout_amount: cashOutValue });
+                    
+                    try {
+                        // Show loading state
+                        button.disabled = true;
+                        button.textContent = 'Processing...';
+                        
+                        await this.api.put(`sessions/${sessionId}/entries/${playerId}/payout`, { 
+                            payout_amount: cashOutValue 
+                        });
                         
                         // Reload the session detail page
                         this.load(sessionId);
                     } catch (error) {
                         console.error('Error updating player:', error);
                         alert(`Error: ${error.message}`);
+                        
+                        // Restore button state
+                        button.disabled = false;
+                        button.textContent = 'Cash Out';
                     }
                 });
             });
@@ -358,7 +501,11 @@ export default class SessionDetailPage {
             document.querySelectorAll('.seven-two-increment-btn').forEach(button => {
                 button.addEventListener('click', async (e) => {
                     const playerId = e.target.dataset.playerId;
-                      try {
+                    
+                    try {
+                        // Disable button to prevent double-clicks
+                        button.disabled = true;
+                        
                         await this.api.put(`players/${playerId}/seven-two-wins/increment`);
                         
                         // Reload the session detail page
@@ -366,6 +513,9 @@ export default class SessionDetailPage {
                     } catch (error) {
                         console.error('Error incrementing 7-2 wins:', error);
                         alert(`Error: ${error.message}`);
+                        
+                        // Re-enable button on error
+                        button.disabled = false;
                     }
                 });
             });
@@ -373,7 +523,11 @@ export default class SessionDetailPage {
             document.querySelectorAll('.seven-two-decrement-btn').forEach(button => {
                 button.addEventListener('click', async (e) => {
                     const playerId = e.target.dataset.playerId;
-                      try {
+                    
+                    try {
+                        // Disable button to prevent double-clicks
+                        button.disabled = true;
+                        
                         await this.api.put(`players/${playerId}/seven-two-wins/decrement`);
                         
                         // Reload the session detail page
@@ -381,6 +535,9 @@ export default class SessionDetailPage {
                     } catch (error) {
                         console.error('Error decrementing 7-2 wins:', error);
                         alert(`Error: ${error.message}`);
+                        
+                        // Re-enable button on error
+                        button.disabled = false;
                     }
                 });
             });
@@ -391,6 +548,10 @@ export default class SessionDetailPage {
                 reactivateSessionBtn.addEventListener('click', async () => {
                     if (confirm("Are you sure you want to reactivate this session?")) {
                         try {
+                            // Show loading state
+                            reactivateSessionBtn.disabled = true;
+                            reactivateSessionBtn.textContent = 'Reactivating...';
+                            
                             await this.api.put(`sessions/${sessionId}/reactivate`);
                             
                             alert("Session reactivated successfully!");
@@ -398,6 +559,10 @@ export default class SessionDetailPage {
                         } catch (error) {
                             console.error('Error reactivating session:', error);
                             alert(`Error: ${error.message}`);
+                            
+                            // Restore button state
+                            reactivateSessionBtn.disabled = false;
+                            reactivateSessionBtn.textContent = 'Reactivate Session';
                         }
                     }
                 });

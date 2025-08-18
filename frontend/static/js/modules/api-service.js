@@ -44,11 +44,44 @@ export default class ApiService {
     }
     
     // DELETE requests
-    async delete(endpoint) {
-        const response = await fetch(`${this.baseUrl}/${endpoint}`, {
-            method: 'DELETE'
-        });
-        return this.handleResponse(response);
+    static async delete(endpoint) {
+        try {
+            const url = `/api/${endpoint}`;
+            console.log(`Attempting to delete: ${url}`);
+
+            // Try DELETE
+            let response = await fetch(url, { method: 'DELETE' });
+            console.log(`DELETE response status for ${endpoint}:`, response.status);
+            if (response.ok) return response.json().catch(() => ({}));
+            let errorText = await response.text();
+            console.error(`DELETE failed. Response: ${errorText}`);
+
+            // Try POST to /delete
+            if (response.status === 405) {
+                const postUrl = url.endsWith('/delete') ? url : `${url}/delete`;
+                console.log(`Trying POST for deletion: ${postUrl}`);
+                response = await fetch(postUrl, { method: 'POST' });
+                console.log(`POST delete response status for ${endpoint}:`, response.status);
+                if (response.ok) return response.json().catch(() => ({}));
+                errorText = await response.text();
+                console.error(`POST failed. Response: ${errorText}`);
+            }
+
+            // Try PATCH as a last resort
+            if (response.status === 405) {
+                console.log(`Trying PATCH for deletion: ${url}`);
+                response = await fetch(url, { method: 'PATCH' });
+                console.log(`PATCH delete response status for ${endpoint}:`, response.status);
+                if (response.ok) return response.json().catch(() => ({}));
+                errorText = await response.text();
+                console.error(`PATCH failed. Response: ${errorText}`);
+            }
+
+            throw new Error(`Server returned ${response.status}: ${errorText}`);
+        } catch (error) {
+            console.error(`Delete operation failed for ${endpoint}:`, error);
+            throw error;
+        }
     }
     
     // --- Dashboard API ---
@@ -102,13 +135,21 @@ export default class ApiService {
     }
       
     async deleteSession(id) {
-        return this.delete(`sessions/${id}/delete`);
+        // Always use the correct endpoint and method for session deletion
+        const url = `${this.baseUrl}/sessions/${id}/delete`;
+        console.log(`Deleting session via: ${url}`);
+        const response = await fetch(url, { method: 'DELETE' });
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`Server returned ${response.status}: ${errorText}`);
+        }
+        return response.json().catch(() => ({}));
     }
       
     async addPlayerToSession(sessionId, data) {
         return this.post(`sessions/${sessionId}/entries`, data);
     }
-      async updatePlayerInSession(sessionId, playerId, data) {
+    async updatePlayerInSession(sessionId, playerId, data) {
         return this.put(`sessions/${sessionId}/entries/${playerId}`, data);
     }
 }
