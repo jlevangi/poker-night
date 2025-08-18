@@ -92,7 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 modalSessionDateInput.value = today;
             }
             
-            if (modalSessionBuyinInput) {
+            if (modalSessionBuyinInput && !modalSessionBuyinInput.value) {
                 modalSessionBuyinInput.value = "20";
             }
             
