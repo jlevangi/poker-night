@@ -8,18 +8,21 @@ import logging
 from typing import Dict, Any
 from flask import Blueprint, jsonify
 
+logger = logging.getLogger(__name__)
+
 # Import chip calculator from scripts directory
 try:
-    from chip_calculator import calculate_chip_distribution
+    from scripts.chip_calculator import calculate_chip_distribution
 except ImportError:
-    logger = logging.getLogger(__name__)
-    logger.warning("Could not import chip_calculator. Chip distribution functionality may not work.")
-    
-    def calculate_chip_distribution(buy_in: float) -> Dict[str, int]:
-        """Fallback function if chip_calculator is not available."""
-        return {}
-
-logger = logging.getLogger(__name__)
+    try:
+        # Fallback: try importing from current path (if scripts dir was added to sys.path)
+        from chip_calculator import calculate_chip_distribution
+    except ImportError:
+        logger.warning("Could not import chip_calculator. Chip distribution functionality may not work.")
+        
+        def calculate_chip_distribution(buy_in: float) -> Dict[str, int]:
+            """Fallback function if chip_calculator is not available."""
+            return {}
 chip_calculator_bp = Blueprint('chip_calculator', __name__)
 
 

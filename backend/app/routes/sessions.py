@@ -9,20 +9,23 @@ from typing import Dict, Any
 from datetime import datetime
 from flask import Blueprint, jsonify, request
 
-from ..services.entry_service import EntryService
+from ..services.database_service import DatabaseService
+
+logger = logging.getLogger(__name__)
 
 # Import chip calculator from scripts directory
 try:
-    from chip_calculator import calculate_chip_distribution
+    from scripts.chip_calculator import calculate_chip_distribution
 except ImportError:
-    logger = logging.getLogger(__name__)
-    logger.warning("Could not import chip_calculator. Chip distribution functionality may not work.")
-    
-    def calculate_chip_distribution(buy_in: float) -> Dict[str, int]:
-        """Fallback function if chip_calculator is not available."""
-        return {}
-
-logger = logging.getLogger(__name__)
+    try:
+        # Fallback: try importing from current path (if scripts dir was added to sys.path)
+        from chip_calculator import calculate_chip_distribution
+    except ImportError:
+        logger.warning("Could not import chip_calculator. Chip distribution functionality may not work.")
+        
+        def calculate_chip_distribution(buy_in: float) -> Dict[str, int]:
+            """Fallback function if chip_calculator is not available."""
+            return {}
 sessions_bp = Blueprint('sessions', __name__)
 
 
@@ -34,8 +37,8 @@ def get_sessions_api() -> Dict[str, Any]:
     Returns:
         JSON response with list of all sessions
     """
-    entry_service = EntryService()
-    sessions = entry_service.get_all_sessions()
+    db_service = DatabaseService()
+    sessions = db_service.get_all_sessions()
     return jsonify([session.to_dict() for session in sessions])
 
 
@@ -47,8 +50,8 @@ def get_active_sessions_api() -> Dict[str, Any]:
     Returns:
         JSON response with list of active sessions
     """
-    entry_service = EntryService()
-    sessions = entry_service.get_active_sessions()
+    db_service = DatabaseService()
+    sessions = db_service.get_active_sessions()
     return jsonify([session.to_dict() for session in sessions])
 
 
@@ -87,8 +90,8 @@ def create_session_api() -> Dict[str, Any]:
     chip_distribution = calculate_chip_distribution(buy_in_float)
     
     # Create the session
-    entry_service = EntryService()
-    session = entry_service.create_session(date_str, buy_in_float)
+    db_service = DatabaseService()
+    session = db_service.create_session(date_str, buy_in_float)
     if session:
         # Add chip distribution to the session data
         if chip_distribution:
@@ -97,7 +100,7 @@ def create_session_api() -> Dict[str, Any]:
             session.total_chips = sum(chip_distribution.values())
             
             # Update the session in the data store to persist the chip distribution
-            entry_service.update_session(session.session_id, session)
+            db_service.update_session(session.session_id, session)
             
             logger.info(f"Session created with ID: {session.session_id}")
         
@@ -116,12 +119,12 @@ def get_session_details_api(session_id: str) -> Dict[str, Any]:
     Returns:
         JSON response with session details and entries
     """
-    entry_service = EntryService()
-    session = entry_service.get_session_by_id(session_id)
+    db_service = DatabaseService()
+    session = db_service.get_session_by_id(session_id)
     if not session:
         return jsonify({"error": "Session not found"}), 404
     
-    entries = entry_service.get_entries_for_session(session_id)
+    entries = db_service.get_entries_for_session(session_id)
     
     # Check if chip distribution is already in the session data
     # If not, calculate it based on the session's buy-in value
@@ -132,7 +135,7 @@ def get_session_details_api(session_id: str) -> Dict[str, Any]:
             session.total_chips = sum(chip_distribution.values())
             
             # Save the updated session with chip distribution
-            entry_service.update_session(session.session_id, session)
+            db_service.update_session(session.session_id, session)
     
     # Prepare response
     response_data = {
@@ -154,8 +157,8 @@ def end_session_api(session_id: str) -> Dict[str, Any]:
     Returns:
         JSON response with success message or error
     """
-    entry_service = EntryService()
-    if entry_service.end_session(session_id):
+    db_service = DatabaseService()
+    if db_service.end_session(session_id):
         return jsonify({"message": "Session ended successfully"})
     return jsonify({"error": "Failed to end session or session not found"}), 404
 
@@ -171,8 +174,8 @@ def reactivate_session_api(session_id: str) -> Dict[str, Any]:
     Returns:
         JSON response with success message or error
     """
-    entry_service = EntryService()
-    if entry_service.reactivate_session(session_id):
+    db_service = DatabaseService()
+    if db_service.reactivate_session(session_id):
         return jsonify({"message": "Session reactivated successfully"})
     return jsonify({"error": "Failed to reactivate session or session not found"}), 404
 
@@ -188,10 +191,10 @@ def delete_session_api(session_id: str) -> Dict[str, Any]:
     Returns:
         JSON response with success message or error
     """
-    entry_service = EntryService()
+    db_service = DatabaseService()
     
     # First check if the session exists
-    session = entry_service.get_session_by_id(session_id)
+    session = db_service.get_session_by_id(session_id)
     if not session:
         return jsonify({"error": "Session not found"}), 404
     
@@ -236,17 +239,17 @@ def add_player_to_session_api(session_id: str) -> Dict[str, Any]:
     except (ValueError, TypeError):
         return jsonify({"error": "Invalid number of buy-ins"}), 400
     
-    entry_service = EntryService()
-    entry = entry_service.record_player_entry(session_id, player_id, num_buy_ins)
+    db_service = DatabaseService()
+    entry = db_service.record_player_entry(session_id, player_id, num_buy_ins)
     if entry:
-        all_entries = entry_service.get_entries_for_session(session_id)
+        all_entries = db_service.get_entries_for_session(session_id)
         return jsonify([entry.to_dict() for entry in all_entries]), 201
     
     # Check for specific errors
-    session_check = entry_service.get_session_by_id(session_id)
+    session_check = db_service.get_session_by_id(session_id)
     if not session_check:
         return jsonify({"error": f"Session {session_id} not found."}), 404
-    player_check = entry_service.get_player_by_id(player_id)
+    player_check = db_service.get_player_by_id(player_id)
     if not player_check:
         return jsonify({"error": f"Player {player_id} not found."}), 404
     return jsonify({"error": "Failed to add player entry for an unknown reason"}), 500
@@ -264,20 +267,20 @@ def remove_buyin_api(session_id: str, player_id: str) -> Dict[str, Any]:
     Returns:
         JSON response with updated session entries or error message
     """
-    entry_service = EntryService()
-    result = entry_service.remove_buy_in(session_id, player_id)
+    db_service = DatabaseService()
+    result = db_service.remove_buy_in(session_id, player_id)
     if result is not None:
         # Return all entries to refresh the UI
-        all_entries = entry_service.get_entries_for_session(session_id)
+        all_entries = db_service.get_entries_for_session(session_id)
         return jsonify([entry.to_dict() for entry in all_entries])
     
     # Check for specific errors
-    session_check = entry_service.get_session_by_id(session_id)
+    session_check = db_service.get_session_by_id(session_id)
     if not session_check:
         return jsonify({"error": f"Session {session_id} not found."}), 404
     if not session_check.is_active:
         return jsonify({"error": f"Session {session_id} is not active."}), 400
-    player_check = entry_service.get_player_by_id(player_id)
+    player_check = db_service.get_player_by_id(player_id)
     if not player_check:
         return jsonify({"error": f"Player {player_id} not found."}), 404
     
@@ -317,13 +320,13 @@ def record_payout_api(session_id: str, player_id: str) -> Dict[str, Any]:
     except (ValueError, TypeError):
         return jsonify({"error": "Invalid payout amount format"}), 400
     
-    entry_service = EntryService()
-    if entry_service.record_payout(session_id, player_id, payout_amount):
-        all_entries = entry_service.get_entries_for_session(session_id)
+    db_service = DatabaseService()
+    if db_service.record_payout(session_id, player_id, payout_amount):
+        all_entries = db_service.get_entries_for_session(session_id)
         return jsonify([entry.to_dict() for entry in all_entries])
     
     # Check for specific errors
-    entries = entry_service.get_entries_for_session(session_id)
+    entries = db_service.get_entries_for_session(session_id)
     entry_check = any(e.player_id == player_id for e in entries)
     if not entry_check:
         return jsonify({"error": f"Player {player_id} not found in session {session_id}"}), 404
@@ -345,21 +348,21 @@ def increment_session_seven_two_wins_api(session_id: str, player_id: str) -> Dic
     if not session_id or not player_id:
         return jsonify({"error": "Session ID and Player ID are required"}), 400
     
-    entry_service = EntryService()
+    db_service = DatabaseService()
     
     # Check if session and player exist
-    session = entry_service.get_session_by_id(session_id)
+    session = db_service.get_session_by_id(session_id)
     if not session:
         return jsonify({"error": "Session not found"}), 404
     
-    player = entry_service.get_player_by_id(player_id)
+    player = db_service.get_player_by_id(player_id)
     if not player:
         return jsonify({"error": "Player not found"}), 404
     
     try:
-        if entry_service.increment_session_seven_two_wins(session_id, player_id):
+        if db_service.increment_session_seven_two_wins(session_id, player_id):
             # Return updated session entries
-            updated_entries = entry_service.get_entries_for_session(session_id)
+            updated_entries = db_service.get_entries_for_session(session_id)
             return jsonify([entry.to_dict() for entry in updated_entries])
         return jsonify({"error": "Failed to increment session 7-2 wins count"}), 500
     except Exception as e:
@@ -382,21 +385,21 @@ def decrement_session_seven_two_wins_api(session_id: str, player_id: str) -> Dic
     if not session_id or not player_id:
         return jsonify({"error": "Session ID and Player ID are required"}), 400
     
-    entry_service = EntryService()
+    db_service = DatabaseService()
     
     # Check if session and player exist
-    session = entry_service.get_session_by_id(session_id)
+    session = db_service.get_session_by_id(session_id)
     if not session:
         return jsonify({"error": "Session not found"}), 404
     
-    player = entry_service.get_player_by_id(player_id)
+    player = db_service.get_player_by_id(player_id)
     if not player:
         return jsonify({"error": "Player not found"}), 404
     
     try:
-        if entry_service.decrement_session_seven_two_wins(session_id, player_id):
+        if db_service.decrement_session_seven_two_wins(session_id, player_id):
             # Return updated session entries
-            updated_entries = entry_service.get_entries_for_session(session_id)
+            updated_entries = db_service.get_entries_for_session(session_id)
             return jsonify([entry.to_dict() for entry in updated_entries])
         return jsonify({"error": "Failed to decrement session 7-2 wins count"}), 500
     except Exception as e:
