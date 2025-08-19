@@ -104,13 +104,83 @@ document.addEventListener('DOMContentLoaded', () => {
     const serviceWorkerManager = new ServiceWorkerManager(APP_VERSION);
     serviceWorkerManager.initialize();
     
+    // Setup navigation highlighting
+    function updateActiveNavigation() {
+        const currentHash = window.location.hash || '#dashboard';
+        const currentPage = currentHash.split('/')[0].replace('#', '') || 'dashboard';
+        
+        // Update desktop navigation
+        document.querySelectorAll('.desktop-nav a').forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href') === `#${currentPage}`) {
+                link.classList.add('active');
+            }
+        });
+        
+        // Update mobile navigation
+        document.querySelectorAll('.bottom-nav .nav-btn').forEach(btn => {
+            btn.classList.remove('active');
+            const hash = btn.getAttribute('data-hash');
+            if (hash === `#${currentPage}`) {
+                btn.classList.add('active');
+            }
+        });
+    }
+    
+    // Setup navigation event listeners
+    function setupNavigation() {
+        // Desktop navigation
+        document.querySelectorAll('.desktop-nav a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const href = link.getAttribute('href');
+                window.location.hash = href;
+                updateActiveNavigation();
+            });
+        });
+        
+        // Mobile navigation
+        document.querySelectorAll('.bottom-nav .nav-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const hash = btn.getAttribute('data-hash');
+                window.location.hash = hash;
+                updateActiveNavigation();
+            });
+        });
+        
+        // Update navigation on hash change
+        window.addEventListener('hashchange', updateActiveNavigation);
+        
+        // Initial navigation state
+        updateActiveNavigation();
+    }
+    
     // Setup router with all routes
     router
-        .register('dashboard', () => dashboardPage.load())
-        .register('players', () => playersPage.load())
-        .register('sessions', () => sessionsPage.load())
-        .register('player/:id', (id) => playerDetailPage.load(id))
-        .register('session/:id', (id) => sessionDetailPage.load(id));
+        .register('dashboard', () => {
+            dashboardPage.load();
+            updateActiveNavigation();
+        })
+        .register('players', () => {
+            playersPage.load();
+            updateActiveNavigation();
+        })
+        .register('sessions', () => {
+            sessionsPage.load();
+            updateActiveNavigation();
+        })
+        .register('player/:id', (id) => {
+            playerDetailPage.load(id);
+            updateActiveNavigation();
+        })
+        .register('session/:id', (id) => {
+            sessionDetailPage.load(id);
+            updateActiveNavigation();
+        });
+    
+    // Initialize navigation
+    setupNavigation();
     
     // Start the router
     router.route();

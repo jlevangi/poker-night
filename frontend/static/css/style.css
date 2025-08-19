@@ -229,11 +229,9 @@ button:hover,
 }
 
 .gamble-king-stats {
-    background-color: #f9f9f9;
     border-radius: 6px;
     padding: 0.8rem 1rem;
     margin-top: 1rem;
-    border-left: 4px solid #3367D6;
 }
 
 .gamble-king-stats p {
@@ -1067,24 +1065,21 @@ footer {
 .bottom-nav {
   display: none;
   position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 60px; /* Reduced height */
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 10px;
+  height: 60px;
   background: linear-gradient(90deg, #3367D6 60%, #2851A7 100%);
   box-shadow: 0 -4px 18px rgba(0, 0, 0, 0.13);
   z-index: 1001;
   flex-direction: row;
-  justify-content: center; /* Center the navigation items */
+  justify-content: center;
   align-items: center;
-  width: 75vw; /* Reduced from 100vw to make it centered */
-  max-width: 600px; /* Maximum width for larger screens */
-  border-radius: 25px 25px 25px 25px;
+  width: 75vw;
+  max-width: 600px;
+  border-radius: 25px;
   padding: 0 8px;
   transition: background 0.3s;
-  margin: 0 auto; /* Center the navbar */
-  left: 50%; /* Position from center */
-  transform: translateX(-50%); /* Adjust to truly center */
 }
 
 .bottom-nav .nav-btn {
@@ -1124,11 +1119,11 @@ footer {
 @media (max-width: 700px) {
   .bottom-nav {
     display: flex;
-    border-radius: 25px 25px 25px 25px; /* Rounded corners for mobile */
+    border-radius: 25px;
     padding-bottom: env(safe-area-inset-bottom, 0);
-    width: 75%; /* Maintain width consistency */
-    max-width: 700px; /* Maximum width for better aesthetics */
-    margin-bottom: 10px;
+    width: 75%;
+    max-width: 700px;
+    bottom: 10px;
   }
 }
 
@@ -1143,6 +1138,11 @@ footer {
   }
   /* Add padding to body/app-content to avoid overlap with bottom nav */
   #app-content {
-    padding-bottom: 20px;
+    padding-bottom: 90px;
+    margin-bottom: 0;
+  }
+  
+  body {
+    padding-bottom: env(safe-area-inset-bottom, 0);
   }
 }
