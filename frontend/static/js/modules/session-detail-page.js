@@ -39,7 +39,7 @@ export default class SessionDetailPage {
                     name: entry.player_name,
                     buyIn: entry.total_buy_in_amount,
                     cashOut: entry.payout,
-                    sevenTwoWins: entry.seven_two_wins || 0
+                    sevenTwoWins: entry.session_seven_two_wins || 0
                 }));
             } else {
                 session.totalValue = 0;
@@ -136,7 +136,8 @@ export default class SessionDetailPage {
         
         // Check if session is active based on multiple possible indicators
         // If is_active is explicitly false OR status is explicitly ENDED, then it's not active
-        const isActive = !(sessionData.is_active === false || sessionData.status === 'ENDED');
+        // Default to inactive if is_active is missing
+        const isActive = sessionData.is_active === true;
         
         console.log("Session active calculation:",
             "is_active =", sessionData.is_active,
@@ -217,7 +218,7 @@ export default class SessionDetailPage {
                         </div>
                         
                         <div class="session-seven-two-controls">
-                            <div class="seven-two-label">7-2 Wins:</div>
+                            <div class="seven-two-label">7-2 Wins (Session):</div>
                             <div class="seven-two-value">${player.sevenTwoWins || 0}</div>
                             
                             ${isActive ? `
@@ -506,12 +507,12 @@ export default class SessionDetailPage {
                         // Disable button to prevent double-clicks
                         button.disabled = true;
                         
-                        await this.api.put(`players/${playerId}/seven-two-wins/increment`);
+                        await this.api.put(`sessions/${sessionId}/players/${playerId}/seven-two-wins/increment`);
                         
                         // Reload the session detail page
                         this.load(sessionId);
                     } catch (error) {
-                        console.error('Error incrementing 7-2 wins:', error);
+                        console.error('Error incrementing session 7-2 wins:', error);
                         alert(`Error: ${error.message}`);
                         
                         // Re-enable button on error
@@ -528,12 +529,12 @@ export default class SessionDetailPage {
                         // Disable button to prevent double-clicks
                         button.disabled = true;
                         
-                        await this.api.put(`players/${playerId}/seven-two-wins/decrement`);
+                        await this.api.put(`sessions/${sessionId}/players/${playerId}/seven-two-wins/decrement`);
                         
                         // Reload the session detail page
                         this.load(sessionId);
                     } catch (error) {
-                        console.error('Error decrementing 7-2 wins:', error);
+                        console.error('Error decrementing session 7-2 wins:', error);
                         alert(`Error: ${error.message}`);
                         
                         // Re-enable button on error

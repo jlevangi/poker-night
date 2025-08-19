@@ -1,5 +1,5 @@
 // Dashboard page module
-export default class DashboardPage {    
+export default class DashboardPage {
     constructor(appContent, apiService) {
         this.appContent = appContent;
         this.api = apiService;
@@ -8,8 +8,18 @@ export default class DashboardPage {
     // Load the dashboard page
     async load() {
         try {
-            // Fetch dashboard data using API service
-            const data = await this.api.get('dashboard');
+            // Fetch data from existing API endpoints
+            const players = await this.api.get('players');
+            const sessions = await this.api.get('sessions');
+            const activeSessions = await this.api.get('sessions/active');
+            
+            // Prepare dashboard data
+            const data = {
+                players: players || [],
+                recentSessions: sessions ? sessions.slice(0, 5) : [],
+                activeSession: activeSessions && activeSessions.length > 0 ? activeSessions[0] : null,
+                gambleKing: players && players.length > 0 ? players[0] : null
+            };
             
             // Render the dashboard
             this.render(data);
@@ -49,15 +59,24 @@ export default class DashboardPage {
     
     // Render Gamble King section
     renderGambleKingSection(gambleKing) {
+        if (!gambleKing || gambleKing.net_profit <= 0) {
+            return `
+                <div class="gamble-king-container">
+                    <h2>Gamble King</h2>
+                    <p>No Gamble King crowned yet! Play some games to claim the throne!</p>
+                </div>
+            `;
+        }
+        
         return `
             <div class="gamble-king-container">
                 <h2>Current Gamble King</h2>
                 <div class="gamble-king-name gamble-king-name-dash">${gambleKing.name}</div>                
                 <div class="gamble-king-stats">
-                    <p>Total Profit: <strong class="${gambleKing.totalProfit >= 0 ? 'profit-positive' : 'profit-negative'}">$${gambleKing.totalProfit !== undefined ? gambleKing.totalProfit.toFixed(2) : '0.00'}</strong></p>
-                    <p>Sessions Played: <strong>${gambleKing.sessionsPlayed || 0}</strong></p>
-                    <p>Win Rate: <strong>${gambleKing.winRate !== undefined ? (gambleKing.winRate * 100).toFixed(0) : '0'}%</strong></p>
-                    ${gambleKing.sevenTwoWins ? `<p>7-2 Wins: <strong>${gambleKing.sevenTwoWins}</strong></p>` : ''}
+                    <p>Total Profit: <strong class="${gambleKing.net_profit >= 0 ? 'profit-positive' : 'profit-negative'}">$${gambleKing.net_profit ? gambleKing.net_profit.toFixed(2) : '0.00'}</strong></p>
+                    <p>Sessions Played: <strong>${gambleKing.games_played || 0}</strong></p>
+                    <p>Win Rate: <strong>${gambleKing.win_percentage ? gambleKing.win_percentage.toFixed(1) : '0'}%</strong></p>
+                    ${gambleKing.seven_two_wins ? `<p>7-2 Wins (Total): <strong>${gambleKing.seven_two_wins}</strong></p>` : ''}
                 </div>
             </div>
         `;
@@ -69,7 +88,7 @@ export default class DashboardPage {
         
         if (activeSession) {
             html += `
-                <a href="#session/${activeSession.id}" class="quick-action-btn active-session-btn">
+                <a href="#session/${activeSession.session_id}" class="quick-action-btn active-session-btn">
                     View Active Session
                 </a>
             `;
@@ -111,20 +130,20 @@ export default class DashboardPage {
         `;
         
         players.forEach((player, index) => {
-            const isGambleKing = index === 0;
+            const isGambleKing = index === 0 && player.net_profit > 0;
             html += `
                 <tr class="${isGambleKing ? 'gamble-king-row' : ''}">
                     <td>${index + 1}</td>
                     <td>
-                        <a href="#player/${player.id}">
+                        <a href="#player/${player.player_id}">
                             ${isGambleKing ? '<span class="crown-icon">👑</span>' : ''}
                             ${player.name}
                         </a>
                     </td>                    
-                    <td class="${player.totalProfit >= 0 ? 'profit-positive' : 'profit-negative'}">
-                        $${player.totalProfit !== undefined ? player.totalProfit.toFixed(2) : '0.00'}
+                    <td class="${player.net_profit >= 0 ? 'profit-positive' : 'profit-negative'}">
+                        $${player.net_profit ? player.net_profit.toFixed(2) : '0.00'}
                     </td>
-                    <td>${player.winRate !== undefined ? (player.winRate * 100).toFixed(0) : '0'}%</td>
+                    <td>${player.win_percentage ? player.win_percentage.toFixed(1) : '0'}%</td>
                 </tr>
             `;
         });
@@ -159,13 +178,13 @@ export default class DashboardPage {
         
         sessions.forEach(session => {
             html += `                <li class="session-item">
-                    <a href="#session/${session.id}" class="session-link">
+                    <a href="#session/${session.session_id}" class="session-link">
                         <span class="session-date">${this.formatDate(session.date)}</span>
-                        <span class="session-buyin">Buy-in: $${session.buyin ? session.buyin.toFixed(2) : '0.00'}</span>
-                        <span class="session-total-value">Total: $${session.totalValue ? session.totalValue.toFixed(2) : '0.00'}</span>
+                        <span class="session-buyin">Buy-in: $${session.default_buy_in_value ? session.default_buy_in_value.toFixed(2) : '0.00'}</span>
+                        <span class="session-total-value">${session.is_active ? 'Active' : 'Ended'}</span>
                     </a>                    
-                    <span class="session-status status-${session.status && typeof session.status === 'string' ? session.status.toLowerCase() : 'unknown'}">
-                        ${session.status || 'Unknown'}
+                    <span class="session-status status-${session.is_active ? 'active' : 'ended'}">
+                        ${session.is_active ? 'Active' : 'Ended'}
                     </span>
                 </li>
             `;

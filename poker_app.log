@@ -1,0 +1,87 @@
+2025-08-18 19:55:54,466 - __main__ - WARNING - Error reading .env file: [Errno 2] No such file or directory: '/mnt/c/Users/pierc/git/poker-night/frontend/.env'
+2025-08-18 19:55:54,471 - __main__ - INFO - Flask app starting with FLASK_DEBUG_MODE=False. Use --debug-paths to see path calculations.
+2025-08-18 19:55:54,476 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.27.50.40:5000
+2025-08-18 19:55:54,477 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-08-18 19:56:05,790 - werkzeug - INFO - 127.0.0.1 - - [18/Aug/2025 19:56:05] "GET /api/players HTTP/1.1" 200 -
+2025-08-18 19:56:11,391 - werkzeug - INFO - 127.0.0.1 - - [18/Aug/2025 19:56:11] "GET / HTTP/1.1" 200 -
+2025-08-18 19:56:23,555 - werkzeug - INFO - 127.0.0.1 - - [18/Aug/2025 19:56:23] "GET /api/sessions HTTP/1.1" 200 -
+2025-08-18 19:56:27,324 - werkzeug - INFO - 127.0.0.1 - - [18/Aug/2025 19:56:27] "GET /api/sessions HTTP/1.1" 200 -
+2025-08-18 19:56:33,124 - data_manager - INFO - Player 'Test Player' added with ID pid_024
+2025-08-18 19:56:33,133 - werkzeug - INFO - 127.0.0.1 - - [18/Aug/2025 19:56:33] "[35m[1mPOST /api/players HTTP/1.1[0m" 201 -
+2025-08-18 19:56:35,639 - werkzeug - INFO - 127.0.0.1 - - [18/Aug/2025 19:56:35] "[31m[1mPOST /api/players HTTP/1.1[0m" 400 -
+2025-08-18 19:56:39,999 - werkzeug - INFO - 127.0.0.1 - - [18/Aug/2025 19:56:39] "[31m[1mPOST /api/players HTTP/1.1[0m" 400 -
+2025-08-18 19:56:44,476 - werkzeug - INFO - 127.0.0.1 - - [18/Aug/2025 19:56:44] "GET /static/js/app.js HTTP/1.1" 200 -
+2025-08-18 19:56:47,873 - werkzeug - INFO - 127.0.0.1 - - [18/Aug/2025 19:56:47] "GET /static/js/modules/api-service.js HTTP/1.1" 200 -
+2025-08-18 19:56:58,651 - data_manager - INFO - Session created for 2025-08-18 with ID sid_20250818_8, Buy-in: $25.00
+2025-08-18 19:56:58,662 - data_manager - INFO - Session sid_20250818_8 has been updated with new data.
+2025-08-18 19:56:58,662 - __main__ - INFO - Session created with ID: sid_20250818_8
+2025-08-18 19:56:58,663 - werkzeug - INFO - 127.0.0.1 - - [18/Aug/2025 19:56:58] "[35m[1mPOST /api/sessions HTTP/1.1[0m" 201 -
+2025-08-18 19:57:03,851 - werkzeug - INFO - 127.0.0.1 - - [18/Aug/2025 19:57:03] "[31m[1mPOST /api/sessions HTTP/1.1[0m" 400 -
+2025-08-18 20:00:15,257 - __main__ - INFO - Flask app starting with FLASK_DEBUG_MODE=False. Use --debug-paths to see path calculations.
+2025-08-18 20:00:15,261 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.27.50.40:5000
+2025-08-18 20:00:15,261 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-08-18 20:00:22,951 - werkzeug - INFO - 127.0.0.1 - - [18/Aug/2025 20:00:22] "GET /static/js/modules/dashboard-page.js HTTP/1.1" 200 -
+2025-08-18 20:00:27,420 - werkzeug - INFO - 127.0.0.1 - - [18/Aug/2025 20:00:27] "GET /static/js/modules/players-page.js HTTP/1.1" 200 -
+2025-08-18 20:01:52,510 - __main__ - INFO - Flask app starting with FLASK_DEBUG_MODE=False. Use --debug-paths to see path calculations.
+2025-08-18 20:01:52,516 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.27.50.40:5000
+2025-08-18 20:01:52,516 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-08-18 20:01:57,300 - werkzeug - INFO - 127.0.0.1 - - [18/Aug/2025 20:01:57] "GET /static/js/modules/dashboard-page.js HTTP/1.1" 200 -
+2025-08-18 20:02:02,263 - werkzeug - INFO - 127.0.0.1 - - [18/Aug/2025 20:02:02] "GET /static/js/modules/players-page.js HTTP/1.1" 200 -
+2025-08-18 20:02:07,876 - werkzeug - INFO - 127.0.0.1 - - [18/Aug/2025 20:02:07] "GET /static/js/modules/players-page.js HTTP/1.1" 200 -
+2025-08-18 20:02:11,316 - werkzeug - INFO - 127.0.0.1 - - [18/Aug/2025 20:02:11] "GET /api/players HTTP/1.1" 200 -
+2025-08-18 20:02:24,986 - werkzeug - INFO - 127.0.0.1 - - [18/Aug/2025 20:02:24] "GET /static/js/app.js HTTP/1.1" 200 -
+2025-08-18 20:02:30,774 - werkzeug - INFO - 127.0.0.1 - - [18/Aug/2025 20:02:30] "GET /static/js/modules/players-page.js HTTP/1.1" 200 -
+2025-08-18 20:03:00,369 - werkzeug - INFO - 127.0.0.1 - - [18/Aug/2025 20:03:00] "GET /static/js/modules/players-page.js HTTP/1.1" 200 -
+2025-08-18 20:03:05,868 - werkzeug - INFO - 127.0.0.1 - - [18/Aug/2025 20:03:05] "GET /static/js/modules/dashboard-page.js HTTP/1.1" 200 -
+2025-08-18 20:18:04,563 - __main__ - INFO - Flask app starting with FLASK_DEBUG_MODE=False. Use --debug-paths to see path calculations.
+2025-08-18 20:18:04,570 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.27.50.40:5000
+2025-08-18 20:18:04,570 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-08-18 20:18:21,295 - data_manager - INFO - Player Griff now has 1 7-2 wins in session sid_20250816_7.
+2025-08-18 20:18:21,312 - werkzeug - INFO - 127.0.0.1 - - [18/Aug/2025 20:18:21] "PUT /api/sessions/sid_20250816_7/players/pid_013/seven-two-wins/increment HTTP/1.1" 200 -
+2025-08-18 20:18:28,226 - data_manager - INFO - Player Griff now has 0 7-2 wins in session sid_20250816_7.
+2025-08-18 20:18:28,241 - werkzeug - INFO - 127.0.0.1 - - [18/Aug/2025 20:18:28] "PUT /api/sessions/sid_20250816_7/players/pid_013/seven-two-wins/decrement HTTP/1.1" 200 -
+2025-08-18 20:18:33,298 - werkzeug - INFO - 127.0.0.1 - - [18/Aug/2025 20:18:33] "[33mPUT /api/players/pid_013/seven-two-wins/increment HTTP/1.1[0m" 404 -
+2025-08-18 20:18:45,185 - data_manager - INFO - Player Griff now has 1 wins with 7-2 hands.
+2025-08-18 20:18:45,199 - werkzeug - INFO - 127.0.0.1 - - [18/Aug/2025 20:18:45] "PUT /api/players/pid_013/seven-two-wins HTTP/1.1" 200 -
+2025-08-18 20:22:42,571 - __main__ - INFO - Flask app starting with FLASK_DEBUG_MODE=False. Use --debug-paths to see path calculations.
+2025-08-18 20:23:54,934 - __main__ - INFO - Flask app starting with FLASK_DEBUG_MODE=False. Use --debug-paths to see path calculations.
+2025-08-18 20:23:54,947 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5001
+ * Running on http://172.27.50.40:5001
+2025-08-18 20:23:54,947 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-08-18 20:24:05,764 - werkzeug - INFO - 127.0.0.1 - - [18/Aug/2025 20:24:05] "GET /api/sessions/sid_20250816_7 HTTP/1.1" 200 -
+2025-08-18 20:24:49,081 - werkzeug - INFO - 127.0.0.1 - - [18/Aug/2025 20:24:49] "GET /api/players/pid_013/stats HTTP/1.1" 200 -
+2025-08-18 20:25:11,086 - werkzeug - INFO - 127.0.0.1 - - [18/Aug/2025 20:25:11] "GET /api/sessions/sid_20250614_2 HTTP/1.1" 200 -
+2025-08-18 20:25:38,006 - werkzeug - INFO - 127.0.0.1 - - [18/Aug/2025 20:25:38] "GET /api/players/pid_013/history HTTP/1.1" 200 -
+2025-08-18 20:25:40,837 - werkzeug - INFO - 127.0.0.1 - - [18/Aug/2025 20:25:40] "GET /api/sessions HTTP/1.1" 200 -
+2025-08-18 20:26:07,208 - __main__ - INFO - Flask app starting with FLASK_DEBUG_MODE=False. Use --debug-paths to see path calculations.
+2025-08-18 20:26:07,212 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.27.50.40:5000
+2025-08-18 20:26:07,212 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-08-18 20:26:13,596 - werkzeug - INFO - 127.0.0.1 - - [18/Aug/2025 20:26:13] "GET /api/sessions/sid_20250614_2 HTTP/1.1" 200 -
+2025-08-18 20:26:18,523 - werkzeug - INFO - 127.0.0.1 - - [18/Aug/2025 20:26:18] "GET /api/players/pid_013/stats HTTP/1.1" 200 -
+2025-08-18 20:26:24,154 - data_manager - INFO - Player Griff now has 1 7-2 wins in session sid_20250816_7.
+2025-08-18 20:26:24,170 - werkzeug - INFO - 127.0.0.1 - - [18/Aug/2025 20:26:24] "PUT /api/sessions/sid_20250816_7/players/pid_013/seven-two-wins/increment HTTP/1.1" 200 -
+2025-08-18 20:29:17,355 - __main__ - INFO - Flask app starting with FLASK_DEBUG_MODE=False. Use --debug-paths to see path calculations.
+2025-08-18 20:29:17,360 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.27.50.40:5000
+2025-08-18 20:29:17,360 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-08-18 20:29:26,159 - werkzeug - INFO - 127.0.0.1 - - [18/Aug/2025 20:29:26] "GET /api/sessions HTTP/1.1" 200 -
+2025-08-18 20:30:16,700 - werkzeug - INFO - 127.0.0.1 - - [18/Aug/2025 20:30:16] "GET /api/sessions/sid_20250816_7 HTTP/1.1" 200 -

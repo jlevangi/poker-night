@@ -11,6 +11,12 @@ export default class PlayerDetailPage {    constructor(appContent, apiService) {
             const history = await this.api.get(`players/${playerId}/history`);
             player.sessions = this.processPlayerHistory(history);
             
+            // Map API response properties to match template expectations
+            player.id = player.player_id;
+            player.totalProfit = player.net_profit;
+            player.sessionsPlayed = player.games_played;
+            player.winRate = player.win_percentage / 100; // Convert percentage to decimal
+            
             // Render player details
             this.render(player);
         } catch (error) {
@@ -45,8 +51,8 @@ export default class PlayerDetailPage {    constructor(appContent, apiService) {
             </div>
             
             <div class="seven-two-stats-detail">
-                <span class="seven-two-label">7-2 Wins:</span>
-                <span class="seven-two-value">${player.sevenTwoWins || 0}</span>
+                <span class="seven-two-label">7-2 Wins (Total):</span>
+                <span class="seven-two-value">${player.seven_two_wins || 0}</span>
                 <div class="seven-two-buttons">
                     <button class="seven-two-increment-btn" data-player-id="${player.id}">+</button>
                     <button class="seven-two-decrement-btn" data-player-id="${player.id}">-</button>

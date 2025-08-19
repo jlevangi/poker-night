@@ -12,7 +12,7 @@ export default class ServiceWorkerManager {
         }
         
         // Add a cache-busting query parameter based on app version
-        const swUrl = /sw.js?v=;
+        const swUrl = `/sw.js?v=${this.version}`;
         
         try {
             // Register the service worker

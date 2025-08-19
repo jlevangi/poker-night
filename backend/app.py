@@ -1,9 +1,21 @@
 import os
-import argparse # Import argparse
+import argparse
 import sys
+import logging
 from flask import Flask, jsonify, request, send_from_directory, render_template, url_for
 # Assuming data_manager.py is in the same directory as app.py (the 'backend' directory)
 import data_manager as dm
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.FileHandler('poker_app.log'),
+        logging.StreamHandler()
+    ]
+)
+logger = logging.getLogger(__name__)
 
 # Add scripts directory to Python path for importing chip_calculator
 scripts_dir = os.path.join(os.path.dirname(__file__), 'scripts')
@@ -53,22 +65,22 @@ def get_app_version():
                         if key.strip() == 'APP_VERSION':
                             return value.strip()
     except Exception as e:
-        print(f"Error reading .env file: {e}")
+        logger.warning(f"Error reading .env file: {e}")
     return '1.0.5'  # Default fallback version
 
 APP_VERSION = get_app_version()
 
 # --- Conditional Debug Path Printing ---
 if args.debug_paths:
-    print("--- PATH DEBUGGING ENABLED ---")
-    print(f"DEBUG: SCRIPT_DIR (app.py location): {SCRIPT_DIR}")
-    print(f"DEBUG: Calculated PROJECT_ROOT_GUESS: {PROJECT_ROOT_GUESS}")
-    print(f"DEBUG: Calculated FRONTEND_DIR: {FRONTEND_DIR_CALC}")
-    print(f"DEBUG: Calculated STATIC_DIR (Flask 'static_folder'): {STATIC_DIR_CALC}")
-    print(f"DEBUG: Calculated TEMPLATE_DIR (Flask 'template_folder'): {TEMPLATE_DIR_CALC}")
-    print(f"DEBUG: Full expected image path for icon-192x192.png: {IMAGE_PATH_EXPECTED}")
-    print(f"DEBUG: Does the expected image file exist at that path? {os.path.exists(IMAGE_PATH_EXPECTED)}")
-    print("--- END PATH DEBUGGING ---")
+    logger.info("--- PATH DEBUGGING ENABLED ---")
+    logger.info(f"DEBUG: SCRIPT_DIR (app.py location): {SCRIPT_DIR}")
+    logger.info(f"DEBUG: Calculated PROJECT_ROOT_GUESS: {PROJECT_ROOT_GUESS}")
+    logger.info(f"DEBUG: Calculated FRONTEND_DIR: {FRONTEND_DIR_CALC}")
+    logger.info(f"DEBUG: Calculated STATIC_DIR (Flask 'static_folder'): {STATIC_DIR_CALC}")
+    logger.info(f"DEBUG: Calculated TEMPLATE_DIR (Flask 'template_folder'): {TEMPLATE_DIR_CALC}")
+    logger.info(f"DEBUG: Full expected image path for icon-192x192.png: {IMAGE_PATH_EXPECTED}")
+    logger.info(f"DEBUG: Does the expected image file exist at that path? {os.path.exists(IMAGE_PATH_EXPECTED)}")
+    logger.info("--- END PATH DEBUGGING ---")
 # --- End Conditional Debug Path Printing ---
 
 # Configure Flask using these calculated paths
@@ -97,57 +109,139 @@ def get_all_players_details():
 @app.route('/api/players', methods=['POST'])
 def add_player_api():
     data = request.get_json()
+    if not data:
+        return jsonify({"error": "Request body is required"}), 400
+    
     name = data.get('name')
-    if not name:
-        return jsonify({"error": "Name is required"}), 400
+    if not name or not isinstance(name, str):
+        return jsonify({"error": "Name is required and must be a string"}), 400
+    
+    # Validate name length and characters
+    name = name.strip()
+    if len(name) < 1 or len(name) > 50:
+        return jsonify({"error": "Name must be between 1 and 50 characters"}), 400
+    
     player = dm.add_player(name)
     if player.get('player_id'):
         return jsonify(dm.get_player_overall_stats(player['player_id'])), 201
     else:
-        # This case might indicate an issue in dm.add_player if it's not returning a proper structure
-        print(f"Warning: add_player returned an unexpected value: {player}")
         return jsonify({"error": "Could not add or retrieve player properly"}), 500
 
 
 @app.route('/api/players/<string:player_id>/stats', methods=['GET'])
 def get_player_stats_api(player_id):
-    stats = dm.get_player_overall_stats(player_id)
-    player_check = dm.get_player_by_id(player_id) # Check if player exists first
-    if not player_check:
-        return jsonify({"error": "Player not found"}), 404
-    return jsonify(stats)
+    try:
+        # Validate player ID format
+        if not player_id or not isinstance(player_id, str):
+            return jsonify({"error": "Invalid player ID"}), 400
+            
+        player_check = dm.get_player_by_id(player_id)
+        if not player_check:
+            return jsonify({"error": "Player not found"}), 404
+            
+        stats = dm.get_player_overall_stats(player_id)
+        return jsonify(stats)
+    except Exception as e:
+        return jsonify({"error": "Internal server error"}), 500
 
 @app.route('/api/players/<string:player_id>/history', methods=['GET'])
 def get_player_history_api(player_id):
-    player_check = dm.get_player_by_id(player_id) # Check if player exists first
-    if not player_check:
-        return jsonify({"error": "Player not found"}), 404
-    history = dm.get_player_session_history(player_id)
-    return jsonify(history)
+    try:
+        if not player_id or not isinstance(player_id, str):
+            return jsonify({"error": "Invalid player ID"}), 400
+            
+        player_check = dm.get_player_by_id(player_id)
+        if not player_check:
+            return jsonify({"error": "Player not found"}), 404
+            
+        history = dm.get_player_session_history(player_id)
+        return jsonify(history)
+    except Exception as e:
+        return jsonify({"error": "Internal server error"}), 500
 
 @app.route('/api/players/<string:player_id>/seven-two-wins', methods=['PUT'])
 def increment_seven_two_wins_api(player_id):
-    player_check = dm.get_player_by_id(player_id)
-    if not player_check:
-        return jsonify({"error": "Player not found"}), 404
-    
-    if dm.increment_seven_two_wins(player_id):
-        stats = dm.get_player_overall_stats(player_id)  # Get updated stats
-        return jsonify(stats)
-    
-    return jsonify({"error": "Failed to update 7-2 wins count"}), 500
+    try:
+        if not player_id or not isinstance(player_id, str):
+            return jsonify({"error": "Invalid player ID"}), 400
+            
+        player_check = dm.get_player_by_id(player_id)
+        if not player_check:
+            return jsonify({"error": "Player not found"}), 404
+        
+        if dm.increment_seven_two_wins(player_id):
+            stats = dm.get_player_overall_stats(player_id)
+            return jsonify(stats)
+        
+        return jsonify({"error": "Failed to update 7-2 wins count"}), 500
+    except Exception as e:
+        return jsonify({"error": "Internal server error"}), 500
 
 @app.route('/api/players/<string:player_id>/seven-two-wins/decrement', methods=['PUT'])
 def decrement_seven_two_wins_api(player_id):
-    player_check = dm.get_player_by_id(player_id)
-    if not player_check:
+    try:
+        if not player_id or not isinstance(player_id, str):
+            return jsonify({"error": "Invalid player ID"}), 400
+            
+        player_check = dm.get_player_by_id(player_id)
+        if not player_check:
+            return jsonify({"error": "Player not found"}), 404
+        
+        if dm.decrement_seven_two_wins(player_id):
+            stats = dm.get_player_overall_stats(player_id)
+            return jsonify(stats)
+        
+        return jsonify({"error": "Failed to decrement 7-2 wins count"}), 500
+    except Exception as e:
+        return jsonify({"error": "Internal server error"}), 500
+
+@app.route('/api/sessions/<string:session_id>/players/<string:player_id>/seven-two-wins/increment', methods=['PUT'])
+def increment_session_seven_two_wins_api(session_id, player_id):
+    if not session_id or not player_id:
+        return jsonify({"error": "Session ID and Player ID are required"}), 400
+    
+    # Check if session and player exist
+    session = dm.get_session_by_id(session_id)
+    if not session:
+        return jsonify({"error": "Session not found"}), 404
+        
+    player = dm.get_player_by_id(player_id)
+    if not player:
         return jsonify({"error": "Player not found"}), 404
     
-    if dm.decrement_seven_two_wins(player_id):
-        stats = dm.get_player_overall_stats(player_id)  # Get updated stats
-        return jsonify(stats)
+    try:
+        if dm.increment_session_seven_two_wins(session_id, player_id):
+            # Return updated session entries
+            updated_entries = dm.get_entries_for_session(session_id)
+            return jsonify(updated_entries)
+        return jsonify({"error": "Failed to increment session 7-2 wins count"}), 500
+    except Exception as e:
+        logger.error(f"Error incrementing session 7-2 wins for player {player_id} in session {session_id}: {str(e)}")
+        return jsonify({"error": "Internal server error"}), 500
+
+@app.route('/api/sessions/<string:session_id>/players/<string:player_id>/seven-two-wins/decrement', methods=['PUT'])
+def decrement_session_seven_two_wins_api(session_id, player_id):
+    if not session_id or not player_id:
+        return jsonify({"error": "Session ID and Player ID are required"}), 400
     
-    return jsonify({"error": "Failed to decrement 7-2 wins count"}), 500
+    # Check if session and player exist
+    session = dm.get_session_by_id(session_id)
+    if not session:
+        return jsonify({"error": "Session not found"}), 404
+        
+    player = dm.get_player_by_id(player_id)
+    if not player:
+        return jsonify({"error": "Player not found"}), 404
+    
+    try:
+        if dm.decrement_session_seven_two_wins(session_id, player_id):
+            # Return updated session entries
+            updated_entries = dm.get_entries_for_session(session_id)
+            return jsonify(updated_entries)
+        return jsonify({"error": "Failed to decrement session 7-2 wins count"}), 500
+    except Exception as e:
+        logger.error(f"Error decrementing session 7-2 wins for player {player_id} in session {session_id}: {str(e)}")
+        return jsonify({"error": "Internal server error"}), 500
 
 @app.route('/api/sessions', methods=['GET'])
 def get_sessions_api():
@@ -162,13 +256,27 @@ def get_active_sessions_api():
 @app.route('/api/sessions', methods=['POST'])
 def create_session_api():
     data = request.get_json()
+    if not data:
+        return jsonify({"error": "Request body is required"}), 400
+        
     date_str = data.get('date')
     buy_in_value = data.get('default_buy_in_value', 20.00)
-    if not date_str:
-        return jsonify({"error": "Date is required"}), 400
+    
+    if not date_str or not isinstance(date_str, str):
+        return jsonify({"error": "Date is required and must be a string"}), 400
+    
+    # Validate date format
+    try:
+        from datetime import datetime
+        datetime.strptime(date_str, "%Y-%m-%d")
+    except ValueError:
+        return jsonify({"error": "Invalid date format. Use YYYY-MM-DD"}), 400
+    
     try:
         buy_in_float = float(buy_in_value)
-    except ValueError:
+        if buy_in_float <= 0 or buy_in_float > 10000:
+            return jsonify({"error": "Buy-in value must be between 0.01 and 10000"}), 400
+    except (ValueError, TypeError):
         return jsonify({"error": "Invalid buy-in value"}), 400
     
     # Calculate chip distribution for the session
@@ -188,7 +296,7 @@ def create_session_api():
             dm.update_session(session['session_id'], session)
             
             # Session created with chip distribution
-            print(f"Session data being returned: {session}")
+            logger.info(f"Session created with ID: {session.get('session_id')}")
             
         return jsonify(session), 201
     return jsonify({"error": "Failed to create session"}), 500
@@ -251,15 +359,24 @@ def delete_session_api(session_id):
 @app.route('/api/sessions/<string:session_id>/entries', methods=['POST'])
 def add_player_to_session_api(session_id):
     data = request.get_json()
+    if not data:
+        return jsonify({"error": "Request body is required"}), 400
+        
     player_id = data.get('player_id')
-    num_buy_ins_str = data.get('num_buy_ins', "1") # Get as string first for validation
-    if not player_id:
-        return jsonify({"error": "Player ID is required"}), 400
+    num_buy_ins_str = data.get('num_buy_ins', "1")
+    
+    if not player_id or not isinstance(player_id, str):
+        return jsonify({"error": "Player ID is required and must be a string"}), 400
+    
+    # Validate session_id format
+    if not session_id or not isinstance(session_id, str):
+        return jsonify({"error": "Invalid session ID"}), 400
+        
     try:
         num_buy_ins = int(num_buy_ins_str)
-        if num_buy_ins <= 0:
-             return jsonify({"error": "Number of buy-ins must be positive"}), 400
-    except ValueError:
+        if num_buy_ins <= 0 or num_buy_ins > 100:
+             return jsonify({"error": "Number of buy-ins must be between 1 and 100"}), 400
+    except (ValueError, TypeError):
         return jsonify({"error": "Invalid number of buy-ins"}), 400
 
     entry = dm.record_player_entry(session_id, player_id, num_buy_ins)
@@ -298,12 +415,24 @@ def remove_buyin_api(session_id, player_id):
 @app.route('/api/sessions/<string:session_id>/entries/<string:player_id>/payout', methods=['PUT'])
 def record_payout_api(session_id, player_id):
     data = request.get_json()
+    if not data:
+        return jsonify({"error": "Request body is required"}), 400
+        
     payout_amount_str = data.get('payout_amount')
     if payout_amount_str is None:
         return jsonify({"error": "Payout amount is required"}), 400
+    
+    # Validate IDs
+    if not session_id or not isinstance(session_id, str):
+        return jsonify({"error": "Invalid session ID"}), 400
+    if not player_id or not isinstance(player_id, str):
+        return jsonify({"error": "Invalid player ID"}), 400
+        
     try:
         payout_amount = float(payout_amount_str)
-    except ValueError:
+        if payout_amount < 0 or payout_amount > 100000:
+            return jsonify({"error": "Payout amount must be between 0 and 100000"}), 400
+    except (ValueError, TypeError):
         return jsonify({"error": "Invalid payout amount format"}), 400
 
     if dm.record_payout(session_id, player_id, payout_amount):
@@ -367,18 +496,9 @@ def serve_sw():
     response.headers['Expires'] = '0'
     return response
 
-@app.route('/.env')
-def serve_env():
-    response = send_from_directory(FRONTEND_DIR_CALC, '.env')
-    # Set headers to ensure it's treated as text
-    response.headers['Content-Type'] = 'text/plain'
-    response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
-    return response
+# .env endpoint removed for security - use environment variables instead
 
-@app.route('/test-chips')
-def test_chips():
-    """A test endpoint to verify chip styles are working"""
-    return send_from_directory(STATIC_DIR_CALC, 'test-chips.html')
+# Test endpoint removed for production
 
 # Flask's default static file handling will use the `static_folder` parameter
 # (STATIC_DIR_CALC) and the default `static_url_path` which is '/static'.
@@ -393,8 +513,8 @@ if __name__ == '__main__':
     FLASK_DEBUG_MODE = False # Set to False for production if desired
 
     if args.debug_paths:
-        print(f"Flask app starting with FLASK_DEBUG_MODE={FLASK_DEBUG_MODE} and --debug-paths enabled.")
+        logger.info(f"Flask app starting with FLASK_DEBUG_MODE={FLASK_DEBUG_MODE} and --debug-paths enabled.")
     else:
-        print(f"Flask app starting with FLASK_DEBUG_MODE={FLASK_DEBUG_MODE}. Use --debug-paths to see path calculations.")
+        logger.info(f"Flask app starting with FLASK_DEBUG_MODE={FLASK_DEBUG_MODE}. Use --debug-paths to see path calculations.")
 
     app.run(debug=FLASK_DEBUG_MODE, host='0.0.0.0', port=args.port)

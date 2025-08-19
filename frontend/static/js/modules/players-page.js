@@ -1,5 +1,6 @@
 // Players page module
-export default class PlayersPage {    constructor(appContent, apiService) {
+export default class PlayersPage {
+    constructor(appContent, apiService) {
         this.appContent = appContent;
         this.api = apiService;
     }
@@ -43,20 +44,20 @@ export default class PlayersPage {    constructor(appContent, apiService) {
                     <li>
                         <div class="player-row">
                             <div class="player-name">
-                                <a href="#player/${player.id}" class="player-name-link">${player.name}</a>
+                                <a href="#player/${player.player_id}" class="player-name-link">${player.name}</a>
                             </div>
                             <div class="player-quick-stats">
                                 <span class="stat">
-                                    Profit: <span class="${player.totalProfit >= 0 ? 'profit-positive' : 'profit-negative'}">
-                                        $${player.totalProfit.toFixed(2)}
+                                    Profit: <span class="${player.net_profit >= 0 ? 'profit-positive' : 'profit-negative'}">
+                                        $${player.net_profit ? player.net_profit.toFixed(2) : '0.00'}
                                     </span>
                                 </span>
                                 <span class="stat">
-                                    Sessions: ${player.sessionsPlayed}
+                                    Sessions: ${player.games_played || 0}
                                 </span>
                                 <div class="seven-two-counter">
-                                    <span class="seven-two-label">7-2 Wins:</span>
-                                    <span class="seven-two-value">${player.sevenTwoWins || 0}</span>
+                                    <span class="seven-two-label">7-2 Wins (Total):</span>
+                                    <span class="seven-two-value">${player.seven_two_wins || 0}</span>
                                 </div>
                             </div>
                         </div>
