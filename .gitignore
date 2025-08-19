@@ -19,3 +19,5 @@ source/
 
 secrets.json
 .env
+.log
+.claude
