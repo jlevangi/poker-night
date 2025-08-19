@@ -34,7 +34,7 @@ Description=Poker Night Application
 After=network.target
 
 [Service]
-ExecStart=/root/poker-night/venv/bin/python /root/poker-night/backend/app.py
+ExecStart=/root/poker-night/venv/bin/python /root/poker-night/backend/run.py
 Restart=always
 User=root
 Group=root
