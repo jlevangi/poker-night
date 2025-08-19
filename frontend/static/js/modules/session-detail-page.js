@@ -31,7 +31,9 @@ export default class SessionDetailPage {
             if (session.entries) {
                 session.totalValue = session.entries.reduce((sum, entry) => sum + entry.total_buy_in_amount, 0);
                 const totalPayout = session.entries.reduce((sum, entry) => sum + entry.payout, 0);
-                session.unpaidValue = session.totalValue - totalPayout;
+                const rawUnpaidValue = session.totalValue - totalPayout;
+                // Round to nearest cent to avoid floating point precision issues
+                session.unpaidValue = Math.round(rawUnpaidValue * 100) / 100;
                 
                 // Map entries to players for easier display
                 session.players = session.entries.map(entry => ({
@@ -151,7 +153,7 @@ export default class SessionDetailPage {
             <p><strong>Status:</strong> <span class="session-status status-${isActive ? 'active' : 'ended'}">${isActive ? 'ACTIVE' : 'ENDED'}</span></p>
               <div class="session-value-summary">
                 <p class="session-total-value">Total Value: $${session.totalValue ? session.totalValue.toFixed(2) : '0.00'}</p>
-                ${session.unpaidValue && session.unpaidValue > 0 ? 
+                ${session.unpaidValue > 0.01 ? 
                     `<p class="session-unpaid-value">Unpaid Amount: $${session.unpaidValue.toFixed(2)}</p>` : 
                     (!isActive ? `<p class="session-unpaid-value paid-out">Fully Paid Out</p>` : '')}
             </div>
@@ -244,12 +246,10 @@ export default class SessionDetailPage {
                     `<button id="end-session-btn" class="action-btn danger-btn">
                         End Session
                     </button>` : 
-                    ''
+                    `<button id="reactivate-session-btn" class="action-btn success-btn">
+                        Reactivate Session
+                    </button>`
                 }
-                <!-- Always show Delete button regardless of session state -->
-                <button id="delete-session-btn" class="action-btn danger-btn">
-                    Delete Session
-                </button>
             </div>
         `;
         
@@ -270,7 +270,7 @@ export default class SessionDetailPage {
                 text-align: center;
             }
             
-            #end-session-btn, #delete-session-btn {
+            #end-session-btn {
                 background-color: #E53935;
                 color: white;
                 font-weight: bold;
@@ -285,8 +285,29 @@ export default class SessionDetailPage {
                 margin: 10px 5px;
             }
             
-            #end-session-btn:hover, #delete-session-btn:hover {
+            #reactivate-session-btn {
+                background-color: #4CAF50;
+                color: white;
+                font-weight: bold;
+                padding: 10px 20px;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+                border-radius: 4px;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                display: inline-block;
+                width: auto;
+                min-width: 200px;
+                margin: 10px 5px;
+            }
+            
+            #end-session-btn:hover {
                 background-color: #D32F2F;
+                box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+                transform: translateY(-1px);
+            }
+            
+            #reactivate-session-btn:hover {
+                background-color: #45a049;
                 box-shadow: 0 4px 8px rgba(0,0,0,0.3);
                 transform: translateY(-1px);
             }
@@ -339,41 +360,38 @@ export default class SessionDetailPage {
     setupEventListeners(session, sessionId, isActive) {
         console.log("Setting up event listeners, isActive:", isActive);
         
-        const deleteBtn = document.getElementById('delete-session-btn');
         const reactivateBtn = document.getElementById('reactivate-session-btn');
         const endBtn = document.getElementById('end-session-btn');
         
         console.log("Manual button check:");
-        console.log("- Delete button:", deleteBtn);
         console.log("- Reactivate button:", reactivateBtn);
         console.log("- End button:", endBtn);
         
-        // Set up the Delete button event listener regardless of session state
-        if (deleteBtn) {
-            console.log("Setting up event listener for delete button");
-            deleteBtn.addEventListener('click', async () => {
-                console.log("Delete button clicked");
-                if (confirm("Are you sure you want to delete this session? This action cannot be undone, although data will be archived.")) {
-                    const sessionDate = session.date || 'unknown date';
-                    if (confirm(`FINAL WARNING: This will permanently remove the session from ${sessionDate} from view. The data will be archived but no longer visible in the app. Continue?`)) {
+        if (!isActive) {
+            // Reactivate session button
+            if (reactivateBtn) {
+                console.log("Found reactivate session button");
+                reactivateBtn.addEventListener('click', async () => {
+                    if (confirm("Are you sure you want to reactivate this session? Players will be able to join and make moves again.")) {
                         try {
-                            deleteBtn.disabled = true;
-                            deleteBtn.textContent = 'Deleting...';
-
-                            await this.api.deleteSession(sessionId); // Now this will work
-                            alert(`Session from ${sessionDate} deleted successfully and data archived!`);
-                            window.location.hash = '#sessions';
+                            reactivateBtn.disabled = true;
+                            reactivateBtn.textContent = 'Reactivating...';
+                            
+                            await this.api.put(`sessions/${sessionId}/reactivate`);
+                            
+                            // Reload the page to show updated session state
+                            this.load(sessionId);
                         } catch (error) {
-                            console.error('Error deleting session:', error);
-                            alert(`Error deleting session. The server might be temporarily unavailable. Please try again later or contact support if the problem persists.\nDetails: ${error.message}`);
-                            deleteBtn.disabled = false;
-                            deleteBtn.textContent = 'Delete Session';
+                            console.error('Error reactivating session:', error);
+                            alert(`Error: ${error.message}`);
+                            
+                            // Restore button state
+                            reactivateBtn.disabled = false;
+                            reactivateBtn.textContent = 'Reactivate Session';
                         }
                     }
-                }
-            });
-        } else {
-            console.error("Delete session button not found!");
+                });
+            }
         }
         
         if (isActive) {

@@ -61,27 +61,6 @@
     margin-bottom: 10px;
 }
 
-/* Delete session button */
-#delete-session-btn {
-    background-color: #E53935; /* Red for dangerous actions */
-    color: white;
-    font-weight: bold;
-    margin: 10px 0;
-    padding: 10px 20px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-    border-radius: 4px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    display: inline-block;
-    width: auto;
-    min-width: 200px;
-}
-
-#delete-session-btn:hover {
-    background-color: #D32F2F;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-    transform: translateY(-1px);
-}
 
 /* Session ended actions container */
 .session-ended-actions {

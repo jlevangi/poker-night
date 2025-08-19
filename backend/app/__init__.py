@@ -16,6 +16,7 @@ from .routes.sessions import sessions_bp
 from .routes.chip_calculator import chip_calculator_bp
 from .routes.frontend import frontend_bp
 from .routes.admin import admin_bp
+from .routes.dashboard import dashboard_bp
 from .database.models import db
 
 
@@ -58,6 +59,7 @@ def create_app(config_class: type = Config) -> Flask:
         db.create_all()
     
     # Register blueprints
+    app.register_blueprint(dashboard_bp, url_prefix='/api')
     app.register_blueprint(players_bp, url_prefix='/api')
     app.register_blueprint(sessions_bp, url_prefix='/api')
     app.register_blueprint(chip_calculator_bp, url_prefix='/api')

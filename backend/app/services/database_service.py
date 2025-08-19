@@ -9,7 +9,7 @@ from typing import List, Dict, Any, Optional
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy import desc
 
-from ..database.models import db, Player, Session, Entry
+from ..database.models import db, Player, Session, Entry, round_to_cents
 from ..models import PlayerStats, PlayerSessionHistory
 
 logger = logging.getLogger(__name__)
@@ -196,7 +196,7 @@ class DatabaseService:
             new_session = Session(
                 session_id=session_id,
                 date=date_str,
-                default_buy_in_value=float(default_buy_in_value),
+                default_buy_in_value=round_to_cents(float(default_buy_in_value)),
                 is_active=True,
                 status="ACTIVE"
             )
@@ -372,12 +372,12 @@ class DatabaseService:
             ).first()
             
             cost_per_buy_in = session.default_buy_in_value
-            total_buy_in_for_this_action = num_buy_ins * cost_per_buy_in
+            total_buy_in_for_this_action = round_to_cents(num_buy_ins * cost_per_buy_in)
             
             if existing_entry:
                 # Update existing entry
                 existing_entry.buy_in_count += num_buy_ins
-                existing_entry.total_buy_in_amount = existing_entry.buy_in_count * cost_per_buy_in
+                existing_entry.total_buy_in_amount = round_to_cents(existing_entry.buy_in_count * cost_per_buy_in)
                 existing_entry.calculate_profit()
                 
                 db.session.commit()
@@ -408,8 +408,8 @@ class DatabaseService:
                     player_id=player_id,
                     buy_in_count=num_buy_ins,
                     total_buy_in_amount=total_buy_in_for_this_action,
-                    payout=0.00,
-                    profit=-total_buy_in_for_this_action,
+                    payout=round_to_cents(0.00),
+                    profit=round_to_cents(-total_buy_in_for_this_action),
                     session_seven_two_wins=0
                 )
                 
@@ -467,7 +467,7 @@ class DatabaseService:
             if entry.buy_in_count > 1:
                 # Decrement buy-in count
                 entry.buy_in_count -= 1
-                entry.total_buy_in_amount = entry.buy_in_count * cost_per_buy_in
+                entry.total_buy_in_amount = round_to_cents(entry.buy_in_count * cost_per_buy_in)
                 entry.calculate_profit()
                 
                 db.session.commit()
@@ -515,7 +515,7 @@ class DatabaseService:
                 self.logger.error(f"No entry found for player {player_id} in session {session_id} to record payout.")
                 return False
             
-            entry.payout = float(payout_amount)
+            entry.payout = round_to_cents(float(payout_amount))
             entry.calculate_profit()
             db.session.commit()
             

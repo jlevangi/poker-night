@@ -212,12 +212,14 @@
             <!-- Players Tab -->
             <div id="players" class="tab-content active">
                 <h3>Player Management</h3>
+                <button onclick="createPlayer()" style="margin-bottom: 10px;">+ Add New Player</button>
                 <div id="playersTable"></div>
             </div>
 
             <!-- Sessions Tab -->
             <div id="sessions" class="tab-content">
                 <h3>Session Management</h3>
+                <button onclick="createSession()" style="margin-bottom: 10px;">+ Add New Session</button>
                 <div id="sessionsTable"></div>
             </div>
 
@@ -408,11 +410,10 @@
                 html += `
                     <tr>
                         <td>${player.player_id}</td>
-                        <td>${player.name}</td>
-                        <td>${player.seven_two_wins}</td>
+                        <td><input type="text" value="${player.name}" onchange="updatePlayerField('${player.player_id}', 'name', this.value)" style="border: 1px solid #ddd; padding: 5px; width: 100%;"></td>
+                        <td><input type="number" value="${player.seven_two_wins}" onchange="updatePlayerField('${player.player_id}', 'seven_two_wins', this.value)" style="border: 1px solid #ddd; padding: 5px; width: 100%;" min="0"></td>
                         <td>${created}</td>
                         <td>
-                            <button onclick="editPlayer('${player.player_id}')">Edit</button>
                             <button class="danger" onclick="deletePlayer('${player.player_id}')">Delete</button>
                         </td>
                     </tr>
@@ -431,11 +432,13 @@
                 html += `
                     <tr>
                         <td>${session.session_id}</td>
-                        <td>${session.date}</td>
-                        <td>$${session.default_buy_in_value}</td>
-                        <td><span style="color: ${session.is_active ? 'green' : 'red'}">${session.status}</span></td>
+                        <td><input type="date" value="${session.date}" onchange="updateSessionField('${session.session_id}', 'date', this.value)" style="border: 1px solid #ddd; padding: 5px; width: 100%;"></td>
+                        <td><input type="number" value="${session.default_buy_in_value}" onchange="updateSessionField('${session.session_id}', 'default_buy_in_value', this.value)" style="border: 1px solid #ddd; padding: 5px; width: 100%;" min="0" step="0.01"></td>
+                        <td><select onchange="updateSessionField('${session.session_id}', 'is_active', this.value === 'true')" style="border: 1px solid #ddd; padding: 5px; width: 100%;">
+                            <option value="true" ${session.is_active ? 'selected' : ''}>Active</option>
+                            <option value="false" ${!session.is_active ? 'selected' : ''}>Ended</option>
+                        </select></td>
                         <td>
-                            <button onclick="editSession('${session.session_id}')">Edit</button>
                             <button class="danger" onclick="deleteSession('${session.session_id}')">Delete</button>
                         </td>
                     </tr>
@@ -448,7 +451,7 @@
 
         function displayEntriesTable(entries) {
             const tableDiv = document.getElementById('entriesTable');
-            let html = '<table><thead><tr><th>Entry ID</th><th>Player</th><th>Session ID</th><th>Buy-ins</th><th>Payout</th><th>Profit</th><th>Actions</th></tr></thead><tbody>';
+            let html = '<table><thead><tr><th>Entry ID</th><th>Player</th><th>Session ID</th><th>Buy-in Count</th><th>Total Buy-in $</th><th>Payout</th><th>7-2 Wins</th><th>Profit</th><th>Actions</th></tr></thead><tbody>';
             
             entries.forEach(entry => {
                 const profitClass = entry.profit > 0 ? 'style="color: green"' : entry.profit < 0 ? 'style="color: red"' : '';
@@ -457,11 +460,12 @@
                         <td>${entry.entry_id}</td>
                         <td>${entry.player_name}</td>
                         <td>${entry.session_id}</td>
-                        <td>${entry.buy_in_count}</td>
-                        <td>$${entry.payout.toFixed(2)}</td>
+                        <td><input type="number" value="${entry.buy_in_count}" onchange="updateEntryField('${entry.entry_id}', 'buy_in_count', this.value)" style="border: 1px solid #ddd; padding: 5px; width: 80px;" min="0"></td>
+                        <td><input type="number" value="${entry.total_buy_in_amount}" onchange="updateEntryField('${entry.entry_id}', 'total_buy_in_amount', this.value)" style="border: 1px solid #ddd; padding: 5px; width: 100px;" min="0" step="0.01"></td>
+                        <td><input type="number" value="${entry.payout}" onchange="updateEntryField('${entry.entry_id}', 'payout', this.value)" style="border: 1px solid #ddd; padding: 5px; width: 100px;" min="0" step="0.01"></td>
+                        <td><input type="number" value="${entry.session_seven_two_wins}" onchange="updateEntryField('${entry.entry_id}', 'session_seven_two_wins', this.value)" style="border: 1px solid #ddd; padding: 5px; width: 60px;" min="0"></td>
                         <td ${profitClass}>$${entry.profit.toFixed(2)}</td>
                         <td>
-                            <button onclick="editEntry('${entry.entry_id}')">Edit</button>
                             <button class="danger" onclick="deleteEntry('${entry.entry_id}')">Delete</button>
                         </td>
                     </tr>
@@ -534,34 +538,263 @@
             }, 5000);
         }
 
-        // Placeholder functions for edit/delete operations
-        function editPlayer(playerId) {
-            alert('Edit functionality would be implemented here for player: ' + playerId);
-        }
-
-        function deletePlayer(playerId) {
-            if (confirm('Are you sure you want to delete this player? This action cannot be undone.')) {
-                alert('Delete functionality would be implemented here for player: ' + playerId);
+        // Field update functions
+        async function updatePlayerField(playerId, field, value) {
+            try {
+                // Validate input
+                if (field === 'name' && !value.trim()) {
+                    showMessage('Player name cannot be empty', 'error');
+                    return;
+                }
+                
+                if (field === 'seven_two_wins') {
+                    const intValue = parseInt(value);
+                    if (isNaN(intValue) || intValue < 0) {
+                        showMessage('7-2 wins must be a non-negative integer', 'error');
+                        return;
+                    }
+                    value = intValue;
+                }
+                
+                // Send update request
+                const updateData = {};
+                updateData[field] = value;
+                
+                const response = await fetch(`/admin/players/${playerId}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(updateData)
+                });
+                
+                const result = await response.json();
+                if (response.ok) {
+                    showMessage(`Player ${field} updated successfully`, 'success');
+                } else {
+                    showMessage('Failed to update player: ' + result.error, 'error');
+                    loadPlayers(); // Refresh on error to revert changes
+                }
+            } catch (error) {
+                showMessage('Error updating player: ' + error.message, 'error');
+                loadPlayers(); // Refresh on error to revert changes
             }
         }
 
-        function editSession(sessionId) {
-            alert('Edit functionality would be implemented here for session: ' + sessionId);
-        }
-
-        function deleteSession(sessionId) {
-            if (confirm('Are you sure you want to delete this session? This action cannot be undone.')) {
-                alert('Delete functionality would be implemented here for session: ' + sessionId);
+        async function deletePlayer(playerId) {
+            if (!confirm('Are you sure you want to delete this player? This will also delete all their entries!')) {
+                return;
+            }
+            
+            try {
+                const response = await fetch(`/admin/players/${playerId}?force=true`, {
+                    method: 'DELETE'
+                });
+                
+                const result = await response.json();
+                if (response.ok) {
+                    showMessage('Player deleted successfully', 'success');
+                    loadPlayers(); // Refresh the table
+                } else {
+                    showMessage('Failed to delete player: ' + result.error, 'error');
+                }
+            } catch (error) {
+                showMessage('Error deleting player: ' + error.message, 'error');
             }
         }
 
-        function editEntry(entryId) {
-            alert('Edit functionality would be implemented here for entry: ' + entryId);
+        async function updateSessionField(sessionId, field, value) {
+            try {
+                // Validate input
+                if (field === 'date' && !value.match(/^\d{4}-\d{2}-\d{2}$/)) {
+                    showMessage('Date must be in YYYY-MM-DD format', 'error');
+                    return;
+                }
+                
+                if (field === 'default_buy_in_value') {
+                    const floatValue = parseFloat(value);
+                    if (isNaN(floatValue) || floatValue <= 0) {
+                        showMessage('Buy-in value must be a positive number', 'error');
+                        return;
+                    }
+                    value = floatValue;
+                }
+                
+                // Send update request
+                const updateData = {};
+                updateData[field] = value;
+                
+                const response = await fetch(`/admin/sessions/${sessionId}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(updateData)
+                });
+                
+                const result = await response.json();
+                if (response.ok) {
+                    showMessage(`Session ${field} updated successfully`, 'success');
+                } else {
+                    showMessage('Failed to update session: ' + result.error, 'error');
+                    loadSessions(); // Refresh on error to revert changes
+                }
+            } catch (error) {
+                showMessage('Error updating session: ' + error.message, 'error');
+                loadSessions(); // Refresh on error to revert changes
+            }
         }
 
-        function deleteEntry(entryId) {
-            if (confirm('Are you sure you want to delete this entry? This action cannot be undone.')) {
-                alert('Delete functionality would be implemented here for entry: ' + entryId);
+        async function deleteSession(sessionId) {
+            if (!confirm('Are you sure you want to delete this session? This will also delete all its entries!')) {
+                return;
+            }
+            
+            try {
+                const response = await fetch(`/admin/sessions/${sessionId}?force=true`, {
+                    method: 'DELETE'
+                });
+                
+                const result = await response.json();
+                if (response.ok) {
+                    showMessage('Session deleted successfully', 'success');
+                    loadSessions(); // Refresh the table
+                } else {
+                    showMessage('Failed to delete session: ' + result.error, 'error');
+                }
+            } catch (error) {
+                showMessage('Error deleting session: ' + error.message, 'error');
+            }
+        }
+
+        async function updateEntryField(entryId, field, value) {
+            try {
+                // Validate input
+                if (field === 'buy_in_count' || field === 'session_seven_two_wins') {
+                    const intValue = parseInt(value);
+                    if (isNaN(intValue) || intValue < 0) {
+                        showMessage(`${field.replace('_', ' ')} must be a non-negative integer`, 'error');
+                        return;
+                    }
+                    value = intValue;
+                }
+                
+                if (field === 'payout' || field === 'total_buy_in_amount') {
+                    const floatValue = parseFloat(value);
+                    if (isNaN(floatValue) || floatValue < 0) {
+                        showMessage(`${field.replace('_', ' ')} must be a non-negative number`, 'error');
+                        return;
+                    }
+                    value = floatValue;
+                }
+                
+                // Send update request
+                const updateData = {};
+                updateData[field] = value;
+                
+                const response = await fetch(`/admin/entries/${entryId}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(updateData)
+                });
+                
+                const result = await response.json();
+                if (response.ok) {
+                    showMessage(`Entry ${field.replace('_', ' ')} updated successfully`, 'success');
+                    // Refresh to show updated profit calculation
+                    loadEntries();
+                } else {
+                    showMessage('Failed to update entry: ' + result.error, 'error');
+                    loadEntries(); // Refresh on error to revert changes
+                }
+            } catch (error) {
+                showMessage('Error updating entry: ' + error.message, 'error');
+                loadEntries(); // Refresh on error to revert changes
+            }
+        }
+
+        async function deleteEntry(entryId) {
+            if (!confirm('Are you sure you want to delete this entry? This action cannot be undone.')) {
+                return;
+            }
+            
+            try {
+                const response = await fetch(`/admin/entries/${entryId}`, {
+                    method: 'DELETE'
+                });
+                
+                const result = await response.json();
+                if (response.ok) {
+                    showMessage('Entry deleted successfully', 'success');
+                    loadEntries(); // Refresh the table
+                } else {
+                    showMessage('Failed to delete entry: ' + result.error, 'error');
+                }
+            } catch (error) {
+                showMessage('Error deleting entry: ' + error.message, 'error');
+            }
+        }
+
+        // Create functions
+        async function createPlayer() {
+            const name = prompt('Enter player name:');
+            if (!name || !name.trim()) {
+                showMessage('Player name cannot be empty', 'error');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/admin/players', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name: name.trim() })
+                });
+                
+                const result = await response.json();
+                if (response.ok) {
+                    showMessage('Player created successfully', 'success');
+                    loadPlayers(); // Refresh the table
+                } else {
+                    showMessage('Failed to create player: ' + result.error, 'error');
+                }
+            } catch (error) {
+                showMessage('Error creating player: ' + error.message, 'error');
+            }
+        }
+
+        async function createSession() {
+            const date = prompt('Enter session date (YYYY-MM-DD):');
+            if (!date) return;
+            
+            if (!date.match(/^\d{4}-\d{2}-\d{2}$/)) {
+                showMessage('Date must be in YYYY-MM-DD format', 'error');
+                return;
+            }
+            
+            const buyIn = prompt('Enter default buy-in value:', '20.00');
+            if (!buyIn) return;
+            
+            const buyInFloat = parseFloat(buyIn);
+            if (isNaN(buyInFloat) || buyInFloat <= 0) {
+                showMessage('Buy-in value must be a positive number', 'error');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/admin/sessions', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        date: date,
+                        default_buy_in_value: buyInFloat
+                    })
+                });
+                
+                const result = await response.json();
+                if (response.ok) {
+                    showMessage('Session created successfully', 'success');
+                    loadSessions(); // Refresh the table
+                } else {
+                    showMessage('Failed to create session: ' + result.error, 'error');
+                }
+            } catch (error) {
+                showMessage('Error creating session: ' + error.message, 'error');
             }
         }
 

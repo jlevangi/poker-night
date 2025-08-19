@@ -6,11 +6,33 @@ This module defines the database schema using SQLAlchemy ORM.
 
 from datetime import datetime
 from typing import Dict, Any, List, Optional
+from decimal import Decimal, ROUND_HALF_UP
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, Integer, String, Float, Boolean, DateTime, ForeignKey, Text
 from sqlalchemy.orm import relationship
 
 db = SQLAlchemy()
+
+
+def round_to_cents(value: Optional[float]) -> Optional[float]:
+    """
+    Round a monetary value to the nearest cent (2 decimal places).
+    
+    Args:
+        value: The value to round
+        
+    Returns:
+        Rounded value or None if input is None
+    """
+    if value is None:
+        return None
+    
+    # Convert to Decimal for precise arithmetic
+    decimal_value = Decimal(str(value))
+    # Round to 2 decimal places (cents)
+    rounded = decimal_value.quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
+    # Convert back to float
+    return float(rounded)
 
 
 class Player(db.Model):
@@ -120,7 +142,7 @@ class Session(db.Model):
         result = {
             'session_id': self.session_id,
             'date': self.date,
-            'default_buy_in_value': self.default_buy_in_value,
+            'default_buy_in_value': round_to_cents(self.default_buy_in_value),
             'is_active': self.is_active,
             'status': self.status,
             'created_at': self.created_at.isoformat() if self.created_at else None,
@@ -156,7 +178,7 @@ class Session(db.Model):
         session = cls(
             session_id=data['session_id'],
             date=data['date'],
-            default_buy_in_value=data.get('default_buy_in_value', 20.00),
+            default_buy_in_value=round_to_cents(data.get('default_buy_in_value', 20.00)),
             is_active=data.get('is_active', True),
             status=data.get('status', 'ACTIVE'),
             total_chips=data.get('total_chips')
@@ -225,9 +247,9 @@ class Entry(db.Model):
             'player_id': self.player_id,
             'player_name': self.player.name if self.player else 'Unknown Player',
             'buy_in_count': self.buy_in_count,
-            'total_buy_in_amount': self.total_buy_in_amount,
-            'payout': self.payout,
-            'profit': self.profit,
+            'total_buy_in_amount': round_to_cents(self.total_buy_in_amount),
+            'payout': round_to_cents(self.payout),
+            'profit': round_to_cents(self.profit),
             'session_seven_two_wins': self.session_seven_two_wins,
             'created_at': self.created_at.isoformat() if self.created_at else None,
             'updated_at': self.updated_at.isoformat() if self.updated_at else None
@@ -249,9 +271,9 @@ class Entry(db.Model):
             session_id=data['session_id'],
             player_id=data['player_id'],
             buy_in_count=data.get('buy_in_count', 1),
-            total_buy_in_amount=data.get('total_buy_in_amount', 0.0),
-            payout=data.get('payout', 0.0),
-            profit=data.get('profit', 0.0),
+            total_buy_in_amount=round_to_cents(data.get('total_buy_in_amount', 0.0)),
+            payout=round_to_cents(data.get('payout', 0.0)),
+            profit=round_to_cents(data.get('profit', 0.0)),
             session_seven_two_wins=data.get('session_seven_two_wins', 0)
         )
     
@@ -260,7 +282,26 @@ class Entry(db.Model):
         Calculate and update profit based on payout and total buy-in amount.
         
         Returns:
-            Calculated profit value
+            Calculated profit value rounded to nearest cent
         """
-        self.profit = self.payout - self.total_buy_in_amount
+        calculated_profit = self.payout - self.total_buy_in_amount
+        self.profit = round_to_cents(calculated_profit)
         return self.profit
+    
+    def set_total_buy_in_amount(self, amount: float) -> None:
+        """
+        Set the total buy-in amount with proper rounding.
+        
+        Args:
+            amount: The amount to set
+        """
+        self.total_buy_in_amount = round_to_cents(amount)
+    
+    def set_payout(self, amount: float) -> None:
+        """
+        Set the payout amount with proper rounding.
+        
+        Args:
+            amount: The amount to set
+        """
+        self.payout = round_to_cents(amount)

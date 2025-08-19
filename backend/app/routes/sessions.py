@@ -95,12 +95,14 @@ def create_session_api() -> Dict[str, Any]:
     if session:
         # Add chip distribution to the session data
         if chip_distribution:
-            session.chip_distribution = chip_distribution
+            import json
+            session.chip_distribution = json.dumps(chip_distribution)
             # Calculate total chip count for convenience
             session.total_chips = sum(chip_distribution.values())
             
-            # Update the session in the data store to persist the chip distribution
-            db_service.update_session(session.session_id, session)
+            # Update the session in the database to persist the chip distribution
+            from ..database.models import db
+            db.session.commit()
             
             logger.info(f"Session created with ID: {session.session_id}")
         

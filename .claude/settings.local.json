@@ -10,7 +10,19 @@
       "Bash(pip install:*)",
       "Bash(grep:*)",
       "Bash(pip3 install:*)",
-      "Bash(ss:*)"
+      "Bash(ss:*)",
+      "Bash(PYTHONPATH=backend python3 backend/migrate_to_database.py --backup)",
+      "Bash(PYTHONPATH=backend python3 fix_profits.py)",
+      "Bash(PYTHONPATH=backend ./venv/bin/python fix_profits.py)",
+      "Bash(PYTHONPATH=backend ./venv/bin/python3 fix_profits.py)",
+      "Bash(PYTHONPATH=backend ./venv/bin/python3 ./fix_profits.py)",
+      "Bash(PYTHONPATH=backend ./venv/bin/python3 ./check_payouts.py)",
+      "Bash(PYTHONPATH=backend ./venv/bin/python3 backend/run.py --host 0.0.0.0 --port 5000 --debug)",
+      "Bash(PYTHONPATH=backend ./venv/bin/python3 backend/run.py --port 5000 --debug)",
+      "Bash(sqlite3:*)",
+      "Bash(PYTHONPATH=backend python3 test_sessions.py)",
+      "Bash(PYTHONPATH=backend ./venv/bin/python3 ../test_sessions.py)",
+      "Bash(PYTHONPATH=backend ./venv/bin/python3 run.py --port 5000 --debug)"
     ],
     "deny": [],
     "ask": []

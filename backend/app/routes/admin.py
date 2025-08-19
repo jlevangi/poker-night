@@ -4,6 +4,7 @@ Admin routes for Poker Night PWA.
 This module contains password-protected administrative endpoints for data management.
 """
 
+import os
 import logging
 import functools
 from typing import Dict, Any, Optional
@@ -11,7 +12,7 @@ from flask import Blueprint, request, jsonify, session, current_app, render_temp
 from werkzeug.security import check_password_hash
 
 from ..services.database_service import DatabaseService
-from ..database.models import db, Player, Session, Entry
+from ..database.models import db, Player, Session, Entry, round_to_cents
 from ..database.backup import DatabaseBackup
 from ..database.migration import DataMigration
 
@@ -156,6 +157,44 @@ def admin_get_players() -> Dict[str, Any]:
         return jsonify({"error": "Failed to retrieve players"}), 500
 
 
+@admin_bp.route('/players', methods=['POST'])
+@require_admin_auth
+def admin_create_player() -> Dict[str, Any]:
+    """
+    Create a new player.
+    
+    Returns:
+        JSON response with created player information
+    """
+    try:
+        data = request.get_json()
+        if not data:
+            return jsonify({"error": "Request body is required"}), 400
+        
+        name = data.get('name')
+        if not name or not isinstance(name, str):
+            return jsonify({"error": "Name is required and must be a string"}), 400
+        
+        # Validate name length and characters
+        name = name.strip()
+        if len(name) < 1 or len(name) > 50:
+            return jsonify({"error": "Name must be between 1 and 50 characters"}), 400
+        
+        # Create new player using database service
+        db_service = DatabaseService()
+        player_data = db_service.add_player(name)
+        
+        if player_data and player_data.get('player_id'):
+            logger.info(f"Admin created new player: {player_data['name']} ({player_data['player_id']})")
+            return jsonify(player_data), 201
+        else:
+            return jsonify({"error": "Failed to create player"}), 500
+        
+    except Exception as e:
+        logger.error(f"Error creating player: {str(e)}")
+        return jsonify({"error": "Failed to create player"}), 500
+
+
 @admin_bp.route('/players/<string:player_id>', methods=['PUT'])
 @require_admin_auth
 def admin_update_player(player_id: str) -> Dict[str, Any]:
@@ -255,6 +294,55 @@ def admin_get_sessions() -> Dict[str, Any]:
         return jsonify({"error": "Failed to retrieve sessions"}), 500
 
 
+@admin_bp.route('/sessions', methods=['POST'])
+@require_admin_auth
+def admin_create_session() -> Dict[str, Any]:
+    """
+    Create a new session.
+    
+    Returns:
+        JSON response with created session information
+    """
+    try:
+        data = request.get_json()
+        if not data:
+            return jsonify({"error": "Request body is required"}), 400
+        
+        date_str = data.get('date')
+        buy_in_value = data.get('default_buy_in_value', 20.00)
+        
+        if not date_str or not isinstance(date_str, str):
+            return jsonify({"error": "Date is required and must be a string"}), 400
+        
+        # Validate date format
+        try:
+            from datetime import datetime
+            datetime.strptime(date_str, "%Y-%m-%d")
+        except ValueError:
+            return jsonify({"error": "Invalid date format. Use YYYY-MM-DD"}), 400
+        
+        try:
+            buy_in_float = float(buy_in_value)
+            if buy_in_float <= 0 or buy_in_float > 10000:
+                return jsonify({"error": "Buy-in value must be between 0.01 and 10000"}), 400
+        except (ValueError, TypeError):
+            return jsonify({"error": "Invalid buy-in value"}), 400
+        
+        # Create new session using database service
+        db_service = DatabaseService()
+        session_data = db_service.create_session(date_str, buy_in_float)
+        
+        if session_data and session_data.get('session_id'):
+            logger.info(f"Admin created new session: {session_data['date']} ({session_data['session_id']})")
+            return jsonify(session_data), 201
+        else:
+            return jsonify({"error": "Failed to create session"}), 500
+        
+    except Exception as e:
+        logger.error(f"Error creating session: {str(e)}")
+        return jsonify({"error": "Failed to create session"}), 500
+
+
 @admin_bp.route('/sessions/<string:session_id>', methods=['PUT'])
 @require_admin_auth
 def admin_update_session(session_id: str) -> Dict[str, Any]:
@@ -284,7 +372,7 @@ def admin_update_session(session_id: str) -> Dict[str, Any]:
             session.date = data['date']
         
         if 'default_buy_in_value' in data:
-            session.default_buy_in_value = float(data['default_buy_in_value'])
+            session.default_buy_in_value = round_to_cents(float(data['default_buy_in_value']))
         
         if 'is_active' in data:
             session.is_active = bool(data['is_active'])
@@ -389,13 +477,17 @@ def admin_update_entry(entry_id: str) -> Dict[str, Any]:
         # Update allowed fields
         if 'buy_in_count' in data:
             entry.buy_in_count = int(data['buy_in_count'])
-            # Recalculate total_buy_in_amount based on session's buy-in value
-            session = Session.query.filter_by(session_id=entry.session_id).first()
-            if session:
-                entry.total_buy_in_amount = entry.buy_in_count * session.default_buy_in_value
+            # Only recalculate total_buy_in_amount if it's not explicitly provided
+            if 'total_buy_in_amount' not in data:
+                session = Session.query.filter_by(session_id=entry.session_id).first()
+                if session:
+                    entry.total_buy_in_amount = entry.buy_in_count * session.default_buy_in_value
+        
+        if 'total_buy_in_amount' in data:
+            entry.total_buy_in_amount = round_to_cents(float(data['total_buy_in_amount']))
         
         if 'payout' in data:
-            entry.payout = float(data['payout'])
+            entry.payout = round_to_cents(float(data['payout']))
         
         if 'session_seven_two_wins' in data:
             entry.session_seven_two_wins = int(data['session_seven_two_wins'])

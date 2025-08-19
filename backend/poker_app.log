@@ -730,3 +730,641 @@ RuntimeError: The session is unavailable because no secret key was set.  Set the
 2025-08-19 14:58:47,813 - __main__ - INFO - Flask app starting with debug_mode=True. Use --debug-paths to see path calculations.
 2025-08-19 14:58:47,837 - werkzeug - WARNING -  * Debugger is active!
 2025-08-19 14:58:47,859 - werkzeug - INFO -  * Debugger PIN: 605-824-999
+2025-08-19 15:01:14,278 - app - INFO - Logging configured for Poker Night application
+2025-08-19 15:01:14,334 - __main__ - INFO - Flask app starting with debug_mode=True. Use --debug-paths to see path calculations.
+2025-08-19 15:01:14,397 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.27.50.40:5000
+2025-08-19 15:01:14,398 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-08-19 15:01:14,407 - werkzeug - INFO -  * Restarting with stat
+2025-08-19 15:01:15,283 - app - INFO - Logging configured for Poker Night application
+2025-08-19 15:01:15,336 - __main__ - INFO - Flask app starting with debug_mode=True. Use --debug-paths to see path calculations.
+2025-08-19 15:01:15,373 - werkzeug - WARNING -  * Debugger is active!
+2025-08-19 15:01:15,395 - werkzeug - INFO -  * Debugger PIN: 890-425-821
+2025-08-19 15:01:38,139 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:01:38] "GET / HTTP/1.1" 200 -
+2025-08-19 15:01:38,509 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:01:38] "GET /sw.js?v=1755630098220 HTTP/1.1" 200 -
+2025-08-19 15:01:38,518 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:01:38] "GET / HTTP/1.1" 200 -
+2025-08-19 15:01:38,521 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:01:38] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2025-08-19 15:01:38,522 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:01:38] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2025-08-19 15:01:38,531 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:01:38] "[33mGET /api/dashboard HTTP/1.1[0m" 404 -
+2025-08-19 15:01:38,532 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:01:38] "[36mGET /static/js/config.js HTTP/1.1[0m" 304 -
+2025-08-19 15:01:38,534 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:01:38] "[36mGET /static/images/icon-192x192.png HTTP/1.1[0m" 304 -
+2025-08-19 15:01:38,534 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:01:38] "[36mGET /static/images/icon-512x512.png HTTP/1.1[0m" 304 -
+2025-08-19 15:01:38,542 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:01:38] "GET /manifest.json HTTP/1.1" 200 -
+2025-08-19 15:01:38,550 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:01:38] "GET /manifest.json HTTP/1.1" 200 -
+2025-08-19 15:01:38,568 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:01:38] "GET /sw.js?v=1.0.5 HTTP/1.1" 200 -
+2025-08-19 15:01:38,576 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:01:38] "GET / HTTP/1.1" 200 -
+2025-08-19 15:01:38,579 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:01:38] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2025-08-19 15:01:38,579 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:01:38] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2025-08-19 15:01:38,584 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:01:38] "[36mGET /static/js/config.js HTTP/1.1[0m" 304 -
+2025-08-19 15:01:38,584 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:01:38] "[36mGET /static/images/icon-192x192.png HTTP/1.1[0m" 304 -
+2025-08-19 15:01:38,585 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:01:38] "[36mGET /static/images/icon-512x512.png HTTP/1.1[0m" 304 -
+2025-08-19 15:01:38,594 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:01:38] "GET /manifest.json HTTP/1.1" 200 -
+2025-08-19 15:01:40,871 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:01:40] "GET / HTTP/1.1" 200 -
+2025-08-19 15:01:40,892 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:01:40] "GET /static/css/modern-ui.css?v=1.0.5 HTTP/1.1" 200 -
+2025-08-19 15:01:40,892 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:01:40] "GET /static/css/chip-styles.css?v=1.0.5 HTTP/1.1" 200 -
+2025-08-19 15:01:40,893 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:01:40] "GET /static/css/style.css?v=1.0.5 HTTP/1.1" 200 -
+2025-08-19 15:01:40,894 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:01:40] "GET /static/css/button-styles.css?v=1.0.5 HTTP/1.1" 200 -
+2025-08-19 15:01:40,894 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:01:40] "GET /static/css/responsive-fixes.css?v=1.0.5 HTTP/1.1" 200 -
+2025-08-19 15:01:40,896 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:01:40] "GET /static/js/app.js?v=1.0.5 HTTP/1.1" 200 -
+2025-08-19 15:01:40,946 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:01:40] "GET /sw.js?v=1755630100535 HTTP/1.1" 200 -
+2025-08-19 15:01:40,947 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:01:40] "GET /static/js/modules/dashboard-page.js HTTP/1.1" 200 -
+2025-08-19 15:01:40,948 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:01:40] "GET /static/js/modules/router.js HTTP/1.1" 200 -
+2025-08-19 15:01:40,948 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:01:40] "GET /static/js/modules/api-service.js HTTP/1.1" 200 -
+2025-08-19 15:01:40,948 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:01:40] "GET /static/js/modules/modal-manager.js HTTP/1.1" 200 -
+2025-08-19 15:01:40,948 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:01:40] "GET /static/js/modules/players-page.js HTTP/1.1" 200 -
+2025-08-19 15:01:40,955 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:01:40] "GET /static/js/modules/session-detail-page.js HTTP/1.1" 200 -
+2025-08-19 15:01:40,956 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:01:40] "GET /static/js/modules/sessions-page.js HTTP/1.1" 200 -
+2025-08-19 15:01:40,957 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:01:40] "GET / HTTP/1.1" 200 -
+2025-08-19 15:01:40,958 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:01:40] "GET /static/js/modules/player-detail-page.js HTTP/1.1" 200 -
+2025-08-19 15:01:40,958 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:01:40] "GET /static/js/modules/service-worker-manager.js HTTP/1.1" 200 -
+2025-08-19 15:01:40,963 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:01:40] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2025-08-19 15:01:40,966 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:01:40] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2025-08-19 15:01:40,976 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:01:40] "[36mGET /static/js/config.js HTTP/1.1[0m" 304 -
+2025-08-19 15:01:40,982 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:01:40] "GET /static/images/icon-192x192.png?v=1.0.5 HTTP/1.1" 200 -
+2025-08-19 15:01:40,982 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:01:40] "[36mGET /static/images/icon-192x192.png HTTP/1.1[0m" 304 -
+2025-08-19 15:01:40,982 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:01:40] "[36mGET /static/images/icon-512x512.png HTTP/1.1[0m" 304 -
+2025-08-19 15:01:40,990 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:01:40] "GET /manifest.json HTTP/1.1" 200 -
+2025-08-19 15:01:41,009 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:01:41] "GET /static/images/icon-192x192.png?v=1.0.5 HTTP/1.1" 200 -
+2025-08-19 15:01:41,011 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:01:41] "GET /manifest.json HTTP/1.1" 200 -
+2025-08-19 15:01:41,013 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:01:41] "GET /sw.js?v=1.0.5 HTTP/1.1" 200 -
+2025-08-19 15:01:41,021 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:01:41] "GET / HTTP/1.1" 200 -
+2025-08-19 15:01:41,022 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:01:41] "[36mGET /static/images/icon-192x192.png HTTP/1.1[0m" 304 -
+2025-08-19 15:01:41,024 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:01:41] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2025-08-19 15:01:41,025 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:01:41] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2025-08-19 15:01:41,032 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:01:41] "[36mGET /static/js/config.js HTTP/1.1[0m" 304 -
+2025-08-19 15:01:41,033 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:01:41] "[36mGET /static/images/icon-192x192.png HTTP/1.1[0m" 304 -
+2025-08-19 15:01:41,034 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:01:41] "[36mGET /static/images/icon-512x512.png HTTP/1.1[0m" 304 -
+2025-08-19 15:01:41,044 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:01:41] "GET /manifest.json HTTP/1.1" 200 -
+2025-08-19 15:01:41,045 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:01:41] "GET /api/players HTTP/1.1" 200 -
+2025-08-19 15:01:41,053 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:01:41] "GET /api/sessions HTTP/1.1" 200 -
+2025-08-19 15:01:41,059 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:01:41] "GET /api/sessions/active HTTP/1.1" 200 -
+2025-08-19 15:01:41,076 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:01:41] "GET /api/sessions/sid_20250816_7 HTTP/1.1" 200 -
+2025-08-19 15:01:41,090 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:01:41] "GET /api/sessions/sid_20250808_6 HTTP/1.1" 200 -
+2025-08-19 15:01:41,125 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:01:41] "GET /api/sessions/sid_20250803_5 HTTP/1.1" 200 -
+2025-08-19 15:01:41,138 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:01:41] "GET /api/sessions/sid_20250726_4 HTTP/1.1" 200 -
+2025-08-19 15:01:41,157 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:01:41] "GET /api/sessions/sid_20250628_3 HTTP/1.1" 200 -
+2025-08-19 15:01:41,173 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:01:41] "GET /api/sessions/sid_20250614_2 HTTP/1.1" 200 -
+2025-08-19 15:01:41,186 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:01:41] "GET /api/sessions/sid_20250524_1 HTTP/1.1" 200 -
+2025-08-19 15:01:45,925 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:01:45] "GET /admin/ HTTP/1.1" 200 -
+2025-08-19 15:01:46,120 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:01:46] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-08-19 15:01:47,728 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:01:47] "GET /sw.js?v=1.0.5 HTTP/1.1" 200 -
+2025-08-19 15:01:50,095 - app.routes.admin - INFO - Admin authentication successful
+2025-08-19 15:01:50,096 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:01:50] "POST /admin/login HTTP/1.1" 200 -
+2025-08-19 15:01:53,685 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:01:53] "GET /admin/players HTTP/1.1" 200 -
+2025-08-19 15:01:59,379 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:01:59] "POST /admin/logout HTTP/1.1" 200 -
+2025-08-19 15:02:00,234 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:02:00] "GET / HTTP/1.1" 200 -
+2025-08-19 15:02:00,328 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:02:00] "GET /sw.js?v=1755630120490 HTTP/1.1" 200 -
+2025-08-19 15:02:00,339 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:02:00] "GET / HTTP/1.1" 200 -
+2025-08-19 15:02:00,342 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:02:00] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2025-08-19 15:02:00,343 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:02:00] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2025-08-19 15:02:00,352 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:02:00] "[36mGET /static/js/config.js HTTP/1.1[0m" 304 -
+2025-08-19 15:02:00,352 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:02:00] "[36mGET /static/images/icon-192x192.png HTTP/1.1[0m" 304 -
+2025-08-19 15:02:00,353 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:02:00] "[36mGET /static/images/icon-512x512.png HTTP/1.1[0m" 304 -
+2025-08-19 15:02:00,358 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:02:00] "[33mGET /api/dashboard HTTP/1.1[0m" 404 -
+2025-08-19 15:02:00,366 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:02:00] "GET /manifest.json HTTP/1.1" 200 -
+2025-08-19 15:02:00,374 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:02:00] "GET /manifest.json HTTP/1.1" 200 -
+2025-08-19 15:02:00,397 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:02:00] "GET /sw.js?v=1.0.5 HTTP/1.1" 200 -
+2025-08-19 15:02:00,406 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:02:00] "GET / HTTP/1.1" 200 -
+2025-08-19 15:02:00,409 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:02:00] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2025-08-19 15:02:00,409 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:02:00] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2025-08-19 15:02:00,415 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:02:00] "[36mGET /static/js/config.js HTTP/1.1[0m" 304 -
+2025-08-19 15:02:00,415 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:02:00] "[36mGET /static/images/icon-192x192.png HTTP/1.1[0m" 304 -
+2025-08-19 15:02:00,416 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:02:00] "[36mGET /static/images/icon-512x512.png HTTP/1.1[0m" 304 -
+2025-08-19 15:02:00,425 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:02:00] "GET /manifest.json HTTP/1.1" 200 -
+2025-08-19 15:02:02,424 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:02:02] "GET / HTTP/1.1" 200 -
+2025-08-19 15:02:02,449 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:02:02] "GET /static/css/style.css?v=1.0.5 HTTP/1.1" 200 -
+2025-08-19 15:02:02,450 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:02:02] "GET /static/css/modern-ui.css?v=1.0.5 HTTP/1.1" 200 -
+2025-08-19 15:02:02,450 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:02:02] "GET /static/css/button-styles.css?v=1.0.5 HTTP/1.1" 200 -
+2025-08-19 15:02:02,450 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:02:02] "GET /static/css/responsive-fixes.css?v=1.0.5 HTTP/1.1" 200 -
+2025-08-19 15:02:02,450 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:02:02] "GET /static/css/chip-styles.css?v=1.0.5 HTTP/1.1" 200 -
+2025-08-19 15:02:02,451 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:02:02] "GET /static/js/app.js?v=1.0.5 HTTP/1.1" 200 -
+2025-08-19 15:02:02,509 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:02:02] "GET /static/js/modules/dashboard-page.js HTTP/1.1" 200 -
+2025-08-19 15:02:02,509 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:02:02] "GET /sw.js?v=1755630122557 HTTP/1.1" 200 -
+2025-08-19 15:02:02,510 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:02:02] "GET /static/js/modules/api-service.js HTTP/1.1" 200 -
+2025-08-19 15:02:02,510 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:02:02] "GET /static/js/modules/router.js HTTP/1.1" 200 -
+2025-08-19 15:02:02,510 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:02:02] "GET /static/js/modules/players-page.js HTTP/1.1" 200 -
+2025-08-19 15:02:02,511 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:02:02] "GET /static/js/modules/modal-manager.js HTTP/1.1" 200 -
+2025-08-19 15:02:02,519 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:02:02] "GET /static/js/modules/player-detail-page.js HTTP/1.1" 200 -
+2025-08-19 15:02:02,519 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:02:02] "GET /static/js/modules/session-detail-page.js HTTP/1.1" 200 -
+2025-08-19 15:02:02,519 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:02:02] "GET /static/js/modules/sessions-page.js HTTP/1.1" 200 -
+2025-08-19 15:02:02,520 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:02:02] "GET /static/js/modules/service-worker-manager.js HTTP/1.1" 200 -
+2025-08-19 15:02:02,522 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:02:02] "GET / HTTP/1.1" 200 -
+2025-08-19 15:02:02,525 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:02:02] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2025-08-19 15:02:02,525 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:02:02] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2025-08-19 15:02:02,532 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:02:02] "[36mGET /static/js/config.js HTTP/1.1[0m" 304 -
+2025-08-19 15:02:02,532 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:02:02] "[36mGET /static/images/icon-192x192.png HTTP/1.1[0m" 304 -
+2025-08-19 15:02:02,545 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:02:02] "[36mGET /static/images/icon-512x512.png HTTP/1.1[0m" 304 -
+2025-08-19 15:02:02,546 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:02:02] "GET /static/images/icon-192x192.png?v=1.0.5 HTTP/1.1" 200 -
+2025-08-19 15:02:02,550 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:02:02] "GET /manifest.json HTTP/1.1" 200 -
+2025-08-19 15:02:02,562 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:02:02] "GET /static/images/icon-192x192.png?v=1.0.5 HTTP/1.1" 200 -
+2025-08-19 15:02:02,564 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:02:02] "GET /manifest.json HTTP/1.1" 200 -
+2025-08-19 15:02:02,574 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:02:02] "GET /sw.js?v=1.0.5 HTTP/1.1" 200 -
+2025-08-19 15:02:02,580 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:02:02] "[36mGET /static/images/icon-192x192.png HTTP/1.1[0m" 304 -
+2025-08-19 15:02:02,583 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:02:02] "GET / HTTP/1.1" 200 -
+2025-08-19 15:02:02,585 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:02:02] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2025-08-19 15:02:02,586 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:02:02] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2025-08-19 15:02:02,592 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:02:02] "[36mGET /static/js/config.js HTTP/1.1[0m" 304 -
+2025-08-19 15:02:02,593 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:02:02] "[36mGET /static/images/icon-192x192.png HTTP/1.1[0m" 304 -
+2025-08-19 15:02:02,594 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:02:02] "[36mGET /static/images/icon-512x512.png HTTP/1.1[0m" 304 -
+2025-08-19 15:02:02,604 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:02:02] "GET /manifest.json HTTP/1.1" 200 -
+2025-08-19 15:02:02,607 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:02:02] "GET /api/players HTTP/1.1" 200 -
+2025-08-19 15:02:02,614 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:02:02] "GET /api/sessions HTTP/1.1" 200 -
+2025-08-19 15:02:02,619 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:02:02] "GET /api/sessions/active HTTP/1.1" 200 -
+2025-08-19 15:02:02,629 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:02:02] "GET /api/sessions/sid_20250816_7 HTTP/1.1" 200 -
+2025-08-19 15:02:02,647 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:02:02] "GET /api/sessions/sid_20250808_6 HTTP/1.1" 200 -
+2025-08-19 15:02:02,658 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:02:02] "GET /api/sessions/sid_20250803_5 HTTP/1.1" 200 -
+2025-08-19 15:02:02,668 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:02:02] "GET /api/sessions/sid_20250726_4 HTTP/1.1" 200 -
+2025-08-19 15:02:02,684 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:02:02] "GET /api/sessions/sid_20250628_3 HTTP/1.1" 200 -
+2025-08-19 15:02:02,696 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:02:02] "GET /api/sessions/sid_20250614_2 HTTP/1.1" 200 -
+2025-08-19 15:02:02,709 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:02:02] "GET /api/sessions/sid_20250524_1 HTTP/1.1" 200 -
+2025-08-19 15:02:47,364 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:02:47] "GET /admin/ HTTP/1.1" 200 -
+2025-08-19 15:02:47,563 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:02:47] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-08-19 15:02:49,198 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:02:49] "GET /sw.js?v=1.0.5 HTTP/1.1" 200 -
+2025-08-19 15:02:50,403 - app.routes.admin - INFO - Admin authentication successful
+2025-08-19 15:02:50,404 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:02:50] "POST /admin/login HTTP/1.1" 200 -
+2025-08-19 15:06:54,617 - app - INFO - Logging configured for Poker Night application
+2025-08-19 15:06:54,673 - __main__ - INFO - Flask app starting with debug_mode=True. Use --debug-paths to see path calculations.
+2025-08-19 15:06:54,735 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.27.50.40:5000
+2025-08-19 15:06:54,735 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-08-19 15:06:54,743 - werkzeug - INFO -  * Restarting with stat
+2025-08-19 15:06:55,645 - app - INFO - Logging configured for Poker Night application
+2025-08-19 15:06:55,698 - __main__ - INFO - Flask app starting with debug_mode=True. Use --debug-paths to see path calculations.
+2025-08-19 15:06:55,735 - werkzeug - WARNING -  * Debugger is active!
+2025-08-19 15:06:55,757 - werkzeug - INFO -  * Debugger PIN: 890-425-821
+2025-08-19 15:06:57,432 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:06:57] "GET /admin/ HTTP/1.1" 200 -
+2025-08-19 15:06:59,197 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:06:59] "GET /sw.js?v=1.0.5 HTTP/1.1" 200 -
+2025-08-19 15:07:01,206 - app.routes.admin - INFO - Admin authentication successful
+2025-08-19 15:07:01,208 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:07:01] "POST /admin/login HTTP/1.1" 200 -
+2025-08-19 15:07:21,222 - app.routes.admin - ERROR - Error listing backups: name 'os' is not defined
+2025-08-19 15:07:21,223 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:07:21] "[35m[1mGET /admin/backups HTTP/1.1[0m" 500 -
+2025-08-19 15:10:41,107 - app - INFO - Logging configured for Poker Night application
+2025-08-19 15:10:41,164 - __main__ - INFO - Flask app starting with debug_mode=True. Use --debug-paths to see path calculations.
+2025-08-19 15:10:41,206 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.27.50.40:5000
+2025-08-19 15:10:41,206 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-08-19 15:10:41,211 - werkzeug - INFO -  * Restarting with stat
+2025-08-19 15:10:42,108 - app - INFO - Logging configured for Poker Night application
+2025-08-19 15:10:42,168 - __main__ - INFO - Flask app starting with debug_mode=True. Use --debug-paths to see path calculations.
+2025-08-19 15:10:42,204 - werkzeug - WARNING -  * Debugger is active!
+2025-08-19 15:10:42,206 - werkzeug - INFO -  * Debugger PIN: 890-425-821
+2025-08-19 15:10:44,674 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:10:44] "GET /admin/ HTTP/1.1" 200 -
+2025-08-19 15:10:46,454 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:10:46] "GET /sw.js?v=1.0.5 HTTP/1.1" 200 -
+2025-08-19 15:10:47,316 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:10:47] "GET / HTTP/1.1" 200 -
+2025-08-19 15:10:47,381 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:10:47] "GET /sw.js?v=1755630647172 HTTP/1.1" 200 -
+2025-08-19 15:10:47,392 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:10:47] "GET / HTTP/1.1" 200 -
+2025-08-19 15:10:47,395 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:10:47] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2025-08-19 15:10:47,395 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:10:47] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2025-08-19 15:10:47,401 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:10:47] "[33mGET /api/dashboard HTTP/1.1[0m" 404 -
+2025-08-19 15:10:47,405 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:10:47] "[36mGET /static/js/config.js HTTP/1.1[0m" 304 -
+2025-08-19 15:10:47,407 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:10:47] "[36mGET /static/images/icon-192x192.png HTTP/1.1[0m" 304 -
+2025-08-19 15:10:47,407 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:10:47] "[36mGET /static/images/icon-512x512.png HTTP/1.1[0m" 304 -
+2025-08-19 15:10:47,412 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:10:47] "GET /manifest.json HTTP/1.1" 200 -
+2025-08-19 15:10:47,421 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:10:47] "GET /manifest.json HTTP/1.1" 200 -
+2025-08-19 15:10:47,450 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:10:47] "GET /sw.js?v=1.0.5 HTTP/1.1" 200 -
+2025-08-19 15:10:47,460 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:10:47] "GET / HTTP/1.1" 200 -
+2025-08-19 15:10:47,462 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:10:47] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2025-08-19 15:10:47,463 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:10:47] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2025-08-19 15:10:47,469 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:10:47] "[36mGET /static/js/config.js HTTP/1.1[0m" 304 -
+2025-08-19 15:10:47,470 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:10:47] "[36mGET /static/images/icon-192x192.png HTTP/1.1[0m" 304 -
+2025-08-19 15:10:47,470 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:10:47] "[36mGET /static/images/icon-512x512.png HTTP/1.1[0m" 304 -
+2025-08-19 15:10:47,479 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:10:47] "GET /manifest.json HTTP/1.1" 200 -
+2025-08-19 15:10:48,956 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:10:48] "GET / HTTP/1.1" 200 -
+2025-08-19 15:10:48,976 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:10:48] "GET /static/css/responsive-fixes.css?v=1.0.5 HTTP/1.1" 200 -
+2025-08-19 15:10:48,977 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:10:48] "GET /static/css/modern-ui.css?v=1.0.5 HTTP/1.1" 200 -
+2025-08-19 15:10:48,977 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:10:48] "GET /static/css/chip-styles.css?v=1.0.5 HTTP/1.1" 200 -
+2025-08-19 15:10:48,977 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:10:48] "GET /static/css/style.css?v=1.0.5 HTTP/1.1" 200 -
+2025-08-19 15:10:48,978 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:10:48] "GET /static/css/button-styles.css?v=1.0.5 HTTP/1.1" 200 -
+2025-08-19 15:10:48,979 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:10:48] "GET /static/js/app.js?v=1.0.5 HTTP/1.1" 200 -
+2025-08-19 15:10:49,107 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:10:49] "GET /sw.js?v=1755630648806 HTTP/1.1" 200 -
+2025-08-19 15:10:49,108 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:10:49] "GET /static/js/modules/modal-manager.js HTTP/1.1" 200 -
+2025-08-19 15:10:49,109 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:10:49] "GET /static/js/modules/dashboard-page.js HTTP/1.1" 200 -
+2025-08-19 15:10:49,109 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:10:49] "GET /static/js/modules/router.js HTTP/1.1" 200 -
+2025-08-19 15:10:49,109 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:10:49] "GET /static/js/modules/api-service.js HTTP/1.1" 200 -
+2025-08-19 15:10:49,109 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:10:49] "GET /static/js/modules/players-page.js HTTP/1.1" 200 -
+2025-08-19 15:10:49,117 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:10:49] "GET /static/js/modules/sessions-page.js HTTP/1.1" 200 -
+2025-08-19 15:10:49,117 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:10:49] "GET /static/js/modules/session-detail-page.js HTTP/1.1" 200 -
+2025-08-19 15:10:49,119 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:10:49] "GET /static/js/modules/player-detail-page.js HTTP/1.1" 200 -
+2025-08-19 15:10:49,120 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:10:49] "GET /static/js/modules/service-worker-manager.js HTTP/1.1" 200 -
+2025-08-19 15:10:49,121 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:10:49] "GET / HTTP/1.1" 200 -
+2025-08-19 15:10:49,124 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:10:49] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2025-08-19 15:10:49,125 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:10:49] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2025-08-19 15:10:49,132 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:10:49] "[36mGET /static/js/config.js HTTP/1.1[0m" 304 -
+2025-08-19 15:10:49,132 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:10:49] "[36mGET /static/images/icon-512x512.png HTTP/1.1[0m" 304 -
+2025-08-19 15:10:49,132 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:10:49] "[36mGET /static/images/icon-192x192.png HTTP/1.1[0m" 304 -
+2025-08-19 15:10:49,151 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:10:49] "GET /static/images/icon-192x192.png?v=1.0.5 HTTP/1.1" 200 -
+2025-08-19 15:10:49,152 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:10:49] "GET /manifest.json HTTP/1.1" 200 -
+2025-08-19 15:10:49,166 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:10:49] "GET /static/images/icon-192x192.png?v=1.0.5 HTTP/1.1" 200 -
+2025-08-19 15:10:49,169 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:10:49] "GET /manifest.json HTTP/1.1" 200 -
+2025-08-19 15:10:49,178 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:10:49] "GET /sw.js?v=1.0.5 HTTP/1.1" 200 -
+2025-08-19 15:10:49,180 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:10:49] "[36mGET /static/images/icon-192x192.png HTTP/1.1[0m" 304 -
+2025-08-19 15:10:49,187 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:10:49] "GET / HTTP/1.1" 200 -
+2025-08-19 15:10:49,191 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:10:49] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2025-08-19 15:10:49,192 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:10:49] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2025-08-19 15:10:49,197 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:10:49] "[36mGET /static/js/config.js HTTP/1.1[0m" 304 -
+2025-08-19 15:10:49,198 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:10:49] "[36mGET /static/images/icon-192x192.png HTTP/1.1[0m" 304 -
+2025-08-19 15:10:49,200 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:10:49] "[36mGET /static/images/icon-512x512.png HTTP/1.1[0m" 304 -
+2025-08-19 15:10:49,210 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:10:49] "GET /manifest.json HTTP/1.1" 200 -
+2025-08-19 15:10:49,213 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:10:49] "GET /api/players HTTP/1.1" 200 -
+2025-08-19 15:10:49,221 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:10:49] "GET /api/sessions HTTP/1.1" 200 -
+2025-08-19 15:10:49,227 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:10:49] "GET /api/sessions/active HTTP/1.1" 200 -
+2025-08-19 15:10:49,241 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:10:49] "GET /api/sessions/sid_20250816_7 HTTP/1.1" 200 -
+2025-08-19 15:10:49,257 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:10:49] "GET /api/sessions/sid_20250808_6 HTTP/1.1" 200 -
+2025-08-19 15:10:49,270 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:10:49] "GET /api/sessions/sid_20250803_5 HTTP/1.1" 200 -
+2025-08-19 15:10:49,283 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:10:49] "GET /api/sessions/sid_20250726_4 HTTP/1.1" 200 -
+2025-08-19 15:10:49,302 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:10:49] "GET /api/sessions/sid_20250628_3 HTTP/1.1" 200 -
+2025-08-19 15:10:49,316 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:10:49] "GET /api/sessions/sid_20250614_2 HTTP/1.1" 200 -
+2025-08-19 15:10:49,330 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:10:49] "GET /api/sessions/sid_20250524_1 HTTP/1.1" 200 -
+2025-08-19 15:10:55,071 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:10:55] "GET /api/sessions HTTP/1.1" 200 -
+2025-08-19 15:10:59,381 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:10:59] "GET /api/players HTTP/1.1" 200 -
+2025-08-19 15:10:59,387 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:10:59] "GET /api/sessions HTTP/1.1" 200 -
+2025-08-19 15:10:59,394 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:10:59] "GET /api/sessions/active HTTP/1.1" 200 -
+2025-08-19 15:10:59,405 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:10:59] "GET /api/sessions/sid_20250816_7 HTTP/1.1" 200 -
+2025-08-19 15:10:59,420 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:10:59] "GET /api/sessions/sid_20250808_6 HTTP/1.1" 200 -
+2025-08-19 15:10:59,433 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:10:59] "GET /api/sessions/sid_20250803_5 HTTP/1.1" 200 -
+2025-08-19 15:10:59,446 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:10:59] "GET /api/sessions/sid_20250726_4 HTTP/1.1" 200 -
+2025-08-19 15:10:59,472 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:10:59] "GET /api/sessions/sid_20250628_3 HTTP/1.1" 200 -
+2025-08-19 15:10:59,486 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:10:59] "GET /api/sessions/sid_20250614_2 HTTP/1.1" 200 -
+2025-08-19 15:10:59,501 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:10:59] "GET /api/sessions/sid_20250524_1 HTTP/1.1" 200 -
+2025-08-19 15:11:01,213 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:11:01] "GET /admin/ HTTP/1.1" 200 -
+2025-08-19 15:11:01,396 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:11:01] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-08-19 15:11:03,035 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:11:03] "GET /sw.js?v=1.0.5 HTTP/1.1" 200 -
+2025-08-19 15:11:04,671 - app.routes.admin - INFO - Admin authentication successful
+2025-08-19 15:11:04,671 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:11:04] "POST /admin/login HTTP/1.1" 200 -
+2025-08-19 15:27:26,185 - app - INFO - Logging configured for Poker Night application
+2025-08-19 15:27:26,246 - __main__ - INFO - Flask app starting with debug_mode=True. Use --debug-paths to see path calculations.
+2025-08-19 15:27:26,295 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.27.50.40:5000
+2025-08-19 15:27:26,296 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-08-19 15:27:26,301 - werkzeug - INFO -  * Restarting with stat
+2025-08-19 15:27:27,212 - app - INFO - Logging configured for Poker Night application
+2025-08-19 15:27:27,267 - __main__ - INFO - Flask app starting with debug_mode=True. Use --debug-paths to see path calculations.
+2025-08-19 15:27:27,304 - werkzeug - WARNING -  * Debugger is active!
+2025-08-19 15:27:27,307 - werkzeug - INFO -  * Debugger PIN: 890-425-821
+2025-08-19 15:27:32,043 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:27:32] "GET / HTTP/1.1" 200 -
+2025-08-19 15:27:32,083 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:27:32] "GET /static/css/button-styles.css?v=1.0.5 HTTP/1.1" 200 -
+2025-08-19 15:27:32,084 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:27:32] "GET /static/js/app.js?v=1.0.5 HTTP/1.1" 200 -
+2025-08-19 15:27:32,084 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:27:32] "GET /static/css/modern-ui.css?v=1.0.5 HTTP/1.1" 200 -
+2025-08-19 15:27:32,084 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:27:32] "GET /static/css/responsive-fixes.css?v=1.0.5 HTTP/1.1" 200 -
+2025-08-19 15:27:32,084 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:27:32] "GET /static/css/style.css?v=1.0.5 HTTP/1.1" 200 -
+2025-08-19 15:27:32,084 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:27:32] "GET /static/css/chip-styles.css?v=1.0.5 HTTP/1.1" 200 -
+2025-08-19 15:27:32,269 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:27:32] "GET /sw.js?v=1755631652213 HTTP/1.1" 200 -
+2025-08-19 15:27:32,271 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:27:32] "GET /static/js/modules/dashboard-page.js HTTP/1.1" 200 -
+2025-08-19 15:27:32,271 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:27:32] "GET /static/js/modules/modal-manager.js HTTP/1.1" 200 -
+2025-08-19 15:27:32,272 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:27:32] "GET /static/js/modules/api-service.js HTTP/1.1" 200 -
+2025-08-19 15:27:32,272 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:27:32] "GET /static/js/modules/router.js HTTP/1.1" 200 -
+2025-08-19 15:27:32,273 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:27:32] "GET /static/js/modules/players-page.js HTTP/1.1" 200 -
+2025-08-19 15:27:32,280 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:27:32] "GET /static/js/modules/sessions-page.js HTTP/1.1" 200 -
+2025-08-19 15:27:32,283 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:27:32] "GET /static/js/modules/session-detail-page.js HTTP/1.1" 200 -
+2025-08-19 15:27:32,284 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:27:32] "GET /static/js/modules/player-detail-page.js HTTP/1.1" 200 -
+2025-08-19 15:27:32,285 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:27:32] "GET / HTTP/1.1" 200 -
+2025-08-19 15:27:32,285 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:27:32] "GET /static/js/modules/service-worker-manager.js HTTP/1.1" 200 -
+2025-08-19 15:27:32,289 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:27:32] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2025-08-19 15:27:32,291 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:27:32] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2025-08-19 15:27:32,309 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:27:32] "[36mGET /static/js/config.js HTTP/1.1[0m" 304 -
+2025-08-19 15:27:32,311 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:27:32] "[36mGET /static/images/icon-192x192.png HTTP/1.1[0m" 304 -
+2025-08-19 15:27:32,311 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:27:32] "GET /static/images/icon-192x192.png?v=1.0.5 HTTP/1.1" 200 -
+2025-08-19 15:27:32,312 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:27:32] "[36mGET /static/images/icon-512x512.png HTTP/1.1[0m" 304 -
+2025-08-19 15:27:32,320 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:27:32] "GET /manifest.json HTTP/1.1" 200 -
+2025-08-19 15:27:32,337 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:27:32] "GET /static/images/icon-192x192.png?v=1.0.5 HTTP/1.1" 200 -
+2025-08-19 15:27:32,339 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:27:32] "GET /manifest.json HTTP/1.1" 200 -
+2025-08-19 15:27:32,349 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:27:32] "[36mGET /static/images/icon-192x192.png HTTP/1.1[0m" 304 -
+2025-08-19 15:27:32,350 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:27:32] "GET /sw.js?v=1.0.5 HTTP/1.1" 200 -
+2025-08-19 15:27:32,359 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:27:32] "GET / HTTP/1.1" 200 -
+2025-08-19 15:27:32,362 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:27:32] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2025-08-19 15:27:32,363 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:27:32] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2025-08-19 15:27:32,370 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:27:32] "[36mGET /static/js/config.js HTTP/1.1[0m" 304 -
+2025-08-19 15:27:32,371 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:27:32] "[36mGET /static/images/icon-512x512.png HTTP/1.1[0m" 304 -
+2025-08-19 15:27:32,371 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:27:32] "[36mGET /static/images/icon-192x192.png HTTP/1.1[0m" 304 -
+2025-08-19 15:27:32,375 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:27:32] "GET /api/players HTTP/1.1" 200 -
+2025-08-19 15:27:32,382 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:27:32] "GET /api/sessions HTTP/1.1" 200 -
+2025-08-19 15:27:32,382 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:27:32] "GET /manifest.json HTTP/1.1" 200 -
+2025-08-19 15:27:32,390 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:27:32] "GET /api/sessions/active HTTP/1.1" 200 -
+2025-08-19 15:27:32,406 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:27:32] "GET /api/sessions/sid_20250816_7 HTTP/1.1" 200 -
+2025-08-19 15:27:32,426 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:27:32] "GET /api/sessions/sid_20250808_6 HTTP/1.1" 200 -
+2025-08-19 15:27:32,439 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:27:32] "GET /api/sessions/sid_20250803_5 HTTP/1.1" 200 -
+2025-08-19 15:27:32,450 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:27:32] "GET /api/sessions/sid_20250726_4 HTTP/1.1" 200 -
+2025-08-19 15:27:32,471 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:27:32] "GET /api/sessions/sid_20250628_3 HTTP/1.1" 200 -
+2025-08-19 15:27:32,485 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:27:32] "GET /api/sessions/sid_20250614_2 HTTP/1.1" 200 -
+2025-08-19 15:27:32,499 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:27:32] "GET /api/sessions/sid_20250524_1 HTTP/1.1" 200 -
+2025-08-19 15:27:38,867 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:27:38] "GET /api/sessions HTTP/1.1" 200 -
+2025-08-19 15:27:42,473 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:27:42] "GET /api/sessions/sid_20250614_2 HTTP/1.1" 200 -
+2025-08-19 15:27:42,478 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:27:42] "GET /api/players/details HTTP/1.1" 200 -
+2025-08-19 15:27:57,409 - app.services.database_service - INFO - Session sid_20250614_2 has been reactivated.
+2025-08-19 15:27:57,409 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:27:57] "PUT /api/sessions/sid_20250614_2/reactivate HTTP/1.1" 200 -
+2025-08-19 15:27:59,373 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:27:59] "GET /api/sessions/sid_20250614_2 HTTP/1.1" 200 -
+2025-08-19 15:27:59,379 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:27:59] "GET /api/players/details HTTP/1.1" 200 -
+2025-08-19 15:28:02,757 - app.services.database_service - INFO - Session sid_20250614_2 has been ended.
+2025-08-19 15:28:02,758 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:28:02] "PUT /api/sessions/sid_20250614_2/end HTTP/1.1" 200 -
+2025-08-19 15:28:02,773 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:28:02] "GET /api/sessions/sid_20250614_2 HTTP/1.1" 200 -
+2025-08-19 15:28:02,779 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:28:02] "GET /api/players/details HTTP/1.1" 200 -
+2025-08-19 15:28:05,087 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:28:05] "GET /api/sessions HTTP/1.1" 200 -
+2025-08-19 15:28:06,650 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:28:06] "GET /api/sessions/sid_20250524_1 HTTP/1.1" 200 -
+2025-08-19 15:28:06,655 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:28:06] "GET /api/players/details HTTP/1.1" 200 -
+2025-08-19 15:28:08,915 - app.services.database_service - INFO - Session sid_20250524_1 has been reactivated.
+2025-08-19 15:28:08,915 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:28:08] "PUT /api/sessions/sid_20250524_1/reactivate HTTP/1.1" 200 -
+2025-08-19 15:28:10,629 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:28:10] "GET /api/sessions/sid_20250524_1 HTTP/1.1" 200 -
+2025-08-19 15:28:10,636 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:28:10] "GET /api/players/details HTTP/1.1" 200 -
+2025-08-19 15:28:13,816 - app.services.database_service - INFO - Session sid_20250524_1 has been ended.
+2025-08-19 15:28:13,817 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:28:13] "PUT /api/sessions/sid_20250524_1/end HTTP/1.1" 200 -
+2025-08-19 15:28:13,831 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:28:13] "GET /api/sessions/sid_20250524_1 HTTP/1.1" 200 -
+2025-08-19 15:28:13,837 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:28:13] "GET /api/players/details HTTP/1.1" 200 -
+2025-08-19 15:28:15,052 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:28:15] "GET /api/sessions HTTP/1.1" 200 -
+2025-08-19 15:28:16,193 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:28:16] "GET /api/sessions/sid_20250816_7 HTTP/1.1" 200 -
+2025-08-19 15:28:16,199 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:28:16] "GET /api/players/details HTTP/1.1" 200 -
+2025-08-19 15:28:17,694 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:28:17] "GET /api/sessions HTTP/1.1" 200 -
+2025-08-19 15:28:18,914 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:28:18] "GET /api/sessions/sid_20250524_1 HTTP/1.1" 200 -
+2025-08-19 15:28:18,920 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:28:18] "GET /api/players/details HTTP/1.1" 200 -
+2025-08-19 15:28:26,243 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:28:26] "GET /api/sessions HTTP/1.1" 200 -
+2025-08-19 15:28:27,673 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:28:27] "GET /api/sessions/sid_20250808_6 HTTP/1.1" 200 -
+2025-08-19 15:28:27,678 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:28:27] "GET /api/players/details HTTP/1.1" 200 -
+2025-08-19 15:28:29,116 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:28:29] "GET /api/sessions HTTP/1.1" 200 -
+2025-08-19 15:28:30,937 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:28:30] "GET /api/players HTTP/1.1" 200 -
+2025-08-19 15:28:30,943 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:28:30] "GET /api/sessions HTTP/1.1" 200 -
+2025-08-19 15:28:30,948 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:28:30] "GET /api/sessions/active HTTP/1.1" 200 -
+2025-08-19 15:28:30,958 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:28:30] "GET /api/sessions/sid_20250816_7 HTTP/1.1" 200 -
+2025-08-19 15:28:30,972 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:28:30] "GET /api/sessions/sid_20250808_6 HTTP/1.1" 200 -
+2025-08-19 15:28:30,983 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:28:30] "GET /api/sessions/sid_20250803_5 HTTP/1.1" 200 -
+2025-08-19 15:28:30,995 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:28:30] "GET /api/sessions/sid_20250726_4 HTTP/1.1" 200 -
+2025-08-19 15:28:31,012 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:28:31] "GET /api/sessions/sid_20250628_3 HTTP/1.1" 200 -
+2025-08-19 15:28:31,024 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:28:31] "GET /api/sessions/sid_20250614_2 HTTP/1.1" 200 -
+2025-08-19 15:28:31,037 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:28:31] "GET /api/sessions/sid_20250524_1 HTTP/1.1" 200 -
+2025-08-19 15:28:36,324 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:28:36] "GET /api/players HTTP/1.1" 200 -
+2025-08-19 15:28:42,294 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:28:42] "GET /api/sessions HTTP/1.1" 200 -
+2025-08-19 15:28:46,594 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:28:46] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+2025-08-19 15:28:46,596 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:28:46] "[36mGET /static/css/responsive-fixes.css?v=1.0.5 HTTP/1.1[0m" 304 -
+2025-08-19 15:28:46,597 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:28:46] "[36mGET /static/css/modern-ui.css?v=1.0.5 HTTP/1.1[0m" 304 -
+2025-08-19 15:28:46,597 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:28:46] "[36mGET /static/css/style.css?v=1.0.5 HTTP/1.1[0m" 304 -
+2025-08-19 15:28:46,598 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:28:46] "[36mGET /static/css/button-styles.css?v=1.0.5 HTTP/1.1[0m" 304 -
+2025-08-19 15:28:46,599 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:28:46] "[36mGET /static/css/chip-styles.css?v=1.0.5 HTTP/1.1[0m" 304 -
+2025-08-19 15:28:46,603 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:28:46] "GET /manifest.json HTTP/1.1" 200 -
+2025-08-19 15:30:34,784 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:30:34] "GET / HTTP/1.1" 200 -
+2025-08-19 15:30:34,801 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:30:34] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+2025-08-19 15:30:34,818 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:30:34] "GET /static/css/style.css?v=1.0.5 HTTP/1.1" 200 -
+2025-08-19 15:30:34,820 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:30:34] "GET /static/css/modern-ui.css?v=1.0.5 HTTP/1.1" 200 -
+2025-08-19 15:30:34,821 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:30:34] "GET /static/css/chip-styles.css?v=1.0.5 HTTP/1.1" 200 -
+2025-08-19 15:30:34,821 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:30:34] "GET /static/css/button-styles.css?v=1.0.5 HTTP/1.1" 200 -
+2025-08-19 15:30:34,822 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:30:34] "GET /static/css/responsive-fixes.css?v=1.0.5 HTTP/1.1" 200 -
+2025-08-19 15:30:34,823 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:30:34] "GET /static/js/app.js?v=1.0.5 HTTP/1.1" 200 -
+2025-08-19 15:30:34,975 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:30:34] "GET /static/js/modules/router.js HTTP/1.1" 200 -
+2025-08-19 15:30:34,975 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:30:34] "GET /static/js/modules/api-service.js HTTP/1.1" 200 -
+2025-08-19 15:30:34,975 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:30:34] "GET /static/js/modules/dashboard-page.js HTTP/1.1" 200 -
+2025-08-19 15:30:34,975 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:30:34] "GET /static/js/modules/modal-manager.js HTTP/1.1" 200 -
+2025-08-19 15:30:34,976 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:30:34] "GET /static/js/modules/players-page.js HTTP/1.1" 200 -
+2025-08-19 15:30:34,976 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:30:34] "GET /sw.js?v=1755631834941 HTTP/1.1" 200 -
+2025-08-19 15:30:34,986 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:30:34] "GET /static/js/modules/sessions-page.js HTTP/1.1" 200 -
+2025-08-19 15:30:34,987 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:30:34] "GET /static/js/modules/player-detail-page.js HTTP/1.1" 200 -
+2025-08-19 15:30:34,987 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:30:34] "GET /static/js/modules/service-worker-manager.js HTTP/1.1" 200 -
+2025-08-19 15:30:34,988 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:30:34] "GET /static/js/modules/session-detail-page.js HTTP/1.1" 200 -
+2025-08-19 15:30:35,005 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:30:35] "GET / HTTP/1.1" 200 -
+2025-08-19 15:30:35,007 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:30:35] "GET /api/sessions HTTP/1.1" 200 -
+2025-08-19 15:30:35,009 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:30:35] "GET /static/images/icon-192x192.png?v=1.0.5 HTTP/1.1" 200 -
+2025-08-19 15:30:35,010 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:30:35] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2025-08-19 15:30:35,010 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:30:35] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2025-08-19 15:30:35,016 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:30:35] "[36mGET /static/js/config.js HTTP/1.1[0m" 304 -
+2025-08-19 15:30:35,019 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:30:35] "[36mGET /static/images/icon-192x192.png HTTP/1.1[0m" 304 -
+2025-08-19 15:30:35,020 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:30:35] "[36mGET /static/images/icon-512x512.png HTTP/1.1[0m" 304 -
+2025-08-19 15:30:35,027 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:30:35] "GET /manifest.json HTTP/1.1" 200 -
+2025-08-19 15:30:35,040 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:30:35] "GET /static/images/icon-192x192.png?v=1.0.5 HTTP/1.1" 200 -
+2025-08-19 15:30:35,041 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:30:35] "GET /manifest.json HTTP/1.1" 200 -
+2025-08-19 15:30:35,052 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:30:35] "[36mGET /static/images/icon-192x192.png HTTP/1.1[0m" 304 -
+2025-08-19 15:30:35,052 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:30:35] "GET /sw.js?v=1.0.5 HTTP/1.1" 200 -
+2025-08-19 15:30:35,063 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:30:35] "GET / HTTP/1.1" 200 -
+2025-08-19 15:30:35,066 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:30:35] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2025-08-19 15:30:35,067 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:30:35] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2025-08-19 15:30:35,073 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:30:35] "[36mGET /static/js/config.js HTTP/1.1[0m" 304 -
+2025-08-19 15:30:35,075 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:30:35] "[36mGET /static/images/icon-192x192.png HTTP/1.1[0m" 304 -
+2025-08-19 15:30:35,075 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:30:35] "[36mGET /static/images/icon-512x512.png HTTP/1.1[0m" 304 -
+2025-08-19 15:30:35,084 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:30:35] "GET /manifest.json HTTP/1.1" 200 -
+2025-08-19 15:30:37,018 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:30:37] "GET /api/sessions/sid_20250816_7 HTTP/1.1" 200 -
+2025-08-19 15:30:37,024 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:30:37] "GET /api/players/details HTTP/1.1" 200 -
+2025-08-19 15:30:40,977 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:30:40] "GET /api/sessions HTTP/1.1" 200 -
+2025-08-19 15:30:42,267 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:30:42] "GET /api/sessions/sid_20250524_1 HTTP/1.1" 200 -
+2025-08-19 15:30:42,272 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:30:42] "GET /api/players/details HTTP/1.1" 200 -
+2025-08-19 15:32:44,839 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:32:44] "GET / HTTP/1.1" 200 -
+2025-08-19 15:32:44,859 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:32:44] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+2025-08-19 15:32:44,877 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:32:44] "GET /static/css/style.css?v=1.0.5 HTTP/1.1" 200 -
+2025-08-19 15:32:44,877 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:32:44] "GET /static/css/modern-ui.css?v=1.0.5 HTTP/1.1" 200 -
+2025-08-19 15:32:44,877 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:32:44] "GET /static/css/chip-styles.css?v=1.0.5 HTTP/1.1" 200 -
+2025-08-19 15:32:44,878 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:32:44] "GET /static/css/responsive-fixes.css?v=1.0.5 HTTP/1.1" 200 -
+2025-08-19 15:32:44,878 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:32:44] "GET /static/css/button-styles.css?v=1.0.5 HTTP/1.1" 200 -
+2025-08-19 15:32:44,879 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:32:44] "GET /static/js/app.js?v=1.0.5 HTTP/1.1" 200 -
+2025-08-19 15:32:45,017 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:32:45] "GET /sw.js?v=1755631964549 HTTP/1.1" 200 -
+2025-08-19 15:32:45,031 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:32:45] "GET /static/js/modules/api-service.js HTTP/1.1" 200 -
+2025-08-19 15:32:45,032 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:32:45] "GET /static/js/modules/router.js HTTP/1.1" 200 -
+2025-08-19 15:32:45,032 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:32:45] "GET /static/js/modules/modal-manager.js HTTP/1.1" 200 -
+2025-08-19 15:32:45,032 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:32:45] "GET /static/js/modules/dashboard-page.js HTTP/1.1" 200 -
+2025-08-19 15:32:45,033 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:32:45] "GET /static/js/modules/players-page.js HTTP/1.1" 200 -
+2025-08-19 15:32:45,033 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:32:45] "GET /static/js/modules/sessions-page.js HTTP/1.1" 200 -
+2025-08-19 15:32:45,038 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:32:45] "GET /static/js/modules/session-detail-page.js HTTP/1.1" 200 -
+2025-08-19 15:32:45,041 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:32:45] "GET / HTTP/1.1" 200 -
+2025-08-19 15:32:45,042 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:32:45] "GET /static/js/modules/player-detail-page.js HTTP/1.1" 200 -
+2025-08-19 15:32:45,042 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:32:45] "GET /static/js/modules/service-worker-manager.js HTTP/1.1" 200 -
+2025-08-19 15:32:45,043 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:32:45] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2025-08-19 15:32:45,044 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:32:45] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2025-08-19 15:32:45,057 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:32:45] "[36mGET /static/js/config.js HTTP/1.1[0m" 304 -
+2025-08-19 15:32:45,057 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:32:45] "[36mGET /static/images/icon-192x192.png HTTP/1.1[0m" 304 -
+2025-08-19 15:32:45,058 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:32:45] "GET /static/images/icon-192x192.png?v=1.0.5 HTTP/1.1" 200 -
+2025-08-19 15:32:45,059 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:32:45] "[36mGET /static/images/icon-512x512.png HTTP/1.1[0m" 304 -
+2025-08-19 15:32:45,074 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:32:45] "GET /api/sessions/sid_20250524_1 HTTP/1.1" 200 -
+2025-08-19 15:32:45,079 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:32:45] "GET /manifest.json HTTP/1.1" 200 -
+2025-08-19 15:32:45,093 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:32:45] "GET /api/players/details HTTP/1.1" 200 -
+2025-08-19 15:32:45,096 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:32:45] "GET /static/images/icon-192x192.png?v=1.0.5 HTTP/1.1" 200 -
+2025-08-19 15:32:45,098 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:32:45] "GET /manifest.json HTTP/1.1" 200 -
+2025-08-19 15:32:45,105 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:32:45] "GET /sw.js?v=1.0.5 HTTP/1.1" 200 -
+2025-08-19 15:32:45,107 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:32:45] "[36mGET /static/images/icon-192x192.png HTTP/1.1[0m" 304 -
+2025-08-19 15:32:45,114 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:32:45] "GET / HTTP/1.1" 200 -
+2025-08-19 15:32:45,118 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:32:45] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2025-08-19 15:32:45,118 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:32:45] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2025-08-19 15:32:45,126 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:32:45] "[36mGET /static/js/config.js HTTP/1.1[0m" 304 -
+2025-08-19 15:32:45,128 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:32:45] "[36mGET /static/images/icon-192x192.png HTTP/1.1[0m" 304 -
+2025-08-19 15:32:45,129 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:32:45] "[36mGET /static/images/icon-512x512.png HTTP/1.1[0m" 304 -
+2025-08-19 15:32:45,137 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:32:45] "GET /manifest.json HTTP/1.1" 200 -
+2025-08-19 15:32:46,873 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:32:46] "GET /api/sessions HTTP/1.1" 200 -
+2025-08-19 15:32:47,739 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:32:47] "GET /api/sessions/sid_20250816_7 HTTP/1.1" 200 -
+2025-08-19 15:32:47,746 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:32:47] "GET /api/players/details HTTP/1.1" 200 -
+2025-08-19 15:32:48,855 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:32:48] "GET /api/sessions HTTP/1.1" 200 -
+2025-08-19 15:32:48,953 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:32:48] "GET /api/players HTTP/1.1" 200 -
+2025-08-19 15:32:48,959 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:32:48] "GET /api/sessions HTTP/1.1" 200 -
+2025-08-19 15:32:48,965 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:32:48] "GET /api/sessions/active HTTP/1.1" 200 -
+2025-08-19 15:32:48,977 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:32:48] "GET /api/sessions/sid_20250816_7 HTTP/1.1" 200 -
+2025-08-19 15:32:48,993 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:32:48] "GET /api/sessions/sid_20250808_6 HTTP/1.1" 200 -
+2025-08-19 15:32:49,004 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:32:49] "GET /api/sessions/sid_20250803_5 HTTP/1.1" 200 -
+2025-08-19 15:32:49,016 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:32:49] "GET /api/sessions/sid_20250726_4 HTTP/1.1" 200 -
+2025-08-19 15:32:49,032 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:32:49] "GET /api/sessions/sid_20250628_3 HTTP/1.1" 200 -
+2025-08-19 15:32:49,047 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:32:49] "GET /api/sessions/sid_20250614_2 HTTP/1.1" 200 -
+2025-08-19 15:32:49,061 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:32:49] "GET /api/sessions/sid_20250524_1 HTTP/1.1" 200 -
+2025-08-19 15:33:50,492 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:33:50] "GET /api/players HTTP/1.1" 200 -
+2025-08-19 15:33:53,382 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:33:53] "GET /api/sessions HTTP/1.1" 200 -
+2025-08-19 15:33:54,478 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:33:54] "GET /api/sessions/sid_20250816_7 HTTP/1.1" 200 -
+2025-08-19 15:33:54,484 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:33:54] "GET /api/players/details HTTP/1.1" 200 -
+2025-08-19 15:34:02,497 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:34:02] "GET /api/sessions HTTP/1.1" 200 -
+2025-08-19 15:34:06,315 - app.services.database_service - INFO - Session created for 2025-08-19 with ID sid_20250819_1, Buy-in: $20.00
+2025-08-19 15:34:06,394 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:34:06] "[35m[1mPOST /api/sessions HTTP/1.1[0m" 500 -
+2025-08-19 15:41:42,972 - app - INFO - Logging configured for Poker Night application
+2025-08-19 15:41:43,032 - __main__ - INFO - Flask app starting with debug_mode=True. Use --debug-paths to see path calculations.
+2025-08-19 15:41:43,076 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.27.50.40:5000
+2025-08-19 15:41:43,076 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-08-19 15:41:43,081 - werkzeug - INFO -  * Restarting with stat
+2025-08-19 15:41:44,000 - app - INFO - Logging configured for Poker Night application
+2025-08-19 15:41:44,057 - __main__ - INFO - Flask app starting with debug_mode=True. Use --debug-paths to see path calculations.
+2025-08-19 15:41:44,097 - werkzeug - WARNING -  * Debugger is active!
+2025-08-19 15:41:44,099 - werkzeug - INFO -  * Debugger PIN: 890-425-821
+2025-08-19 15:41:45,908 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:41:45] "GET / HTTP/1.1" 200 -
+2025-08-19 15:41:45,927 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:41:45] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+2025-08-19 15:41:45,952 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:41:45] "GET /static/css/style.css?v=1.0.5 HTTP/1.1" 200 -
+2025-08-19 15:41:45,952 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:41:45] "GET /static/css/modern-ui.css?v=1.0.5 HTTP/1.1" 200 -
+2025-08-19 15:41:45,953 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:41:45] "GET /static/css/responsive-fixes.css?v=1.0.5 HTTP/1.1" 200 -
+2025-08-19 15:41:45,953 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:41:45] "GET /static/css/button-styles.css?v=1.0.5 HTTP/1.1" 200 -
+2025-08-19 15:41:45,953 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:41:45] "GET /static/js/app.js?v=1.0.5 HTTP/1.1" 200 -
+2025-08-19 15:41:45,954 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:41:45] "GET /static/css/chip-styles.css?v=1.0.5 HTTP/1.1" 200 -
+2025-08-19 15:41:46,140 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:41:46] "GET /static/js/modules/dashboard-page.js HTTP/1.1" 200 -
+2025-08-19 15:41:46,140 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:41:46] "GET /static/js/modules/router.js HTTP/1.1" 200 -
+2025-08-19 15:41:46,141 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:41:46] "GET /static/js/modules/modal-manager.js HTTP/1.1" 200 -
+2025-08-19 15:41:46,142 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:41:46] "GET /static/js/modules/api-service.js HTTP/1.1" 200 -
+2025-08-19 15:41:46,142 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:41:46] "GET /static/js/modules/players-page.js HTTP/1.1" 200 -
+2025-08-19 15:41:46,147 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:41:46] "GET /sw.js?v=1755632506083 HTTP/1.1" 200 -
+2025-08-19 15:41:46,150 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:41:46] "GET /static/js/modules/session-detail-page.js HTTP/1.1" 200 -
+2025-08-19 15:41:46,151 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:41:46] "GET /static/js/modules/sessions-page.js HTTP/1.1" 200 -
+2025-08-19 15:41:46,152 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:41:46] "GET /static/js/modules/player-detail-page.js HTTP/1.1" 200 -
+2025-08-19 15:41:46,153 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:41:46] "GET /static/js/modules/service-worker-manager.js HTTP/1.1" 200 -
+2025-08-19 15:41:46,160 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:41:46] "GET / HTTP/1.1" 200 -
+2025-08-19 15:41:46,164 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:41:46] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2025-08-19 15:41:46,169 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:41:46] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2025-08-19 15:41:46,175 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:41:46] "GET /api/sessions HTTP/1.1" 200 -
+2025-08-19 15:41:46,177 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:41:46] "GET /static/images/icon-192x192.png?v=1.0.5 HTTP/1.1" 200 -
+2025-08-19 15:41:46,178 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:41:46] "[36mGET /static/js/config.js HTTP/1.1[0m" 304 -
+2025-08-19 15:41:46,182 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:41:46] "[36mGET /static/images/icon-192x192.png HTTP/1.1[0m" 304 -
+2025-08-19 15:41:46,184 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:41:46] "[36mGET /static/images/icon-512x512.png HTTP/1.1[0m" 304 -
+2025-08-19 15:41:46,191 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:41:46] "GET /manifest.json HTTP/1.1" 200 -
+2025-08-19 15:41:46,204 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:41:46] "GET /static/images/icon-192x192.png?v=1.0.5 HTTP/1.1" 200 -
+2025-08-19 15:41:46,205 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:41:46] "GET /manifest.json HTTP/1.1" 200 -
+2025-08-19 15:41:46,219 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:41:46] "[36mGET /static/images/icon-192x192.png HTTP/1.1[0m" 304 -
+2025-08-19 15:41:46,220 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:41:46] "GET /sw.js?v=1.0.5 HTTP/1.1" 200 -
+2025-08-19 15:41:46,230 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:41:46] "GET / HTTP/1.1" 200 -
+2025-08-19 15:41:46,233 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:41:46] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2025-08-19 15:41:46,234 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:41:46] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2025-08-19 15:41:46,243 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:41:46] "[36mGET /static/js/config.js HTTP/1.1[0m" 304 -
+2025-08-19 15:41:46,245 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:41:46] "[36mGET /static/images/icon-192x192.png HTTP/1.1[0m" 304 -
+2025-08-19 15:41:46,245 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:41:46] "[36mGET /static/images/icon-512x512.png HTTP/1.1[0m" 304 -
+2025-08-19 15:41:46,254 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:41:46] "GET /manifest.json HTTP/1.1" 200 -
+2025-08-19 15:41:46,814 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:41:46] "GET /api/players HTTP/1.1" 200 -
+2025-08-19 15:41:46,821 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:41:46] "GET /api/sessions HTTP/1.1" 200 -
+2025-08-19 15:41:46,828 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:41:46] "GET /api/sessions/active HTTP/1.1" 200 -
+2025-08-19 15:41:46,838 - app.services.database_service - ERROR - Failed to update session sid_20250819_1: (raised as a result of Query-invoked autoflush; consider using a session.no_autoflush block if this flush is occurring prematurely)
+(sqlite3.ProgrammingError) Error binding parameter 1: type 'dict' is not supported
+[SQL: UPDATE sessions SET chip_distribution=?, total_chips=?, updated_at=? WHERE sessions.id = ?]
+[parameters: ({'Black': 10, 'Blue': 10, 'Green': 13, 'Red': 14, 'White': 20}, 67, '2025-08-19 19:41:46.838609', 8)]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-08-19 15:41:46,841 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:41:46] "GET /api/sessions/sid_20250819_1 HTTP/1.1" 200 -
+2025-08-19 15:41:46,847 - app.services.database_service - ERROR - Failed to update session sid_20250819_2: (raised as a result of Query-invoked autoflush; consider using a session.no_autoflush block if this flush is occurring prematurely)
+(sqlite3.ProgrammingError) Error binding parameter 1: type 'dict' is not supported
+[SQL: UPDATE sessions SET chip_distribution=?, total_chips=?, updated_at=? WHERE sessions.id = ?]
+[parameters: ({'Black': 10, 'Blue': 10, 'Green': 13, 'Red': 14, 'White': 20}, 67, '2025-08-19 19:41:46.847701', 9)]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-08-19 15:41:46,849 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:41:46] "GET /api/sessions/sid_20250819_2 HTTP/1.1" 200 -
+2025-08-19 15:41:46,859 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:41:46] "GET /api/sessions/sid_20250816_7 HTTP/1.1" 200 -
+2025-08-19 15:41:46,874 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:41:46] "GET /api/sessions/sid_20250808_6 HTTP/1.1" 200 -
+2025-08-19 15:41:46,885 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:41:46] "GET /api/sessions/sid_20250803_5 HTTP/1.1" 200 -
+2025-08-19 15:41:46,895 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:41:46] "GET /api/sessions/sid_20250726_4 HTTP/1.1" 200 -
+2025-08-19 15:41:46,911 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:41:46] "GET /api/sessions/sid_20250628_3 HTTP/1.1" 200 -
+2025-08-19 15:41:46,924 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:41:46] "GET /api/sessions/sid_20250614_2 HTTP/1.1" 200 -
+2025-08-19 15:41:46,937 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:41:46] "GET /api/sessions/sid_20250524_1 HTTP/1.1" 200 -
+2025-08-19 15:41:47,700 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:41:47] "GET /api/sessions HTTP/1.1" 200 -
+2025-08-19 15:41:48,761 - app.services.database_service - ERROR - Failed to update session sid_20250819_1: (raised as a result of Query-invoked autoflush; consider using a session.no_autoflush block if this flush is occurring prematurely)
+(sqlite3.ProgrammingError) Error binding parameter 1: type 'dict' is not supported
+[SQL: UPDATE sessions SET chip_distribution=?, total_chips=?, updated_at=? WHERE sessions.id = ?]
+[parameters: ({'Black': 10, 'Blue': 10, 'Green': 13, 'Red': 14, 'White': 20}, 67, '2025-08-19 19:41:48.761571', 8)]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-08-19 15:41:48,763 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:41:48] "GET /api/sessions/sid_20250819_1 HTTP/1.1" 200 -
+2025-08-19 15:41:48,769 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:41:48] "GET /api/players/details HTTP/1.1" 200 -
+2025-08-19 15:41:52,567 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:41:52] "GET /api/sessions HTTP/1.1" 200 -
+2025-08-19 15:41:54,587 - app.services.database_service - ERROR - Failed to update session sid_20250819_2: (raised as a result of Query-invoked autoflush; consider using a session.no_autoflush block if this flush is occurring prematurely)
+(sqlite3.ProgrammingError) Error binding parameter 1: type 'dict' is not supported
+[SQL: UPDATE sessions SET chip_distribution=?, total_chips=?, updated_at=? WHERE sessions.id = ?]
+[parameters: ({'Black': 10, 'Blue': 10, 'Green': 13, 'Red': 14, 'White': 20}, 67, '2025-08-19 19:41:54.586839', 9)]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-08-19 15:41:54,588 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:41:54] "GET /api/sessions/sid_20250819_2 HTTP/1.1" 200 -
+2025-08-19 15:41:54,593 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:41:54] "GET /api/players/details HTTP/1.1" 200 -
+2025-08-19 15:41:56,832 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:41:56] "GET /api/sessions HTTP/1.1" 200 -
+2025-08-19 15:41:58,092 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:41:58] "GET /api/players HTTP/1.1" 200 -
+2025-08-19 15:41:58,098 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:41:58] "GET /api/sessions HTTP/1.1" 200 -
+2025-08-19 15:41:58,103 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:41:58] "GET /api/sessions/active HTTP/1.1" 200 -
+2025-08-19 15:41:58,109 - app.services.database_service - ERROR - Failed to update session sid_20250819_1: (raised as a result of Query-invoked autoflush; consider using a session.no_autoflush block if this flush is occurring prematurely)
+(sqlite3.ProgrammingError) Error binding parameter 1: type 'dict' is not supported
+[SQL: UPDATE sessions SET chip_distribution=?, total_chips=?, updated_at=? WHERE sessions.id = ?]
+[parameters: ({'Black': 10, 'Blue': 10, 'Green': 13, 'Red': 14, 'White': 20}, 67, '2025-08-19 19:41:58.109669', 8)]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-08-19 15:41:58,111 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:41:58] "GET /api/sessions/sid_20250819_1 HTTP/1.1" 200 -
+2025-08-19 15:41:58,118 - app.services.database_service - ERROR - Failed to update session sid_20250819_2: (raised as a result of Query-invoked autoflush; consider using a session.no_autoflush block if this flush is occurring prematurely)
+(sqlite3.ProgrammingError) Error binding parameter 1: type 'dict' is not supported
+[SQL: UPDATE sessions SET chip_distribution=?, total_chips=?, updated_at=? WHERE sessions.id = ?]
+[parameters: ({'Black': 10, 'Blue': 10, 'Green': 13, 'Red': 14, 'White': 20}, 67, '2025-08-19 19:41:58.118622', 9)]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-08-19 15:41:58,120 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:41:58] "GET /api/sessions/sid_20250819_2 HTTP/1.1" 200 -
+2025-08-19 15:41:58,131 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:41:58] "GET /api/sessions/sid_20250816_7 HTTP/1.1" 200 -
+2025-08-19 15:41:58,143 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:41:58] "GET /api/sessions/sid_20250808_6 HTTP/1.1" 200 -
+2025-08-19 15:41:58,155 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:41:58] "GET /api/sessions/sid_20250803_5 HTTP/1.1" 200 -
+2025-08-19 15:41:58,166 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:41:58] "GET /api/sessions/sid_20250726_4 HTTP/1.1" 200 -
+2025-08-19 15:41:58,181 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:41:58] "GET /api/sessions/sid_20250628_3 HTTP/1.1" 200 -
+2025-08-19 15:41:58,194 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:41:58] "GET /api/sessions/sid_20250614_2 HTTP/1.1" 200 -
+2025-08-19 15:41:58,207 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:41:58] "GET /api/sessions/sid_20250524_1 HTTP/1.1" 200 -
+2025-08-19 15:41:57,430 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:41:57] "GET /admin/ HTTP/1.1" 200 -
+2025-08-19 15:41:57,625 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:41:57] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-08-19 15:41:59,238 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:41:59] "GET /sw.js?v=1.0.5 HTTP/1.1" 200 -
+2025-08-19 15:42:01,581 - app.routes.admin - INFO - Admin authentication successful
+2025-08-19 15:42:01,581 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:42:01] "POST /admin/login HTTP/1.1" 200 -
+2025-08-19 15:42:23,309 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:42:23] "GET /admin/ HTTP/1.1" 200 -
+2025-08-19 15:42:23,381 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:42:23] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-08-19 15:42:26,562 - app.routes.admin - INFO - Admin authentication successful
+2025-08-19 15:42:26,563 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:42:26] "POST /admin/login HTTP/1.1" 200 -
+2025-08-19 15:42:26,580 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:42:26] "GET /admin/status HTTP/1.1" 200 -
+2025-08-19 15:42:28,333 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:42:28] "GET /admin/entries HTTP/1.1" 200 -
+2025-08-19 15:42:27,710 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:42:27] "[31m[1mGET /admin/sessions HTTP/1.1[0m" 401 -
+2025-08-19 15:42:30,625 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:42:30] "GET /admin/ HTTP/1.1" 200 -
+2025-08-19 15:42:32,348 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:42:32] "GET /sw.js?v=1.0.5 HTTP/1.1" 200 -
+2025-08-19 15:42:33,812 - app.routes.admin - INFO - Admin authentication successful
+2025-08-19 15:42:33,812 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:42:33] "POST /admin/login HTTP/1.1" 200 -
+2025-08-19 16:00:00,433 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 16:00:00] "[31m[1mGET /admin/sessions HTTP/1.1[0m" 401 -
+2025-08-19 16:12:54,363 - backend.app - INFO - Logging configured for Poker Night application
+2025-08-19 16:13:13,461 - app - INFO - Logging configured for Poker Night application
+2025-08-19 16:13:13,519 - __main__ - INFO - Flask app starting with debug_mode=True. Use --debug-paths to see path calculations.
+2025-08-19 16:13:20,939 - app.routes.admin - WARNING - Admin authentication failed
+2025-08-19 16:13:20,940 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 16:13:20] "[31m[1mPOST /admin/login HTTP/1.1[0m" 401 -
+2025-08-19 16:13:32,154 - app.routes.admin - INFO - Admin authentication successful
+2025-08-19 16:13:32,155 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 16:13:32] "POST /admin/login HTTP/1.1" 200 -
+2025-08-19 16:13:35,967 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 16:13:35] "GET /admin/sessions HTTP/1.1" 200 -
+2025-08-19 16:13:41,348 - app.routes.admin - WARNING - Admin deleted session sid_20250819_2 (force=False)
+2025-08-19 16:13:41,348 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 16:13:41] "DELETE /admin/sessions/sid_20250819_2 HTTP/1.1" 200 -
+2025-08-19 16:13:45,468 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 16:13:45] "GET /admin/sessions HTTP/1.1" 200 -
+2025-08-19 16:13:49,573 - app.routes.admin - WARNING - Admin deleted session sid_20250819_1 (force=False)
+2025-08-19 16:13:49,573 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 16:13:49] "DELETE /admin/sessions/sid_20250819_1 HTTP/1.1" 200 -
+2025-08-19 16:13:53,937 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 16:13:53] "GET /admin/sessions HTTP/1.1" 200 -
+2025-08-19 16:14:38,102 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 16:14:38] "GET /admin/ HTTP/1.1" 200 -
+2025-08-19 16:14:38,262 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 16:14:38] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-08-19 16:14:42,239 - app.routes.admin - INFO - Admin authentication successful
+2025-08-19 16:14:42,240 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 16:14:42] "POST /admin/login HTTP/1.1" 200 -
+2025-08-19 16:14:42,253 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 16:14:42] "GET /admin/status HTTP/1.1" 200 -
+2025-08-19 16:14:43,585 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 16:14:43] "GET /admin/sessions HTTP/1.1" 200 -
+2025-08-19 16:14:54,453 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 16:14:54] "GET /admin/ HTTP/1.1" 200 -
+2025-08-19 16:14:55,614 - app.routes.admin - INFO - Admin authentication successful
+2025-08-19 16:14:55,614 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 16:14:55] "POST /admin/login HTTP/1.1" 200 -
+2025-08-19 16:14:55,628 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 16:14:55] "GET /admin/status HTTP/1.1" 200 -
+2025-08-19 16:14:56,892 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 16:14:56] "GET /admin/sessions HTTP/1.1" 200 -
+2025-08-19 16:15:02,539 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 16:15:02] "GET /admin/players HTTP/1.1" 200 -
+2025-08-19 16:15:03,574 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 16:15:03] "GET /admin/sessions HTTP/1.1" 200 -
+2025-08-19 16:15:04,625 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 16:15:04] "GET /admin/sessions HTTP/1.1" 200 -
+2025-08-19 16:15:05,141 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 16:15:05] "GET /admin/entries HTTP/1.1" 200 -
+2025-08-19 16:15:05,405 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 16:15:05] "GET /admin/sessions HTTP/1.1" 200 -
+2025-08-19 16:15:07,492 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 16:15:07] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -

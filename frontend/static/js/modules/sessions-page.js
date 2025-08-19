@@ -51,7 +51,7 @@ export default class SessionsPage {    constructor(appContent, apiService) {
                         </a>                        <span class="session-status status-${session.status && typeof session.status === 'string' ? session.status.toLowerCase() : 'unknown'}">
                             ${session.status || 'Unknown'}
                             ${session.status === 'ENDED' ? 
-                                `<span class="session-action-dot" title="This session can be deleted">•</span>` : ''}
+                                `<span class="session-action-dot" title="This session can be deleted"></span>` : ''}
                         </span>
                     </li>
                 `;

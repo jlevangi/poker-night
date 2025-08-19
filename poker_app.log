@@ -85,3 +85,19 @@
 2025-08-18 20:29:17,360 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
 2025-08-18 20:29:26,159 - werkzeug - INFO - 127.0.0.1 - - [18/Aug/2025 20:29:26] "GET /api/sessions HTTP/1.1" 200 -
 2025-08-18 20:30:16,700 - werkzeug - INFO - 127.0.0.1 - - [18/Aug/2025 20:30:16] "GET /api/sessions/sid_20250816_7 HTTP/1.1" 200 -
+2025-08-19 15:26:54,416 - app - INFO - Logging configured for Poker Night application
+2025-08-19 15:31:31,416 - app - INFO - Logging configured for Poker Night application
+2025-08-19 15:36:33,263 - app - INFO - Logging configured for Poker Night application
+2025-08-19 15:36:33,324 - __main__ - INFO - Flask app starting with debug_mode=True. Use --debug-paths to see path calculations.
+2025-08-19 15:36:33,392 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.27.50.40:5000
+2025-08-19 15:36:33,392 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-08-19 15:36:33,397 - werkzeug - INFO -  * Restarting with stat
+2025-08-19 15:36:34,294 - app - INFO - Logging configured for Poker Night application
+2025-08-19 15:36:34,347 - __main__ - INFO - Flask app starting with debug_mode=True. Use --debug-paths to see path calculations.
+2025-08-19 15:36:34,387 - werkzeug - WARNING -  * Debugger is active!
+2025-08-19 15:36:34,402 - werkzeug - INFO -  * Debugger PIN: 605-824-999
+2025-08-19 15:36:39,609 - app.services.database_service - INFO - Session created for 2025-08-19 with ID sid_20250819_2, Buy-in: $20.00
+2025-08-19 15:36:39,683 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:36:39] "[35m[1mPOST /api/sessions HTTP/1.1[0m" 500 -

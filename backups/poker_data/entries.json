@@ -5,9 +5,9 @@
         "player_id": "pid_001",
         "player_name": "Pierce",
         "buy_in_count": 2,
-        "total_buy_in_amount": 40,
-        "payout": 0,
-        "profit": -40
+        "total_buy_in_amount": 40.0,
+        "payout": 0.0,
+        "profit": -40.0
     },
     {
         "entry_id": "eid_0002",
@@ -15,7 +15,7 @@
         "player_id": "pid_003",
         "player_name": "Timmy",
         "buy_in_count": 1,
-        "total_buy_in_amount": 20,
+        "total_buy_in_amount": 20.0,
         "payout": 36.85,
         "profit": 16.85
     },
@@ -25,7 +25,7 @@
         "player_id": "pid_002",
         "player_name": "Matty Ice",
         "buy_in_count": 1,
-        "total_buy_in_amount": 20,
+        "total_buy_in_amount": 20.0,
         "payout": 85.1,
         "profit": 65.1
     },
@@ -35,7 +35,7 @@
         "player_id": "pid_008",
         "player_name": "Liv",
         "buy_in_count": 2,
-        "total_buy_in_amount": 40,
+        "total_buy_in_amount": 40.0,
         "payout": 27.5,
         "profit": -12.5
     },
@@ -45,7 +45,7 @@
         "player_id": "pid_007",
         "player_name": "Cassie",
         "buy_in_count": 1,
-        "total_buy_in_amount": 20,
+        "total_buy_in_amount": 20.0,
         "payout": 59.35,
         "profit": 39.35
     },
@@ -55,9 +55,9 @@
         "player_id": "pid_011",
         "player_name": "Elijah",
         "buy_in_count": 2,
-        "total_buy_in_amount": 40,
-        "payout": 0,
-        "profit": -40
+        "total_buy_in_amount": 40.0,
+        "payout": 0.0,
+        "profit": -40.0
     },
     {
         "entry_id": "eid_0008",
@@ -65,9 +65,9 @@
         "player_id": "pid_005",
         "player_name": "Colin",
         "buy_in_count": 2,
-        "total_buy_in_amount": 40,
-        "payout": 0,
-        "profit": -40
+        "total_buy_in_amount": 40.0,
+        "payout": 0.0,
+        "profit": -40.0
     },
     {
         "entry_id": "eid_0009",
@@ -75,17 +75,17 @@
         "player_id": "pid_006",
         "player_name": "Brantley",
         "buy_in_count": 1,
-        "total_buy_in_amount": 20,
+        "total_buy_in_amount": 20.0,
         "payout": 31.2,
         "profit": 11.2
     },
     {
-        "entry_id": "eid_0057",
+        "entry_id": "eid_0009",
         "session_id": "sid_20250614_2",
         "player_id": "pid_012",
         "player_name": "Daulton W.",
         "buy_in_count": 1,
-        "total_buy_in_amount": 20,
+        "total_buy_in_amount": 20.0,
         "payout": 31.95,
         "profit": 11.95
     },
@@ -95,7 +95,7 @@
         "player_id": "pid_003",
         "player_name": "Timmy",
         "buy_in_count": 2,
-        "total_buy_in_amount": 40,
+        "total_buy_in_amount": 40.0,
         "payout": 83.05,
         "profit": 43.05
     },
@@ -105,9 +105,9 @@
         "player_id": "pid_008",
         "player_name": "Liv",
         "buy_in_count": 1,
-        "total_buy_in_amount": 20,
-        "payout": 0,
-        "profit": -20
+        "total_buy_in_amount": 20.0,
+        "payout": 0.0,
+        "profit": -20.0
     },
     {
         "entry_id": "eid_0012",
@@ -115,7 +115,7 @@
         "player_id": "pid_002",
         "player_name": "Matty Ice",
         "buy_in_count": 1,
-        "total_buy_in_amount": 20,
+        "total_buy_in_amount": 20.0,
         "payout": 36.4,
         "profit": 16.4
     },
@@ -125,9 +125,9 @@
         "player_id": "pid_007",
         "player_name": "Cassie",
         "buy_in_count": 1,
-        "total_buy_in_amount": 20,
+        "total_buy_in_amount": 20.0,
         "payout": 42.3,
-        "profit": 22.3
+        "profit": 22.299999999999997
     },
     {
         "entry_id": "eid_0014",
@@ -135,9 +135,9 @@
         "player_id": "pid_013",
         "player_name": "Griff",
         "buy_in_count": 3,
-        "total_buy_in_amount": 60,
-        "payout": 0,
-        "profit": -60
+        "total_buy_in_amount": 60.0,
+        "payout": 0.0,
+        "profit": -60.0
     },
     {
         "entry_id": "eid_0015",
@@ -145,9 +145,9 @@
         "player_id": "pid_014",
         "player_name": "Mike M",
         "buy_in_count": 1,
-        "total_buy_in_amount": 20,
-        "payout": 0,
-        "profit": -20
+        "total_buy_in_amount": 20.0,
+        "payout": 0.0,
+        "profit": -20.0
     },
     {
         "entry_id": "eid_0016",
@@ -155,9 +155,9 @@
         "player_id": "pid_005",
         "player_name": "Colin",
         "buy_in_count": 1,
-        "total_buy_in_amount": 20,
+        "total_buy_in_amount": 20.0,
         "payout": 26.3,
-        "profit": 6.3
+        "profit": 6.300000000000001
     },
     {
         "entry_id": "eid_0017",
@@ -165,9 +165,9 @@
         "player_id": "pid_001",
         "player_name": "Pierce",
         "buy_in_count": 3,
-        "total_buy_in_amount": 60,
+        "total_buy_in_amount": 60.0,
         "payout": 56.7,
-        "profit": -3.3
+        "profit": -3.299999999999997
     },
     {
         "entry_id": "eid_0018",
@@ -175,9 +175,9 @@
         "player_id": "pid_002",
         "player_name": "Matty Ice",
         "buy_in_count": 2,
-        "total_buy_in_amount": 40,
+        "total_buy_in_amount": 40.0,
         "payout": 77.1,
-        "profit": 37.1
+        "profit": 37.099999999999994
     },
     {
         "entry_id": "eid_0019",
@@ -185,7 +185,7 @@
         "player_id": "pid_007",
         "player_name": "Cassie",
         "buy_in_count": 1,
-        "total_buy_in_amount": 20,
+        "total_buy_in_amount": 20.0,
         "payout": 61.1,
         "profit": 41.1
     },
@@ -195,9 +195,9 @@
         "player_id": "pid_015",
         "player_name": "Gabe",
         "buy_in_count": 1,
-        "total_buy_in_amount": 20,
-        "payout": 0,
-        "profit": -20
+        "total_buy_in_amount": 20.0,
+        "payout": 0.0,
+        "profit": -20.0
     },
     {
         "entry_id": "eid_0021",
@@ -205,9 +205,9 @@
         "player_id": "pid_004",
         "player_name": "Mariah",
         "buy_in_count": 1,
-        "total_buy_in_amount": 20,
-        "payout": 0,
-        "profit": -20
+        "total_buy_in_amount": 20.0,
+        "payout": 0.0,
+        "profit": -20.0
     },
     {
         "entry_id": "eid_0022",
@@ -215,7 +215,7 @@
         "player_id": "pid_006",
         "player_name": "Brantley",
         "buy_in_count": 1,
-        "total_buy_in_amount": 20,
+        "total_buy_in_amount": 20.0,
         "payout": 161.1,
         "profit": 141.1
     },
@@ -225,9 +225,9 @@
         "player_id": "pid_005",
         "player_name": "Colin",
         "buy_in_count": 1,
-        "total_buy_in_amount": 20,
-        "payout": 0,
-        "profit": -20
+        "total_buy_in_amount": 20.0,
+        "payout": 0.0,
+        "profit": -20.0
     },
     {
         "entry_id": "eid_0024",
@@ -235,9 +235,9 @@
         "player_id": "pid_008",
         "player_name": "Liv",
         "buy_in_count": 2,
-        "total_buy_in_amount": 40,
-        "payout": 0,
-        "profit": -40
+        "total_buy_in_amount": 40.0,
+        "payout": 0.0,
+        "profit": -40.0
     },
     {
         "entry_id": "eid_0025",
@@ -245,9 +245,9 @@
         "player_id": "pid_003",
         "player_name": "Timmy",
         "buy_in_count": 3,
-        "total_buy_in_amount": 60,
-        "payout": 0,
-        "profit": -60
+        "total_buy_in_amount": 60.0,
+        "payout": 0.0,
+        "profit": -60.0
     },
     {
         "entry_id": "eid_0026",
@@ -255,9 +255,9 @@
         "player_id": "pid_016",
         "player_name": "Nick",
         "buy_in_count": 1,
-        "total_buy_in_amount": 20,
+        "total_buy_in_amount": 20.0,
         "payout": 16.05,
-        "profit": -3.95
+        "profit": -3.9499999999999993
     },
     {
         "entry_id": "eid_0027",
@@ -265,9 +265,9 @@
         "player_id": "pid_017",
         "player_name": "Jessica",
         "buy_in_count": 2,
-        "total_buy_in_amount": 40,
+        "total_buy_in_amount": 40.0,
         "payout": 30.1,
-        "profit": -9.9
+        "profit": -9.899999999999999
     },
     {
         "entry_id": "eid_0028",
@@ -275,7 +275,7 @@
         "player_id": "pid_014",
         "player_name": "Mike M",
         "buy_in_count": 1,
-        "total_buy_in_amount": 20,
+        "total_buy_in_amount": 20.0,
         "payout": 30.55,
         "profit": 10.55
     },
@@ -285,9 +285,9 @@
         "player_id": "pid_011",
         "player_name": "Elijah",
         "buy_in_count": 2,
-        "total_buy_in_amount": 40,
-        "payout": 0,
-        "profit": -40
+        "total_buy_in_amount": 40.0,
+        "payout": 0.0,
+        "profit": -40.0
     },
     {
         "entry_id": "eid_0030",
@@ -295,7 +295,7 @@
         "player_id": "pid_018",
         "player_name": "kaiden",
         "buy_in_count": 1,
-        "total_buy_in_amount": 20,
+        "total_buy_in_amount": 20.0,
         "payout": 11.25,
         "profit": -8.75
     },
@@ -305,7 +305,7 @@
         "player_id": "pid_007",
         "player_name": "Cassie",
         "buy_in_count": 1,
-        "total_buy_in_amount": 20,
+        "total_buy_in_amount": 20.0,
         "payout": 47.15,
         "profit": 27.15
     },
@@ -315,9 +315,9 @@
         "player_id": "pid_002",
         "player_name": "Matty Ice",
         "buy_in_count": 1,
-        "total_buy_in_amount": 20,
+        "total_buy_in_amount": 20.0,
         "payout": 45.55,
-        "profit": 25.55
+        "profit": 25.549999999999997
     },
     {
         "entry_id": "eid_0033",
@@ -325,9 +325,9 @@
         "player_id": "pid_006",
         "player_name": "Brantley",
         "buy_in_count": 2,
-        "total_buy_in_amount": 40,
-        "payout": 0,
-        "profit": -40
+        "total_buy_in_amount": 40.0,
+        "payout": 0.0,
+        "profit": -40.0
     },
     {
         "entry_id": "eid_0034",
@@ -335,9 +335,9 @@
         "player_id": "pid_005",
         "player_name": "Colin",
         "buy_in_count": 2,
-        "total_buy_in_amount": 40,
+        "total_buy_in_amount": 40.0,
         "payout": 51.3,
-        "profit": 11.3
+        "profit": 11.299999999999997
     },
     {
         "entry_id": "eid_0035",
@@ -345,9 +345,9 @@
         "player_id": "pid_014",
         "player_name": "Mike M",
         "buy_in_count": 1,
-        "total_buy_in_amount": 20,
+        "total_buy_in_amount": 20.0,
         "payout": 36.05,
-        "profit": 16.05
+        "profit": 16.049999999999997
     },
     {
         "entry_id": "eid_0036",
@@ -355,9 +355,9 @@
         "player_id": "pid_019",
         "player_name": "Brandon",
         "buy_in_count": 2,
-        "total_buy_in_amount": 40,
-        "payout": 0,
-        "profit": -40
+        "total_buy_in_amount": 40.0,
+        "payout": 0.0,
+        "profit": -40.0
     },
     {
         "entry_id": "eid_0037",
@@ -365,7 +365,7 @@
         "player_id": "pid_002",
         "player_name": "Matty Ice",
         "buy_in_count": 1,
-        "total_buy_in_amount": 20,
+        "total_buy_in_amount": 20.0,
         "payout": 84.9,
         "profit": 64.9
     },
@@ -375,19 +375,19 @@
         "player_id": "pid_007",
         "player_name": "Cassie",
         "buy_in_count": 2,
-        "total_buy_in_amount": 40,
-        "payout": 0,
-        "profit": -40
+        "total_buy_in_amount": 40.0,
+        "payout": 0.0,
+        "profit": -40.0
     },
     {
         "entry_id": "eid_0039",
         "session_id": "sid_20250803_5",
         "player_id": "pid_001",
         "player_name": "Pierce",
-        "buy_in_count": 2,
-        "total_buy_in_amount": 40,
+        "buy_in_count": 0,
+        "total_buy_in_amount": 0,
         "payout": 59.4,
-        "profit": 19.4
+        "profit": 59.4
     },
     {
         "entry_id": "eid_0040",
@@ -395,9 +395,9 @@
         "player_id": "pid_003",
         "player_name": "Timmy",
         "buy_in_count": 2,
-        "total_buy_in_amount": 40,
-        "payout": 0,
-        "profit": -40
+        "total_buy_in_amount": 40.0,
+        "payout": 0.0,
+        "profit": -40.0
     },
     {
         "entry_id": "eid_0041",
@@ -405,9 +405,9 @@
         "player_id": "pid_020",
         "player_name": "Robbie",
         "buy_in_count": 1,
-        "total_buy_in_amount": 20,
-        "payout": 0,
-        "profit": -20
+        "total_buy_in_amount": 20.0,
+        "payout": 0.0,
+        "profit": -20.0
     },
     {
         "entry_id": "eid_0042",
@@ -415,9 +415,9 @@
         "player_id": "pid_021",
         "player_name": "Eli L.",
         "buy_in_count": 1,
-        "total_buy_in_amount": 20,
+        "total_buy_in_amount": 20.0,
         "payout": 35.7,
-        "profit": 15.7
+        "profit": 15.700000000000003
     },
     {
         "entry_id": "eid_0043",
@@ -425,7 +425,7 @@
         "player_id": "pid_003",
         "player_name": "Timmy",
         "buy_in_count": 1,
-        "total_buy_in_amount": 20,
+        "total_buy_in_amount": 20.0,
         "payout": 94.95,
         "profit": 74.95
     },
@@ -435,9 +435,9 @@
         "player_id": "pid_008",
         "player_name": "Liv",
         "buy_in_count": 2,
-        "total_buy_in_amount": 40,
-        "payout": 0,
-        "profit": -40
+        "total_buy_in_amount": 40.0,
+        "payout": 0.0,
+        "profit": -40.0
     },
     {
         "entry_id": "eid_0045",
@@ -445,7 +445,7 @@
         "player_id": "pid_002",
         "player_name": "Matty Ice",
         "buy_in_count": 3,
-        "total_buy_in_amount": 60,
+        "total_buy_in_amount": 60.0,
         "payout": 43.6,
         "profit": -16.4
     },
@@ -455,9 +455,9 @@
         "player_id": "pid_007",
         "player_name": "Cassie",
         "buy_in_count": 1,
-        "total_buy_in_amount": 20,
-        "payout": 0,
-        "profit": -20
+        "total_buy_in_amount": 20.0,
+        "payout": 0.0,
+        "profit": -20.0
     },
     {
         "entry_id": "eid_0047",
@@ -465,9 +465,9 @@
         "player_id": "pid_009",
         "player_name": "Corey",
         "buy_in_count": 3,
-        "total_buy_in_amount": 60,
-        "payout": 0,
-        "profit": -60
+        "total_buy_in_amount": 60.0,
+        "payout": 0.0,
+        "profit": -60.0
     },
     {
         "entry_id": "eid_0048",
@@ -475,7 +475,7 @@
         "player_id": "pid_022",
         "player_name": "Seth",
         "buy_in_count": 1,
-        "total_buy_in_amount": 20,
+        "total_buy_in_amount": 20.0,
         "payout": 50.4,
         "profit": 30.4
     },
@@ -485,9 +485,9 @@
         "player_id": "pid_005",
         "player_name": "Colin",
         "buy_in_count": 1,
-        "total_buy_in_amount": 20,
-        "payout": 0,
-        "profit": -20
+        "total_buy_in_amount": 20.0,
+        "payout": 0.0,
+        "profit": -20.0
     },
     {
         "entry_id": "eid_0050",
@@ -495,9 +495,9 @@
         "player_id": "pid_001",
         "player_name": "Pierce",
         "buy_in_count": 2,
-        "total_buy_in_amount": 40,
+        "total_buy_in_amount": 40.0,
         "payout": 88.4,
-        "profit": 48.4
+        "profit": 48.400000000000006
     },
     {
         "entry_id": "eid_0051",
@@ -505,7 +505,7 @@
         "player_id": "pid_013",
         "player_name": "Griff",
         "buy_in_count": 1,
-        "total_buy_in_amount": 20,
+        "total_buy_in_amount": 20.0,
         "payout": 26.75,
         "profit": 6.75
     },
@@ -515,9 +515,9 @@
         "player_id": "pid_012",
         "player_name": "Daulton W.",
         "buy_in_count": 2,
-        "total_buy_in_amount": 40,
-        "payout": 10,
-        "profit": -30
+        "total_buy_in_amount": 40.0,
+        "payout": 10.0,
+        "profit": -30.0
     },
     {
         "entry_id": "eid_0053",
@@ -525,7 +525,7 @@
         "player_id": "pid_013",
         "player_name": "Griff",
         "buy_in_count": 1,
-        "total_buy_in_amount": 20,
+        "total_buy_in_amount": 20.0,
         "payout": 112.5,
         "profit": 92.5
     },
@@ -535,9 +535,9 @@
         "player_id": "pid_003",
         "player_name": "Timmy",
         "buy_in_count": 1,
-        "total_buy_in_amount": 20,
+        "total_buy_in_amount": 20.0,
         "payout": 17.9,
-        "profit": -2.1
+        "profit": -2.1000000000000014
     },
     {
         "entry_id": "eid_0055",
@@ -545,7 +545,7 @@
         "player_id": "pid_002",
         "player_name": "Matty Ice",
         "buy_in_count": 3,
-        "total_buy_in_amount": 60,
+        "total_buy_in_amount": 60.0,
         "payout": 22.5,
         "profit": -37.5
     },
@@ -555,8 +555,8 @@
         "player_id": "pid_023",
         "player_name": "Larry",
         "buy_in_count": 1,
-        "total_buy_in_amount": 20,
+        "total_buy_in_amount": 20.0,
         "payout": 14.7,
-        "profit": -5.3
+        "profit": -5.300000000000001
     }
 ]
