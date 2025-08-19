@@ -1,6 +1,0 @@
-{
-  "backup_date": "2025-08-19T11:19:29.853307",
-  "description": "Pre-migration backup",
-  "source_db": "/mnt/c/Users/pierc/git/poker-night/poker_data/poker_night.db",
-  "backup_file": "poker_db_backup_20250819_111929.db"
-}
