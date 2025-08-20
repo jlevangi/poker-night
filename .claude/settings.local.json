@@ -35,7 +35,8 @@
       "Bash(PYTHONPATH=. python3 test_notifications.py)",
       "Bash(PYTHONPATH=. ./venv/bin/python3 -c \"\nfrom app.services.notification_service import NotificationService\nprint(''NotificationService imported successfully'')\nns = NotificationService()\nprint(''NotificationService instantiated successfully'')\n\")",
       "Bash(./venv/bin/pip install pywebpush py-vapid)",
-      "Bash(PYTHONPATH=.:*)"
+      "Bash(PYTHONPATH=.:*)",
+      "Bash(PYTHONPATH=backend ./venv/bin/python:*)"
     ],
     "deny": [],
     "ask": []

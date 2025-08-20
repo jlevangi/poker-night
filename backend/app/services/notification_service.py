@@ -21,23 +21,20 @@ class NotificationService:
     
     def __init__(self):
         """Initialize NotificationService."""
+        import os
         self.logger = logging.getLogger(__name__)
         
-        # VAPID keys - in production, these should be stored in environment variables
-        self.vapid_private_key = """-----BEGIN PRIVATE KEY-----
-MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQguS4XZfhx/vl5UtuU
-d6nETnh956EjHXQ41us/XtabHDmhRANCAATEqDiS4ZqEoO5losQYlXnSuCrhQT3v
-fBRxIHdtRA4oQLmUnx5P1A4t639nTqdaeKD5jY7+7aDA3xCppi/hhAN1
------END PRIVATE KEY-----"""
+        # VAPID keys from environment variables
+        self.vapid_private_key = os.getenv('VAPID_PRIVATE_KEY')
+        self.vapid_public_key = os.getenv('VAPID_PUBLIC_KEY')
         
-        self.vapid_public_key = """-----BEGIN PUBLIC KEY-----
-MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAExKg4kuGahKDuZaLEGJV50rgq4UE9
-73wUcSB3bUQOKEC5lJ8eT9QOLet/Z06nWnig+Y2O/u2gwN8QqaYv4YQDdQ==
------END PUBLIC KEY-----"""
+        if not self.vapid_private_key or not self.vapid_public_key:
+            raise ValueError("VAPID_PRIVATE_KEY and VAPID_PUBLIC_KEY environment variables must be set")
         
         # Contact information for VAPID
+        vapid_email = os.getenv('VAPID_EMAIL', 'admin@yourpokerapp.com')
         self.vapid_claims = {
-            "sub": "mailto:admin@yourpokerapp.com"  # Change this to your actual contact
+            "sub": f"mailto:{vapid_email}"
         }
 
     def calculate_session_summary(self, session_id: str) -> Dict[str, Any]:
