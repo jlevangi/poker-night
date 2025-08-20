@@ -41,8 +41,8 @@ class Config:
         self.SECRET_KEY = os.environ.get('SECRET_KEY', 'poker-night-admin-secret-key-change-in-production')
         
     def _load_app_version(self) -> None:
-        """Load APP_VERSION from frontend/.env file."""
-        env_file_path = os.path.join(self.FRONTEND_DIR, '.env')
+        """Load APP_VERSION from root .env file."""
+        env_file_path = os.path.join(self.PROJECT_ROOT, '.env')
         self.APP_VERSION = '1.0.5'  # Default fallback version
         
         try:
@@ -61,13 +61,13 @@ class Config:
     
     def _load_admin_config(self) -> None:
         """Load admin configuration from environment variables and .env file."""
-        # Try to load from backend .env file first
-        backend_env_file = os.path.join(self.SCRIPT_DIR, '.env')
+        # Try to load from root .env file first
+        root_env_file = os.path.join(self.PROJECT_ROOT, '.env')
         admin_password_hash = None
         
-        if os.path.exists(backend_env_file):
+        if os.path.exists(root_env_file):
             try:
-                with open(backend_env_file, 'r') as f:
+                with open(root_env_file, 'r') as f:
                     for line in f:
                         if line.strip() and not line.strip().startswith('#'):
                             if '=' in line:
@@ -78,7 +78,7 @@ class Config:
             except Exception as e:
                 import logging
                 logger = logging.getLogger(__name__)
-                logger.warning(f"Error reading backend .env file: {e}")
+                logger.warning(f"Error reading root .env file: {e}")
         
         # Fall back to environment variable or default
         self.ADMIN_PASSWORD_HASH = os.environ.get('ADMIN_PASSWORD_HASH', admin_password_hash)

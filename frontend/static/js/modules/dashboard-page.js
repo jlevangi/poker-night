@@ -137,16 +137,16 @@ export default class DashboardPage {
         }
         
         return `
-            <div class="ui-card" style="background: linear-gradient(135deg, #fefce8 0%, #fef3c7 100%); border: 3px solid #f59e0b; margin-bottom: 1.5rem; box-shadow: 0 10px 15px -3px rgba(245, 158, 11, 0.1), 0 4px 6px -2px rgba(245, 158, 11, 0.04);">
-                <div style="text-align: center; padding: 1.25rem 1.5rem 0.5rem 1.5rem;">
-                    <h3 style="font-size: 1.5rem; color: #d97706; font-weight: 800; margin: 0 0 0.75rem 0;">
+            <div class="ui-card gamble-king-card" style="background: linear-gradient(135deg, #fefce8 0%, #fef3c7 100%); border: 3px solid #f59e0b; margin-bottom: 1.5rem; box-shadow: 0 10px 15px -3px rgba(245, 158, 11, 0.1), 0 4px 6px -2px rgba(245, 158, 11, 0.04);">
+                <div class="gamble-king-header" style="text-align: center; padding: 1.25rem 1.5rem 0.5rem 1.5rem;">
+                    <h3 class="gamble-king-title" style="font-size: 1.5rem; color: #d97706; font-weight: 800; margin: 0 0 0.75rem 0;">
                         👑 CURRENT GAMBLE KING 👑
                     </h3>
                     <div class="gamble-king-name" style="font-size: 2.25rem; font-weight: 900; background: linear-gradient(45deg, #d97706, #f59e0b, #fbbf24, #f59e0b, #d97706); background-size: 300% 300%; -webkit-background-clip: text; background-clip: text; color: transparent; margin-bottom: 1rem; text-align: center; animation: goldShine 3s ease-in-out infinite;">
                         ${gambleKing.name}
                     </div>
                 </div>
-                <div style="padding: 0 1.5rem 1.5rem 1.5rem;">
+                <div class="gamble-king-content" style="padding: 0 1.5rem 1.5rem 1.5rem;">
                     <div class="gamble-king-stats" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem;">
                         <div style="background: white; border: 2px solid #f59e0b; border-left: 2px solid #f59e0b; padding: 1rem; text-align: center; border-radius: var(--radius-lg);">
                             <span class="stat-value profit-${gambleKing.net_profit >= 0 ? 'positive' : 'negative'}" style="font-size: 1.5rem; font-weight: 800; display: block;">$${gambleKing.net_profit ? gambleKing.net_profit.toFixed(2) : '0.00'}</span>

@@ -6,18 +6,6 @@ export default class Router {
         
         // Setup event listeners
         window.addEventListener('hashchange', () => this.route());
-        
-        // Handle mobile bottom navigation
-        document.querySelectorAll('.bottom-nav .nav-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                // Update active states
-                document.querySelectorAll('.bottom-nav .nav-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                
-                // Navigate to the page
-                window.location.hash = btn.dataset.hash;
-            });
-        });
     }
     
     // Register a route handler

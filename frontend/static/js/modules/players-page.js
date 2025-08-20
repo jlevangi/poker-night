@@ -22,15 +22,16 @@ export default class PlayersPage {
     // Render players content
     render(players) {
         let html = `
-            <h2>Players</h2>
-            
-            <div class="add-player-form">
-                <h3>Add New Player</h3>
-                <input type="text" id="new-player-name" placeholder="Player Name">
-                <button id="add-player-btn" class="action-btn">Add Player</button>
-            </div>
-            
-            <h3>Player List</h3>
+            <div class="fade-in">
+                <h2>Players</h2>
+                
+                <div class="add-player-form">
+                    <h3>Add New Player</h3>
+                    <input type="text" id="new-player-name" placeholder="Player Name">
+                    <button id="add-player-btn" class="action-btn">Add Player</button>
+                </div>
+                
+                <h3>Player List</h3>
         `;
         
         if (players && players.length > 0) {
@@ -72,6 +73,10 @@ export default class PlayersPage {
         } else {
             html += `<p>No players found. Add your first player above!</p>`;
         }
+        
+        html += `
+            </div>
+        `;
         
         this.appContent.innerHTML = html;
         

@@ -1103,13 +1103,20 @@ footer {
 .bottom-nav .nav-btn:active, .bottom-nav .nav-btn.active {
   background: rgba(255, 255, 255, 0.13);
   color: #fff;
-  box-shadow: 0 0 8px rgba(255, 255, 255, 0.25); /* Add highlight for active button */
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.25);
+  transform: scale(0.95);
+}
+
+.bottom-nav .nav-btn:active .nav-icon {
+  transform: scale(1.2);
+  filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.8));
 }
 
 .bottom-nav .nav-icon {
   font-size: 1.3em;
   display: block;
   line-height: 1;
+  transition: all 0.2s ease;
 }
 
 .bottom-nav .nav-label {
@@ -1144,5 +1151,104 @@ footer {
   
   body {
     padding-bottom: env(safe-area-inset-bottom, 0);
+  }
+  
+  /* Make gamble king section more compact on mobile */
+  .gamble-king-card {
+    margin-bottom: 1rem !important;
+  }
+  
+  .gamble-king-header {
+    padding: 0.75rem 1rem 0.25rem 1rem !important;
+  }
+  
+  .gamble-king-title {
+    font-size: 1.125rem !important;
+    margin: 0 0 0.5rem 0 !important;
+  }
+  
+  .gamble-king-name {
+    font-size: 1.5rem !important;
+    margin-bottom: 0.5rem !important;
+  }
+  
+  .gamble-king-content {
+    padding: 0 1rem 0.75rem 1rem !important;
+  }
+  
+  .gamble-king-stats {
+    gap: 0.5rem !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  
+  .gamble-king-stats > div {
+    padding: 0.75rem 0.5rem !important;
+  }
+  
+  .gamble-king-stats .stat-value {
+    font-size: 1.25rem !important;
+  }
+  
+  .gamble-king-stats .stat-label {
+    font-size: 0.625rem !important;
+  }
+  
+  /* Fix players page mobile overflow */
+  .player-row {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 0.5rem;
+  }
+  
+  .player-name {
+    flex: none !important;
+    width: 100% !important;
+  }
+  
+  .player-quick-stats {
+    flex: none !important;
+    width: 100% !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 0.25rem;
+    font-size: 0.8rem !important;
+  }
+  
+  .player-quick-stats .stat {
+    margin-right: 0 !important;
+    white-space: normal !important;
+  }
+  
+  .seven-two-counter {
+    font-size: 0.8rem !important;
+  }
+  
+  /* Fix double borders and reduce whitespace on dashboard table */
+  .ui-card {
+    border: none !important;
+    padding: 0.75rem !important;
+    margin-bottom: 1rem !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+  }
+  
+  .ui-card-header {
+    padding-bottom: 0.5rem !important;
+    margin-bottom: 0.75rem !important;
+  }
+  
+  .modern-table {
+    border: 1px solid var(--neutral-200) !important;
+    box-shadow: none !important;
+  }
+  
+  .table-responsive {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  
+  .modern-table th,
+  .modern-table td {
+    padding: 0.5rem !important;
+    font-size: 0.875rem !important;
   }
 }

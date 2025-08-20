@@ -30,13 +30,14 @@ export default class SessionsPage {    constructor(appContent, apiService) {
     // Render sessions content
     render(sessions) {
         let html = `
-            <h2>Poker Sessions</h2>
-            
-            <div class="sessions-actions">
-                <button id="create-session-btn" class="action-btn">Create New Session</button>
-            </div>
-            
-            <h3>All Sessions</h3>
+            <div class="fade-in">
+                <h2>Poker Sessions</h2>
+                
+                <div class="sessions-actions">
+                    <button id="create-session-btn" class="action-btn">Create New Session</button>
+                </div>
+                
+                <h3>All Sessions</h3>
         `;
         
         if (sessions && sessions.length > 0) {
@@ -61,6 +62,10 @@ export default class SessionsPage {    constructor(appContent, apiService) {
         } else {
             html += `<p>No sessions found. Create your first session above!</p>`;
         }
+        
+        html += `
+            </div>
+        `;
         
         this.appContent.innerHTML = html;
         
