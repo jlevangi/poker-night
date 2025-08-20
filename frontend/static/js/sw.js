@@ -1,10 +1,10 @@
-const APP_VERSION = '1.0.6'; // Increment this version whenever making substantial changes
+const APP_VERSION = '1.0.7'; // Increment this version whenever making substantial changes
 const CACHE_NAME = `gamble-king-cache-v${APP_VERSION}`;
 
 // Assets that should be cached for offline use
 const URLS_TO_CACHE = [
     '/',
-    '/static/css/style.css',
+    '/static/css/styles/main.css',
     '/static/js/app.js',
     '/static/js/config.js',
     '/static/images/icon-192x192.png',

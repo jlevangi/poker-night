@@ -259,6 +259,8 @@
                     document.getElementById('loginForm').classList.add('hidden');
                     document.getElementById('adminContent').classList.remove('hidden');
                     loadDashboard();
+                    // Load the default active tab (players)
+                    loadPlayers();
                 } else {
                     errorDiv.textContent = result.error || 'Login failed';
                     errorDiv.classList.remove('hidden');
@@ -642,19 +644,73 @@
         }
 
         async function deleteSession(sessionId) {
-            if (!confirm('Are you sure you want to delete this session? This will also delete all its entries!')) {
-                return;
-            }
-            
             try {
+                // Get all sessions to find the one we want to delete
+                const sessionsResponse = await fetch('/admin/sessions');
+                if (!sessionsResponse.ok) {
+                    showMessage('Failed to check session details', 'error');
+                    return;
+                }
+                
+                const allSessions = await sessionsResponse.json();
+                const sessionData = allSessions.find(s => s.session_id === sessionId);
+                
+                if (!sessionData) {
+                    showMessage('Session not found', 'error');
+                    return;
+                }
+                
+                // Check entries for this session
+                const entriesResponse = await fetch('/admin/entries');
+                if (!entriesResponse.ok) {
+                    showMessage('Failed to check session entries', 'error');
+                    return;
+                }
+                
+                const allEntries = await entriesResponse.json();
+                const sessionEntries = allEntries.filter(entry => entry.session_id === sessionId);
+                
+                let confirmMessage = 'Are you sure you want to delete this session?';
+                let hasMoneyInvolved = false;
+                
+                if (sessionEntries.length > 0) {
+                    const totalBuyIns = sessionEntries.reduce((sum, entry) => sum + (entry.total_buy_in_amount || 0), 0);
+                    const totalPayouts = sessionEntries.reduce((sum, entry) => sum + (entry.payout || 0), 0);
+                    
+                    if (totalBuyIns > 0 || totalPayouts > 0) {
+                        hasMoneyInvolved = true;
+                        confirmMessage = `⚠️ WARNING: This session contains financial data!
+                        
+${sessionEntries.length} player entries will be deleted:
+• Total Buy-ins: $${totalBuyIns.toFixed(2)}
+• Total Payouts: $${totalPayouts.toFixed(2)}
+
+This action cannot be undone. Are you absolutely sure you want to delete this session and ALL its entries?`;
+                    } else {
+                        confirmMessage = `This session has ${sessionEntries.length} player entries that will also be deleted. Continue?`;
+                    }
+                }
+                
+                // Show different confirmation based on whether money is involved
+                const userConfirmed = hasMoneyInvolved ? 
+                    confirm(confirmMessage) && confirm('FINAL CONFIRMATION: Delete session with $' + (sessionEntries.reduce((sum, entry) => sum + (entry.total_buy_in_amount || 0), 0)).toFixed(2) + ' in buy-ins?') :
+                    confirm(confirmMessage);
+                
+                if (!userConfirmed) {
+                    return;
+                }
+                
+                // Proceed with deletion
                 const response = await fetch(`/admin/sessions/${sessionId}?force=true`, {
                     method: 'DELETE'
                 });
                 
                 const result = await response.json();
                 if (response.ok) {
-                    showMessage('Session deleted successfully', 'success');
+                    showMessage('Session and all associated entries deleted successfully', 'success');
                     loadSessions(); // Refresh the table
+                    // Refresh dashboard stats if showing
+                    loadDashboard();
                 } else {
                     showMessage('Failed to delete session: ' + result.error, 'error');
                 }

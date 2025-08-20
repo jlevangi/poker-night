@@ -8,7 +8,9 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
-    <title>Gamble King</title>    <link rel="stylesheet" href="{{ versioned_url('css/style.css') }}">
+    <title>Gamble King</title>    <!-- Main unified CSS -->
+    <link rel="stylesheet" href="{{ versioned_url('css/styles/main.css') }}">
+    <!-- Legacy CSS files for compatibility -->
     <link rel="stylesheet" href="{{ versioned_url('css/modern-ui.css') }}">
     <link rel="stylesheet" href="{{ versioned_url('css/responsive-fixes.css') }}">
     <link rel="stylesheet" href="{{ versioned_url('css/chip-styles.css') }}">
@@ -44,6 +46,11 @@
     <button id="dark-mode-toggle" class="dark-mode-toggle" title="Toggle Dark Mode">
         🌙
     </button>
+
+    <!-- Settings Button -->
+    <a href="/admin/" target="_blank" id="settings-btn" class="settings-toggle" title="Admin Settings">
+        ⚙️
+    </a>
 
     <main id="app-content">
         <p>Loading...</p>

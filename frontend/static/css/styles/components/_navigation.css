@@ -15,12 +15,42 @@ nav a:hover {
     text-decoration: underline;
 }
 
+/* Desktop Navigation */
+.desktop-nav {
+    display: flex;
+    justify-content: center;
+    margin-top: 0.5rem;
+}
+
+.desktop-nav a {
+    color: rgba(255, 255, 255, 0.9);
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    margin: 0 0.25rem;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    font-weight: 500;
+    position: relative;
+}
+
+.desktop-nav a:hover {
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
+    transform: translateY(-1px);
+}
+
+.desktop-nav a.active {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
 /* Quick Actions Navigation */
 .quick-actions {
     display: flex;
     justify-content: center;
     gap: var(--spacing-md);
-    margin: var(--spacing-lg) 0 2.5rem;
+    margin: var(--spacing-lg) 0 var(--spacing-md);
     flex-wrap: wrap;
 }
 

@@ -236,11 +236,46 @@ input:focus, textarea:focus, select:focus {
   box-shadow: var(--shadow-lg);
 }
 
-/* Mobile positioning for dark mode toggle */
+/* Settings toggle button - mirrors dark mode toggle but on left */
+.settings-toggle {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 1000;
+  background: var(--card-bg);
+  color: var(--text-primary);
+  border: 2px solid var(--border-color);
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  transition: all 0.3s ease;
+  box-shadow: var(--shadow-md);
+  text-decoration: none;
+}
+
+.settings-toggle:hover {
+  transform: scale(1.05);
+  box-shadow: var(--shadow-lg);
+  color: var(--text-primary);
+}
+
+/* Mobile positioning for both toggles */
 @media (max-width: 700px) {
   .dark-mode-toggle {
     top: 15px;
     right: 15px;
+    width: 45px;
+    height: 45px;
+    font-size: 1.1rem;
+  }
+  
+  .settings-toggle {
+    top: 15px;
+    left: 15px;
     width: 45px;
     height: 45px;
     font-size: 1.1rem;
@@ -362,9 +397,9 @@ footer {
   color: #ef4444 !important;
 }
 
-/* Session status indicators */
+/* Session status indicators - ensure text is always white regardless of theme */
 .session-status {
-  color: var(--text-secondary);
+  color: white !important;
 }
 
 /* Player quick stats */
@@ -572,6 +607,19 @@ a:hover {
   color: #93c5fd;
 }
 
+/* Ensure blue text elements are visible in dark mode */
+[data-theme="dark"] h2 {
+  color: #60a5fa !important;
+}
+
+[data-theme="dark"] .player-name-link,
+[data-theme="dark"] .players-stats-table td a,
+[data-theme="dark"] .players-dashboard-table td a,
+[data-theme="dark"] .session-total-value,
+[data-theme="dark"] .gamble-king-container h2 {
+  color: #60a5fa !important;
+}
+
 /* Make sure all text in lists is properly colored */
 .sessions-list li,
 .players-list li {
@@ -589,14 +637,12 @@ a:hover {
   background-color: var(--card-bg) !important;
 }
 
-/* Session status styling */
-.status-active {
-  color: #22c55e !important;
+/* Session status styling - ensure text is always white */
+.session-status.status-active,
+.session-status.status-ended {
+  color: white !important;
 }
 
-.status-ended {
-  color: var(--text-secondary) !important;
-}
 
 /* Make sure session and player names are visible */
 .session-item a,
@@ -756,15 +802,18 @@ footer {
   color: var(--text-primary) !important;
 }
 
-/* Specifically for the Gamble King text in header - user requested inversion */
-/* Light mode: light text color */
-header .royal-header h1 {
+/* Ensure header text is always white against blue background for both modes */
+header .royal-header h1,
+header h1,
+header nav a {
   color: #ffffff !important;
 }
 
-/* Dark mode: dark text color */
-[data-theme="dark"] header .royal-header h1 {
-  color: #000000 !important;
+/* Dark mode header should still be white against blue */
+[data-theme="dark"] header .royal-header h1,
+[data-theme="dark"] header h1,
+[data-theme="dark"] header nav a {
+  color: #ffffff !important;
 }
 
 /* Additional edge cases and container fixes */

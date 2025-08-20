@@ -113,14 +113,13 @@ export default class SessionDetailPage {
                 const backgroundColor = chipColors[chipColor];
                 const textColor = ['White'].includes(chipColor) ? '#000000' : '#FFFFFF';
                 
-                // Define border styles based on chip color
+                // Define border styles based on chip color to match real poker chips
                 let borderStyle;
                 if (chipColor === 'White') {
-                    borderStyle = '3px dashed #000000'; // Black dashed border for white chips
-                } else if (['Black', 'Blue', 'Green'].includes(chipColor)) {
-                    borderStyle = '3px dashed rgba(255, 255, 255, 0.7)'; // White dashed border for dark chips
+                    borderStyle = '3px dashed #000000'; // Black dashed border for white chips only
                 } else {
-                    borderStyle = '3px dashed rgba(255, 255, 255, 0.5)'; // Lighter white dashed for red chips
+                    // All colored chips (Red, Blue, Green, Black) have white dashes in real life
+                    borderStyle = '3px dashed #ffffff';
                 }
                 
                 html += `
@@ -193,14 +192,16 @@ export default class SessionDetailPage {
             
             html += `
                 <div class="add-player-form">
-                    <select id="add-player-select">
-                        <option value="">-- Select Player --</option>
-                        ${(session.availablePlayers || []).map(player => 
-                            `<option value="${player.player_id}">${player.name}</option>`
-                        ).join('')}
-                    </select>
-                    <input type="number" id="player-buyin" placeholder="Buy-in Amount ($)" value="${sessionData.default_buy_in_value ? sessionData.default_buy_in_value.toFixed(2) : '20.00'}" step="0.01">
-                    <button id="add-player-to-session-btn" class="action-btn">Add Player</button>
+                    <div class="form-row">
+                        <select id="add-player-select">
+                            <option value="">-- Select Player --</option>
+                            ${(session.availablePlayers || []).map(player => 
+                                `<option value="${player.player_id}">${player.name}</option>`
+                            ).join('')}
+                        </select>
+                        <input type="number" id="player-buyin" placeholder="Buy-in Amount ($)" value="${sessionData.default_buy_in_value ? sessionData.default_buy_in_value.toFixed(2) : '20.00'}" step="0.01">
+                        <button id="add-player-to-session-btn" class="action-btn">Add Player</button>
+                    </div>
                 </div>
             `;
         }
@@ -216,7 +217,7 @@ export default class SessionDetailPage {
                 
                 html += `
                     <li>
-                        <div class="session-player-details">
+                        <div class="session-player-details clickable-player-details" data-player-id="${player.id}">
                             <p><strong><a href="#player/${player.id}">${player.name}</a></strong></p>
                             <p>Buy-in: $${buyIn.toFixed(2)} | 
                                Cash-out: $${cashOut.toFixed(2)} |
@@ -346,6 +347,17 @@ export default class SessionDetailPage {
             .success-btn {
                 background-color: #4CAF50;
                 color: white;
+            }
+            
+            /* Clickable player details styling */
+            .clickable-player-details {
+                cursor: pointer !important;
+                transition: background-color 0.2s ease;
+            }
+            
+            .clickable-player-details:hover {
+                background-color: rgba(0, 123, 255, 0.1);
+                border-radius: 4px;
             }
         `;
         document.head.appendChild(styleElement);
@@ -493,14 +505,17 @@ export default class SessionDetailPage {
             document.querySelectorAll('.cash-out-player-btn').forEach(button => {
                 button.addEventListener('click', async (e) => {
                     const playerId = e.target.dataset.playerId;
-                    const cashOut = prompt('Enter cash-out amount ($):');
+                    let cashOut = prompt('Enter cash-out amount ($):');
                     
                     if (cashOut === null) return; // User cancelled
                     
+                    // Remove non-numeric characters except decimal point
+                    cashOut = cashOut.replace(/[^0-9.]/g, '');
+                    
                     const cashOutValue = parseFloat(cashOut);
                     
-                    if (isNaN(cashOutValue) || cashOutValue < 0) {
-                        alert('Please enter a valid cash-out amount');
+                    if (isNaN(cashOutValue) || cashOutValue < 0 || cashOut === '') {
+                        alert('Please enter a valid numeric cash-out amount (numbers only)');
                         return;
                     }
                     
@@ -570,7 +585,28 @@ export default class SessionDetailPage {
                     }
                 });
             });
-        } else {
+        }
+        
+        // Add click handlers for clickable player details (works for both active and inactive sessions)
+        document.querySelectorAll('.clickable-player-details').forEach(element => {
+            element.addEventListener('click', (e) => {
+                // Don't navigate if clicking on a link or button
+                if (e.target.tagName === 'A' || e.target.tagName === 'BUTTON' || e.target.closest('button')) {
+                    return;
+                }
+                
+                const playerId = element.dataset.playerId;
+                if (playerId) {
+                    // Navigate to player page
+                    window.location.hash = `#player/${playerId}`;
+                }
+            });
+            
+            // Add cursor pointer style
+            element.style.cursor = 'pointer';
+        });
+        
+        if (!isActive) {
             // Reactivate session button - only set up if session is not active
             const reactivateSessionBtn = document.getElementById('reactivate-session-btn');
             if (reactivateSessionBtn) {

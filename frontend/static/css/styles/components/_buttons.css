@@ -150,6 +150,9 @@ button:hover,
     cursor: pointer;
     margin: 0 3px;
     transition: background-color var(--transition-fast);
+    padding: 0;
+    text-align: center;
+    line-height: 1;
 }
 
 .seven-two-increment-btn {
@@ -162,6 +165,20 @@ button:hover,
 
 .seven-two-decrement-btn {
     background-color: var(--seven-two-decrement);
+    /* Additional centering for minus sign which can appear off-center */
+    position: relative;
+    color: transparent; /* Hide the original text */
+}
+
+.seven-two-decrement-btn::before {
+    content: "−"; /* Use proper minus sign (U+2212) instead of hyphen */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 16px;
+    line-height: 1;
+    color: var(--text-white);
 }
 
 .seven-two-decrement-btn:hover {

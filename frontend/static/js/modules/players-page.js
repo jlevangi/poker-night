@@ -27,8 +27,10 @@ export default class PlayersPage {
                 
                 <div class="add-player-form">
                     <h3>Add New Player</h3>
-                    <input type="text" id="new-player-name" placeholder="Player Name">
-                    <button id="add-player-btn" class="action-btn">Add Player</button>
+                    <div class="form-row">
+                        <input type="text" id="new-player-name" placeholder="Player Name">
+                        <button id="add-player-btn" class="action-btn">Add Player</button>
+                    </div>
                 </div>
                 
                 <h3>Player List</h3>

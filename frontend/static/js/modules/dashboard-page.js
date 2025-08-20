@@ -65,12 +65,6 @@ export default class DashboardPage {
     render(data) {
         let html = `
             <div class="fade-in">
-                <div style="text-align: center; margin-bottom: 2rem; position: relative;">
-                    <h2 style="font-size: 2rem; font-weight: 700; color: var(--neutral-800); margin-bottom: 0.5rem; border: none; padding: 0;">
-                        Dashboard
-                    </h2>
-                    <a href="/admin/" target="_blank" class="settings-btn" style="position: absolute; top: 0; right: 0; width: 40px; height: 40px; background: var(--neutral-100); border: 1px solid var(--neutral-200); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--neutral-600); text-decoration: none; font-size: 1.2rem; transition: all 0.2s ease; hover: transform: scale(1.05);" onmouseover="this.style.background='var(--neutral-200)'; this.style.color='var(--neutral-800)'" onmouseout="this.style.background='var(--neutral-100)'; this.style.color='var(--neutral-600)'" title="Admin Settings">⚙️</a>
-                </div>
                 
                 <!-- Gamble King Section -->
                 ${data.gambleKing ? this.renderGambleKingSection(data.gambleKing) : ''}

@@ -250,19 +250,20 @@ def admin_delete_player(player_id: str) -> Dict[str, Any]:
         if not player:
             return jsonify({"error": "Player not found"}), 404
         
+        # Check for force parameter first
+        force = request.args.get('force', '').lower() == 'true'
+        
         # Check if player has any entries
         entry_count = Entry.query.filter_by(player_id=player_id).count()
         if entry_count > 0:
-            return jsonify({
-                "error": f"Cannot delete player with {entry_count} existing entries. "
-                         f"Delete entries first or use force=true parameter."
-            }), 400
-        
-        # Check for force parameter
-        force = request.args.get('force', '').lower() == 'true'
-        if force:
-            # Delete all associated entries first
-            Entry.query.filter_by(player_id=player_id).delete()
+            if not force:
+                return jsonify({
+                    "error": f"Cannot delete player with {entry_count} existing entries. "
+                             f"Delete entries first or use force=true parameter."
+                }), 400
+            else:
+                # Delete all associated entries first
+                Entry.query.filter_by(player_id=player_id).delete()
         
         db.session.delete(player)
         db.session.commit()
@@ -408,19 +409,20 @@ def admin_delete_session(session_id: str) -> Dict[str, Any]:
         if not session:
             return jsonify({"error": "Session not found"}), 404
         
+        # Check for force parameter first
+        force = request.args.get('force', '').lower() == 'true'
+        
         # Check if session has any entries
         entry_count = Entry.query.filter_by(session_id=session_id).count()
         if entry_count > 0:
-            return jsonify({
-                "error": f"Cannot delete session with {entry_count} existing entries. "
-                         f"Delete entries first or use force=true parameter."
-            }), 400
-        
-        # Check for force parameter
-        force = request.args.get('force', '').lower() == 'true'
-        if force:
-            # Delete all associated entries first
-            Entry.query.filter_by(session_id=session_id).delete()
+            if not force:
+                return jsonify({
+                    "error": f"Cannot delete session with {entry_count} existing entries. "
+                             f"Delete entries first or use force=true parameter."
+                }), 400
+            else:
+                # Delete all associated entries first
+                Entry.query.filter_by(session_id=session_id).delete()
         
         db.session.delete(session)
         db.session.commit()

@@ -5,6 +5,20 @@
     align-items: center;
     justify-content: space-between;
     gap: clamp(1rem, 3vw, 2rem);
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+/* Ensure seven-two-counter stays at the right edge */
+.player-stats-container .seven-two-counter {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.85rem;
+    color: #6c757d;
+    margin-left: auto;
 }
 
 /* Update player quick stats for new structure */

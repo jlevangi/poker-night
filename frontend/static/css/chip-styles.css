@@ -36,7 +36,7 @@
     justify-content: center;
     box-shadow: 0 3px 5px rgba(0, 0, 0, 0.3);
     position: relative;
-    border: 3px dashed rgba(255, 255, 255, 0.3);
+    /* Border styles are set inline by JavaScript to match real poker chips */
 }
 
 .chip-count {
@@ -50,12 +50,11 @@
     margin-top: 5px;
 }
 
-/* Make sure white chips have a border and black text */
+/* Ensure white chip text is black (border handled by JavaScript) */
 .chip[style*="background-color: #FFFFFF"],
 .chip[style*="background-color:#FFFFFF"],
 .chip[style*="background: #FFFFFF"],
 .chip[style*="background:#FFFFFF"] {
-    border: 1px solid #ccc !important;
     color: #000000 !important;
 }
 
