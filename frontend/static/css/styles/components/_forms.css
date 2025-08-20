@@ -83,6 +83,7 @@ select {
     font-size: 1rem !important;
     transition: all 0.2s ease !important;
     background-color: var(--bg-input, #ffffff) !important;
+    color: var(--text-primary, #333) !important;
 }
 
 .add-player-form .form-row input[type="text"]:focus {
@@ -102,6 +103,8 @@ select {
     border-radius: 8px !important;
     font-size: 1rem !important;
     transition: all 0.2s ease !important;
+    background-color: var(--bg-input, #ffffff) !important;
+    color: var(--text-primary, #333) !important;
 }
 
 .add-player-form .form-row button {

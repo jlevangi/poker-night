@@ -49,7 +49,7 @@ export default class PlayersPage {
                             <div class="player-name">
                                 <a href="#player/${player.player_id}" class="player-name-link">${player.name}</a>
                             </div>
-                            <div class="player-stats-container">
+                            <div class="player-stats-container clickable-player-stats" data-player-id="${player.player_id}">
                                 <div class="player-quick-stats">
                                     <span class="stat">
                                         Profit: <span class="${player.net_profit >= 0 ? 'profit-positive' : 'profit-negative'}">
@@ -125,5 +125,24 @@ export default class PlayersPage {
                 }
             });
         }
+
+        // Add click handlers for player stats containers
+        document.querySelectorAll('.clickable-player-stats').forEach(element => {
+            element.addEventListener('click', (e) => {
+                // Don't navigate if clicking on a link
+                if (e.target.tagName === 'A' || e.target.closest('a')) {
+                    return;
+                }
+                
+                const playerId = element.dataset.playerId;
+                if (playerId) {
+                    // Navigate to player detail page
+                    window.location.hash = `#player/${playerId}`;
+                }
+            });
+            
+            // Add cursor pointer style
+            element.style.cursor = 'pointer';
+        });
     }
 }

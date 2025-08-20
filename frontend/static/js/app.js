@@ -10,6 +10,119 @@ import PlayerDetailPage from './modules/player-detail-page.js';
 import ServiceWorkerManager from './modules/service-worker-manager.js';
 import DarkModeManager from './modules/dark-mode-manager.js';
 
+// Service worker update handling
+function setupServiceWorkerUpdates() {
+    if ('serviceWorker' in navigator) {
+        // Listen for service worker messages
+        navigator.serviceWorker.addEventListener('message', event => {
+            if (event.data.type === 'NEW_VERSION') {
+                console.log('New version available:', event.data.version);
+                showUpdateNotification();
+            }
+            
+            if (event.data.type === 'FORCE_REFRESH') {
+                console.log('Force refresh requested');
+                window.location.reload();
+            }
+        });
+        
+        // Check for updates periodically
+        setInterval(() => {
+            checkForUpdates();
+        }, 30000); // Check every 30 seconds
+        
+        // Check for updates when page becomes visible
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden) {
+                checkForUpdates();
+            }
+        });
+    }
+}
+
+async function checkForUpdates() {
+    if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+        try {
+            const config = await appConfig.getConfig();
+            navigator.serviceWorker.controller.postMessage({
+                type: 'CHECK_VERSION',
+                version: config.APP_VERSION
+            });
+        } catch (error) {
+            console.error('Error checking for updates:', error);
+        }
+    }
+}
+
+function showUpdateNotification() {
+    // Check if notification is already showing
+    if (document.querySelector('.update-notification')) {
+        return;
+    }
+    
+    const notification = document.createElement('div');
+    notification.className = 'update-notification';
+    notification.innerHTML = `
+        <div style="
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #3367D6;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 10000;
+            max-width: 300px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        ">
+            <div style="margin-bottom: 10px; font-weight: 600;">
+                🎮 Update Available
+            </div>
+            <div style="margin-bottom: 15px; font-size: 14px; opacity: 0.9;">
+                New features and improvements are ready!
+            </div>
+            <div>
+                <button onclick="updateApp()" style="
+                    background: white;
+                    color: #3367D6;
+                    border: none;
+                    padding: 8px 16px;
+                    border-radius: 4px;
+                    font-weight: 600;
+                    cursor: pointer;
+                    margin-right: 10px;
+                ">Update Now</button>
+                <button onclick="dismissUpdate()" style="
+                    background: transparent;
+                    color: white;
+                    border: 1px solid rgba(255,255,255,0.3);
+                    padding: 8px 16px;
+                    border-radius: 4px;
+                    cursor: pointer;
+                ">Later</button>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(notification);
+}
+
+window.updateApp = function() {
+    if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+        navigator.serviceWorker.controller.postMessage({
+            type: 'FORCE_UPDATE'
+        });
+    }
+};
+
+window.dismissUpdate = function() {
+    const notification = document.querySelector('.update-notification');
+    if (notification) {
+        notification.remove();
+    }
+};
+
 document.addEventListener('DOMContentLoaded', () => {
     const appContent = document.getElementById('app-content');
     
@@ -190,4 +303,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Start the router
     router.route();
+    
+    // Setup service worker update handling
+    setupServiceWorkerUpdates();
 });

@@ -6,16 +6,17 @@ This module contains dashboard-related API endpoints.
 
 import logging
 from typing import Dict, Any
-from flask import Blueprint, jsonify
+from flask import Blueprint, Response
 
 from ..services.database_service import DatabaseService
+from ..utils.cache import api_response_no_cache
 
 logger = logging.getLogger(__name__)
 dashboard_bp = Blueprint('dashboard', __name__)
 
 
 @dashboard_bp.route('/dashboard', methods=['GET'])
-def get_dashboard_api() -> Dict[str, Any]:
+def get_dashboard_api() -> Response:
     """
     Get dashboard data including total players, sessions, and recent activity.
     
@@ -55,8 +56,8 @@ def get_dashboard_api() -> Dict[str, Any]:
             "recent_sessions": [s.to_dict() for s in sessions[:5]]  # Last 5 sessions
         }
         
-        return jsonify(dashboard_data)
+        return api_response_no_cache(dashboard_data)
         
     except Exception as e:
         logger.error(f"Error loading dashboard data: {str(e)}")
-        return jsonify({"error": "Failed to load dashboard data"}), 500
+        return api_response_no_cache({"error": "Failed to load dashboard data"}), 500

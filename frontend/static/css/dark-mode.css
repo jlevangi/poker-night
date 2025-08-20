@@ -156,6 +156,57 @@ input, textarea, select {
   border-color: var(--border-color);
 }
 
+/* Ensure form inputs have proper styling in both themes */
+input[type="text"], 
+input[type="number"], 
+input[type="email"], 
+input[type="password"],
+select {
+  background-color: var(--card-bg) !important;
+  color: var(--text-primary) !important;
+  border-color: var(--border-color) !important;
+}
+
+/* Specifically ensure dark mode inputs have proper contrast */
+[data-theme="dark"] input[type="text"],
+[data-theme="dark"] input[type="number"], 
+[data-theme="dark"] input[type="email"], 
+[data-theme="dark"] input[type="password"],
+[data-theme="dark"] select {
+  background-color: #2a2a2a !important;
+  color: #ffffff !important;
+  border-color: #555 !important;
+}
+
+[data-theme="dark"] input[type="text"]::placeholder,
+[data-theme="dark"] input[type="number"]::placeholder,
+[data-theme="dark"] input[type="email"]::placeholder,
+[data-theme="dark"] input[type="password"]::placeholder {
+  color: #aaa !important;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+select:focus {
+  border-color: var(--primary-color, #3367D6) !important;
+  background-color: var(--card-bg) !important;
+  color: var(--text-primary) !important;
+}
+
+/* Dark mode focus states */
+[data-theme="dark"] input[type="text"]:focus,
+[data-theme="dark"] input[type="number"]:focus,
+[data-theme="dark"] input[type="email"]:focus,
+[data-theme="dark"] input[type="password"]:focus,
+[data-theme="dark"] select:focus {
+  border-color: #4285F4 !important;
+  background-color: #2a2a2a !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.2) !important;
+}
+
 input:focus, textarea:focus, select:focus {
   background-color: var(--card-bg);
   border-color: #3367D6;
@@ -211,37 +262,22 @@ input:focus, textarea:focus, select:focus {
   border-color: var(--border-color);
 }
 
-/* Dark mode toggle button */
-.dark-mode-toggle {
+/* Header Controls Container */
+.header-controls {
   position: fixed;
   top: 20px;
-  right: 20px;
+  left: 0;
+  right: 0;
   z-index: 1000;
-  background: var(--card-bg);
-  border: 2px solid var(--border-color);
-  border-radius: 50%;
-  width: 50px;
-  height: 50px;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  font-size: 1.2rem;
-  transition: all 0.3s ease;
-  box-shadow: var(--shadow-md);
+  justify-content: space-between;
+  padding: 0 20px;
+  pointer-events: none; /* Allow clicking through the container */
 }
 
-.dark-mode-toggle:hover {
-  transform: scale(1.05);
-  box-shadow: var(--shadow-lg);
-}
-
-/* Settings toggle button - mirrors dark mode toggle but on left */
-.settings-toggle {
-  position: fixed;
-  top: 20px;
-  left: 20px;
-  z-index: 1000;
+/* Shared header button styling */
+.header-btn {
+  pointer-events: all; /* Re-enable clicks on buttons */
   background: var(--card-bg);
   color: var(--text-primary);
   border: 2px solid var(--border-color);
@@ -254,32 +290,37 @@ input:focus, textarea:focus, select:focus {
   font-size: 1.2rem;
   transition: all 0.3s ease;
   box-shadow: var(--shadow-md);
+  cursor: pointer;
   text-decoration: none;
 }
 
-.settings-toggle:hover {
+.header-btn:hover {
   transform: scale(1.05);
   box-shadow: var(--shadow-lg);
   color: var(--text-primary);
 }
 
-/* Mobile positioning for both toggles */
+/* Mobile positioning for header controls */
 @media (max-width: 700px) {
-  .dark-mode-toggle {
+  .header-controls {
     top: 15px;
-    right: 15px;
-    width: 45px;
-    height: 45px;
-    font-size: 1.1rem;
+    padding: 0 15px;
   }
   
-  .settings-toggle {
-    top: 15px;
-    left: 15px;
+  .header-btn {
     width: 45px;
     height: 45px;
     font-size: 1.1rem;
   }
+}
+
+/* Legacy classes for backward compatibility - redirect to new classes */
+.dark-mode-toggle {
+  /* Styles now handled by .header-btn class */
+}
+
+.settings-toggle {
+  /* Styles now handled by .header-btn class */
 }
 
 /* Stats cards */
@@ -464,15 +505,30 @@ p, span, div {
   color: var(--text-primary) !important;
 }
 
-/* Action buttons */
-.action-btn {
-  background-color: var(--card-bg) !important;
-  color: var(--text-primary) !important;
-  border-color: var(--border-color) !important;
+/* Action buttons - only apply dark mode styles in dark theme */
+[data-theme="dark"] .action-btn {
+  background-color: #2851A7 !important; /* Darker blue for dark mode */
+  color: white !important;
+  border-color: #2851A7 !important;
 }
 
-.action-btn:hover {
-  background-color: var(--bg-tertiary) !important;
+[data-theme="dark"] .action-btn:hover {
+  background-color: #1a3a7a !important;
+  border-color: #1a3a7a !important;
+}
+
+/* Ensure light mode action buttons keep their original blue background with white text */
+[data-theme="light"] .action-btn,
+body:not([data-theme]) .action-btn {
+  background-color: #3367D6 !important;
+  color: white !important;
+  border-color: #3367D6 !important;
+}
+
+[data-theme="light"] .action-btn:hover,
+body:not([data-theme]) .action-btn:hover {
+  background-color: #4285F4 !important;
+  border-color: #4285F4 !important;
 }
 
 /* Primary buttons should maintain their blue color but adjust for dark mode */
