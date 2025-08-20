@@ -36,7 +36,10 @@
       "Bash(PYTHONPATH=. ./venv/bin/python3 -c \"\nfrom app.services.notification_service import NotificationService\nprint(''NotificationService imported successfully'')\nns = NotificationService()\nprint(''NotificationService instantiated successfully'')\n\")",
       "Bash(./venv/bin/pip install pywebpush py-vapid)",
       "Bash(PYTHONPATH=.:*)",
-      "Bash(PYTHONPATH=backend ./venv/bin/python:*)"
+      "Bash(PYTHONPATH=backend ./venv/bin/python:*)",
+      "Bash(echo \"Great! The NotificationService is now properly configured. \n\nTo test notifications:\n1. Restart your Flask application (the fix is now in place)\n2. Create a new test session\n3. Subscribe to it \n4. Add a player and end the session\n5. You should receive a push notification\n\nThe issue was that the NotificationService wasn''t loading the .env file correctly, so the VAPID keys weren''t being parsed properly. This is now fixed.\")",
+      "Bash(PYTHONPATH=backend:*)",
+      "Bash(./venv/bin/pip list)"
     ],
     "deny": [],
     "ask": []

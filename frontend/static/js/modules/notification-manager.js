@@ -5,7 +5,7 @@
 export class NotificationManager {
     constructor(apiService) {
         this.apiService = apiService;
-        this.vapidPublicKey = 'BIguQ8N5CoR_YXwJ-dDladVgsfyN6RdKj2vVr0Y_uN9i4W5ChZ81bA8ye3mmF4PkmpFqci0PtyDW9TShqHgFQ9Y'; // Generated VAPID application server key
+        this.vapidPublicKey = 'BDlMkG_IEOYBPgC5D_BEqH-fREq1q1yI3_hQYwN_8wA6-jiMzHpLbg832VUi_n9Sb-ugJgzC7QImdGuiih2-xys'; // Generated VAPID application server key
     }
 
     /**

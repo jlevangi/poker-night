@@ -10,6 +10,7 @@ from typing import Dict, Any
 from flask import Blueprint, jsonify, request
 
 from ..services.database_service import DatabaseService
+from ..services.notification_service import NotificationService
 from ..database.models import db, PushSubscription
 
 logger = logging.getLogger(__name__)
