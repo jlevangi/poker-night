@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="{{ versioned_url('css/responsive-fixes.css') }}">
     <link rel="stylesheet" href="{{ versioned_url('css/chip-styles.css') }}">
     <link rel="stylesheet" href="{{ versioned_url('css/button-styles.css') }}">
+    <link rel="stylesheet" href="{{ versioned_url('css/dark-mode.css') }}">
     <link rel="manifest" href="{{ url_for('frontend.serve_manifest') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
@@ -37,6 +38,11 @@
             <a href="#sessions">Sessions</a>
         </nav>
     </header>
+
+    <!-- Dark Mode Toggle -->
+    <button id="dark-mode-toggle" class="dark-mode-toggle" title="Toggle Dark Mode">
+        🌙
+    </button>
 
     <main id="app-content">
         <p>Loading...</p>

@@ -8,6 +8,7 @@ import SessionsPage from './modules/sessions-page.js';
 import SessionDetailPage from './modules/session-detail-page.js';
 import PlayerDetailPage from './modules/player-detail-page.js';
 import ServiceWorkerManager from './modules/service-worker-manager.js';
+import DarkModeManager from './modules/dark-mode-manager.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     const appContent = document.getElementById('app-content');
@@ -16,6 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const apiService = new ApiService();
     const router = new Router(appContent);
     const newSessionModal = new ModalManager('new-session-modal');
+    const darkModeManager = new DarkModeManager();
     
     // Initialize modules
     const dashboardPage = new DashboardPage(appContent, apiService);
