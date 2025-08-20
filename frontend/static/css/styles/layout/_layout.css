@@ -1,0 +1,58 @@
+/* Layout Styles */
+
+#app-content {
+    padding: var(--spacing-lg);
+    max-width: 900px;
+    margin: var(--spacing-md) auto;
+    background-color: var(--bg-primary);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-light);
+}
+
+/* Seven-Two Game Layout */
+.seven-two-label {
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.seven-two-value {
+    font-size: 1rem;
+    font-weight: bold;
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-pill);
+    padding: 4px 12px;
+    min-width: 30px;
+    text-align: center;
+    color: var(--text-primary);
+}
+
+.seven-two-stat {
+    display: flex;
+    align-items: center;
+}
+
+.seven-two-buttons {
+    display: flex;
+    margin-left: 10px;
+}
+
+/* Mobile Layout Adjustments */
+@media (max-width: 600px) {
+    #app-content {
+        margin: var(--spacing-sm);
+        padding: var(--spacing-md);
+    }
+}
+
+@media (max-width: 700px) {
+    /* Add padding to avoid overlap with bottom nav */
+    #app-content {
+        padding-bottom: 90px;
+        margin-bottom: 0;
+    }
+    
+    .seven-two-counter {
+        font-size: 0.8rem !important;
+    }
+}

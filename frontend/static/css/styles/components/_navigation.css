@@ -1,0 +1,208 @@
+/* Navigation Component Styles */
+
+nav {
+    margin-top: var(--spacing-sm);
+}
+
+nav a {
+    color: var(--text-white);
+    margin: 0 0.75rem;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+nav a:hover {
+    text-decoration: underline;
+}
+
+/* Quick Actions Navigation */
+.quick-actions {
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-md);
+    margin: var(--spacing-lg) 0 2.5rem;
+    flex-wrap: wrap;
+}
+
+/* Sessions Actions */
+.sessions-actions {
+    margin-bottom: var(--spacing-lg);
+}
+
+.session-action-buttons {
+    display: flex;
+    justify-content: flex-end;
+    margin: var(--spacing-md) 0;
+    gap: var(--spacing-sm);
+}
+
+.session-player-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-left: auto;
+}
+
+/* Bottom Navigation Bar */
+.bottom-nav {
+    display: none;
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 10px;
+    height: 60px;
+    background: linear-gradient(90deg, var(--primary-color) 60%, var(--primary-hover) 100%);
+    box-shadow: 0 -4px 18px rgba(0, 0, 0, 0.13);
+    z-index: var(--z-nav);
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 75vw;
+    max-width: 600px;
+    border-radius: 25px;
+    padding: 0 8px;
+    transition: background var(--transition-medium);
+}
+
+.bottom-nav .nav-btn {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.92);
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    cursor: pointer;
+    padding: 0;
+    border-radius: var(--radius-xl);
+    margin: 0 10px;
+    transition: background 0.18s, color 0.18s;
+    min-width: 40px;
+}
+
+.bottom-nav .nav-btn:active, .bottom-nav .nav-btn.active {
+    background: rgba(255, 255, 255, 0.13);
+    color: var(--text-white);
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.25);
+    transform: scale(0.95);
+}
+
+.bottom-nav .nav-btn:active .nav-icon {
+    transform: scale(1.2);
+    filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.8));
+}
+
+.bottom-nav .nav-icon {
+    font-size: 1.3em;
+    display: block;
+    line-height: 1;
+    transition: all var(--transition-fast);
+}
+
+.bottom-nav .nav-label {
+    display: none;
+}
+
+/* Session Status */
+.session-status {
+    padding: 0.4rem 0.8rem;
+    border-radius: var(--radius-pill);
+    font-size: 0.85rem;
+    font-weight: bold;
+    color: var(--text-white);
+    min-width: 70px;
+    text-align: center;
+    margin-left: var(--spacing-sm);
+}
+
+.session-status.status-active {
+    background-color: var(--color-success);
+}
+
+.session-status.status-ended {
+    background-color: var(--color-danger);
+}
+
+/* Back Navigation Buttons */
+.back-nav-btn {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 0.5rem !important;
+    padding: 0.75rem 1.25rem !important;
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-hover) 100%) !important;
+    color: var(--text-white) !important;
+    text-decoration: none !important;
+    border-radius: var(--radius-md) !important;
+    font-weight: 600 !important;
+    transition: all var(--transition-fast) !important;
+    margin-bottom: var(--spacing-lg) !important;
+    box-shadow: 0 4px 12px rgba(51, 103, 214, 0.2) !important;
+    font-size: 0.95rem !important;
+    border: none !important;
+    letter-spacing: 0.3px !important;
+}
+
+.back-nav-btn:hover {
+    background: linear-gradient(135deg, var(--primary-hover) 0%, #1a3a7a 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 20px rgba(51, 103, 214, 0.3) !important;
+    text-decoration: none !important;
+    color: var(--text-white) !important;
+}
+
+.back-nav-btn:active {
+    transform: translateY(0) !important;
+    box-shadow: 0 2px 8px rgba(51, 103, 214, 0.2) !important;
+}
+
+.back-nav-btn::before {
+    content: "←" !important;
+    font-size: 1.1rem !important;
+    font-weight: bold !important;
+    margin-right: 0.25rem !important;
+}
+
+/* Dark mode adjustments for back buttons */
+[data-theme="dark"] .back-nav-btn {
+    box-shadow: 0 4px 12px rgba(96, 165, 250, 0.2) !important;
+}
+
+[data-theme="dark"] .back-nav-btn:hover {
+    box-shadow: 0 6px 20px rgba(96, 165, 250, 0.3) !important;
+}
+
+/* Mobile Navigation Adjustments */
+@media (max-width: 600px) {
+    nav a {
+        display: block;
+        margin: var(--spacing-sm) 0;
+    }
+}
+
+@media (max-width: 400px) {
+    .quick-actions {
+        flex-direction: column;
+    }
+    
+    .session-status {
+        margin-top: var(--spacing-sm);
+        margin-left: 0;
+    }
+}
+
+@media (max-width: 700px) {
+    .bottom-nav {
+        display: flex;
+        border-radius: 25px;
+        padding-bottom: env(safe-area-inset-bottom, 0);
+        width: 75%;
+        max-width: 700px;
+        bottom: 10px;
+    }
+    
+    /* Hide desktop navigation */
+    .top-nav, .desktop-nav, .main-nav, .header-links {
+        display: none !important;
+    }
+}

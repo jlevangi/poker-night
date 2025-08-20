@@ -1,0 +1,37 @@
+/* Player stats container - restructured layout */
+.player-stats-container {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: clamp(1rem, 3vw, 2rem);
+}
+
+/* Update player quick stats for new structure */
+@media (max-width: 700px) {
+  .player-stats-container {
+    flex: 1 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: clamp(0.25rem, 2vw, 1rem) !important;
+  }
+
+  .player-quick-stats {
+    flex: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0.25rem !important;
+    font-size: 0.8rem !important;
+  }
+
+  .seven-two-counter {
+    flex: 0 0 auto !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    gap: 0.25rem !important;
+    font-size: 0.8rem !important;
+    margin-left: auto !important;
+  }
+}

@@ -24,7 +24,7 @@
   --bg-secondary: #2d2d2d;
   --bg-tertiary: #404040;
   --text-primary: #ffffff;
-  --text-secondary: #b0b0b0;
+  --text-secondary: #ffffff;
   --text-tertiary: #888888;
   --border-color: #404040;
   --border-light: #2d2d2d;
@@ -35,13 +35,54 @@
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+  
+  /* Override neutral colors for dark mode */
+  --neutral-50: #374151;
+  --neutral-100: #4b5563;
+  --neutral-200: #6b7280;
+  --neutral-300: #9ca3af;
+  --neutral-400: #d1d5db;
+  --neutral-500: #e5e7eb;
+  --neutral-600: #f3f4f6;
+  --neutral-700: #f9fafb;
+  --neutral-800: #ffffff;
+  --neutral-900: #ffffff;
 }
 
 /* Apply theme colors to base elements */
+html {
+  background-color: var(--bg-primary) !important;
+}
+
 body {
-  background-color: var(--bg-primary);
+  background-color: var(--bg-primary) !important;
   color: var(--text-primary);
   transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Ensure root element background changes in dark mode */
+html {
+  background-color: #f4f7f6 !important;
+  transition: background-color 0.3s ease;
+}
+
+html[data-theme="dark"] {
+  background-color: #1a1a1a !important;
+}
+
+[data-theme="dark"] body {
+  background-color: #1a1a1a !important;
+}
+
+/* Force background on document root */
+[data-theme="dark"] {
+  background-color: #1a1a1a !important;
+}
+
+/* Ensure viewport fills with correct background */
+html, body {
+  min-height: 100vh !important;
+  background-color: inherit !important;
 }
 
 /* Header styling */
@@ -229,7 +270,7 @@ input:focus, textarea:focus, select:focus {
 
 /* Gamble King card - keep the gold theme! */
 [data-theme="dark"] .gamble-king-card {
-  background: linear-gradient(135deg, #2d2418 0%, #3d3322 100%) !important;
+  background: #3d3322 100% !important;
   border-color: #f59e0b !important;
 }
 
@@ -253,8 +294,15 @@ input:focus, textarea:focus, select:focus {
 
 /* App content area */
 #app-content {
-  background-color: var(--bg-primary);
-  color: var(--text-primary);
+  background-color: var(--bg-primary) !important;
+  color: var(--text-primary) !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+[data-theme="dark"] #app-content {
+  background-color: var(--bg-primary) !important;
+  box-shadow: none !important;
 }
 
 /* Forms styling */
@@ -273,11 +321,7 @@ input:focus, textarea:focus, select:focus {
 
 /* Session actions */
 .sessions-actions {
-  background-color: var(--card-bg) !important;
-  border: 1px solid var(--border-color) !important;
-  border-radius: 8px;
-  padding: 1rem;
-  margin-bottom: 1.5rem;
+  /* Removed div styling */
 }
 
 /* All headings */
@@ -342,7 +386,16 @@ footer {
 }
 
 .seven-two-value {
-  color: var(--text-primary);
+  color: var(--text-primary) !important;
+  background-color: var(--bg-secondary) !important;
+  border-color: var(--border-color) !important;
+}
+
+/* Dark mode styling for compact seven-two value */
+[data-theme="dark"] .seven-two-value {
+  background-color: #404040 !important;
+  border-color: #555 !important;
+  color: #ffffff !important;
 }
 
 /* Ensure all text elements are properly themed */
@@ -560,4 +613,181 @@ a:hover {
 [data-theme="dark"] .session-item a:hover,
 [data-theme="dark"] .player-name a:hover {
   color: #60a5fa !important;
+}
+
+/* Fix session-value-summary dark mode styling */
+.session-value-summary {
+  background-color: var(--card-bg) !important;
+  border-left-color: #3367D6 !important;
+}
+
+[data-theme="dark"] .session-value-summary {
+  background-color: var(--bg-secondary) !important;
+  border-left-color: #60a5fa !important;
+}
+
+.session-total-value {
+  color: var(--text-primary) !important;
+}
+
+.session-unpaid-value {
+  color: var(--text-secondary) !important;
+}
+
+/* Fix chip-distribution dark mode styling */
+.chip-distribution {
+  background-color: var(--card-bg) !important;
+  border-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] .chip-distribution {
+  background-color: var(--bg-secondary) !important;
+  border-color: var(--border-color) !important;
+}
+
+.chip-distribution h3,
+.chip-distribution h4 {
+  color: var(--text-primary) !important;
+}
+
+.chip-distribution p,
+.chip-distribution span {
+  color: var(--text-secondary) !important;
+}
+
+/* Fix table-responsive dark mode styling */
+.table-responsive {
+  background-color: var(--card-bg) !important;
+}
+
+[data-theme="dark"] .table-responsive {
+  background-color: var(--bg-primary) !important;
+}
+
+/* Fix players-stats-table dark mode styling */
+.players-stats-table {
+  background-color: var(--card-bg) !important;
+  border-color: var(--border-color) !important;
+}
+
+.players-stats-table th {
+  background-color: var(--bg-secondary) !important;
+  color: var(--text-primary) !important;
+  border-bottom-color: var(--border-color) !important;
+}
+
+.players-stats-table td {
+  color: var(--text-secondary) !important;
+  border-bottom-color: var(--border-light) !important;
+}
+
+.players-stats-table tr:hover {
+  background-color: var(--bg-tertiary) !important;
+}
+
+.players-stats-table td a {
+  color: #3367D6 !important;
+}
+
+[data-theme="dark"] .players-stats-table td a {
+  color: #60a5fa !important;
+}
+
+.players-stats-table td a:hover {
+  color: #2851A7 !important;
+}
+
+[data-theme="dark"] .players-stats-table td a:hover {
+  color: #93c5fd !important;
+}
+
+/* Fix seven-two-stats-detail dark mode styling */
+.seven-two-stats-detail {
+  background-color: var(--card-bg) !important;
+  border-left-color: #28a745 !important;
+}
+
+[data-theme="dark"] .seven-two-stats-detail {
+  background-color: var(--bg-secondary) !important;
+  border-left-color: #22c55e !important;
+}
+
+.seven-two-stats-detail .seven-two-label {
+  color: var(--text-primary) !important;
+}
+
+.seven-two-stats-detail .seven-two-value {
+  color: var(--text-primary) !important;
+}
+
+/* Fix fade-in and edge screen elements */
+.fade-in {
+  background-color: transparent !important;
+}
+
+[data-theme="dark"] .fade-in {
+  background-color: transparent !important;
+}
+
+/* Fix body and main container edges */
+body {
+  background-color: var(--bg-primary) !important;
+}
+
+#app-content {
+  background-color: var(--bg-primary) !important;
+}
+
+/* Fix footer dark mode */
+footer {
+  background-color: var(--bg-primary) !important;
+  color: var(--text-secondary) !important;
+  border-top-color: var(--border-light) !important;
+}
+
+/* Fix header text - make Gamble King header text invert for dark mode */
+[data-theme="dark"] .royal-header h1 {
+  color: var(--text-primary) !important;
+  text-shadow: none !important;
+}
+
+/* Light mode header text should be dark */
+.royal-header h1 {
+  color: var(--text-primary) !important;
+}
+
+/* Specifically for the Gamble King text in header - user requested inversion */
+/* Light mode: light text color */
+header .royal-header h1 {
+  color: #ffffff !important;
+}
+
+/* Dark mode: dark text color */
+[data-theme="dark"] header .royal-header h1 {
+  color: #000000 !important;
+}
+
+/* Additional edge cases and container fixes */
+[data-theme="dark"] .container,
+[data-theme="dark"] .main-container,
+[data-theme="dark"] .content-wrapper {
+  background-color: var(--bg-primary) !important;
+}
+
+/* Fix any remaining white/light backgrounds */
+[data-theme="dark"] .bg-light,
+[data-theme="dark"] .background-light,
+[data-theme="dark"] .light-bg {
+  background-color: var(--bg-secondary) !important;
+}
+
+/* Ensure proper text color inheritance */
+[data-theme="dark"] * {
+  border-color: var(--border-color);
+}
+
+[data-theme="dark"] p,
+[data-theme="dark"] span,
+[data-theme="dark"] div:not(.btn):not(.button) {
+  color: inherit;
 }

@@ -1,0 +1,56 @@
+/* Form Component Styles */
+
+input[type="text"],
+input[type="number"],
+input[type="date"],
+select {
+    padding: 0.6rem;
+    margin-right: var(--spacing-sm);
+    margin-bottom: var(--spacing-sm);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+/* Form Containers */
+.add-player-form,
+.create-session-form,
+.session-controls {
+    margin-bottom: var(--spacing-lg);
+    padding: var(--spacing-md);
+    background-color: var(--bg-card);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-card);
+}
+
+.player-stats-summary p,
+.session-controls h3 {
+    margin-top: var(--spacing-sm);
+    margin-bottom: var(--spacing-sm);
+}
+
+/* Modal Form Styles */
+.modal-form-group {
+    margin-bottom: var(--spacing-md);
+}
+
+.modal-form-group label {
+    display: block;
+    margin-bottom: 0.3rem;
+    font-weight: 500;
+    color: #555;
+}
+
+.modal-form-group input[type="date"],
+.modal-form-group input[type="number"] {
+    width: calc(100% - 1.4rem);
+    padding: 0.7rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    box-sizing: border-box;
+}
+
+.modal-form-group input[type="number"] {
+    margin-bottom: 0;
+}

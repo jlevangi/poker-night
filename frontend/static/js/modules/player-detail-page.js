@@ -43,6 +43,7 @@ export default class PlayerDetailPage {    constructor(appContent, apiService) {
     // Render player detail content
     render(player) {
         let html = `
+            <a href="#players" class="back-nav-btn">Back to Players</a>
             <h2>Player Details: ${player.name}</h2>
               <div class="player-stats-summary">
                 <p>Total Profit: <span class="${player.totalProfit >= 0 ? 'profit-positive' : 'profit-negative'}">$${player.totalProfit !== undefined ? player.totalProfit.toFixed(2) : '0.00'}</span></p>
@@ -53,10 +54,6 @@ export default class PlayerDetailPage {    constructor(appContent, apiService) {
             <div class="seven-two-stats-detail">
                 <span class="seven-two-label">7-2 Wins (Total):</span>
                 <span class="seven-two-value">${player.seven_two_wins || 0}</span>
-                <div class="seven-two-buttons">
-                    <button class="seven-two-increment-btn" data-player-id="${player.id}">+</button>
-                    <button class="seven-two-decrement-btn" data-player-id="${player.id}">-</button>
-                </div>
             </div>
         `;
         
@@ -101,7 +98,6 @@ export default class PlayerDetailPage {    constructor(appContent, apiService) {
             html += `<p>No sessions found for this player.</p>`;
         }
         
-        html += `<p><a href="#players">&laquo; Back to Players</a></p>`;
         
         this.appContent.innerHTML = html;
         
@@ -111,52 +107,7 @@ export default class PlayerDetailPage {    constructor(appContent, apiService) {
     
     // Setup event listeners for the page
     setupEventListeners(player) {
-        // 7-2 increment button
-        const incrementBtn = document.querySelector('.seven-two-increment-btn');
-        if (incrementBtn) {
-            incrementBtn.addEventListener('click', async () => {
-                try {
-                    const response = await fetch(`/api/players/${player.id}/seven-two-wins/increment`, {
-                        method: 'PUT',
-                        headers: { 'Content-Type': 'application/json' }
-                    });
-                    
-                    if (!response.ok) {
-                        const errorData = await response.json();
-                        throw new Error(errorData.error || "Failed to increment 7-2 wins");
-                    }
-                    
-                    // Reload the player detail page
-                    this.load(player.id);
-                } catch (error) {
-                    console.error('Error incrementing 7-2 wins:', error);
-                    alert(`Error: ${error.message}`);
-                }
-            });
-        }
-        
-        // 7-2 decrement button
-        const decrementBtn = document.querySelector('.seven-two-decrement-btn');
-        if (decrementBtn) {
-            decrementBtn.addEventListener('click', async () => {
-                try {
-                    const response = await fetch(`/api/players/${player.id}/seven-two-wins/decrement`, {
-                        method: 'PUT',
-                        headers: { 'Content-Type': 'application/json' }
-                    });
-                    
-                    if (!response.ok) {
-                        const errorData = await response.json();
-                        throw new Error(errorData.error || "Failed to decrement 7-2 wins");
-                    }
-                    
-                    // Reload the player detail page
-                    this.load(player.id);
-                } catch (error) {
-                    console.error('Error decrementing 7-2 wins:', error);
-                    alert(`Error: ${error.message}`);
-                }
-            });
-        }
+        // No event listeners needed for player detail page
+        // 7-2 win buttons are only available during active sessions
     }
 }

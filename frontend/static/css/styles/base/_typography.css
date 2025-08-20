@@ -1,0 +1,50 @@
+/* Typography Styles */
+
+h1, h2, h3, h4, h5, h6 {
+    margin-top: 0;
+}
+
+h2 {
+    color: var(--primary-color);
+    border-bottom: 2px solid var(--border-lighter);
+    padding-bottom: var(--spacing-sm);
+    margin-top: 0;
+}
+
+h3 {
+    color: var(--text-secondary);
+    margin-top: var(--spacing-lg);
+    margin-bottom: 0.75rem;
+}
+
+/* Links */
+a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Profit/Loss text styling */
+.profit-positive {
+    color: var(--profit-positive);
+    font-weight: bold;
+}
+
+.profit-negative {
+    color: var(--profit-negative);
+    font-weight: bold;
+}
+
+/* Gamble King name styling with gradient */
+.gamble-king-name-dash {
+    background: var(--gamble-king-gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    font-weight: bold;
+    text-shadow: 0px 0px 1px rgba(0,0,0,0.1);
+    animation: shine 10s infinite linear;
+}

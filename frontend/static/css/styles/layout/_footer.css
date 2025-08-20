@@ -1,0 +1,9 @@
+/* Footer Styles */
+
+footer {
+    text-align: center;
+    padding: var(--spacing-lg);
+    margin-top: var(--spacing-xl);
+    color: var(--text-light);
+    font-size: 0.9rem;
+}

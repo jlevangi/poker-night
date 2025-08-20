@@ -67,7 +67,7 @@
 /* Enhanced Body and Base Styles */
 body {
     font-family: var(--font-body);
-    background: linear-gradient(135deg, var(--neutral-50) 0%, var(--neutral-100) 100%);
+    background: var(--neutral-900);
     color: var(--neutral-800);
     line-height: 1.6;
     font-size: 16px;

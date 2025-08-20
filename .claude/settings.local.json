@@ -22,7 +22,8 @@
       "Bash(sqlite3:*)",
       "Bash(PYTHONPATH=backend python3 test_sessions.py)",
       "Bash(PYTHONPATH=backend ./venv/bin/python3 ../test_sessions.py)",
-      "Bash(PYTHONPATH=backend ./venv/bin/python3 run.py --port 5000 --debug)"
+      "Bash(PYTHONPATH=backend ./venv/bin/python3 run.py --port 5000 --debug)",
+      "Bash(mkdir:*)"
     ],
     "deny": [],
     "ask": []

@@ -113,8 +113,18 @@ export default class SessionDetailPage {
                 const backgroundColor = chipColors[chipColor];
                 const textColor = ['White'].includes(chipColor) ? '#000000' : '#FFFFFF';
                 
+                // Define border styles based on chip color
+                let borderStyle;
+                if (chipColor === 'White') {
+                    borderStyle = '3px dashed #000000'; // Black dashed border for white chips
+                } else if (['Black', 'Blue', 'Green'].includes(chipColor)) {
+                    borderStyle = '3px dashed rgba(255, 255, 255, 0.7)'; // White dashed border for dark chips
+                } else {
+                    borderStyle = '3px dashed rgba(255, 255, 255, 0.5)'; // Lighter white dashed for red chips
+                }
+                
                 html += `
-                    <div class="chip" style="background-color: ${backgroundColor}; color: ${textColor}; border: ${chipColor === 'White' ? '2px solid #ccc' : '3px dashed rgba(255, 255, 255, 0.3)'}">
+                    <div class="chip" style="background-color: ${backgroundColor}; color: ${textColor}; border: ${borderStyle}">
                         <span class="chip-count">${chipDistribution[chipColor]}</span>
                         <span class="chip-name">${chipColor}</span>
                     </div>`;
@@ -147,6 +157,7 @@ export default class SessionDetailPage {
             "final isActive =", isActive);
         
         let html = `
+            <a href="#sessions" class="back-nav-btn">Back to Sessions</a>
             <h2>Session Details</h2>
             <p><strong>Date:</strong> ${this.formatDate(sessionData.date)}</p>
             <p><strong>Default Buy-in:</strong> $${sessionData.default_buy_in_value ? sessionData.default_buy_in_value.toFixed(2) : '0.00'}</p>
@@ -253,7 +264,6 @@ export default class SessionDetailPage {
             </div>
         `;
         
-        html += `<p><a href="#sessions">&laquo; Back to Sessions</a></p>`;
         
         // Log the HTML about to be rendered
         console.log("Full HTML being set:", html);

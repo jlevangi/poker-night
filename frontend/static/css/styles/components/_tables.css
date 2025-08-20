@@ -1,0 +1,112 @@
+/* Table Component Styles */
+
+.table-responsive {
+    overflow-x: auto;
+    margin-bottom: var(--spacing-lg);
+}
+
+/* Dashboard Player Standings Table */
+.players-dashboard-table {
+    width: 100%;
+    max-width: 600px;
+    border-collapse: collapse;
+    margin: var(--spacing-md) auto;
+    background-color: var(--bg-content);
+    box-shadow: var(--shadow-card);
+}
+
+.players-dashboard-table th,
+.players-dashboard-table td {
+    padding: 0.75rem var(--spacing-sm);
+    border-bottom: 1px solid #e9ecef;
+    text-align: left;
+}
+
+.players-dashboard-table th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    color: #495057;
+    border-bottom: 2px solid var(--border-table);
+}
+
+.players-dashboard-table tr:hover {
+    background-color: #f8f9fa;
+}
+
+.players-dashboard-table td a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.players-dashboard-table td a:hover {
+    text-decoration: underline;
+}
+
+/* Player Statistics Table */
+.players-stats-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: var(--spacing-md);
+    background-color: var(--bg-content);
+    box-shadow: var(--shadow-card);
+}
+
+.players-stats-table th,
+.players-stats-table td {
+    padding: 0.75rem var(--spacing-sm);
+    border-bottom: 1px solid #e9ecef;
+    text-align: left;
+}
+
+.players-stats-table th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    color: #495057;
+    border-bottom: 2px solid var(--border-table);
+}
+
+.players-stats-table tr:hover {
+    background-color: #f8f9fa;
+}
+
+.players-stats-table td a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.players-stats-table td a:hover {
+    text-decoration: underline;
+}
+
+/* Modern Table Styles */
+.modern-table {
+    border: 1px solid var(--border-table);
+    box-shadow: none;
+}
+
+.modern-table th,
+.modern-table td {
+    padding: var(--spacing-sm);
+    font-size: 0.875rem;
+}
+
+/* Mobile Table Adjustments */
+@media (max-width: 700px) {
+    .modern-table {
+        border: 1px solid var(--border-table) !important;
+        box-shadow: none !important;
+    }
+    
+    .table-responsive {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    
+    .modern-table th,
+    .modern-table td {
+        padding: var(--spacing-sm) !important;
+        font-size: 0.875rem !important;
+    }
+}

@@ -1,0 +1,269 @@
+/* List Component Styles */
+
+li {
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--border-light);
+}
+
+li:last-child {
+    border-bottom: none;
+}
+
+li a {
+    text-decoration: none;
+    color: #007bff;
+}
+
+li a:hover {
+    text-decoration: underline;
+}
+
+/* Session Lists */
+.sessions-list {
+    list-style: none;
+    padding: 0;
+}
+
+.session-link {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    text-decoration: none;
+    color: var(--text-primary);
+}
+
+.session-link:hover .session-date {
+    color: var(--primary-color);
+}
+
+.session-date {
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.session-buyin {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.session-buyin, .session-total-value, .session-unpaid-value {
+    color: #555;
+    font-size: 0.9rem;
+}
+
+/* Player Lists */
+.players-list {
+    margin-bottom: var(--spacing-xl);
+    padding: 0;
+}
+
+.players-list li {
+    padding: 0.75rem var(--spacing-sm);
+}
+
+.players-list li a {
+    display: block;
+    width: 100%;
+    padding: 0.25rem 0;
+}
+
+.players-list-container {
+    margin-bottom: var(--spacing-lg);
+}
+
+.player-name-link {
+    display: block;
+    padding: var(--spacing-sm) 0.25rem;
+    color: var(--primary-color);
+    font-weight: 500;
+    border-radius: var(--radius-sm);
+    transition: background-color var(--transition-fast);
+}
+
+.player-name-link:hover {
+    background-color: var(--primary-light);
+    text-decoration: none;
+}
+
+/* Enhanced Player List Styles */
+.players-list.enhanced li {
+    padding: 0;
+}
+
+.player-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-sm);
+    transition: background-color var(--transition-fast);
+}
+
+.player-row:hover {
+    background-color: #f8f9fa;
+}
+
+.player-name {
+    flex: 0 0 25%;
+    font-weight: 500;
+}
+
+.player-quick-stats {
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem;
+    gap: var(--spacing-md);
+}
+
+.player-quick-stats .stat {
+    white-space: nowrap;
+}
+
+/* Seven-two counter positioned on the right within quick-stats */
+.seven-two-counter {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    font-size: 0.9rem;
+    gap: var(--spacing-sm);
+    margin-left: auto;
+}
+
+/* Player Standings List */
+.player-standings-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.8rem var(--spacing-sm);
+}
+
+.player-standings-list strong {
+    margin-right: auto;
+}
+
+/* Session Players List */
+.session-players-list li {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 8px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid var(--border-light);
+    background-color: var(--bg-card);
+    border-radius: var(--radius-md);
+}
+
+.session-player-details {
+    flex: 1 1 65%;
+    padding-right: 15px;
+}
+
+.session-seven-two-controls {
+    flex: 0 0 35%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    border-left: 1px solid #e0e0e0;
+    padding-left: 15px;
+}
+
+/* Gamble King Highlighting */
+.gamble-king-row {
+    background-color: var(--gamble-king-bg) !important;
+}
+
+.gamble-king-row:hover {
+    background-color: var(--gamble-king-bg-hover) !important;
+}
+
+.crown-icon {
+    font-size: 1.2rem;
+    margin-right: 0.25rem;
+}
+
+.gamble-king-label-container {
+    margin-top: 0.25rem;
+}
+
+.gamble-king-label {
+    font-size: 0.75rem;
+    background-color: var(--gamble-king-label-bg);
+    color: var(--gamble-king-label-text);
+    padding: 0.15rem 0.4rem;
+    border-radius: var(--radius-xl);
+    font-weight: bold;
+    white-space: nowrap;
+    display: inline-block;
+}
+
+/* Mobile List Adjustments */
+@media (max-width: 600px) {
+    .players-list {
+        margin-bottom: var(--spacing-lg);
+    }
+    
+    .players-list li {
+        padding: var(--spacing-sm) 0.25rem;
+        margin: 0;
+    }
+    
+    .players-list li a {
+        padding: var(--spacing-sm) 0;
+        margin: 0;
+        display: block;
+        width: 100%;
+    }
+}
+
+@media (max-width: 700px) {
+    /* Fix players page mobile overflow */
+    .player-row {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: var(--spacing-sm);
+    }
+    
+    .player-name {
+        flex: none !important;
+        width: 100% !important;
+    }
+    
+    .player-quick-stats {
+        flex: none !important;
+        width: 100% !important;
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 0.25rem;
+        font-size: 0.8rem !important;
+    }
+    
+    .player-quick-stats .stat {
+        margin-right: 0 !important;
+        white-space: normal !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .session-players-list li {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .session-player-details {
+        width: 100%;
+        margin-bottom: 10px;
+        padding-right: 0;
+    }
+    
+    .session-seven-two-controls {
+        width: 100%;
+        border-left: none;
+        border-top: 1px solid #e0e0e0;
+        padding-left: 0;
+        padding-top: 10px;
+        margin-top: 10px;
+        justify-content: flex-start;
+    }
+}

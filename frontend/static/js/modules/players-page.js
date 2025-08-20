@@ -47,17 +47,19 @@ export default class PlayersPage {
                             <div class="player-name">
                                 <a href="#player/${player.player_id}" class="player-name-link">${player.name}</a>
                             </div>
-                            <div class="player-quick-stats">
-                                <span class="stat">
-                                    Profit: <span class="${player.net_profit >= 0 ? 'profit-positive' : 'profit-negative'}">
-                                        $${player.net_profit ? player.net_profit.toFixed(2) : '0.00'}
+                            <div class="player-stats-container">
+                                <div class="player-quick-stats">
+                                    <span class="stat">
+                                        Profit: <span class="${player.net_profit >= 0 ? 'profit-positive' : 'profit-negative'}">
+                                            $${player.net_profit ? player.net_profit.toFixed(2) : '0.00'}
+                                        </span>
                                     </span>
-                                </span>
-                                <span class="stat">
-                                    Sessions: ${player.games_played || 0}
-                                </span>
+                                    <span class="stat">
+                                        Sessions: ${player.games_played || 0}
+                                    </span>
+                                </div>
                                 <div class="seven-two-counter">
-                                    <span class="seven-two-label">7-2 Wins (Total):</span>
+                                    <span class="seven-two-label">7-2 Wins:</span>
                                     <span class="seven-two-value">${player.seven_two_wins || 0}</span>
                                 </div>
                             </div>
