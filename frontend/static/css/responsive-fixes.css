@@ -38,19 +38,13 @@
         padding-right: 0.5rem;
     }
     
-    /* Improve spacing in tables on mobile */
-    .players-stats-table th,
-    .players-stats-table td,
-    .players-dashboard-table th,
-    .players-dashboard-table td {
-        padding: 0.5rem 0.35rem;
-    }
+    /* Improve spacing in tables on mobile - removed general padding rule */
     
     /* Further reduce table column spacing on mobile */
     .players-stats-table td:not(:first-child),
     .players-dashboard-table td:not(:first-child) {
-        padding-left: 0.25rem;
-        padding-right: 0.25rem;
+        padding-left: 0.15rem;
+        padding-right: 0.15rem;
     }
     
     /* Special styling for dashboard table - more compact layout */

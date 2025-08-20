@@ -50,11 +50,43 @@
     margin-top: var(--spacing-md);
     background-color: var(--bg-content);
     box-shadow: var(--shadow-card);
+    table-layout: fixed; /* Enable fixed layout for better width control */
+}
+
+/* Define compact column widths to minimize space between columns */
+.players-stats-table th:nth-child(1), 
+.players-stats-table td:nth-child(1) { /* Date column */
+    width: 10%;
+}
+
+.players-stats-table th:nth-child(2), 
+.players-stats-table td:nth-child(2) { /* Buy-In column */
+    width: 10%;
+}
+
+.players-stats-table th:nth-child(3), 
+.players-stats-table td:nth-child(3) { /* Cash Out column */
+    width: 10%;
+}
+
+.players-stats-table th:nth-child(4), 
+.players-stats-table td:nth-child(4) { /* Profit column */
+    width: 20%;
+}
+
+/* Align monetary columns to eliminate right-side spacing */
+.players-stats-table th:nth-child(2), 
+.players-stats-table td:nth-child(2), /* Buy-In column */
+.players-stats-table th:nth-child(3), 
+.players-stats-table td:nth-child(3), /* Cash Out column */
+.players-stats-table th:nth-child(4), 
+.players-stats-table td:nth-child(4) { /* Profit column */
+    text-align: right;
 }
 
 .players-stats-table th,
 .players-stats-table td {
-    padding: 0.75rem var(--spacing-sm);
+    padding: 0.8rem 0.4rem;
     border-bottom: 1px solid #e9ecef;
     text-align: left;
 }
@@ -78,6 +110,34 @@
 
 .players-stats-table td a:hover {
     text-decoration: underline;
+}
+
+/* Mobile responsive adjustments for players-stats-table */
+@media (max-width: 768px) {
+    .players-stats-table th:nth-child(1), 
+    .players-stats-table td:nth-child(1) { /* Date column */
+        width: 10%;
+    }
+
+    .players-stats-table th:nth-child(2), 
+    .players-stats-table td:nth-child(2) { /* Buy-In column */
+        width: 13%;
+    }
+
+    .players-stats-table th:nth-child(3), 
+    .players-stats-table td:nth-child(3) { /* Cash Out column */
+        width: 10%;
+    }
+
+    .players-stats-table th:nth-child(4), 
+    .players-stats-table td:nth-child(4) { /* Profit column */
+        width: 20%;
+    }
+    
+    .players-stats-table th,
+    .players-stats-table td {
+        font-size: 0.9rem;
+    }
 }
 
 /* Modern Table Styles */
