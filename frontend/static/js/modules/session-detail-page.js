@@ -1,10 +1,12 @@
 // Session detail page module
 import ApiService from './api-service.js';
+import { NotificationManager } from './notification-manager.js';
 
 export default class SessionDetailPage {
     constructor(appContent, apiService) {
         this.appContent = appContent;
         this.api = apiService;
+        this.notificationManager = new NotificationManager(apiService);
     }
     
     // Helper to format date as 'MMM DD, YYYY' or fallback
@@ -156,7 +158,17 @@ export default class SessionDetailPage {
             "final isActive =", isActive);
         
         let html = `
-            <a href="#sessions" class="back-nav-btn">Back to Sessions</a>
+            <!-- Header with navigation and notification controls -->
+            <div class="session-header">
+                <a href="#sessions" class="back-nav-btn">Back to Sessions</a>
+                ${isActive ? 
+                    `<button id="notification-btn" class="notification-btn" data-state="loading">
+                        <span class="btn-text">Loading...</span>
+                    </button>` : 
+                    ''
+                }
+            </div>
+            
             <h2>Session Details</h2>
             <p><strong>Date:</strong> ${this.formatDate(sessionData.date)}</p>
             <p><strong>Default Buy-in:</strong> $${sessionData.default_buy_in_value ? sessionData.default_buy_in_value.toFixed(2) : '0.00'}</p>
@@ -585,6 +597,9 @@ export default class SessionDetailPage {
                     }
                 });
             });
+            
+            // Set up notification functionality for active sessions
+            this.setupNotificationHandlers(sessionId);
         }
         
         // Add click handlers for clickable player details (works for both active and inactive sessions)
@@ -633,5 +648,129 @@ export default class SessionDetailPage {
                 });
             }
         }
+    }
+
+    /**
+     * Set up notification handlers for active sessions
+     */
+    async setupNotificationHandlers(sessionId) {
+        const notificationBtn = document.getElementById('notification-btn');
+        if (!notificationBtn) return;
+
+        const currentPlayerId = this.getCurrentPlayerId();
+        if (!currentPlayerId) {
+            this.updateNotificationButton(notificationBtn, 'unavailable', 'Not Available');
+            return;
+        }
+
+        try {
+            // Check permission status first
+            const permissionStatus = this.notificationManager.getPermissionStatus();
+            
+            if (permissionStatus === 'unsupported') {
+                this.updateNotificationButton(notificationBtn, 'unavailable', 'Not Supported');
+                return;
+            }
+
+            if (permissionStatus === 'denied') {
+                this.updateNotificationButton(notificationBtn, 'denied', 'Permission Denied');
+                return;
+            }
+
+            if (permissionStatus === 'default') {
+                // Show "Get Notified" button to request permission
+                this.updateNotificationButton(notificationBtn, 'request-permission', '🔔 Get Notified');
+                this.setupNotificationButtonHandler(notificationBtn, sessionId, currentPlayerId, 'request-permission');
+                return;
+            }
+
+            // Permission granted - check subscription status
+            const isSubscribed = await this.notificationManager.isSubscribedToSession(currentPlayerId, sessionId);
+            
+            if (isSubscribed) {
+                this.updateNotificationButton(notificationBtn, 'subscribed', '✓ Subscribed');
+                this.setupNotificationButtonHandler(notificationBtn, sessionId, currentPlayerId, 'unsubscribe');
+            } else {
+                this.updateNotificationButton(notificationBtn, 'not-subscribed', 'Subscribe');
+                this.setupNotificationButtonHandler(notificationBtn, sessionId, currentPlayerId, 'subscribe');
+            }
+
+        } catch (error) {
+            console.error('Error setting up notification handlers:', error);
+            this.updateNotificationButton(notificationBtn, 'error', 'Error');
+        }
+    }
+
+    /**
+     * Update the notification button appearance
+     */
+    updateNotificationButton(button, state, text) {
+        button.setAttribute('data-state', state);
+        button.querySelector('.btn-text').textContent = text;
+        button.disabled = ['loading', 'unavailable', 'denied', 'error'].includes(state);
+    }
+
+    /**
+     * Set up click handler for notification button based on current state
+     */
+    setupNotificationButtonHandler(button, sessionId, playerId, action) {
+        // Remove any existing listeners by cloning the button
+        const newButton = button.cloneNode(true);
+        button.parentNode.replaceChild(newButton, button);
+
+        newButton.addEventListener('click', async () => {
+            try {
+                this.updateNotificationButton(newButton, 'loading', 'Loading...');
+
+                switch (action) {
+                    case 'request-permission':
+                        await this.notificationManager.requestPermission();
+                        // After permission granted, refresh the button state
+                        this.setupNotificationHandlers(sessionId);
+                        break;
+
+                    case 'subscribe':
+                        await this.notificationManager.subscribeToSession(playerId, sessionId);
+                        this.updateNotificationButton(newButton, 'subscribed', '✓ Subscribed');
+                        this.setupNotificationButtonHandler(newButton, sessionId, playerId, 'unsubscribe');
+                        break;
+
+                    case 'unsubscribe':
+                        await this.notificationManager.unsubscribeFromSession(playerId, sessionId);
+                        this.updateNotificationButton(newButton, 'not-subscribed', 'Subscribe');
+                        this.setupNotificationButtonHandler(newButton, sessionId, playerId, 'subscribe');
+                        break;
+                }
+            } catch (error) {
+                console.error(`Error ${action}:`, error);
+                this.updateNotificationButton(newButton, 'error', 'Error');
+                
+                // Show user-friendly error message
+                let errorMsg = 'An error occurred. Please try again.';
+                if (error.message.includes('denied')) {
+                    errorMsg = 'Permission denied. Please enable notifications in your browser settings.';
+                } else if (error.message.includes('not supported')) {
+                    errorMsg = 'Notifications are not supported in this browser.';
+                }
+                
+                alert(errorMsg);
+                
+                // Reset button after error
+                setTimeout(() => {
+                    this.setupNotificationHandlers(sessionId);
+                }, 2000);
+            }
+        });
+    }
+
+    /**
+     * Get current player ID - this needs to be implemented based on your authentication system
+     * For now, returning a placeholder - you'll need to replace this with actual player identification
+     */
+    getCurrentPlayerId() {
+        // TODO: Implement actual player identification
+        // This could be from localStorage, session storage, or API call
+        // For now, returning a default player ID for testing
+        return localStorage.getItem('current_player_id') || 'pid_001';
     }
 }

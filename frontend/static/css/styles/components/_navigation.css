@@ -202,11 +202,197 @@ nav a:hover {
     box-shadow: 0 6px 20px rgba(96, 165, 250, 0.3) !important;
 }
 
-/* Mobile Navigation Adjustments */
+/* Session Header Layout - align items on same line */
+.session-header {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: flex-start !important; /* Align both buttons to the top */
+    gap: var(--space-4, 1rem) !important;
+    flex-wrap: nowrap !important; /* Prevent wrapping to keep on same row */
+}
+
+/* Ensure both buttons align perfectly to the top */
+.session-header > * {
+    align-self: flex-start !important;
+    vertical-align: top !important;
+}
+
+/* Single Notification Button - force exact same size as back button */
+.notification-btn {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 0.5rem !important;
+    padding: 0.75rem 1.25rem !important; /* Match back button */
+    font-size: 0.95rem !important; /* Match back button */
+    font-weight: 600 !important;
+    border-radius: var(--radius-md) !important; /* Match back button */
+    border: none !important; /* Match back button - no border */
+    text-decoration: none !important;
+    transition: all var(--transition-fast) !important; /* Match back button */
+    cursor: pointer !important;
+    white-space: nowrap !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+    letter-spacing: 0.3px !important; /* Match back button */
+    /* Force exact dimensions to match back button */
+    height: 52px !important; /* Increased to match back button exactly */
+    min-width: 140px !important; /* Ensure adequate width */
+}
+
+/* Default state (request permission) */
+.notification-btn[data-state="request-permission"] {
+    color: var(--primary-color, #3367d6) !important;
+    border: 1.5px solid var(--primary-color, #3367d6) !important;
+    background: transparent !important;
+}
+
+.notification-btn[data-state="request-permission"]:hover {
+    background: var(--primary-color, #3367d6) !important;
+    color: white !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 12px rgba(51, 103, 214, 0.3) !important;
+}
+
+/* Not subscribed state */
+.notification-btn[data-state="not-subscribed"] {
+    color: var(--primary-color, #3367d6) !important;
+    border: 1.5px solid var(--primary-color, #3367d6) !important;
+    background: transparent !important;
+}
+
+.notification-btn[data-state="not-subscribed"]:hover {
+    background: var(--primary-color, #3367d6) !important;
+    color: white !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 12px rgba(51, 103, 214, 0.3) !important;
+}
+
+/* Subscribed state - green with checkmark */
+.notification-btn[data-state="subscribed"] {
+    color: white !important;
+    border: 1.5px solid var(--secondary-color, #059669) !important;
+    background: var(--secondary-color, #059669) !important;
+}
+
+.notification-btn[data-state="subscribed"]:hover {
+    background: var(--secondary-dark, #047857) !important;
+    border-color: var(--secondary-dark, #047857) !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 12px rgba(5, 150, 105, 0.4) !important;
+}
+
+/* Loading state */
+.notification-btn[data-state="loading"] {
+    color: var(--neutral-500, #6b7280) !important;
+    border: 1.5px solid var(--neutral-300, #cbd5e1) !important;
+    background: var(--neutral-50, #f8fafc) !important;
+    cursor: wait !important;
+}
+
+/* Error state */
+.notification-btn[data-state="error"] {
+    color: var(--error-color, #dc2626) !important;
+    border: 1.5px solid var(--error-color, #dc2626) !important;
+    background: rgba(220, 38, 38, 0.1) !important;
+}
+
+/* Unavailable/denied states */
+.notification-btn[data-state="unavailable"],
+.notification-btn[data-state="denied"] {
+    color: var(--neutral-400, #94a3b8) !important;
+    border: 1.5px solid var(--neutral-300, #cbd5e1) !important;
+    background: var(--neutral-100, #f1f5f9) !important;
+    cursor: not-allowed !important;
+}
+
+/* Disabled state */
+.notification-btn:disabled {
+    opacity: 0.7 !important;
+    cursor: not-allowed !important;
+    transform: none !important;
+}
+
+.notification-btn:disabled:hover {
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+/* Dark mode adjustments */
+[data-theme="dark"] .notification-btn[data-state="request-permission"],
+[data-theme="dark"] .notification-btn[data-state="not-subscribed"] {
+    color: var(--primary-light, #60a5fa) !important;
+    border-color: var(--primary-light, #60a5fa) !important;
+}
+
+[data-theme="dark"] .notification-btn[data-state="request-permission"]:hover,
+[data-theme="dark"] .notification-btn[data-state="not-subscribed"]:hover {
+    background: var(--primary-light, #60a5fa) !important;
+    color: var(--neutral-900, #0f172a) !important;
+    box-shadow: 0 4px 12px rgba(96, 165, 250, 0.3) !important;
+}
+
+[data-theme="dark"] .notification-btn[data-state="subscribed"] {
+    background: var(--secondary-light, #10b981) !important;
+    border-color: var(--secondary-light, #10b981) !important;
+}
+
+[data-theme="dark"] .notification-btn[data-state="subscribed"]:hover {
+    background: var(--secondary-color, #059669) !important;
+    border-color: var(--secondary-color, #059669) !important;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4) !important;
+}
+
+[data-theme="dark"] .notification-btn[data-state="loading"] {
+    background: var(--neutral-800, #1e293b) !important;
+    border-color: var(--neutral-600, #475569) !important;
+    color: var(--neutral-400, #94a3b8) !important;
+}
+
+[data-theme="dark"] .notification-btn[data-state="unavailable"],
+[data-theme="dark"] .notification-btn[data-state="denied"] {
+    background: var(--neutral-800, #1e293b) !important;
+    border-color: var(--neutral-700, #334155) !important;
+    color: var(--neutral-500, #64748b) !important;
+}
+
+/* Mobile Navigation Adjustments - keep buttons on same row until very small screens */
 @media (max-width: 600px) {
     nav a {
         display: block;
         margin: var(--spacing-sm) 0;
+    }
+    
+    /* Make notification buttons smaller on mobile to fit better */
+    .notification-btn {
+        font-size: 0.8125rem !important;
+        min-width: 110px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    /* Further reduce button size but keep on same row */
+    .notification-btn {
+        font-size: 0.75rem !important;
+        min-width: 95px !important;
+    }
+    
+    .session-header {
+        gap: var(--space-2, 0.5rem) !important;
+    }
+}
+
+@media (max-width: 380px) {
+    /* Only stack on very small screens if absolutely necessary */
+    .session-header {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: var(--space-2, 0.5rem) !important;
+    }
+    
+    .notification-btn {
+        align-self: flex-end !important;
+        min-width: auto !important;
     }
 }
 

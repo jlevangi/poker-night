@@ -156,6 +156,92 @@ async function staleWhileRevalidate(request) {
     return cachedResponse || fetchPromise;
 }
 
+// Push event handler for notifications
+self.addEventListener('push', event => {
+    console.log('Push notification received:', event);
+    
+    let notificationData = {};
+    
+    if (event.data) {
+        try {
+            notificationData = event.data.json();
+        } catch (error) {
+            console.error('Error parsing push notification data:', error);
+            // Use default notification data if parsing fails
+            notificationData = {
+                title: 'Poker Session Update',
+                body: 'A poker session has ended',
+                icon: '/static/images/icon-192x192.png'
+            };
+        }
+    } else {
+        // Default notification if no data provided
+        notificationData = {
+            title: 'Poker Session Update',
+            body: 'A poker session has ended',
+            icon: '/static/images/icon-192x192.png'
+        };
+    }
+    
+    // Set default values if not provided
+    const options = {
+        body: notificationData.body || 'A poker session has ended',
+        icon: notificationData.icon || '/static/images/icon-192x192.png',
+        badge: '/static/images/icon-192x192.png',
+        tag: notificationData.tag || 'poker-session',
+        data: notificationData.data || {},
+        requireInteraction: false,
+        silent: false
+    };
+    
+    // Add action buttons if provided
+    if (notificationData.actions) {
+        options.actions = notificationData.actions;
+    }
+    
+    const title = notificationData.title || 'Poker Session Ended';
+    
+    event.waitUntil(
+        self.registration.showNotification(title, options)
+    );
+});
+
+// Notification click handler
+self.addEventListener('notificationclick', event => {
+    console.log('Notification click received:', event);
+    
+    event.notification.close();
+    
+    // Handle action button clicks
+    if (event.action === 'view_results') {
+        event.waitUntil(
+            clients.openWindow('/sessions/' + (event.notification.data.sessionId || ''))
+        );
+    } else if (event.action === 'dismiss') {
+        // Just close the notification (already done above)
+        return;
+    } else {
+        // Default click - open the app
+        event.waitUntil(
+            clients.matchAll({ type: 'window' }).then(clientList => {
+                // If app is already open, focus it
+                for (const client of clientList) {
+                    if (client.url.includes(self.location.origin) && 'focus' in client) {
+                        return client.focus();
+                    }
+                }
+                // Otherwise open new window
+                if (clients.openWindow) {
+                    const targetUrl = event.notification.data.sessionId 
+                        ? `/sessions/${event.notification.data.sessionId}`
+                        : '/';
+                    return clients.openWindow(targetUrl);
+                }
+            })
+        );
+    }
+});
+
 // Add message event handler for update requests
 self.addEventListener('message', event => {
     console.log('Service Worker received message:', event.data);

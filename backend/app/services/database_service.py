@@ -14,6 +14,13 @@ from ..models import PlayerStats, PlayerSessionHistory
 
 logger = logging.getLogger(__name__)
 
+# Import notification service at module level
+try:
+    from .notification_service import NotificationService
+except ImportError as e:
+    logger.warning(f"Could not import NotificationService: {e}")
+    NotificationService = None
+
 
 class DatabaseService:
     """
@@ -266,6 +273,19 @@ class DatabaseService:
             db.session.commit()
             
             self.logger.info(f"Session {session_id} has been ended.")
+            
+            # Send push notifications to subscribers
+            if NotificationService:
+                try:
+                    notification_service = NotificationService()
+                    notification_result = notification_service.send_session_end_notifications(session_id)
+                    self.logger.info(f"Notification result for session {session_id}: {notification_result}")
+                except Exception as e:
+                    self.logger.error(f"Failed to send notifications for session {session_id}: {str(e)}")
+                    # Don't fail the session ending if notifications fail
+            else:
+                self.logger.warning("NotificationService not available, skipping notifications")
+            
             return True
             
         except Exception as e:

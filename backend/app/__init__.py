@@ -17,6 +17,7 @@ from .routes.chip_calculator import chip_calculator_bp
 from .routes.frontend import frontend_bp
 from .routes.admin import admin_bp
 from .routes.dashboard import dashboard_bp
+from .routes.notifications import notifications_bp
 from .database.models import db
 
 
@@ -63,6 +64,7 @@ def create_app(config_class: type = Config) -> Flask:
     app.register_blueprint(players_bp, url_prefix='/api')
     app.register_blueprint(sessions_bp, url_prefix='/api')
     app.register_blueprint(chip_calculator_bp, url_prefix='/api')
+    app.register_blueprint(notifications_bp, url_prefix='/api/notifications')
     app.register_blueprint(admin_bp, url_prefix='/admin')
     app.register_blueprint(frontend_bp)
     

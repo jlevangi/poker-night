@@ -305,3 +305,55 @@ class Entry(db.Model):
             amount: The amount to set
         """
         self.payout = round_to_cents(amount)
+
+
+class PushSubscription(db.Model):
+    """
+    Push subscription model for storing user notification subscriptions.
+    
+    Attributes:
+        id: Primary key
+        player_id: Foreign key to player
+        session_id: Foreign key to session they're subscribed to
+        endpoint: Push service endpoint URL
+        auth: Authentication key
+        p256dh: Public key for encryption
+        created_at: Timestamp when subscription was created
+        is_active: Whether subscription is currently active
+    """
+    
+    __tablename__ = 'push_subscriptions'
+    
+    id = Column(Integer, primary_key=True)
+    player_id = Column(String(20), ForeignKey('players.player_id'), nullable=False, index=True)
+    session_id = Column(String(30), ForeignKey('sessions.session_id'), nullable=False, index=True)
+    endpoint = Column(Text, nullable=False)
+    auth = Column(String(255), nullable=False)
+    p256dh = Column(String(255), nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+    is_active = Column(Boolean, default=True, nullable=False)
+    
+    # Relationships
+    player = relationship("Player")
+    session = relationship("Session")
+    
+    def __repr__(self) -> str:
+        return f'<PushSubscription {self.id}: {self.player_id} -> {self.session_id}>'
+    
+    def to_dict(self) -> Dict[str, Any]:
+        """
+        Convert PushSubscription instance to dictionary.
+        
+        Returns:
+            Dictionary representation of subscription
+        """
+        return {
+            'id': self.id,
+            'player_id': self.player_id,
+            'session_id': self.session_id,
+            'endpoint': self.endpoint,
+            'auth': self.auth,
+            'p256dh': self.p256dh,
+            'created_at': self.created_at.isoformat() if self.created_at else None,
+            'is_active': self.is_active
+        }
