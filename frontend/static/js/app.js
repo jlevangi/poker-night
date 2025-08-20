@@ -18,6 +18,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const router = new Router(appContent);
     const newSessionModal = new ModalManager('new-session-modal');
     const darkModeManager = new DarkModeManager();
+    // Force dark mode on first load if no user preference
+    if (!localStorage.getItem('gamble-king-dark-mode')) {
+        darkModeManager.setTheme('dark');
+    }
     
     // Initialize modules
     const dashboardPage = new DashboardPage(appContent, apiService);

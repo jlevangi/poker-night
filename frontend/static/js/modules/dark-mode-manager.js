@@ -47,12 +47,8 @@ export default class DarkModeManager {
             return savedTheme;
         }
 
-        // Check system preference
-        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            return 'dark';
-        }
-
-        return 'light';
+        // Default to dark mode if no user preference
+        return 'dark';
     }
 
     hasUserPreference() {
