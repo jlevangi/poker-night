@@ -31,66 +31,60 @@ class NotificationService:
         env_path = os.path.join(project_root, '.env')
         load_dotenv(env_path)
         
-        # VAPID keys from environment variables (DER format, base64 encoded)
-        vapid_private_b64 = os.getenv('VAPID_PRIVATE_KEY')
-        vapid_public_b64 = os.getenv('VAPID_PUBLIC_KEY')
-        
-        if not vapid_private_b64 or not vapid_public_b64:
-            raise ValueError("VAPID_PRIVATE_KEY and VAPID_PUBLIC_KEY environment variables must be set")
-        
-        # Create Vapid instance using py-vapid library directly
-        # This avoids key format issues with pywebpush
         import base64
         from py_vapid import Vapid
-        import tempfile
+        import dotenv
+        # Load .env path
         import os
-        
-        # Decode the stored PEM
-        private_pem = base64.b64decode(vapid_private_b64).decode('utf-8')
-        
-        # Create a temporary file to load the key
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.pem', delete=False) as f:
-            f.write(private_pem)
-            temp_key_file = f.name
-        
-        # Use a singleton pattern to ensure same keys for entire app session
-        if not hasattr(NotificationService, '_shared_vapid_instance'):
-            self.logger.info("Generating VAPID keys for this application session...")
-            
-            NotificationService._shared_vapid_instance = Vapid()
-            NotificationService._shared_vapid_instance.generate_keys()
-            
-            # Log the keys once for reference
+        project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
+        env_path = os.path.join(project_root, '.env')
+        dotenv.load_dotenv(env_path)
+
+        vapid_private_b64 = os.getenv('VAPID_PRIVATE_KEY')
+        vapid_public_b64 = os.getenv('VAPID_PUBLIC_KEY')
+
+        if not vapid_private_b64 or not vapid_public_b64:
+            # Generate new VAPID keys
+            v = Vapid()
+            v.generate_keys()
+            private_pem = v.private_pem()
+            public_pem = v.public_pem()
+            vapid_private_b64 = base64.b64encode(private_pem).decode()
+            vapid_public_b64 = base64.b64encode(public_pem).decode()
+            # Write to .env (append or update)
+            def set_key_in_env_file(key, value):
+                # Read all lines
+                if os.path.exists(env_path):
+                    with open(env_path, 'r') as f:
+                        lines = f.readlines()
+                else:
+                    lines = []
+                found = False
+                for i, line in enumerate(lines):
+                    if line.startswith(f'{key}='):
+                        lines[i] = f'{key}={value}\n'
+                        found = True
+                        break
+                if not found:
+                    lines.append(f'{key}={value}\n')
+                with open(env_path, 'w') as f:
+                    f.writelines(lines)
+            set_key_in_env_file('VAPID_PRIVATE_KEY', vapid_private_b64)
+            set_key_in_env_file('VAPID_PUBLIC_KEY', vapid_public_b64)
+            self.logger.info("Generated new VAPID keys and saved to .env")
+            # Log only the public key for frontend
             try:
-                new_private_pem = NotificationService._shared_vapid_instance.private_pem().decode()
-                new_public_pem = NotificationService._shared_vapid_instance.public_pem().decode()
-                new_private_b64 = base64.b64encode(new_private_pem.encode()).decode()
-                new_public_b64 = base64.b64encode(new_public_pem.encode()).decode()
-                
-                self.logger.info("Generated application VAPID keys:")
-                self.logger.info(f"VAPID_PRIVATE_KEY={new_private_b64}")
-                self.logger.info(f"VAPID_PUBLIC_KEY={new_public_b64}")
-                
-                # Get browser key for frontend
                 from cryptography.hazmat.primitives.serialization import Encoding, PublicFormat
-                public_key_bytes = NotificationService._shared_vapid_instance.public_key.public_bytes(Encoding.X962, PublicFormat.UncompressedPoint)
+                public_key_bytes = v.public_key.public_bytes(Encoding.X962, PublicFormat.UncompressedPoint)
                 browser_key = base64.urlsafe_b64encode(public_key_bytes).decode().rstrip('=')
                 self.logger.info(f"Frontend applicationServerKey: {browser_key}")
-                self.logger.info("Update notification-manager.js with the above applicationServerKey")
-                
             except Exception as log_error:
-                self.logger.error(f"Failed to log new keys: {log_error}")
-        else:
-            self.logger.info("Using existing VAPID keys for this session")
-        
-        # Use the shared instance
-        self.vapid_private_key = NotificationService._shared_vapid_instance
-            
-        finally:
-            # Clean up temp file
-            if os.path.exists(temp_key_file):
-                os.unlink(temp_key_file)
-        
+                self.logger.error(f"Failed to log public key for frontend: {log_error}")
+        # Always decode and use the PEM
+        private_pem_str = base64.b64decode(vapid_private_b64).decode('utf-8')
+        self.vapid_private_key = private_pem_str
+        # Do NOT log or print private keys in production
+
         # Contact information for VAPID
         vapid_email = os.getenv('VAPID_EMAIL', 'admin@yourpokerapp.com')
         self.vapid_claims = {
