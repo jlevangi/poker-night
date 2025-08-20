@@ -173,9 +173,9 @@ select {
 [data-theme="dark"] input[type="email"], 
 [data-theme="dark"] input[type="password"],
 [data-theme="dark"] select {
-  background-color: #2a2a2a !important;
+  background-color: #1a1a1a !important;
   color: #ffffff !important;
-  border-color: #555 !important;
+  border-color: #444 !important;
 }
 
 [data-theme="dark"] input[type="text"]::placeholder,
@@ -183,6 +183,63 @@ select {
 [data-theme="dark"] input[type="email"]::placeholder,
 [data-theme="dark"] input[type="password"]::placeholder {
   color: #aaa !important;
+}
+
+/* Ensure all form inputs in dark mode have consistent dark backgrounds */
+[data-theme="dark"] .add-player-form input,
+[data-theme="dark"] .add-player-form select,
+[data-theme="dark"] .form-row input,
+[data-theme="dark"] .form-row select,
+[data-theme="dark"] .modal-form-group input,
+[data-theme="dark"] .modal-form-group select {
+  background-color: #1a1a1a !important;
+  color: #ffffff !important;
+  border-color: #444 !important;
+}
+
+/* More specific selector to override forms.css styles */
+[data-theme="dark"] .add-player-form .form-row input[type="text"],
+[data-theme="dark"] .add-player-form .form-row input[type="number"],
+[data-theme="dark"] .add-player-form .form-row select {
+  background-color: #1a1a1a !important;
+  color: #ffffff !important;
+  border-color: #444 !important;
+}
+
+[data-theme="dark"] .add-player-form input:focus,
+[data-theme="dark"] .add-player-form select:focus,
+[data-theme="dark"] .form-row input:focus,
+[data-theme="dark"] .form-row select:focus,
+[data-theme="dark"] .modal-form-group input:focus,
+[data-theme="dark"] .modal-form-group select:focus {
+  background-color: #1a1a1a !important;
+  color: #ffffff !important;
+  border-color: #4285F4 !important;
+  box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.2) !important;
+}
+
+/* More specific focus selectors to override forms.css styles */
+[data-theme="dark"] .add-player-form .form-row input[type="text"]:focus,
+[data-theme="dark"] .add-player-form .form-row input[type="number"]:focus,
+[data-theme="dark"] .add-player-form .form-row select:focus {
+  background-color: #1a1a1a !important;
+  color: #ffffff !important;
+  border-color: #4285F4 !important;
+  box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.2) !important;
+}
+
+/* Specific styling for player-buyin input by ID */
+[data-theme="dark"] #player-buyin {
+  background-color: #1a1a1a !important;
+  color: #ffffff !important;
+  border-color: #444 !important;
+}
+
+[data-theme="dark"] #player-buyin:focus {
+  background-color: #1a1a1a !important;
+  color: #ffffff !important;
+  border-color: #4285F4 !important;
+  box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.2) !important;
 }
 
 input[type="text"]:focus,
@@ -202,7 +259,7 @@ select:focus {
 [data-theme="dark"] input[type="password"]:focus,
 [data-theme="dark"] select:focus {
   border-color: #4285F4 !important;
-  background-color: #2a2a2a !important;
+  background-color: #1a1a1a !important;
   color: #ffffff !important;
   box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.2) !important;
 }
