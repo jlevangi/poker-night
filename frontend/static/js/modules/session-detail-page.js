@@ -70,11 +70,9 @@ export default class SessionDetailPage {
     
     // Helper method to render chip distribution
     renderChipDistribution(session) {
-        console.log("renderChipDistribution called with:", session);
         
         // Check if session and chip_distribution exist
         if (!session || !session.session_info || !session.session_info.chip_distribution) {
-            console.error("No chip distribution found in session data:", session);
             return `<div class="chip-distribution">
                 <h3>Chip Distribution</h3>
                 <p>No chip distribution data available.</p>

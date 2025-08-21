@@ -146,7 +146,6 @@ export class NotificationManager {
                 throw new Error(response.error);
             }
 
-            console.log('Successfully subscribed to notifications for session:', sessionId);
             return { success: true, message: 'Successfully subscribed to notifications' };
 
         } catch (error) {
@@ -171,7 +170,6 @@ export class NotificationManager {
                 throw new Error(response.error);
             }
 
-            console.log('Successfully unsubscribed from notifications for session:', sessionId);
             return { success: true, message: 'Successfully unsubscribed from notifications' };
 
         } catch (error) {

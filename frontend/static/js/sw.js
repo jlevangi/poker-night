@@ -1,4 +1,4 @@
-const APP_VERSION = '1.0.9'; // Increment this version whenever making substantial changes
+const APP_VERSION = '1.1.0'; // Increment this version whenever making substantial changes
 const CACHE_NAME = `gamble-king-cache-v${APP_VERSION}`;
 
 // Assets that should be cached for offline use
@@ -15,7 +15,6 @@ const URLS_TO_CACHE = [
 
 // Install event: Cache core assets
 self.addEventListener('install', event => {
-    console.log(`Service worker v${APP_VERSION} installing...`);
     
     // Immediately take control of all clients
     self.skipWaiting();
@@ -23,7 +22,6 @@ self.addEventListener('install', event => {
     event.waitUntil(
         caches.open(CACHE_NAME)
             .then(cache => {
-                console.log('Opened cache');
                 return cache.addAll(URLS_TO_CACHE);
             })
             .catch(error => {
@@ -34,7 +32,6 @@ self.addEventListener('install', event => {
 
 // Activate event: Clean up old caches
 self.addEventListener('activate', event => {
-    console.log(`Service worker v${APP_VERSION} activating...`);
     
     event.waitUntil(
         caches.keys().then(cacheNames => {
@@ -42,7 +39,6 @@ self.addEventListener('activate', event => {
                 cacheNames.map(cacheName => {
                     // Delete old cache versions
                     if (cacheName.startsWith('gamble-king-cache-') && cacheName !== CACHE_NAME) {
-                        console.log('Deleting old cache:', cacheName);
                         return caches.delete(cacheName);
                     }
                 })
@@ -113,7 +109,6 @@ async function networkFirstStrategy(request) {
         
         return networkResponse;
     } catch (error) {
-        console.log('Network failed, trying cache:', request.url);
         
         // Try to get from cache
         const cachedResponse = await caches.match(request);
@@ -244,18 +239,15 @@ self.addEventListener('notificationclick', event => {
 
 // Add message event handler for update requests
 self.addEventListener('message', event => {
-    console.log('Service Worker received message:', event.data);
     
     if (event.data.type === 'SKIP_WAITING') {
         // This triggers the service worker to activate immediately
-        console.log('Skip waiting and activate immediately');
         self.skipWaiting();
     }
     
     if (event.data.type === 'CHECK_VERSION') {
         // Report back if versions don't match
         if (event.data.version !== APP_VERSION) {
-            console.log(`Version mismatch: SW=${APP_VERSION}, Client=${event.data.version}`);
             // Notify the client about the version mismatch
             self.clients.matchAll().then(clients => {
                 clients.forEach(client => {
@@ -266,20 +258,17 @@ self.addEventListener('message', event => {
                 });
             });
         } else {
-            console.log('Versions match, no update needed');
         }
     }
     
     if (event.data.type === 'CLEAR_CACHE') {
         // Clear all caches and notify completion
-        console.log('Clearing all caches...');
         event.waitUntil(
             caches.keys().then(cacheNames => {
                 return Promise.all(
                     cacheNames.map(cacheName => caches.delete(cacheName))
                 );
             }).then(() => {
-                console.log('All caches cleared');
                 // Notify the client that caches are cleared
                 if (event.ports && event.ports[0]) {
                     event.ports[0].postMessage({ success: true });
@@ -290,7 +279,6 @@ self.addEventListener('message', event => {
     
     if (event.data.type === 'FORCE_UPDATE') {
         // Force refresh by clearing cache and reloading
-        console.log('Force update requested');
         event.waitUntil(
             caches.keys().then(cacheNames => {
                 return Promise.all(

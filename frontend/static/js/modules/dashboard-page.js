@@ -8,49 +8,24 @@ export default class DashboardPage {
     // Load the dashboard page
     async load() {
         try {
-            // Fetch data from existing API endpoints
-            const players = await this.api.get('players');
-            const sessions = await this.api.get('sessions');
-            const activeSessions = await this.api.get('sessions/active');
+            // Use the dedicated dashboard API endpoint for better performance
+            // This gets all the dashboard data in a single optimized call
+            const [dashboardData, players, activeSessions] = await Promise.all([
+                this.api.get('dashboard'),
+                this.api.get('players'),
+                this.api.get('sessions/active')
+            ]);
             
-            // Calculate total gambled by fetching detailed session data with entries
-            let totalGambled = 0;
-            console.log(`Dashboard: Found ${sessions ? sessions.length : 0} sessions to process`);
-            
-            if (sessions && sessions.length > 0) {
-                for (const session of sessions) {
-                    try {
-                        const sessionDetails = await this.api.get(`sessions/${session.session_id}`);
-                        if (sessionDetails && sessionDetails.entries && sessionDetails.entries.length > 0) {
-                            
-                            const sessionTotal = sessionDetails.entries.reduce((sum, entry) => {
-                                // Use the total_buy_in_amount field which contains the actual amount spent
-                                const playerTotal = entry.total_buy_in_amount || 0;
-                                console.log(`${entry.player_name}: $${playerTotal} (${entry.buy_in_count} buy-ins)`);
-                                return sum + playerTotal;
-                            }, 0);
-                            
-                            totalGambled += sessionTotal;
-                            console.log(`Session ${session.session_id}: ${sessionDetails.entries.length} entries, total: $${sessionTotal}`);
-                        } else {
-                            console.log(`Session ${session.session_id}: No entries found`);
-                        }
-                    } catch (sessionError) {
-                        console.warn(`Could not fetch session details for ${session.session_id}:`, sessionError);
-                    }
-                }
-            }
-            
-            console.log(`Dashboard: Total gambled calculated as: $${totalGambled}`)
-            
-            // Prepare dashboard data
+            // Prepare dashboard data using the optimized dashboard API
             const data = {
                 players: players || [],
-                allSessions: sessions || [],
-                recentSessions: sessions ? sessions.slice(0, 5) : [],
+                allSessions: dashboardData?.recent_sessions || [],
+                recentSessions: dashboardData?.recent_sessions || [],
                 activeSession: activeSessions && activeSessions.length > 0 ? activeSessions[0] : null,
                 gambleKing: players && players.length > 0 ? players[0] : null,
-                totalGambled: totalGambled
+                totalGambled: dashboardData?.total_buy_ins || 0,
+                totalPlayers: dashboardData?.total_players || 0,
+                totalSessions: dashboardData?.total_sessions || 0
             };
             
             // Render the dashboard
@@ -91,19 +66,16 @@ export default class DashboardPage {
     
     // Render stats overview section
     renderStatsOverview(data) {
-        const { players, allSessions, totalGambled } = data;
-        
-        const totalPlayers = players ? players.length : 0;
-        const totalSessions = allSessions ? allSessions.length : 0;
+        const { totalGambled, totalPlayers, totalSessions } = data;
         
         return `
             <div class="stats-grid" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 1.5rem;">
                 <div class="stat-card" style="padding: 1rem; text-align: center; border: 1px solid var(--neutral-200); background: white;">
-                    <span class="stat-value" style="font-size: 1.5rem; font-weight: 600;">${totalPlayers}</span>
+                    <span class="stat-value" style="font-size: 1.5rem; font-weight: 600;">${totalPlayers || 0}</span>
                     <span class="stat-label" style="font-size: 0.75rem;">Total Players</span>
                 </div>
                 <div class="stat-card" style="padding: 1rem; text-align: center; border: 1px solid var(--neutral-200); background: white;">
-                    <span class="stat-value" style="font-size: 1.5rem; font-weight: 600;">${totalSessions}</span>
+                    <span class="stat-value" style="font-size: 1.5rem; font-weight: 600;">${totalSessions || 0}</span>
                     <span class="stat-label" style="font-size: 0.75rem;">Sessions Played</span>
                 </div>
                 <div class="stat-card" style="padding: 1rem; text-align: center; border: 1px solid var(--neutral-200); background: white;">
