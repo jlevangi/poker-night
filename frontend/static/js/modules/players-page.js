@@ -1,5 +1,6 @@
 // Players page module
-export default class PlayersPage {    constructor(appContent, apiService) {
+export default class PlayersPage {
+    constructor(appContent, apiService) {
         this.appContent = appContent;
         this.api = apiService;
     }
@@ -21,15 +22,18 @@ export default class PlayersPage {    constructor(appContent, apiService) {
     // Render players content
     render(players) {
         let html = `
-            <h2>Players</h2>
-            
-            <div class="add-player-form">
-                <h3>Add New Player</h3>
-                <input type="text" id="new-player-name" placeholder="Player Name">
-                <button id="add-player-btn" class="action-btn">Add Player</button>
-            </div>
-            
-            <h3>Player List</h3>
+            <div class="fade-in">
+                <h2>Players</h2>
+                
+                <div class="add-player-form">
+                    <h3>Add New Player</h3>
+                    <div class="form-row">
+                        <input type="text" id="new-player-name" placeholder="Player Name">
+                        <button id="add-player-btn" class="action-btn">Add Player</button>
+                    </div>
+                </div>
+                
+                <h3>Player List</h3>
         `;
         
         if (players && players.length > 0) {
@@ -43,20 +47,22 @@ export default class PlayersPage {    constructor(appContent, apiService) {
                     <li>
                         <div class="player-row">
                             <div class="player-name">
-                                <a href="#player/${player.id}" class="player-name-link">${player.name}</a>
+                                <a href="#player/${player.player_id}" class="player-name-link">${player.name}</a>
                             </div>
-                            <div class="player-quick-stats">
-                                <span class="stat">
-                                    Profit: <span class="${player.totalProfit >= 0 ? 'profit-positive' : 'profit-negative'}">
-                                        $${player.totalProfit.toFixed(2)}
+                            <div class="player-stats-container clickable-player-stats" data-player-id="${player.player_id}">
+                                <div class="player-quick-stats">
+                                    <span class="stat">
+                                        Profit: <span class="${player.net_profit >= 0 ? 'profit-positive' : 'profit-negative'}">
+                                            $${player.net_profit ? player.net_profit.toFixed(2) : '0.00'}
+                                        </span>
                                     </span>
-                                </span>
-                                <span class="stat">
-                                    Sessions: ${player.sessionsPlayed}
-                                </span>
+                                    <span class="stat">
+                                        Sessions: ${player.games_played || 0}
+                                    </span>
+                                </div>
                                 <div class="seven-two-counter">
                                     <span class="seven-two-label">7-2 Wins:</span>
-                                    <span class="seven-two-value">${player.sevenTwoWins || 0}</span>
+                                    <span class="seven-two-value">${player.seven_two_wins || 0}</span>
                                 </div>
                             </div>
                         </div>
@@ -71,6 +77,10 @@ export default class PlayersPage {    constructor(appContent, apiService) {
         } else {
             html += `<p>No players found. Add your first player above!</p>`;
         }
+        
+        html += `
+            </div>
+        `;
         
         this.appContent.innerHTML = html;
         
@@ -115,5 +125,24 @@ export default class PlayersPage {    constructor(appContent, apiService) {
                 }
             });
         }
+
+        // Add click handlers for player stats containers
+        document.querySelectorAll('.clickable-player-stats').forEach(element => {
+            element.addEventListener('click', (e) => {
+                // Don't navigate if clicking on a link
+                if (e.target.tagName === 'A' || e.target.closest('a')) {
+                    return;
+                }
+                
+                const playerId = element.dataset.playerId;
+                if (playerId) {
+                    // Navigate to player detail page
+                    window.location.hash = `#player/${playerId}`;
+                }
+            });
+            
+            // Add cursor pointer style
+            element.style.cursor = 'pointer';
+        });
     }
 }

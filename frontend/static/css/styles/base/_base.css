@@ -1,0 +1,15 @@
+/* Global Base Styles */
+
+body {
+    font-family: var(--font-family);
+    background-color: var(--bg-body);
+    color: var(--text-primary);
+    line-height: var(--line-height);
+}
+
+/* Mobile body adjustments */
+@media (max-width: 700px) {
+    body {
+        padding-bottom: env(safe-area-inset-bottom, 0);
+    }
+}

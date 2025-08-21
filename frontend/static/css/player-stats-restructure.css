@@ -1,0 +1,64 @@
+/* Player stats container - restructured layout */
+.player-stats-container {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: clamp(1rem, 3vw, 2rem);
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+/* Ensure seven-two-counter stays at the right edge */
+.player-stats-container .seven-two-counter {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.85rem;
+    color: #6c757d;
+    margin-left: auto;
+}
+
+/* Clickable player stats styling */
+.clickable-player-stats {
+    cursor: pointer !important;
+    transition: background-color 0.2s ease;
+    border-radius: 4px;
+    padding: 0.25rem;
+    margin: -0.25rem;
+}
+
+.clickable-player-stats:hover {
+    background-color: rgba(51, 103, 214, 0.1);
+}
+
+/* Update player quick stats for new structure */
+@media (max-width: 700px) {
+  .player-stats-container {
+    flex: 1 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: clamp(0.25rem, 2vw, 1rem) !important;
+  }
+
+  .player-quick-stats {
+    flex: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0.25rem !important;
+    font-size: 0.8rem !important;
+  }
+
+  .seven-two-counter {
+    flex: 0 0 auto !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    gap: 0.25rem !important;
+    font-size: 0.8rem !important;
+    margin-left: auto !important;
+  }
+}

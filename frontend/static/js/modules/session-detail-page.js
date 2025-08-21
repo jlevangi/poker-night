@@ -1,10 +1,12 @@
 // Session detail page module
 import ApiService from './api-service.js';
+import { NotificationManager } from './notification-manager.js';
 
 export default class SessionDetailPage {
     constructor(appContent, apiService) {
         this.appContent = appContent;
         this.api = apiService;
+        this.notificationManager = new NotificationManager(apiService);
     }
     
     // Helper to format date as 'MMM DD, YYYY' or fallback
@@ -31,7 +33,9 @@ export default class SessionDetailPage {
             if (session.entries) {
                 session.totalValue = session.entries.reduce((sum, entry) => sum + entry.total_buy_in_amount, 0);
                 const totalPayout = session.entries.reduce((sum, entry) => sum + entry.payout, 0);
-                session.unpaidValue = session.totalValue - totalPayout;
+                const rawUnpaidValue = session.totalValue - totalPayout;
+                // Round to nearest cent to avoid floating point precision issues
+                session.unpaidValue = Math.round(rawUnpaidValue * 100) / 100;
                 
                 // Map entries to players for easier display
                 session.players = session.entries.map(entry => ({
@@ -39,7 +43,7 @@ export default class SessionDetailPage {
                     name: entry.player_name,
                     buyIn: entry.total_buy_in_amount,
                     cashOut: entry.payout,
-                    sevenTwoWins: entry.seven_two_wins || 0
+                    sevenTwoWins: entry.session_seven_two_wins || 0
                 }));
             } else {
                 session.totalValue = 0;
@@ -111,8 +115,17 @@ export default class SessionDetailPage {
                 const backgroundColor = chipColors[chipColor];
                 const textColor = ['White'].includes(chipColor) ? '#000000' : '#FFFFFF';
                 
+                // Define border styles based on chip color to match real poker chips
+                let borderStyle;
+                if (chipColor === 'White') {
+                    borderStyle = '3px dashed #000000'; // Black dashed border for white chips only
+                } else {
+                    // All colored chips (Red, Blue, Green, Black) have white dashes in real life
+                    borderStyle = '3px dashed #ffffff';
+                }
+                
                 html += `
-                    <div class="chip" style="background-color: ${backgroundColor}; color: ${textColor}; border: ${chipColor === 'White' ? '2px solid #ccc' : '3px dashed rgba(255, 255, 255, 0.3)'}">
+                    <div class="chip" style="background-color: ${backgroundColor}; color: ${textColor}; border: ${borderStyle}">
                         <span class="chip-count">${chipDistribution[chipColor]}</span>
                         <span class="chip-name">${chipColor}</span>
                     </div>`;
@@ -136,7 +149,8 @@ export default class SessionDetailPage {
         
         // Check if session is active based on multiple possible indicators
         // If is_active is explicitly false OR status is explicitly ENDED, then it's not active
-        const isActive = !(sessionData.is_active === false || sessionData.status === 'ENDED');
+        // Default to inactive if is_active is missing
+        const isActive = sessionData.is_active === true;
         
         console.log("Session active calculation:",
             "is_active =", sessionData.is_active,
@@ -144,26 +158,28 @@ export default class SessionDetailPage {
             "final isActive =", isActive);
         
         let html = `
+            <!-- Header with navigation and notification controls -->
+            <div class="session-header">
+                <a href="#sessions" class="back-nav-btn">Back to Sessions</a>
+                ${isActive ? 
+                    `<button id="notification-btn" class="notification-btn" data-state="loading">
+                        <span class="btn-text">Loading...</span>
+                    </button>` : 
+                    ''
+                }
+            </div>
+            
             <h2>Session Details</h2>
             <p><strong>Date:</strong> ${this.formatDate(sessionData.date)}</p>
             <p><strong>Default Buy-in:</strong> $${sessionData.default_buy_in_value ? sessionData.default_buy_in_value.toFixed(2) : '0.00'}</p>
             <p><strong>Status:</strong> <span class="session-status status-${isActive ? 'active' : 'ended'}">${isActive ? 'ACTIVE' : 'ENDED'}</span></p>
               <div class="session-value-summary">
                 <p class="session-total-value">Total Value: $${session.totalValue ? session.totalValue.toFixed(2) : '0.00'}</p>
-                ${session.unpaidValue && session.unpaidValue > 0 ? 
+                ${session.unpaidValue > 0.01 ? 
                     `<p class="session-unpaid-value">Unpaid Amount: $${session.unpaidValue.toFixed(2)}</p>` : 
                     (!isActive ? `<p class="session-unpaid-value paid-out">Fully Paid Out</p>` : '')}
             </div>
             
-            <!-- Only show Reactivate button if session is not active -->
-            ${!isActive ? 
-                `<div class="session-reactivate-container" style="text-align: center; margin: 20px 0;">
-                    <button id="reactivate-session-btn" class="action-btn reactivate-session-btn">
-                        Reactivate Session
-                    </button>
-                </div>` : 
-                '' // Nothing if active
-            }
 
             <!-- Chip Distribution Section -->
             <div id="chip-distribution-container">
@@ -179,14 +195,16 @@ export default class SessionDetailPage {
             
             html += `
                 <div class="add-player-form">
-                    <select id="add-player-select">
-                        <option value="">-- Select Player --</option>
-                        ${(session.availablePlayers || []).map(player => 
-                            `<option value="${player.player_id}">${player.name}</option>`
-                        ).join('')}
-                    </select>
-                    <input type="number" id="player-buyin" placeholder="Buy-in Amount ($)" value="${sessionData.default_buy_in_value ? sessionData.default_buy_in_value.toFixed(2) : '20.00'}" step="0.01">
-                    <button id="add-player-to-session-btn" class="action-btn">Add Player</button>
+                    <div class="form-row">
+                        <select id="add-player-select">
+                            <option value="">-- Select Player --</option>
+                            ${(session.availablePlayers || []).map(player => 
+                                `<option value="${player.player_id}">${player.name}</option>`
+                            ).join('')}
+                        </select>
+                        <input type="number" id="player-buyin" placeholder="Buy-in Amount ($)" value="${sessionData.default_buy_in_value ? sessionData.default_buy_in_value.toFixed(2) : '20.00'}" step="0.01">
+                        <button id="add-player-to-session-btn" class="action-btn">Add Player</button>
+                    </div>
                 </div>
             `;
         }
@@ -202,7 +220,7 @@ export default class SessionDetailPage {
                 
                 html += `
                     <li>
-                        <div class="session-player-details">
+                        <div class="session-player-details clickable-player-details" data-player-id="${player.id}">
                             <p><strong><a href="#player/${player.id}">${player.name}</a></strong></p>
                             <p>Buy-in: $${buyIn.toFixed(2)} | 
                                Cash-out: $${cashOut.toFixed(2)} |
@@ -217,7 +235,7 @@ export default class SessionDetailPage {
                         </div>
                         
                         <div class="session-seven-two-controls">
-                            <div class="seven-two-label">7-2 Wins:</div>
+                            <div class="seven-two-label">7-2 Wins (Session):</div>
                             <div class="seven-two-value">${player.sevenTwoWins || 0}</div>
                             
                             ${isActive ? `
@@ -243,16 +261,13 @@ export default class SessionDetailPage {
                     `<button id="end-session-btn" class="action-btn danger-btn">
                         End Session
                     </button>` : 
-                    ''
+                    `<button id="reactivate-session-btn" class="action-btn success-btn">
+                        Reactivate Session
+                    </button>`
                 }
-                <!-- Always show Delete button regardless of session state -->
-                <button id="delete-session-btn" class="action-btn danger-btn">
-                    Delete Session
-                </button>
             </div>
         `;
         
-        html += `<p><a href="#sessions">&laquo; Back to Sessions</a></p>`;
         
         // Log the HTML about to be rendered
         console.log("Full HTML being set:", html);
@@ -269,7 +284,7 @@ export default class SessionDetailPage {
                 text-align: center;
             }
             
-            #end-session-btn, #delete-session-btn {
+            #end-session-btn {
                 background-color: #E53935;
                 color: white;
                 font-weight: bold;
@@ -284,8 +299,29 @@ export default class SessionDetailPage {
                 margin: 10px 5px;
             }
             
-            #end-session-btn:hover, #delete-session-btn:hover {
+            #reactivate-session-btn {
+                background-color: #4CAF50;
+                color: white;
+                font-weight: bold;
+                padding: 10px 20px;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+                border-radius: 4px;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                display: inline-block;
+                width: auto;
+                min-width: 200px;
+                margin: 10px 5px;
+            }
+            
+            #end-session-btn:hover {
                 background-color: #D32F2F;
+                box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+                transform: translateY(-1px);
+            }
+            
+            #reactivate-session-btn:hover {
+                background-color: #45a049;
                 box-shadow: 0 4px 8px rgba(0,0,0,0.3);
                 transform: translateY(-1px);
             }
@@ -315,6 +351,17 @@ export default class SessionDetailPage {
                 background-color: #4CAF50;
                 color: white;
             }
+            
+            /* Clickable player details styling */
+            .clickable-player-details {
+                cursor: pointer !important;
+                transition: background-color 0.2s ease;
+            }
+            
+            .clickable-player-details:hover {
+                background-color: rgba(0, 123, 255, 0.1);
+                border-radius: 4px;
+            }
         `;
         document.head.appendChild(styleElement);
         
@@ -338,41 +385,38 @@ export default class SessionDetailPage {
     setupEventListeners(session, sessionId, isActive) {
         console.log("Setting up event listeners, isActive:", isActive);
         
-        const deleteBtn = document.getElementById('delete-session-btn');
         const reactivateBtn = document.getElementById('reactivate-session-btn');
         const endBtn = document.getElementById('end-session-btn');
         
         console.log("Manual button check:");
-        console.log("- Delete button:", deleteBtn);
         console.log("- Reactivate button:", reactivateBtn);
         console.log("- End button:", endBtn);
         
-        // Set up the Delete button event listener regardless of session state
-        if (deleteBtn) {
-            console.log("Setting up event listener for delete button");
-            deleteBtn.addEventListener('click', async () => {
-                console.log("Delete button clicked");
-                if (confirm("Are you sure you want to delete this session? This action cannot be undone, although data will be archived.")) {
-                    const sessionDate = session.date || 'unknown date';
-                    if (confirm(`FINAL WARNING: This will permanently remove the session from ${sessionDate} from view. The data will be archived but no longer visible in the app. Continue?`)) {
+        if (!isActive) {
+            // Reactivate session button
+            if (reactivateBtn) {
+                console.log("Found reactivate session button");
+                reactivateBtn.addEventListener('click', async () => {
+                    if (confirm("Are you sure you want to reactivate this session? Players will be able to join and make moves again.")) {
                         try {
-                            deleteBtn.disabled = true;
-                            deleteBtn.textContent = 'Deleting...';
-
-                            await this.api.deleteSession(sessionId); // Now this will work
-                            alert(`Session from ${sessionDate} deleted successfully and data archived!`);
-                            window.location.hash = '#sessions';
+                            reactivateBtn.disabled = true;
+                            reactivateBtn.textContent = 'Reactivating...';
+                            
+                            await this.api.put(`sessions/${sessionId}/reactivate`);
+                            
+                            // Reload the page to show updated session state
+                            this.load(sessionId);
                         } catch (error) {
-                            console.error('Error deleting session:', error);
-                            alert(`Error deleting session. The server might be temporarily unavailable. Please try again later or contact support if the problem persists.\nDetails: ${error.message}`);
-                            deleteBtn.disabled = false;
-                            deleteBtn.textContent = 'Delete Session';
+                            console.error('Error reactivating session:', error);
+                            alert(`Error: ${error.message}`);
+                            
+                            // Restore button state
+                            reactivateBtn.disabled = false;
+                            reactivateBtn.textContent = 'Reactivate Session';
                         }
                     }
-                }
-            });
-        } else {
-            console.error("Delete session button not found!");
+                });
+            }
         }
         
         if (isActive) {
@@ -464,14 +508,17 @@ export default class SessionDetailPage {
             document.querySelectorAll('.cash-out-player-btn').forEach(button => {
                 button.addEventListener('click', async (e) => {
                     const playerId = e.target.dataset.playerId;
-                    const cashOut = prompt('Enter cash-out amount ($):');
+                    let cashOut = prompt('Enter cash-out amount ($):');
                     
                     if (cashOut === null) return; // User cancelled
                     
+                    // Remove non-numeric characters except decimal point
+                    cashOut = cashOut.replace(/[^0-9.]/g, '');
+                    
                     const cashOutValue = parseFloat(cashOut);
                     
-                    if (isNaN(cashOutValue) || cashOutValue < 0) {
-                        alert('Please enter a valid cash-out amount');
+                    if (isNaN(cashOutValue) || cashOutValue < 0 || cashOut === '') {
+                        alert('Please enter a valid numeric cash-out amount (numbers only)');
                         return;
                     }
                     
@@ -506,12 +553,12 @@ export default class SessionDetailPage {
                         // Disable button to prevent double-clicks
                         button.disabled = true;
                         
-                        await this.api.put(`players/${playerId}/seven-two-wins/increment`);
+                        await this.api.put(`sessions/${sessionId}/players/${playerId}/seven-two-wins/increment`);
                         
                         // Reload the session detail page
                         this.load(sessionId);
                     } catch (error) {
-                        console.error('Error incrementing 7-2 wins:', error);
+                        console.error('Error incrementing session 7-2 wins:', error);
                         alert(`Error: ${error.message}`);
                         
                         // Re-enable button on error
@@ -528,12 +575,12 @@ export default class SessionDetailPage {
                         // Disable button to prevent double-clicks
                         button.disabled = true;
                         
-                        await this.api.put(`players/${playerId}/seven-two-wins/decrement`);
+                        await this.api.put(`sessions/${sessionId}/players/${playerId}/seven-two-wins/decrement`);
                         
                         // Reload the session detail page
                         this.load(sessionId);
                     } catch (error) {
-                        console.error('Error decrementing 7-2 wins:', error);
+                        console.error('Error decrementing session 7-2 wins:', error);
                         alert(`Error: ${error.message}`);
                         
                         // Re-enable button on error
@@ -541,32 +588,153 @@ export default class SessionDetailPage {
                     }
                 });
             });
-        } else {
-            // Reactivate session button - only set up if session is not active
-            const reactivateSessionBtn = document.getElementById('reactivate-session-btn');
-            if (reactivateSessionBtn) {
-                reactivateSessionBtn.addEventListener('click', async () => {
-                    if (confirm("Are you sure you want to reactivate this session?")) {
-                        try {
-                            // Show loading state
-                            reactivateSessionBtn.disabled = true;
-                            reactivateSessionBtn.textContent = 'Reactivating...';
-                            
-                            await this.api.put(`sessions/${sessionId}/reactivate`);
-                            
-                            alert("Session reactivated successfully!");
-                            this.load(sessionId);
-                        } catch (error) {
-                            console.error('Error reactivating session:', error);
-                            alert(`Error: ${error.message}`);
-                            
-                            // Restore button state
-                            reactivateSessionBtn.disabled = false;
-                            reactivateSessionBtn.textContent = 'Reactivate Session';
-                        }
-                    }
-                });
-            }
+            
+            // Set up notification functionality for active sessions
+            this.setupNotificationHandlers(sessionId);
         }
+        
+        // Add click handlers for clickable player details (works for both active and inactive sessions)
+        document.querySelectorAll('.clickable-player-details').forEach(element => {
+            element.addEventListener('click', (e) => {
+                // Don't navigate if clicking on a link or button
+                if (e.target.tagName === 'A' || e.target.tagName === 'BUTTON' || e.target.closest('button')) {
+                    return;
+                }
+                
+                const playerId = element.dataset.playerId;
+                if (playerId) {
+                    // Navigate to player page
+                    window.location.hash = `#player/${playerId}`;
+                }
+            });
+            
+            // Add cursor pointer style
+            element.style.cursor = 'pointer';
+        });
+        
+    }
+
+    /**
+     * Set up notification handlers for active sessions
+     */
+    async setupNotificationHandlers(sessionId) {
+        const notificationBtn = document.getElementById('notification-btn');
+        if (!notificationBtn) return;
+
+        const currentPlayerId = this.getCurrentPlayerId();
+        if (!currentPlayerId) {
+            this.updateNotificationButton(notificationBtn, 'unavailable', 'Not Available');
+            return;
+        }
+
+        try {
+            // Check permission status first
+            const permissionStatus = this.notificationManager.getPermissionStatus();
+            
+            if (permissionStatus === 'unsupported') {
+                this.updateNotificationButton(notificationBtn, 'unavailable', 'Not Supported');
+                return;
+            }
+
+            if (permissionStatus === 'denied') {
+                this.updateNotificationButton(notificationBtn, 'denied', 'Permission Denied');
+                return;
+            }
+
+            if (permissionStatus === 'default') {
+                // Show "Get Notified" button to request permission
+                this.updateNotificationButton(notificationBtn, 'request-permission', '🔔 Get Notified');
+                this.setupNotificationButtonHandler(notificationBtn, sessionId, currentPlayerId, 'request-permission');
+                return;
+            }
+
+            // Permission granted - check subscription status
+            const isSubscribed = await this.notificationManager.isSubscribedToSession(currentPlayerId, sessionId);
+            
+            if (isSubscribed) {
+                this.updateNotificationButton(notificationBtn, 'subscribed', '✓ Subscribed');
+                this.setupNotificationButtonHandler(notificationBtn, sessionId, currentPlayerId, 'unsubscribe');
+            } else {
+                this.updateNotificationButton(notificationBtn, 'not-subscribed', 'Subscribe');
+                this.setupNotificationButtonHandler(notificationBtn, sessionId, currentPlayerId, 'subscribe');
+            }
+
+        } catch (error) {
+            console.error('Error setting up notification handlers:', error);
+            this.updateNotificationButton(notificationBtn, 'error', 'Error');
+        }
+    }
+
+    /**
+     * Update the notification button appearance
+     */
+    updateNotificationButton(button, state, text) {
+        button.setAttribute('data-state', state);
+        button.querySelector('.btn-text').textContent = text;
+        button.disabled = ['loading', 'unavailable', 'denied', 'error'].includes(state);
+    }
+
+    /**
+     * Set up click handler for notification button based on current state
+     */
+    setupNotificationButtonHandler(button, sessionId, playerId, action) {
+        // Remove any existing listeners by cloning the button
+        const newButton = button.cloneNode(true);
+        button.parentNode.replaceChild(newButton, button);
+
+        newButton.addEventListener('click', async () => {
+            try {
+                this.updateNotificationButton(newButton, 'loading', 'Loading...');
+
+                switch (action) {
+                    case 'request-permission':
+                        await this.notificationManager.requestPermission();
+                        // After permission granted, refresh the button state
+                        this.setupNotificationHandlers(sessionId);
+                        break;
+
+                    case 'subscribe':
+                        await this.notificationManager.subscribeToSession(playerId, sessionId);
+                        this.updateNotificationButton(newButton, 'subscribed', '✓ Subscribed');
+                        this.setupNotificationButtonHandler(newButton, sessionId, playerId, 'unsubscribe');
+                        break;
+
+                    case 'unsubscribe':
+                        await this.notificationManager.unsubscribeFromSession(playerId, sessionId);
+                        this.updateNotificationButton(newButton, 'not-subscribed', 'Subscribe');
+                        this.setupNotificationButtonHandler(newButton, sessionId, playerId, 'subscribe');
+                        break;
+                }
+            } catch (error) {
+                console.error(`Error ${action}:`, error);
+                this.updateNotificationButton(newButton, 'error', 'Error');
+                
+                // Show user-friendly error message
+                let errorMsg = 'An error occurred. Please try again.';
+                if (error.message.includes('denied')) {
+                    errorMsg = 'Permission denied. Please enable notifications in your browser settings.';
+                } else if (error.message.includes('not supported')) {
+                    errorMsg = 'Notifications are not supported in this browser.';
+                }
+                
+                alert(errorMsg);
+                
+                // Reset button after error
+                setTimeout(() => {
+                    this.setupNotificationHandlers(sessionId);
+                }, 2000);
+            }
+        });
+    }
+
+    /**
+     * Get current player ID - this needs to be implemented based on your authentication system
+     * For now, returning a placeholder - you'll need to replace this with actual player identification
+     */
+    getCurrentPlayerId() {
+        // TODO: Implement actual player identification
+        // This could be from localStorage, session storage, or API call
+        // For now, returning a default player ID for testing
+        return localStorage.getItem('current_player_id') || 'pid_001';
     }
 }

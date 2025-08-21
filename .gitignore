@@ -19,3 +19,10 @@ source/
 
 secrets.json
 .env
+.env.local
+*.log
+.claude/
+
+# Push notification keys and sensitive data
+vapid_keys.txt
+vapid_keys.json

@@ -1,0 +1,14 @@
+/* Utility Classes */
+
+/* Text utilities could be added here in the future */
+.text-center {
+    text-align: center;
+}
+
+/* Margin utilities could be added here in the future */
+.mb-4 {
+    margin-bottom: var(--spacing-md);
+}
+
+/* Currently the original CSS doesn't have many utility classes,
+   but this file provides a place to add them as needed */

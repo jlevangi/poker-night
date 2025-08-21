@@ -1,0 +1,183 @@
+/* Card Component Styles */
+
+/* Gamble King Container */
+.gamble-king-container {
+    background-color: var(--bg-content);
+    padding: var(--spacing-lg);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-heavy);
+    margin-bottom: var(--spacing-xl);
+    border: 2px solid var(--primary-color);
+}
+
+.gamble-king-container h2 {
+    margin-top: 0;
+    color: var(--primary-color);
+    font-size: 1.5rem;
+}
+
+.gamble-king-name {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #2c3e50;
+    margin: var(--spacing-sm) 0;
+}
+
+.gamble-king-stats {
+    border-radius: var(--radius-md);
+    padding: 0.8rem 1rem;
+    margin-top: var(--spacing-md);
+}
+
+.gamble-king-stats p {
+    margin: 0.4rem 0;
+    font-size: 1.1rem;
+}
+
+/* Session Item Cards */
+.session-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-md);
+    margin-bottom: 0.75rem;
+    background-color: var(--bg-card);
+    border-radius: var(--radius-md);
+    border: 1px solid #e7e7e7;
+    transition: box-shadow var(--transition-fast);
+}
+
+.session-item:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* Session Value Summary Card */
+.session-value-summary {
+    background-color: #f8f8f8;
+    padding: var(--spacing-md);
+    border-left: 4px solid var(--primary-color);
+    margin: var(--spacing-md) 0;
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-medium);
+}
+
+.session-total-value {
+    font-size: 1.2rem;
+    margin: 0 0 var(--spacing-sm) 0;
+    color: #343a40;
+    font-weight: 500;
+    color: var(--primary-color);
+    margin-top: 0.2rem;
+}
+
+.session-unpaid-value {
+    font-size: 1.1rem;
+    margin: 0;
+    color: var(--profit-unpaid);
+    font-weight: 500;
+    margin-top: 0.1rem;
+}
+
+.session-unpaid-value.paid-out {
+    color: var(--color-success) !important;
+    font-weight: bold;
+}
+
+/* Seven-Two Stats Detail Card */
+.seven-two-stats-detail {
+    display: flex;
+    align-items: center;
+    margin-top: 15px;
+    padding: 10px 15px;
+    background-color: var(--bg-card);
+    border-radius: var(--radius-lg);
+    border-left: 4px solid var(--seven-two-border);
+}
+
+.seven-two-stats-detail .seven-two-label {
+    font-weight: 600;
+    margin-right: 15px;
+}
+
+.seven-two-stats-detail .seven-two-value {
+    font-size: 1.4rem;
+    font-weight: bold;
+    margin-right: 20px;
+}
+
+/* Mobile Card Adjustments */
+@media (max-width: 400px) {
+    .session-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+@media (max-width: 600px) {
+    .seven-two-stats-detail {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    
+    .seven-two-stats-detail .seven-two-buttons {
+        margin-top: 5px;
+        width: 100%;
+        display: flex;
+        justify-content: flex-start;
+    }
+}
+
+@media (max-width: 700px) {
+    /* Make gamble king section more compact on mobile */
+    .gamble-king-card {
+        margin-bottom: var(--spacing-md) !important;
+    }
+    
+    .gamble-king-header {
+        padding: 0.75rem 1rem 0.25rem 1rem !important;
+    }
+    
+    .gamble-king-title {
+        font-size: 1.125rem !important;
+        margin: 0 0 var(--spacing-sm) 0 !important;
+    }
+    
+    .gamble-king-name {
+        font-size: 1.5rem !important;
+        margin-bottom: var(--spacing-sm) !important;
+    }
+    
+    .gamble-king-content {
+        padding: 0 1rem 0.75rem 1rem !important;
+    }
+    
+    .gamble-king-stats {
+        gap: var(--spacing-sm) !important;
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+    
+    .gamble-king-stats > div {
+        padding: 0.75rem var(--spacing-sm) !important;
+    }
+    
+    .gamble-king-stats .stat-value {
+        font-size: 1.25rem !important;
+    }
+    
+    .gamble-king-stats .stat-label {
+        font-size: 0.625rem !important;
+    }
+    
+    /* Fix double borders and reduce whitespace on dashboard table */
+    .ui-card {
+        border: none !important;
+        padding: 0.75rem !important;
+        margin-bottom: var(--spacing-md) !important;
+        box-shadow: var(--shadow-card) !important;
+    }
+    
+    .ui-card-header {
+        padding-bottom: var(--spacing-sm) !important;
+        margin-bottom: 0.75rem !important;
+    }
+}

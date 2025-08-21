@@ -1,0 +1,102 @@
+/* Theme Variables and CSS Custom Properties */
+
+:root {
+    /* Primary Colors */
+    --primary-color: #3367D6;
+    --primary-hover: #2851A7;
+    --primary-light: #f0f4ff;
+    
+    /* Background Colors */
+    --bg-body: #f4f7f6;
+    --bg-content: #fff;
+    --bg-card: #f9f9f9;
+    --bg-header: #3367D6;
+    
+    /* Text Colors */
+    --text-primary: #333;
+    --text-secondary: #4a5568;
+    --text-muted: #666;
+    --text-light: #777;
+    --text-white: white;
+    
+    /* Success/Error Colors */
+    --color-success: #28a745;
+    --color-success-hover: #218838;
+    --color-danger: #dc3545;
+    --color-danger-hover: #c82333;
+    --color-warning: #f0ad4e;
+    --color-warning-hover: #ec971f;
+    --color-info: #17a2b8;
+    --color-info-hover: #138496;
+    
+    /* Profit Colors */
+    --profit-positive: #28a745;
+    --profit-negative: #dc3545;
+    --profit-unpaid: #e67e22;
+    
+    /* Border Colors */
+    --border-color: #ccc;
+    --border-light: #eee;
+    --border-lighter: #e0e0e0;
+    --border-card: #e9ecef;
+    --border-table: #dee2e6;
+    
+    /* Shadow */
+    --shadow-light: 0 0 15px rgba(0, 0, 0, 0.05);
+    --shadow-medium: 0 2px 4px rgba(0, 0, 0, 0.1);
+    --shadow-heavy: 0 4px 15px rgba(0, 0, 0, 0.1);
+    --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.1);
+    
+    /* Gamble King Colors */
+    --gamble-king-bg: rgba(255, 215, 0, 0.1);
+    --gamble-king-bg-hover: rgba(255, 215, 0, 0.2);
+    --gamble-king-label-bg: #ffc107;
+    --gamble-king-label-text: #212529;
+    --gamble-king-gradient: linear-gradient(to right, #BF953F, #FCF6BA, #B38728, #FBF5B7, #AA771C);
+    
+    /* Seven-Two Game Colors */
+    --seven-two-bg: #4CAF50;
+    --seven-two-bg-hover: #45a049;
+    --seven-two-increment: #28a745;
+    --seven-two-increment-hover: #218838;
+    --seven-two-decrement: #dc3545;
+    --seven-two-decrement-hover: #c82333;
+    --seven-two-border: #28a745;
+    
+    /* Spacing */
+    --spacing-xs: 0.25rem;
+    --spacing-sm: 0.5rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 1.5rem;
+    --spacing-xl: 2rem;
+    
+    /* Border Radius */
+    --radius-sm: 4px;
+    --radius-md: 6px;
+    --radius-lg: 8px;
+    --radius-xl: 12px;
+    --radius-pill: 15px;
+    --radius-circle: 50%;
+    
+    /* Transitions */
+    --transition-fast: 0.2s ease;
+    --transition-medium: 0.3s ease;
+    --transition-slow: 0.5s ease;
+    
+    /* Typography */
+    --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --line-height: 1.6;
+    
+    /* Z-Index */
+    --z-modal: 1000;
+    --z-nav: 1001;
+}
+
+/* Media Query Variables for Mobile */
+@media (max-width: 700px) {
+    :root {
+        /* Mobile-specific adjustments */
+        --spacing-mobile: 0.75rem;
+        --font-size-mobile: 0.875rem;
+    }
+}

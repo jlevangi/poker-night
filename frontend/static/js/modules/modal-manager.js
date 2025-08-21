@@ -87,8 +87,6 @@ export default class ModalManager {
                 return;
             }
             
-            console.log("Showing modal");
-            
             // Apply comprehensive styling to make sure it shows on all devices
             // First remove any inline style that might be interfering
             this.modal.removeAttribute('style');
@@ -120,8 +118,6 @@ export default class ModalManager {
             
             // Make sure modal is at the end of body to avoid z-index issues
             document.body.appendChild(this.modal);
-
-            console.log("Modal should now be visible");
         } catch(e) {
             console.error("Error showing modal:", e);
             alert("There was a problem showing the form. Please try again later.");
@@ -133,7 +129,6 @@ export default class ModalManager {
     hide() {
         try {
             if (this.modal) {
-                console.log("Hiding modal");
                 // Remove active class
                 this.modal.classList.remove('active');
                 
@@ -148,8 +143,6 @@ export default class ModalManager {
                 Object.keys(modalHideStyles).forEach(key => {
                     this.modal.style[key] = modalHideStyles[key];
                 });
-                
-                console.log("Modal should now be hidden");
             }
         } catch(e) {
             console.error("Error hiding modal:", e);

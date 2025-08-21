@@ -1,0 +1,40 @@
+/* Animation Utilities */
+
+@keyframes shine {
+    0% { background-position: 0; }
+    60% { background-position: 100px; }
+    100% { background-position: 200px; }
+}
+
+@keyframes slidein-down {
+    from { transform: translateY(-100%); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes slidein {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+/* Update Notification Animations */
+.update-content {
+    padding: 18px 24px 18px 24px;
+    text-align: center;
+}
+
+@media (max-width: 700px) {
+    .update-notification {
+        bottom: 80px;
+        right: 2vw;
+        left: auto;
+        max-width: 96vw;
+        border-radius: var(--radius-xl);
+    }
+    
+    .update-notification {
+        max-width: 98vw;
+        border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+        left: 1vw;
+        right: 1vw;
+    }
+}

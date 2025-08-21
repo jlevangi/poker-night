@@ -8,11 +8,16 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
-    <title>Gamble King</title>    <link rel="stylesheet" href="{{ versioned_url('css/style.css') }}">
+    <title>Gamble King</title>    <!-- Main unified CSS -->
+    <link rel="stylesheet" href="{{ versioned_url('css/styles/main.css') }}">
+    <!-- Legacy CSS files for compatibility -->
+    <link rel="stylesheet" href="{{ versioned_url('css/modern-ui.css') }}">
     <link rel="stylesheet" href="{{ versioned_url('css/responsive-fixes.css') }}">
     <link rel="stylesheet" href="{{ versioned_url('css/chip-styles.css') }}">
     <link rel="stylesheet" href="{{ versioned_url('css/button-styles.css') }}">
-    <link rel="manifest" href="{{ url_for('serve_manifest') }}">
+    <link rel="stylesheet" href="{{ versioned_url('css/player-stats-restructure.css') }}">
+    <link rel="stylesheet" href="{{ versioned_url('css/dark-mode.css') }}">
+    <link rel="manifest" href="{{ url_for('frontend.serve_manifest') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
     <meta name="mobile-web-app-capable" content="yes">    <meta name="apple-mobile-web-app-capable" content="yes">
@@ -36,6 +41,18 @@
             <a href="#sessions">Sessions</a>
         </nav>
     </header>
+
+    <!-- Header Controls Container -->
+    <div class="header-controls">
+        <!-- Settings Button -->
+        <a href="/admin/" target="_blank" id="settings-btn" class="header-btn settings-btn" title="Admin Settings">
+            ⚙️
+        </a>
+        <!-- Dark Mode Toggle -->
+        <button id="dark-mode-toggle" class="header-btn dark-mode-btn" title="Toggle Dark Mode">
+            🌙
+        </button>
+    </div>
 
     <main id="app-content">
         <p>Loading...</p>
@@ -106,7 +123,7 @@
             
         }
     </script>
-    <script src="{{ versioned_url('js/app.js') }}"></script>
+    <script type="module" src="{{ versioned_url('js/app.js') }}"></script>
 </body>
 
 </html>

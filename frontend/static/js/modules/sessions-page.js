@@ -10,8 +10,17 @@ export default class SessionsPage {    constructor(appContent, apiService) {
             // Fetch sessions data using API service
             const data = await this.api.get('sessions');
             
+            // Map API response to match template expectations
+            const mappedSessions = data.map(session => ({
+                ...session,
+                id: session.session_id,
+                buyin: session.default_buy_in_value,
+                totalValue: 0, // Sessions list doesn't include calculated totals
+                unpaidValue: 0 // Sessions list doesn't include calculated totals
+            }));
+            
             // Render the sessions page
-            this.render(data);
+            this.render(mappedSessions);
         } catch (error) {
             console.error('Error loading sessions:', error);
             this.appContent.innerHTML = `<p>Error loading sessions: ${error.message}</p>`;
@@ -21,33 +30,29 @@ export default class SessionsPage {    constructor(appContent, apiService) {
     // Render sessions content
     render(sessions) {
         let html = `
-            <h2>Poker Sessions</h2>
-            
-            <div class="sessions-actions">
-                <button id="create-session-btn" class="action-btn">Create New Session</button>
-            </div>
-            
-            <h3>All Sessions</h3>
+            <div class="fade-in">
+                <h2>Poker Sessions</h2>
+                
+                <div class="sessions-actions">
+                    <button id="create-session-btn" class="action-btn">Create New Session</button>
+                </div>
+                
+                <h3>All Sessions</h3>
         `;
         
         if (sessions && sessions.length > 0) {
             html += `<ul class="sessions-list">`;
               sessions.forEach(session => {
-                const hasUnpaidAmount = session.unpaidValue && session.unpaidValue > 0;
-                const fullyPaidOut = session.status === 'ENDED' && (!session.unpaidValue || session.unpaidValue === 0);
                   html += `
                     <li class="session-item">
-                        <a href="#session/${session.id}" class="session-link">
+                        <a href="#session/${session.session_id}" class="session-link">
                             <span class="session-date">${session.date}</span>
                             <span class="session-buyin">Buy-in: $${session.buyin ? session.buyin.toFixed(2) : '0.00'}</span>
-                            <span class="session-total-value">Total: $${session.totalValue ? session.totalValue.toFixed(2) : '0.00'}</span>
-                            ${hasUnpaidAmount ? 
-                                `<span class="session-unpaid-value">Unpaid: $${session.unpaidValue ? session.unpaidValue.toFixed(2) : '0.00'}</span>` : 
-                                (fullyPaidOut ? `<span class="session-unpaid-value paid-out">Fully Paid Out</span>` : '')}
+                            <span class="session-info">Click to view details</span>
                         </a>                        <span class="session-status status-${session.status && typeof session.status === 'string' ? session.status.toLowerCase() : 'unknown'}">
                             ${session.status || 'Unknown'}
                             ${session.status === 'ENDED' ? 
-                                `<span class="session-action-dot" title="This session can be deleted">•</span>` : ''}
+                                `<span class="session-action-dot" title="This session can be deleted"></span>` : ''}
                         </span>
                     </li>
                 `;
@@ -57,6 +62,10 @@ export default class SessionsPage {    constructor(appContent, apiService) {
         } else {
             html += `<p>No sessions found. Create your first session above!</p>`;
         }
+        
+        html += `
+            </div>
+        `;
         
         this.appContent.innerHTML = html;
         
