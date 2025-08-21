@@ -101,3 +101,17 @@
 2025-08-19 15:36:34,402 - werkzeug - INFO -  * Debugger PIN: 605-824-999
 2025-08-19 15:36:39,609 - app.services.database_service - INFO - Session created for 2025-08-19 with ID sid_20250819_2, Buy-in: $20.00
 2025-08-19 15:36:39,683 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:36:39] "[35m[1mPOST /api/sessions HTTP/1.1[0m" 500 -
+2025-08-21 15:03:14,271 - app - INFO - Logging configured for Poker Night application
+2025-08-21 15:04:02,902 - app - INFO - Logging configured for Poker Night application
+2025-08-21 15:04:33,171 - app - INFO - Logging configured for Poker Night application
+2025-08-21 15:04:33,362 - app.services.notification_service - ERROR - WebPush error sending to subscription 14: WebPushException: Push failed: 403 Forbidden
+Response body:the VAPID credentials in the authorization header do not correspond to the credentials used to create the subscriptions.
+, Response the VAPID credentials in the authorization header do not correspond to the credentials used to create the subscriptions.
+
+2025-08-21 15:07:03,310 - app - INFO - Logging configured for Poker Night application
+2025-08-21 15:07:03,385 - dotenv.main - WARNING - python-dotenv could not parse statement starting at line 26
+2025-08-21 15:07:03,385 - dotenv.main - WARNING - python-dotenv could not parse statement starting at line 31
+2025-08-21 15:07:03,387 - dotenv.main - WARNING - python-dotenv could not parse statement starting at line 26
+2025-08-21 15:07:03,387 - dotenv.main - WARNING - python-dotenv could not parse statement starting at line 31
+2025-08-21 15:08:17,582 - app - INFO - Logging configured for Poker Night application
+2025-08-21 15:17:23,326 - app - INFO - Logging configured for Poker Night application

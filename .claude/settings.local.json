@@ -40,7 +40,8 @@
       "Bash(echo \"Great! The NotificationService is now properly configured. \n\nTo test notifications:\n1. Restart your Flask application (the fix is now in place)\n2. Create a new test session\n3. Subscribe to it \n4. Add a player and end the session\n5. You should receive a push notification\n\nThe issue was that the NotificationService wasn''t loading the .env file correctly, so the VAPID keys weren''t being parsed properly. This is now fixed.\")",
       "Bash(PYTHONPATH=backend:*)",
       "Bash(./venv/bin/pip list)",
-      "Bash(mv:*)"
+      "Bash(mv:*)",
+      "Bash(cp:*)"
     ],
     "deny": [],
     "ask": []

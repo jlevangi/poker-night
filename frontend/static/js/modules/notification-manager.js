@@ -5,7 +5,34 @@
 export class NotificationManager {
     constructor(apiService) {
         this.apiService = apiService;
-        this.vapidPublicKey = 'BDlMkG_IEOYBPgC5D_BEqH-fREq1q1yI3_hQYwN_8wA6-jiMzHpLbg832VUi_n9Sb-ugJgzC7QImdGuiih2-xys'; // Generated VAPID application server key
+        this.vapidPublicKey = null; // Will be fetched from API
+        this.vapidKeyPromise = null; // Cache the promise to avoid multiple requests
+    }
+
+    /**
+     * Fetch VAPID public key from the server
+     */
+    async getVapidPublicKey() {
+        if (this.vapidPublicKey) {
+            return this.vapidPublicKey;
+        }
+
+        if (!this.vapidKeyPromise) {
+            this.vapidKeyPromise = this.apiService.get('notifications/vapid-public-key')
+                .then(response => {
+                    if (response.error) {
+                        throw new Error(response.error);
+                    }
+                    this.vapidPublicKey = response.vapid_public_key;
+                    return this.vapidPublicKey;
+                })
+                .catch(error => {
+                    this.vapidKeyPromise = null; // Reset on error to allow retry
+                    throw error;
+                });
+        }
+
+        return this.vapidKeyPromise;
     }
 
     /**
@@ -80,6 +107,12 @@ export class NotificationManager {
                 throw new Error('Notification permission not granted');
             }
 
+            // Get VAPID public key from server
+            const vapidKey = await this.getVapidPublicKey();
+            if (!vapidKey) {
+                throw new Error('Failed to get VAPID public key from server');
+            }
+
             // Get service worker registration
             const registration = await navigator.serviceWorker.ready;
             
@@ -90,7 +123,7 @@ export class NotificationManager {
                 // Create new subscription
                 subscription = await registration.pushManager.subscribe({
                     userVisibleOnly: true,
-                    applicationServerKey: this.urlBase64ToUint8Array(this.vapidPublicKey)
+                    applicationServerKey: this.urlBase64ToUint8Array(vapidKey)
                 });
             }
 

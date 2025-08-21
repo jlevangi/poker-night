@@ -31,26 +31,28 @@ class NotificationService:
         env_path = os.path.join(project_root, '.env')
         load_dotenv(env_path)
         
-        import base64
         from py_vapid import Vapid
         import dotenv
+        import base64
         # Load .env path
         import os
         project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
         env_path = os.path.join(project_root, '.env')
         dotenv.load_dotenv(env_path)
 
-        vapid_private_b64 = os.getenv('VAPID_PRIVATE_KEY')
-        vapid_public_b64 = os.getenv('VAPID_PUBLIC_KEY')
+        vapid_private_key = os.getenv('VAPID_PRIVATE_KEY')
+        vapid_public_key = os.getenv('VAPID_PUBLIC_KEY')
 
-        if not vapid_private_b64 or not vapid_public_b64:
+        if not vapid_private_key or not vapid_public_key:
             # Generate new VAPID keys
             v = Vapid()
             v.generate_keys()
             private_pem = v.private_pem()
             public_pem = v.public_pem()
-            vapid_private_b64 = base64.b64encode(private_pem).decode()
-            vapid_public_b64 = base64.b64encode(public_pem).decode()
+            # Store PEM keys directly (no base64 encoding needed)
+            vapid_private_key = private_pem.decode() if isinstance(private_pem, bytes) else private_pem
+            vapid_public_key = public_pem.decode() if isinstance(public_pem, bytes) else public_pem
+            
             # Write to .env (append or update)
             def set_key_in_env_file(key, value):
                 # Read all lines
@@ -60,17 +62,19 @@ class NotificationService:
                 else:
                     lines = []
                 found = False
+                # Replace newlines with \n for .env storage
+                escaped_value = value.replace('\n', '\\n')
                 for i, line in enumerate(lines):
                     if line.startswith(f'{key}='):
-                        lines[i] = f'{key}={value}\n'
+                        lines[i] = f'{key}={escaped_value}\n'
                         found = True
                         break
                 if not found:
-                    lines.append(f'{key}={value}\n')
+                    lines.append(f'{key}={escaped_value}\n')
                 with open(env_path, 'w') as f:
                     f.writelines(lines)
-            set_key_in_env_file('VAPID_PRIVATE_KEY', vapid_private_b64)
-            set_key_in_env_file('VAPID_PUBLIC_KEY', vapid_public_b64)
+            set_key_in_env_file('VAPID_PRIVATE_KEY', vapid_private_key)
+            set_key_in_env_file('VAPID_PUBLIC_KEY', vapid_public_key)
             self.logger.info("Generated new VAPID keys and saved to .env")
             # Log only the public key for frontend
             try:
@@ -80,9 +84,12 @@ class NotificationService:
                 self.logger.info(f"Frontend applicationServerKey: {browser_key}")
             except Exception as log_error:
                 self.logger.error(f"Failed to log public key for frontend: {log_error}")
-        # Always decode and use the PEM
-        private_pem_str = base64.b64decode(vapid_private_b64).decode('utf-8')
-        self.vapid_private_key = private_pem_str
+        else:
+            # Keys exist, handle escaping if they were stored with \n
+            vapid_private_key = vapid_private_key.replace('\\n', '\n')
+            vapid_public_key = vapid_public_key.replace('\\n', '\n')
+            
+        self.vapid_private_key = vapid_private_key
         # Do NOT log or print private keys in production
 
         # Contact information for VAPID
@@ -241,15 +248,31 @@ class NotificationService:
                 }
             }
             
-            webpush(
-                subscription_info=subscription_info,
-                data=json.dumps(notification_data),
-                vapid_private_key=self.vapid_private_key,
-                vapid_claims=self.vapid_claims
-            )
+            # Write VAPID key to temporary file for pywebpush
+            import tempfile
+            import os
             
-            self.logger.info(f"Successfully sent notification to subscription {subscription.id}")
-            return True
+            with tempfile.NamedTemporaryFile(mode='w', suffix='.pem', delete=False) as f:
+                f.write(self.vapid_private_key)
+                temp_key_path = f.name
+            
+            try:
+                webpush(
+                    subscription_info=subscription_info,
+                    data=json.dumps(notification_data),
+                    vapid_private_key=temp_key_path,
+                    vapid_claims=self.vapid_claims
+                )
+                
+                self.logger.info(f"Successfully sent notification to subscription {subscription.id}")
+                return True
+                
+            finally:
+                # Clean up temporary file
+                try:
+                    os.unlink(temp_key_path)
+                except:
+                    pass
             
         except WebPushException as e:
             self.logger.error(f"WebPush error sending to subscription {subscription.id}: {str(e)}")
@@ -258,6 +281,9 @@ class NotificationService:
                 subscription.is_active = False
                 db.session.commit()
                 self.logger.info(f"Deactivated invalid subscription {subscription.id}")
+            elif e.response and e.response.status_code == 403:
+                # VAPID credentials mismatch - subscription was created with different keys
+                self.logger.warning(f"VAPID credentials mismatch for subscription {subscription.id} - subscription may need to be recreated")
             return False
             
         except Exception as e:

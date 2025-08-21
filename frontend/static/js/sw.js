@@ -1,4 +1,4 @@
-const APP_VERSION = '1.0.8'; // Increment this version whenever making substantial changes
+const APP_VERSION = '1.0.9'; // Increment this version whenever making substantial changes
 const CACHE_NAME = `gamble-king-cache-v${APP_VERSION}`;
 
 // Assets that should be cached for offline use
@@ -215,7 +215,7 @@ self.addEventListener('notificationclick', event => {
     // Handle action button clicks
     if (event.action === 'view_results') {
         event.waitUntil(
-            clients.openWindow('/sessions/' + (event.notification.data.sessionId || ''))
+            clients.openWindow('/#session/' + (event.notification.data.sessionId || ''))
         );
     } else if (event.action === 'dismiss') {
         // Just close the notification (already done above)
@@ -233,7 +233,7 @@ self.addEventListener('notificationclick', event => {
                 // Otherwise open new window
                 if (clients.openWindow) {
                     const targetUrl = event.notification.data.sessionId 
-                        ? `/sessions/${event.notification.data.sessionId}`
+                        ? `/#session/${event.notification.data.sessionId}`
                         : '/';
                     return clients.openWindow(targetUrl);
                 }

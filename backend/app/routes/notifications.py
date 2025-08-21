@@ -192,3 +192,55 @@ def get_player_subscriptions(player_id: str) -> Dict[str, Any]:
     except Exception as e:
         logger.error(f"Error fetching subscriptions for player {player_id}: {str(e)}")
         return jsonify({"error": "Internal server error"}), 500
+
+
+@notifications_bp.route('/vapid-public-key', methods=['GET'])
+def get_vapid_public_key() -> Dict[str, Any]:
+    """
+    Get the current VAPID public key for frontend subscription setup.
+    
+    Returns:
+        JSON response with the browser-compatible VAPID public key
+    """
+    try:
+        # Use cryptography directly to load the private key and extract public key
+        import base64
+        import os
+        from dotenv import load_dotenv
+        from cryptography.hazmat.primitives import serialization
+        from cryptography.hazmat.primitives.serialization import Encoding, PublicFormat
+        
+        load_dotenv()
+        private_key_pem = os.getenv('VAPID_PRIVATE_KEY')
+        
+        if not private_key_pem:
+            logger.error("VAPID_PRIVATE_KEY not found in environment")
+            return jsonify({"error": "VAPID private key not configured"}), 500
+        
+        # Handle escaped newlines from .env
+        pem_content = private_key_pem.replace('\\n', '\n')
+        
+        # Load the private key using cryptography directly
+        private_key = serialization.load_pem_private_key(
+            pem_content.encode('utf-8'),
+            password=None
+        )
+        
+        # Get the public key from the private key
+        public_key = private_key.public_key()
+        
+        # Convert to browser-compatible format (X9.62 uncompressed point)
+        public_key_bytes = public_key.public_bytes(
+            Encoding.X962, 
+            PublicFormat.UncompressedPoint
+        )
+        
+        # Base64 encode for browser use
+        browser_key = base64.urlsafe_b64encode(public_key_bytes).decode().rstrip('=')
+        
+        logger.info("Successfully generated browser-compatible VAPID public key")
+        return jsonify({"vapid_public_key": browser_key})
+        
+    except Exception as e:
+        logger.error(f"Error generating VAPID public key: {str(e)}")
+        return jsonify({"error": "Failed to generate VAPID public key"}), 500
