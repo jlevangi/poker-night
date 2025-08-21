@@ -180,15 +180,6 @@ export default class SessionDetailPage {
                     (!isActive ? `<p class="session-unpaid-value paid-out">Fully Paid Out</p>` : '')}
             </div>
             
-            <!-- Only show Reactivate button if session is not active -->
-            ${!isActive ? 
-                `<div class="session-reactivate-container" style="text-align: center; margin: 20px 0;">
-                    <button id="reactivate-session-btn" class="action-btn reactivate-session-btn">
-                        Reactivate Session
-                    </button>
-                </div>` : 
-                '' // Nothing if active
-            }
 
             <!-- Chip Distribution Section -->
             <div id="chip-distribution-container">
@@ -621,33 +612,6 @@ export default class SessionDetailPage {
             element.style.cursor = 'pointer';
         });
         
-        if (!isActive) {
-            // Reactivate session button - only set up if session is not active
-            const reactivateSessionBtn = document.getElementById('reactivate-session-btn');
-            if (reactivateSessionBtn) {
-                reactivateSessionBtn.addEventListener('click', async () => {
-                    if (confirm("Are you sure you want to reactivate this session?")) {
-                        try {
-                            // Show loading state
-                            reactivateSessionBtn.disabled = true;
-                            reactivateSessionBtn.textContent = 'Reactivating...';
-                            
-                            await this.api.put(`sessions/${sessionId}/reactivate`);
-                            
-                            alert("Session reactivated successfully!");
-                            this.load(sessionId);
-                        } catch (error) {
-                            console.error('Error reactivating session:', error);
-                            alert(`Error: ${error.message}`);
-                            
-                            // Restore button state
-                            reactivateSessionBtn.disabled = false;
-                            reactivateSessionBtn.textContent = 'Reactivate Session';
-                        }
-                    }
-                });
-            }
-        }
     }
 
     /**

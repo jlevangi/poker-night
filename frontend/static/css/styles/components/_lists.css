@@ -150,9 +150,13 @@ li a:hover {
     align-items: center;
     padding: 12px 8px;
     margin-bottom: 10px;
-    border-bottom: 1px solid var(--border-light);
     background-color: var(--bg-card);
     border-radius: var(--radius-md);
+}
+
+.session-players-list li + li {
+    border-top: 1px solid var(--border-light);
+    margin-top: 10px;
 }
 
 .session-player-details {
@@ -165,7 +169,6 @@ li a:hover {
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    border-left: 1px solid #e0e0e0;
     padding-left: 15px;
 }
 
@@ -260,7 +263,6 @@ li a:hover {
     .session-seven-two-controls {
         width: 100%;
         border-left: none;
-        border-top: 1px solid #e0e0e0;
         padding-left: 0;
         padding-top: 10px;
         margin-top: 10px;

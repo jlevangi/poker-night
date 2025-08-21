@@ -81,7 +81,7 @@
 .players-stats-table td:nth-child(3), /* Cash Out column */
 .players-stats-table th:nth-child(4), 
 .players-stats-table td:nth-child(4) { /* Profit column */
-    text-align: right;
+    text-align: left;
 }
 
 .players-stats-table th,
@@ -114,29 +114,40 @@
 
 /* Mobile responsive adjustments for players-stats-table */
 @media (max-width: 768px) {
-    .players-stats-table th:nth-child(1), 
-    .players-stats-table td:nth-child(1) { /* Date column */
-        width: 10%;
+    .players-stats-table {
+        table-layout: auto;
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 1px;
     }
 
-    .players-stats-table th:nth-child(2), 
-    .players-stats-table td:nth-child(2) { /* Buy-In column */
-        width: 13%;
-    }
-
-    .players-stats-table th:nth-child(3), 
-    .players-stats-table td:nth-child(3) { /* Cash Out column */
-        width: 10%;
-    }
-
-    .players-stats-table th:nth-child(4), 
-    .players-stats-table td:nth-child(4) { /* Profit column */
-        width: 20%;
-    }
-    
-    .players-stats-table th,
+    .players-stats-table th, 
     .players-stats-table td {
+        width: auto;
         font-size: 0.9rem;
+        text-align: left;
+        white-space: nowrap;
+        max-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .players-stats-table th:first-child,
+    .players-stats-table td:first-child { /* Date column */
+        text-align: left;
+        white-space: normal;
+        width: 1%;
+        min-width: max-content;
+    }
+
+    .players-stats-table th:nth-child(2),
+    .players-stats-table td:nth-child(2), /* Buy-In column */
+    .players-stats-table th:nth-child(3),
+    .players-stats-table td:nth-child(3), /* Cash Out column */
+    .players-stats-table th:nth-child(4),
+    .players-stats-table td:nth-child(4) { /* Profit column */
+        width: 1%;
+        min-width: max-content;
     }
 }
 
