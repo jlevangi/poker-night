@@ -7,7 +7,7 @@ This module contains routes for serving static frontend files.
 import os
 import logging
 from typing import Any
-from flask import Blueprint, render_template, send_from_directory, Response
+from flask import Blueprint, render_template, send_from_directory, Response, abort
 
 from ..config import Config
 
@@ -66,3 +66,15 @@ def serve_sw() -> Response:
     response.headers['Expires'] = '0'
     
     return response
+
+
+@frontend_bp.route('/.env')
+def block_env_file() -> None:
+    """
+    Explicitly block access to .env file.
+    
+    Raises:
+        404 error for .env file access attempts
+    """
+    logger.warning("Blocked access attempt to .env file")
+    abort(404)

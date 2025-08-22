@@ -1,40 +1,13 @@
-// Function to parse .env file content
-async function parseEnvFile() {
+// Function to fetch config from secure backend endpoint
+async function fetchConfig() {
     try {
-        const response = await fetch('/.env');
+        const response = await fetch('/api/config');
         if (!response.ok) {
-            console.error('Failed to load .env file:', response.statusText);
+            console.error('Failed to load config:', response.statusText);
             return getDefaultConfig();
         }
         
-        const text = await response.text();
-        const config = {};
-        
-        // Parse each line
-        text.split('\n').forEach(line => {
-            // Skip comments and empty lines
-            if (!line || line.trim().startsWith('#')) return;
-            
-            // Split by first = character
-            const [key, value] = line.split('=');
-            if (!key || !value) return;
-            
-            // Trim whitespace and store in config
-            const trimmedKey = key.trim();
-            let trimmedValue = value.trim();
-            
-            // Handle true/false string values
-            if (trimmedValue.toLowerCase() === 'true') trimmedValue = true;
-            if (trimmedValue.toLowerCase() === 'false') trimmedValue = false;
-            
-            // Handle numeric values
-            if (!isNaN(trimmedValue) && trimmedValue !== '') {
-                trimmedValue = Number(trimmedValue);
-            }
-            
-            config[trimmedKey] = trimmedValue;
-        });
-        
+        const config = await response.json();
         return {...getDefaultConfig(), ...config};
     } catch (error) {
         console.error('Error loading config:', error);
@@ -59,7 +32,7 @@ let appConfig = null;
 // Async function to load config
 async function loadConfig() {
     if (appConfig === null) {
-        appConfig = await parseEnvFile();
+        appConfig = await fetchConfig();
     }
     return appConfig;
 }

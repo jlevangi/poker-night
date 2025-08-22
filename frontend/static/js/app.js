@@ -84,7 +84,7 @@ function showUpdateNotification() {
                 New features and improvements are ready!
             </div>
             <div>
-                <button onclick="updateApp()" style="
+                <button id="update-now-btn" style="
                     background: white;
                     color: #3367D6;
                     border: none;
@@ -94,7 +94,7 @@ function showUpdateNotification() {
                     cursor: pointer;
                     margin-right: 10px;
                 ">Update Now</button>
-                <button onclick="dismissUpdate()" style="
+                <button id="dismiss-update-btn" style="
                     background: transparent;
                     color: white;
                     border: 1px solid rgba(255,255,255,0.3);
@@ -107,6 +107,13 @@ function showUpdateNotification() {
     `;
     
     document.body.appendChild(notification);
+    
+    // Add event listeners instead of inline handlers
+    const updateBtn = notification.querySelector('#update-now-btn');
+    const dismissBtn = notification.querySelector('#dismiss-update-btn');
+    
+    updateBtn.addEventListener('click', updateApp);
+    dismissBtn.addEventListener('click', dismissUpdate);
 }
 
 window.updateApp = function() {
