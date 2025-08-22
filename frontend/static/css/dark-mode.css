@@ -816,8 +816,8 @@ a:hover {
   color: var(--text-primary) !important;
 }
 
-.chip-distribution p,
-.chip-distribution span {
+[data-theme="dark"] .chip-distribution p,
+[data-theme="dark"] .chip-distribution span {
   color: var(--text-secondary) !important;
 }
 
