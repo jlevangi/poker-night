@@ -414,15 +414,15 @@ input:focus, textarea:focus, select:focus {
 
 [data-theme="dark"] .gamble-king-stats > div {
   background: var(--card-bg) !important;
-  border-color: #f59e0b !important;
+  border-color: #fb9a03 !important;
 }
 
 [data-theme="dark"] .gamble-king-stats .stat-value {
-  color: #d97706 !important;
+  color: #fb9a03 !important;
 }
 
 [data-theme="dark"] .gamble-king-stats .stat-label {
-  color: #92400e !important;
+  color: #fb9a03 !important;
 }
 
 /* App content area */
