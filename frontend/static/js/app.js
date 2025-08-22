@@ -219,11 +219,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 date: date, 
                 default_buy_in_value: buyin 
             });
-            alert('Session created successfully!');
             newSessionModal.hide();
-            if (window.location.hash === '#sessions' || window.location.hash === '') {
-                router.route(); // Refresh current page
-            }
             window.location.hash = `#session/${newSession.session_id}`;
         } catch (error) {
             alert(`Error: ${error.message}`);
