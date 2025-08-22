@@ -25,7 +25,7 @@ def get_public_config():
     
     # Only expose safe, non-sensitive configuration values
     public_config = {
-        'APP_VERSION': getattr(config, 'APP_VERSION', '1.0.6'),
+        'APP_VERSION': getattr(config, 'APP_VERSION', '1.0.0'),
         'API_BASE_URL': '/api',
         'CACHE_NAME_PREFIX': 'gamble-king-cache',
         'DEBUG_MODE': getattr(config, 'DEBUG', False),

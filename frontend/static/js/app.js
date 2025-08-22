@@ -118,8 +118,19 @@ function showUpdateNotification() {
 
 window.updateApp = function() {
     if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+        // First dismiss the update notification
+        dismissUpdate();
+        
+        // Post message to service worker to clear caches and update
         navigator.serviceWorker.controller.postMessage({
             type: 'FORCE_UPDATE'
+        });
+        
+        // Also try to get a new service worker registration
+        navigator.serviceWorker.getRegistration().then(registration => {
+            if (registration) {
+                registration.update();
+            }
         });
     }
 };
@@ -131,8 +142,13 @@ window.dismissUpdate = function() {
     }
 };
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     const appContent = document.getElementById('app-content');
+    
+    // Load configuration first
+    const config = await appConfig.getConfig();
+    const APP_VERSION = config.APP_VERSION;
+    console.log('App initialized with version:', APP_VERSION);
     
     // Initialize services and managers
     const apiService = new ApiService();
@@ -149,10 +165,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const playersPage = new PlayersPage(appContent, apiService);
     const sessionsPage = new SessionsPage(appContent, apiService);
     const sessionDetailPage = new SessionDetailPage(appContent, apiService);
-    const playerDetailPage = new PlayerDetailPage(appContent, apiService);    
-    
-    // Initialize configuration from config.js
-    let APP_VERSION = '1.0.5'; // Default until config loads
+    const playerDetailPage = new PlayerDetailPage(appContent, apiService);
     
     // Setup new session modal
     setupNewSessionModal();

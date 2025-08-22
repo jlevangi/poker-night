@@ -18,7 +18,7 @@ async function fetchConfig() {
 // Fallback default configuration
 function getDefaultConfig() {
     return {
-        APP_VERSION: '1.0.6', // Default version if .env can't be loaded
+        APP_VERSION: '1.0.0', // Fallback version if backend is unreachable
         API_BASE_URL: '/api',
         CACHE_NAME_PREFIX: 'gamble-king-cache',
         DEBUG_MODE: false,
