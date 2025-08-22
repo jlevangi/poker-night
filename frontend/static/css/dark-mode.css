@@ -486,6 +486,13 @@ footer {
   border-color: var(--border-color);
 }
 
+/* Keep primary buttons with their original blue styling */
+.quick-actions .btn-primary {
+  background-color: var(--primary-color) !important;
+  color: white !important;
+  border-color: var(--primary-color) !important;
+}
+
 /* Ensure profit colors remain visible in dark mode */
 [data-theme="dark"] .profit-positive {
   color: #22c55e !important;
