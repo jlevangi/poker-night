@@ -9,6 +9,7 @@ import SessionDetailPage from './modules/session-detail-page.js';
 import PlayerDetailPage from './modules/player-detail-page.js';
 import ServiceWorkerManager from './modules/service-worker-manager.js';
 import DarkModeManager from './modules/dark-mode-manager.js';
+import appConfig from './config.js';
 
 // Service worker update handling
 function setupServiceWorkerUpdates() {
