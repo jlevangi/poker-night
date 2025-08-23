@@ -36,6 +36,7 @@
     justify-content: center;
     box-shadow: 0 3px 5px rgba(0, 0, 0, 0.3);
     position: relative;
+    color: white; /* Default white text for all chips */
     /* Border styles are set inline by JavaScript to match real poker chips */
 }
 

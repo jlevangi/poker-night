@@ -9,6 +9,7 @@ import SessionDetailPage from './modules/session-detail-page.js';
 import PlayerDetailPage from './modules/player-detail-page.js';
 import ServiceWorkerManager from './modules/service-worker-manager.js';
 import DarkModeManager from './modules/dark-mode-manager.js';
+import appConfig from './config.js';
 
 // Service worker update handling
 function setupServiceWorkerUpdates() {
@@ -83,7 +84,7 @@ function showUpdateNotification() {
                 New features and improvements are ready!
             </div>
             <div>
-                <button onclick="updateApp()" style="
+                <button id="update-now-btn" style="
                     background: white;
                     color: #3367D6;
                     border: none;
@@ -93,7 +94,7 @@ function showUpdateNotification() {
                     cursor: pointer;
                     margin-right: 10px;
                 ">Update Now</button>
-                <button onclick="dismissUpdate()" style="
+                <button id="dismiss-update-btn" style="
                     background: transparent;
                     color: white;
                     border: 1px solid rgba(255,255,255,0.3);
@@ -106,12 +107,30 @@ function showUpdateNotification() {
     `;
     
     document.body.appendChild(notification);
+    
+    // Add event listeners instead of inline handlers
+    const updateBtn = notification.querySelector('#update-now-btn');
+    const dismissBtn = notification.querySelector('#dismiss-update-btn');
+    
+    updateBtn.addEventListener('click', updateApp);
+    dismissBtn.addEventListener('click', dismissUpdate);
 }
 
 window.updateApp = function() {
     if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+        // First dismiss the update notification
+        dismissUpdate();
+        
+        // Post message to service worker to clear caches and update
         navigator.serviceWorker.controller.postMessage({
             type: 'FORCE_UPDATE'
+        });
+        
+        // Also try to get a new service worker registration
+        navigator.serviceWorker.getRegistration().then(registration => {
+            if (registration) {
+                registration.update();
+            }
         });
     }
 };
@@ -123,8 +142,13 @@ window.dismissUpdate = function() {
     }
 };
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     const appContent = document.getElementById('app-content');
+    
+    // Load configuration first
+    const config = await appConfig.getConfig();
+    const APP_VERSION = config.APP_VERSION;
+    console.log('App initialized with version:', APP_VERSION);
     
     // Initialize services and managers
     const apiService = new ApiService();
@@ -141,10 +165,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const playersPage = new PlayersPage(appContent, apiService);
     const sessionsPage = new SessionsPage(appContent, apiService);
     const sessionDetailPage = new SessionDetailPage(appContent, apiService);
-    const playerDetailPage = new PlayerDetailPage(appContent, apiService);    
-    
-    // Initialize configuration from config.js
-    let APP_VERSION = '1.0.5'; // Default until config loads
+    const playerDetailPage = new PlayerDetailPage(appContent, apiService);
     
     // Setup new session modal
     setupNewSessionModal();
@@ -198,11 +219,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 date: date, 
                 default_buy_in_value: buyin 
             });
-            alert('Session created successfully!');
             newSessionModal.hide();
-            if (window.location.hash === '#sessions' || window.location.hash === '') {
-                router.route(); // Refresh current page
-            }
             window.location.hash = `#session/${newSession.session_id}`;
         } catch (error) {
             alert(`Error: ${error.message}`);

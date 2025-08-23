@@ -47,11 +47,12 @@ button:hover,
 }
 
 .quick-action-btn#quick-start-session-btn {
-    background-color: var(--color-warning);
+    background-color: var(--primary-color);
+    color: white !important;
 }
 
 .quick-action-btn#quick-start-session-btn:hover {
-    background-color: var(--color-warning-hover);
+    background-color: var(--primary-hover);
 }
 
 /* Danger Button */

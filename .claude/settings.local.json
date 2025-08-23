@@ -43,7 +43,8 @@
       "Bash(mv:*)",
       "Bash(cp:*)",
       "Bash(find:*)",
-      "Bash(sed:*)"
+      "Bash(sed:*)",
+      "Bash(git rm:*)"
     ],
     "deny": [],
     "ask": []

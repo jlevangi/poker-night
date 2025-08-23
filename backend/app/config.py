@@ -43,7 +43,7 @@ class Config:
     def _load_app_version(self) -> None:
         """Load APP_VERSION from root .env file."""
         env_file_path = os.path.join(self.PROJECT_ROOT, '.env')
-        self.APP_VERSION = '1.0.5'  # Default fallback version
+        self.APP_VERSION = '1.0.0'  # Default fallback version
         
         try:
             with open(env_file_path, 'r') as f:

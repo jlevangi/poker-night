@@ -1,5 +1,28 @@
-const APP_VERSION = '1.1.0'; // Increment this version whenever making substantial changes
-const CACHE_NAME = `gamble-king-cache-v${APP_VERSION}`;
+// Get version dynamically from config API
+let APP_VERSION = null;
+let CACHE_NAME = null;
+
+// Function to fetch version from backend
+async function getAppVersion() {
+    if (APP_VERSION === null) {
+        try {
+            const response = await fetch('/api/config');
+            if (response.ok) {
+                const config = await response.json();
+                APP_VERSION = config.APP_VERSION || '1.0.0';
+                console.log('Service Worker loaded version:', APP_VERSION);
+            } else {
+                APP_VERSION = '1.0.0'; // Fallback
+                console.log('Service Worker using fallback version:', APP_VERSION);
+            }
+        } catch (error) {
+            console.error('Failed to fetch version:', error);
+            APP_VERSION = '1.0.0'; // Fallback
+        }
+        CACHE_NAME = `gamble-king-cache-v${APP_VERSION}`;
+    }
+    return APP_VERSION;
+}
 
 // Assets that should be cached for offline use
 const URLS_TO_CACHE = [
@@ -15,26 +38,26 @@ const URLS_TO_CACHE = [
 
 // Install event: Cache core assets
 self.addEventListener('install', event => {
-    
     // Immediately take control of all clients
     self.skipWaiting();
     
     event.waitUntil(
-        caches.open(CACHE_NAME)
-            .then(cache => {
-                return cache.addAll(URLS_TO_CACHE);
-            })
-            .catch(error => {
-                console.error('Failed to cache assets:', error);
-            })
+        getAppVersion().then(() => {
+            return caches.open(CACHE_NAME);
+        }).then(cache => {
+            return cache.addAll(URLS_TO_CACHE);
+        }).catch(error => {
+            console.error('Failed to cache assets:', error);
+        })
     );
 });
 
 // Activate event: Clean up old caches
 self.addEventListener('activate', event => {
-    
     event.waitUntil(
-        caches.keys().then(cacheNames => {
+        getAppVersion().then(() => {
+            return caches.keys();
+        }).then(cacheNames => {
             return Promise.all(
                 cacheNames.map(cacheName => {
                     // Delete old cache versions
@@ -103,6 +126,7 @@ async function networkFirstStrategy(request) {
         
         // If successful, update cache with fresh response
         if (networkResponse.ok) {
+            await getAppVersion(); // Ensure we have the cache name
             const cache = await caches.open(CACHE_NAME);
             cache.put(request, networkResponse.clone());
         }
@@ -134,6 +158,7 @@ async function networkFirstStrategy(request) {
 
 // Stale-while-revalidate strategy: Serve from cache, update in background
 async function staleWhileRevalidate(request) {
+    await getAppVersion(); // Ensure we have the cache name
     const cache = await caches.open(CACHE_NAME);
     
     // Get from cache immediately (don't await)
@@ -246,19 +271,32 @@ self.addEventListener('message', event => {
     }
     
     if (event.data.type === 'CHECK_VERSION') {
-        // Report back if versions don't match
-        if (event.data.version !== APP_VERSION) {
-            // Notify the client about the version mismatch
-            self.clients.matchAll().then(clients => {
-                clients.forEach(client => {
-                    client.postMessage({
-                        type: 'NEW_VERSION',
-                        version: APP_VERSION
-                    });
-                });
-            });
-        } else {
-        }
+        // Get current version and compare
+        event.waitUntil(
+            getAppVersion().then(swVersion => {
+                if (event.data.version !== swVersion) {
+                    // Only notify about new version if we haven't already notified recently
+                    // This prevents notification spam
+                    const lastNotification = self.lastVersionNotification || 0;
+                    const now = Date.now();
+                    
+                    if (now - lastNotification > 60000) { // Wait at least 1 minute between notifications
+                        self.lastVersionNotification = now;
+                        
+                        // Notify the client about the version mismatch
+                        return self.clients.matchAll().then(clients => {
+                            clients.forEach(client => {
+                                client.postMessage({
+                                    type: 'NEW_VERSION',
+                                    version: swVersion,
+                                    clientVersion: event.data.version
+                                });
+                            });
+                        });
+                    }
+                }
+            })
+        );
     }
     
     if (event.data.type === 'CLEAR_CACHE') {
