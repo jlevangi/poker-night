@@ -16,6 +16,20 @@ echo "Current working directory: '$(pwd)'"
 echo "Script name: '${BASH_SOURCE[0]}'"
 echo "==================================="
 
+# Determine deployment mode early
+if [ "$SCRIPT_DIR" = "/root/poker-night" ]; then
+    echo "=== PRODUCTION MODE ==="
+    echo "Running from production app directory: $SCRIPT_DIR"
+    echo "Will update dependencies and restart service without file copy"
+    DEPLOYMENT_MODE="production"
+    APP_DIR="$SCRIPT_DIR"  # Set APP_DIR to current directory for production mode
+else
+    echo "=== DEPLOYMENT MODE ==="
+    echo "Running from git repository: $SCRIPT_DIR"
+    echo "Will copy files to production and restart service"
+    DEPLOYMENT_MODE="deployment"
+fi
+
 # Check if service is already running and stop it
 if systemctl is-active --quiet poker-night.service; then
     echo "Stopping existing Poker Night service..."
@@ -30,21 +44,42 @@ apt-get update -y
 echo "Installing Python3 and dependencies..."
 apt-get install -y python3 python3-full python3-venv rsync
 
-# Create a virtual environment outside the git repo
-echo "Creating virtual environment..."
-python3 -m venv $APP_DIR/venv
-
-# Install Python dependencies in virtual environment
-echo "Installing Python dependencies..."
-if [ -f "$SCRIPT_DIR/requirements.txt" ]; then
-    echo "Upgrading pip..."
-    $APP_DIR/venv/bin/pip install --upgrade pip
-    echo "Installing requirements..."
-    $APP_DIR/venv/bin/pip install -r "$SCRIPT_DIR/requirements.txt"
-else
-    echo "Warning: requirements.txt not found."
-    # Install essential packages if requirements.txt is missing
-    $APP_DIR/venv/bin/pip install Flask Flask-SQLAlchemy Werkzeug python-dotenv pywebpush py-vapid cryptography
+# Handle virtual environment based on deployment mode
+if [ "$DEPLOYMENT_MODE" = "deployment" ]; then
+    # Create/update virtual environment for deployment
+    echo "Creating/updating virtual environment..."
+    python3 -m venv $APP_DIR/venv
+    
+    echo "Installing Python dependencies..."
+    if [ -f "$SCRIPT_DIR/requirements.txt" ]; then
+        echo "Upgrading pip..."
+        $APP_DIR/venv/bin/pip install --upgrade pip
+        echo "Installing requirements from git repo..."
+        $APP_DIR/venv/bin/pip install -r "$SCRIPT_DIR/requirements.txt"
+    else
+        echo "Warning: requirements.txt not found in git repo."
+        $APP_DIR/venv/bin/pip install Flask Flask-SQLAlchemy Werkzeug python-dotenv pywebpush py-vapid cryptography
+    fi
+    
+elif [ "$DEPLOYMENT_MODE" = "production" ]; then
+    # Update existing virtual environment in production
+    if [ ! -d "$APP_DIR/venv" ]; then
+        echo "Creating new virtual environment in production..."
+        python3 -m venv $APP_DIR/venv
+    else
+        echo "Updating existing virtual environment..."
+    fi
+    
+    echo "Installing/updating Python dependencies..."
+    if [ -f "$APP_DIR/requirements.txt" ]; then
+        echo "Upgrading pip..."
+        $APP_DIR/venv/bin/pip install --upgrade pip
+        echo "Installing requirements from production app..."
+        $APP_DIR/venv/bin/pip install -r "$APP_DIR/requirements.txt"
+    else
+        echo "Warning: requirements.txt not found in production app."
+        $APP_DIR/venv/bin/pip install --upgrade Flask Flask-SQLAlchemy Werkzeug python-dotenv pywebpush py-vapid cryptography
+    fi
 fi
 
 # Ensure .env file exists with default values if missing
@@ -97,13 +132,7 @@ echo "Creating data directories..."
 mkdir -p $APP_DIR/poker_data
 mkdir -p $APP_DIR/poker_data/archives
 
-# SAFETY CHECK: Never run this script from /root/poker-night
-if [ "$SCRIPT_DIR" = "/root/poker-night" ]; then
-    echo "ERROR: Do not run this script from /root/poker-night!"
-    echo "This script should be run from your git repository directory."
-    echo "Example: cd /home/git/poker-night && sudo ./install.sh"
-    exit 1
-fi
+# Deployment mode already determined above
 
 # Backup database before making changes
 if [ -f "$APP_DIR/poker_data/poker_night.db" ]; then
@@ -112,41 +141,61 @@ if [ -f "$APP_DIR/poker_data/poker_night.db" ]; then
     echo "Database backed up"
 fi
 
-# Copy application files from git repo to app directory
-echo "Copying application files from $SCRIPT_DIR to $APP_DIR..."
-
-# Check if source directory has the expected structure
-if [ ! -d "$SCRIPT_DIR/backend" ]; then
-    echo "ERROR: backend directory not found in $SCRIPT_DIR"
-    echo "This doesn't look like a poker-night git repository."
-    echo "Contents of $SCRIPT_DIR:"
-    ls -la "$SCRIPT_DIR"
-    exit 1
+# Handle file operations based on deployment mode
+if [ "$DEPLOYMENT_MODE" = "deployment" ]; then
+    # Copy application files from git repo to app directory
+    echo "Copying application files from $SCRIPT_DIR to $APP_DIR..."
+    
+    # Check if source directory has the expected structure
+    if [ ! -d "$SCRIPT_DIR/backend" ]; then
+        echo "ERROR: backend directory not found in $SCRIPT_DIR"
+        echo "This doesn't look like a poker-night git repository."
+        echo "Contents of $SCRIPT_DIR:"
+        ls -la "$SCRIPT_DIR"
+        exit 1
+    fi
+    
+    # Copy files (excluding git and temporary files)
+    rsync -av \
+        --exclude='.git' \
+        --exclude='venv' \
+        --exclude='__pycache__' \
+        --exclude='*.pyc' \
+        --exclude='*.log' \
+        --exclude='poker_data' \
+        "$SCRIPT_DIR/" "$APP_DIR/"
+    
+    echo "File copy completed. Verifying structure..."
+    if [ -d "$APP_DIR/backend" ] && [ -f "$APP_DIR/backend/run.py" ]; then
+        echo "✓ Application files copied successfully"
+    else
+        echo "✗ Copy failed - missing required files"
+        exit 1
+    fi
+    
+    # Set permissions ONLY on the app directory (never on git files)
+    echo "Setting permissions on app directory only..."
+    chmod +x "$APP_DIR/backend/run.py"
+    chmod -R 755 "$APP_DIR"
+    echo "Permissions set on $APP_DIR"
+    
+elif [ "$DEPLOYMENT_MODE" = "production" ]; then
+    # Running from production directory - just verify structure and update dependencies
+    echo "Verifying production app structure..."
+    if [ ! -d "$SCRIPT_DIR/backend" ] || [ ! -f "$SCRIPT_DIR/backend/run.py" ]; then
+        echo "ERROR: Invalid production app structure in $SCRIPT_DIR"
+        echo "Missing backend directory or run.py file"
+        exit 1
+    fi
+    
+    # Ensure permissions are correct
+    echo "Ensuring proper permissions..."
+    chmod +x "$SCRIPT_DIR/backend/run.py"
+    chmod -R 755 "$SCRIPT_DIR"
+    echo "Permissions verified"
+    
+    # APP_DIR already set to SCRIPT_DIR above
 fi
-
-# Copy files (excluding git and temporary files)
-rsync -av \
-    --exclude='.git' \
-    --exclude='venv' \
-    --exclude='__pycache__' \
-    --exclude='*.pyc' \
-    --exclude='*.log' \
-    --exclude='poker_data' \
-    "$SCRIPT_DIR/" "$APP_DIR/"
-
-echo "File copy completed. Verifying structure..."
-if [ -d "$APP_DIR/backend" ] && [ -f "$APP_DIR/backend/run.py" ]; then
-    echo "✓ Application files copied successfully"
-else
-    echo "✗ Copy failed - missing required files"
-    exit 1
-fi
-
-# Set permissions ONLY on the app directory (never on git files)
-echo "Setting permissions on app directory only..."
-chmod +x "$APP_DIR/backend/run.py"
-chmod -R 755 "$APP_DIR"
-echo "Permissions set on $APP_DIR"
 
 # Enable and start the service
 echo "Enabling and starting the service..."
