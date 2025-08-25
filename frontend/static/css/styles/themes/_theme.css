@@ -63,6 +63,12 @@
     --seven-two-decrement-hover: #c82333;
     --seven-two-border: #28a745;
     
+    /* Shared Counter Button Colors - Use same colors as seven-two for consistency */
+    --counter-increment: #28a745;
+    --counter-increment-hover: #218838;
+    --counter-decrement: #dc3545;
+    --counter-decrement-hover: #c82333;
+    
     /* Spacing */
     --spacing-xs: 0.25rem;
     --spacing-sm: 0.5rem;

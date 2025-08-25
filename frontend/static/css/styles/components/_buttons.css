@@ -115,7 +115,57 @@ button:hover,
     background-color: #888;
 }
 
-/* Seven-Two Game Buttons */
+/* Shared Counter Button Styles */
+.counter-btn {
+    width: 30px;
+    height: 30px;
+    border-radius: var(--radius-circle);
+    border: none;
+    color: var(--text-white);
+    font-size: 18px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    margin: 0 3px;
+    transition: background-color var(--transition-fast);
+    padding: 0;
+    text-align: center;
+    line-height: 1;
+}
+
+.counter-btn-increment {
+    background-color: var(--counter-increment);
+}
+
+.counter-btn-increment:hover {
+    background-color: var(--counter-increment-hover);
+}
+
+.counter-btn-decrement {
+    background-color: var(--counter-decrement);
+    /* Additional centering for minus sign which can appear off-center */
+    position: relative;
+    color: transparent; /* Hide the original text */
+}
+
+.counter-btn-decrement::before {
+    content: "−"; /* Use proper minus sign (U+2212) instead of hyphen */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 16px;
+    line-height: 1;
+    color: var(--text-white);
+}
+
+.counter-btn-decrement:hover {
+    background-color: var(--counter-decrement-hover);
+}
+
+/* Seven-Two Game Buttons - Legacy support and specific overrides */
 .seven-two-btn {
     background-color: var(--seven-two-bg);
     color: var(--text-white);
@@ -137,7 +187,11 @@ button:hover,
     background-color: var(--seven-two-bg-hover);
 }
 
-.seven-two-increment-btn, .seven-two-decrement-btn {
+/* Apply counter button styles to specific seven-two and strikes buttons */
+.seven-two-increment-btn, 
+.seven-two-decrement-btn,
+.strikes-increment-btn,
+.strikes-decrement-btn {
     width: 30px;
     height: 30px;
     border-radius: var(--radius-circle);
@@ -156,22 +210,26 @@ button:hover,
     line-height: 1;
 }
 
-.seven-two-increment-btn {
-    background-color: var(--seven-two-increment);
+.seven-two-increment-btn,
+.strikes-increment-btn {
+    background-color: var(--counter-increment);
 }
 
-.seven-two-increment-btn:hover {
-    background-color: var(--seven-two-increment-hover);
+.seven-two-increment-btn:hover,
+.strikes-increment-btn:hover {
+    background-color: var(--counter-increment-hover);
 }
 
-.seven-two-decrement-btn {
-    background-color: var(--seven-two-decrement);
+.seven-two-decrement-btn,
+.strikes-decrement-btn {
+    background-color: var(--counter-decrement);
     /* Additional centering for minus sign which can appear off-center */
     position: relative;
     color: transparent; /* Hide the original text */
 }
 
-.seven-two-decrement-btn::before {
+.seven-two-decrement-btn::before,
+.strikes-decrement-btn::before {
     content: "−"; /* Use proper minus sign (U+2212) instead of hyphen */
     position: absolute;
     top: 50%;
@@ -182,8 +240,9 @@ button:hover,
     color: var(--text-white);
 }
 
-.seven-two-decrement-btn:hover {
-    background-color: var(--seven-two-decrement-hover);
+.seven-two-decrement-btn:hover,
+.strikes-decrement-btn:hover {
+    background-color: var(--counter-decrement-hover);
 }
 
 /* Add Player Button Styling */
