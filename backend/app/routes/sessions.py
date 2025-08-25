@@ -335,6 +335,101 @@ def record_payout_api(session_id: str, player_id: str) -> Dict[str, Any]:
     return jsonify({"error": "Failed to record payout for an unknown reason"}), 500
 
 
+@sessions_bp.route('/sessions/<string:session_id>/entries/<string:player_id>/cash-out', methods=['PUT'])
+def toggle_cash_out_status_api(session_id: str, player_id: str) -> Dict[str, Any]:
+    """
+    Toggle the cash-out status for a player in a session.
+    
+    Args:
+        session_id: Session's unique identifier
+        player_id: Player's unique identifier
+        
+    Returns:
+        JSON response with updated session entries or error message
+    """
+    # Validate IDs
+    if not session_id or not isinstance(session_id, str):
+        return jsonify({"error": "Invalid session ID"}), 400
+    if not player_id or not isinstance(player_id, str):
+        return jsonify({"error": "Invalid player ID"}), 400
+    
+    db_service = DatabaseService()
+    
+    # Check if session and player exist and session is active
+    session = db_service.get_session_by_id(session_id)
+    if not session:
+        return jsonify({"error": "Session not found"}), 404
+    if not session.is_active:
+        return jsonify({"error": "Session is not active"}), 400
+    
+    # Toggle the cash-out status
+    if db_service.toggle_player_cash_out_status(session_id, player_id):
+        all_entries = db_service.get_entries_for_session(session_id)
+        return jsonify([entry.to_dict() for entry in all_entries])
+    
+    # Check if player entry exists
+    entries = db_service.get_entries_for_session(session_id)
+    entry_check = any(e.player_id == player_id for e in entries)
+    if not entry_check:
+        return jsonify({"error": f"Player {player_id} not found in session {session_id}"}), 404
+    return jsonify({"error": "Failed to toggle cash-out status for an unknown reason"}), 500
+
+
+@sessions_bp.route('/sessions/<string:session_id>/entries/<string:player_id>/buy-in', methods=['POST'])
+def handle_buy_in_api(session_id: str, player_id: str) -> Dict[str, Any]:
+    """
+    Handle a buy-in for a player (sets cash-out status to False and records buy-in).
+    
+    Args:
+        session_id: Session's unique identifier
+        player_id: Player's unique identifier
+        
+    Returns:
+        JSON response with updated session entries or error message
+    """
+    data = request.get_json()
+    if not data:
+        return jsonify({"error": "Request body is required"}), 400
+    
+    num_buy_ins_str = data.get('num_buy_ins', "1")
+    
+    # Validate IDs
+    if not session_id or not isinstance(session_id, str):
+        return jsonify({"error": "Invalid session ID"}), 400
+    if not player_id or not isinstance(player_id, str):
+        return jsonify({"error": "Invalid player ID"}), 400
+    
+    try:
+        num_buy_ins = int(num_buy_ins_str)
+        if num_buy_ins <= 0 or num_buy_ins > 100:
+            return jsonify({"error": "Number of buy-ins must be between 1 and 100"}), 400
+    except (ValueError, TypeError):
+        return jsonify({"error": "Invalid number of buy-ins"}), 400
+    
+    db_service = DatabaseService()
+    
+    # Check if session exists and is active
+    session = db_service.get_session_by_id(session_id)
+    if not session:
+        return jsonify({"error": "Session not found"}), 404
+    if not session.is_active:
+        return jsonify({"error": "Session is not active"}), 400
+    
+    # Record the buy-in and set cash-out status to False
+    entry = db_service.record_player_entry(session_id, player_id, num_buy_ins)
+    if entry:
+        # Set cash-out status to False since they're buying back in
+        if db_service.set_player_cash_out_status(session_id, player_id, False):
+            all_entries = db_service.get_entries_for_session(session_id)
+            return jsonify([entry.to_dict() for entry in all_entries]), 201
+    
+    # Check for specific errors
+    player_check = db_service.get_player_by_id(player_id)
+    if not player_check:
+        return jsonify({"error": f"Player {player_id} not found."}), 404
+    return jsonify({"error": "Failed to process buy-in for an unknown reason"}), 500
+
+
 @sessions_bp.route('/sessions/<string:session_id>/players/<string:player_id>/seven-two-wins/increment', methods=['PUT'])
 def increment_session_seven_two_wins_api(session_id: str, player_id: str) -> Dict[str, Any]:
     """
@@ -406,4 +501,78 @@ def decrement_session_seven_two_wins_api(session_id: str, player_id: str) -> Dic
         return jsonify({"error": "Failed to decrement session 7-2 wins count"}), 500
     except Exception as e:
         logger.error(f"Error decrementing session 7-2 wins for player {player_id} in session {session_id}: {str(e)}")
+        return jsonify({"error": "Internal server error"}), 500
+
+
+@sessions_bp.route('/sessions/<string:session_id>/players/<string:player_id>/strikes/increment', methods=['PUT'])
+def increment_session_strikes_api(session_id: str, player_id: str) -> Dict[str, Any]:
+    """
+    Increment session-specific strikes for a player.
+    
+    Args:
+        session_id: Session's unique identifier
+        player_id: Player's unique identifier
+        
+    Returns:
+        JSON response with updated session entries or error message
+    """
+    if not session_id or not player_id:
+        return jsonify({"error": "Session ID and Player ID are required"}), 400
+    
+    db_service = DatabaseService()
+    
+    # Check if session and player exist
+    session = db_service.get_session_by_id(session_id)
+    if not session:
+        return jsonify({"error": "Session not found"}), 404
+    
+    player = db_service.get_player_by_id(player_id)
+    if not player:
+        return jsonify({"error": "Player not found"}), 404
+    
+    try:
+        if db_service.increment_session_strikes(session_id, player_id):
+            # Return updated session entries
+            updated_entries = db_service.get_entries_for_session(session_id)
+            return jsonify([entry.to_dict() for entry in updated_entries])
+        return jsonify({"error": "Failed to increment session strikes count"}), 500
+    except Exception as e:
+        logger.error(f"Error incrementing session strikes for player {player_id} in session {session_id}: {str(e)}")
+        return jsonify({"error": "Internal server error"}), 500
+
+
+@sessions_bp.route('/sessions/<string:session_id>/players/<string:player_id>/strikes/decrement', methods=['PUT'])
+def decrement_session_strikes_api(session_id: str, player_id: str) -> Dict[str, Any]:
+    """
+    Decrement session-specific strikes for a player.
+    
+    Args:
+        session_id: Session's unique identifier
+        player_id: Player's unique identifier
+        
+    Returns:
+        JSON response with updated session entries or error message
+    """
+    if not session_id or not player_id:
+        return jsonify({"error": "Session ID and Player ID are required"}), 400
+    
+    db_service = DatabaseService()
+    
+    # Check if session and player exist
+    session = db_service.get_session_by_id(session_id)
+    if not session:
+        return jsonify({"error": "Session not found"}), 404
+    
+    player = db_service.get_player_by_id(player_id)
+    if not player:
+        return jsonify({"error": "Player not found"}), 404
+    
+    try:
+        if db_service.decrement_session_strikes(session_id, player_id):
+            # Return updated session entries
+            updated_entries = db_service.get_entries_for_session(session_id)
+            return jsonify([entry.to_dict() for entry in updated_entries])
+        return jsonify({"error": "Failed to decrement session strikes count"}), 500
+    except Exception as e:
+        logger.error(f"Error decrementing session strikes for player {player_id} in session {session_id}: {str(e)}")
         return jsonify({"error": "Internal server error"}), 500

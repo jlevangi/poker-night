@@ -9,10 +9,48 @@
     box-shadow: var(--shadow-light);
 }
 
-/* Seven-Two Game Layout */
+/* Shared Counter Layout Styles */
+.counter-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 4px 0;
+    flex-wrap: wrap;
+}
+
+.counter-label {
+    font-weight: 500;
+    color: var(--text-secondary);
+    white-space: nowrap;
+    min-width: fit-content;
+}
+
+.counter-value {
+    font-size: 1rem;
+    font-weight: bold;
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-pill);
+    padding: 4px 12px;
+    min-width: 30px;
+    text-align: center;
+    color: var(--text-primary);
+    flex-shrink: 0;
+}
+
+.counter-buttons {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    flex-shrink: 0;
+}
+
+/* Seven-Two Game Layout - Apply shared styles */
 .seven-two-label {
     font-weight: 500;
     color: var(--text-secondary);
+    white-space: nowrap;
+    min-width: fit-content;
 }
 
 .seven-two-value {
@@ -25,16 +63,68 @@
     min-width: 30px;
     text-align: center;
     color: var(--text-primary);
+    flex-shrink: 0;
 }
 
 .seven-two-stat {
     display: flex;
     align-items: center;
+    gap: 8px;
+    margin: 4px 0;
+    flex-wrap: wrap;
 }
 
 .seven-two-buttons {
     display: flex;
-    margin-left: 10px;
+    align-items: center;
+    gap: 2px;
+    flex-shrink: 0;
+}
+
+/* Strikes Layout - Apply shared styles */
+.strikes-label {
+    font-weight: 500;
+    color: var(--text-secondary);
+    white-space: nowrap;
+    min-width: fit-content;
+}
+
+.strikes-value {
+    font-size: 1rem;
+    font-weight: bold;
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-pill);
+    padding: 4px 12px;
+    min-width: 30px;
+    text-align: center;
+    color: var(--text-primary);
+    flex-shrink: 0;
+}
+
+.strikes-stat {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 4px 0;
+    flex-wrap: wrap;
+}
+
+.strikes-buttons {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    flex-shrink: 0;
+}
+
+/* Also style the session controls containers */
+.session-seven-two-controls,
+.session-strikes-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 4px 0;
+    flex-wrap: wrap;
 }
 
 /* Mobile Layout Adjustments */
@@ -42,6 +132,29 @@
     #app-content {
         margin: var(--spacing-sm);
         padding: var(--spacing-md);
+    }
+    
+    /* Ensure counter controls remain aligned on mobile */
+    .seven-two-stat,
+    .strikes-stat,
+    .session-seven-two-controls,
+    .session-strikes-controls {
+        gap: 6px;
+        margin: 6px 0;
+    }
+    
+    /* Adjust label width for better mobile layout */
+    .seven-two-label,
+    .strikes-label {
+        font-size: 0.9rem;
+        min-width: 120px;
+    }
+    
+    /* Ensure buttons stay together */
+    .seven-two-buttons,
+    .strikes-buttons {
+        margin-left: auto;
+        min-width: 70px;
     }
 }
 

@@ -538,6 +538,24 @@ footer {
   color: #ffffff !important;
 }
 
+/* Strikes counter dark mode styling */
+.strikes-label {
+  color: var(--text-secondary);
+}
+
+.strikes-value {
+  color: var(--text-primary) !important;
+  background-color: var(--bg-secondary) !important;
+  border-color: var(--border-color) !important;
+}
+
+/* Dark mode styling for compact strikes value */
+[data-theme="dark"] .strikes-value {
+  background-color: #404040 !important;
+  border-color: #555 !important;
+  color: #ffffff !important;
+}
+
 /* Ensure all text elements are properly themed */
 p, span, div {
   color: inherit;

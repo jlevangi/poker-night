@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 frontend_bp = Blueprint('frontend', __name__)
 
 
-@frontend_bp.route('/')
+@frontend_bp.route('/', methods=['GET', 'POST'])
 def serve_index() -> str:
     """
     Serve the main index page.

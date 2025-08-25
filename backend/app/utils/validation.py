@@ -133,11 +133,11 @@ class DataValidator:
             results['valid'] = False
         
         # Check for extremely high values that might indicate data corruption
-        high_buy_ins = Entry.query.filter(Entry.total_buy_in_amount > 10000).count()
+        high_buy_ins = Entry.query.filter(Entry.total_buy_in_amount > 1000).count()
         if high_buy_ins > 0:
-            results['warnings'].append(f"Found {high_buy_ins} entries with very high buy-in amounts (>$10,000)")
+            results['warnings'].append(f"Found {high_buy_ins} entries with very high buy-in amounts (>$1,000)")
         
-        high_payouts = Entry.query.filter(Entry.payout > 50000).count()
+        high_payouts = Entry.query.filter(Entry.payout > 500).count()
         if high_payouts > 0:
             results['warnings'].append(f"Found {high_payouts} entries with very high payouts (>$50,000)")
     

@@ -43,7 +43,9 @@ export default class SessionDetailPage {
                     name: entry.player_name,
                     buyIn: entry.total_buy_in_amount,
                     cashOut: entry.payout,
-                    sevenTwoWins: entry.session_seven_two_wins || 0
+                    isCashedOut: entry.is_cashed_out || false,
+                    sevenTwoWins: entry.session_seven_two_wins || 0,
+                    strikes: entry.session_strikes || 0
                 }));
             } else {
                 session.totalValue = 0;
@@ -226,10 +228,11 @@ export default class SessionDetailPage {
                         </div>
                         
                         <div class="session-player-actions">
-                            ${isActive ?
-                                `<button class="cash-out-player-btn action-btn success-btn" data-player-id="${player.id}">Cash Out</button>` :
-                                ''
-                            }
+                            ${isActive ? (
+                                player.isCashedOut ? 
+                                    `<button class="buy-in-player-btn" data-player-id="${player.id}" data-is-cashed-out="${player.isCashedOut}">Buy In</button>` :
+                                    `<button class="cash-out-player-btn" data-player-id="${player.id}" data-is-cashed-out="${player.isCashedOut}">Cash Out</button>`
+                            ) : ''}
                         </div>
                         
                         <div class="session-seven-two-controls">
@@ -240,6 +243,18 @@ export default class SessionDetailPage {
                                 <div class="seven-two-buttons">
                                     <button class="seven-two-increment-btn" data-player-id="${player.id}">+</button>
                                     <button class="seven-two-decrement-btn" data-player-id="${player.id}">-</button>
+                                </div>
+                            ` : ''}
+                        </div>
+                        
+                        <div class="session-strikes-controls">
+                            <div class="strikes-label">Strikes (Session):</div>
+                            <div class="strikes-value">${player.strikes || 0}</div>
+                            
+                            ${isActive ? `
+                                <div class="strikes-buttons">
+                                    <button class="strikes-increment-btn" data-player-id="${player.id}">+</button>
+                                    <button class="strikes-decrement-btn" data-player-id="${player.id}">-</button>
                                 </div>
                             ` : ''}
                         </div>
@@ -332,14 +347,40 @@ export default class SessionDetailPage {
             
             /* Style for Cash Out button */
             .cash-out-player-btn {
+                padding: 8px 16px;
+                border-radius: 4px;
+                border: none;
                 background-color: #4CAF50 !important;
                 color: white !important;
                 font-weight: bold;
+                cursor: pointer;
+                margin-right: 8px;
+                transition: all 0.2s ease;
                 box-shadow: 0 2px 4px rgba(0,0,0,0.2);
             }
             
             .cash-out-player-btn:hover {
                 background-color: #45a049 !important;
+                box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+                transform: translateY(-1px);
+            }
+            
+            /* Style for Buy In button */
+            .buy-in-player-btn {
+                padding: 8px 16px;
+                border-radius: 4px;
+                border: none;
+                background-color: #2196F3 !important;
+                color: white !important;
+                font-weight: bold;
+                cursor: pointer;
+                margin-right: 8px;
+                transition: all 0.2s ease;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            }
+            
+            .buy-in-player-btn:hover {
+                background-color: #1976D2 !important;
                 box-shadow: 0 4px 8px rgba(0,0,0,0.3);
                 transform: translateY(-1px);
             }
@@ -502,43 +543,199 @@ export default class SessionDetailPage {
                 });
             }
             
-            // Cash out player buttons (formerly Update buttons)
+            // Cash out button - collect payout amount and mark as cashed out
             document.querySelectorAll('.cash-out-player-btn').forEach(button => {
                 button.addEventListener('click', async (e) => {
                     const playerId = e.target.dataset.playerId;
-                    let cashOut = prompt('Enter cash-out amount ($):');
                     
-                    if (cashOut === null) return; // User cancelled
+                    // Create a custom modal-like dialog for cash-out amount
+                    const modalHtml = `
+                        <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; display: flex; align-items: center; justify-content: center;">
+                            <div style="background: white; padding: 20px; border-radius: 8px; max-width: 400px; width: 90%;">
+                                <h3>Cash Out Player</h3>
+                                <label for="cashout-amount">Enter cash-out amount ($):</label>
+                                <input type="number" id="cashout-amount" inputmode="decimal" step="0.01" min="0" style="width: 100%; padding: 10px; margin: 10px 0; font-size: 16px; border: 2px solid #ddd; border-radius: 4px;">
+                                <div style="text-align: right; margin-top: 15px;">
+                                    <button id="cancel-cashout" style="margin-right: 10px; padding: 8px 16px; background: #ccc; border: none; border-radius: 4px; cursor: pointer;">Cancel</button>
+                                    <button id="confirm-cashout" style="padding: 8px 16px; background: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer;">Cash Out</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
                     
-                    // Remove non-numeric characters except decimal point
-                    cashOut = cashOut.replace(/[^0-9.]/g, '');
+                    const modalElement = document.createElement('div');
+                    modalElement.innerHTML = modalHtml;
+                    document.body.appendChild(modalElement);
                     
-                    const cashOutValue = parseFloat(cashOut);
+                    const cashoutInput = document.getElementById('cashout-amount');
+                    const cancelBtn = document.getElementById('cancel-cashout');
+                    const confirmBtn = document.getElementById('confirm-cashout');
                     
-                    if (isNaN(cashOutValue) || cashOutValue < 0 || cashOut === '') {
-                        alert('Please enter a valid numeric cash-out amount (numbers only)');
-                        return;
-                    }
+                    // Focus the input for better UX
+                    setTimeout(() => cashoutInput.focus(), 100);
                     
-                    try {
-                        // Show loading state
-                        button.disabled = true;
-                        button.textContent = 'Processing...';
+                    // Input validation - numbers only
+                    cashoutInput.addEventListener('input', (event) => {
+                        let value = event.target.value;
+                        value = value.replace(/[^0-9.]/g, '');
+                        const parts = value.split('.');
+                        if (parts.length > 2) {
+                            value = parts[0] + '.' + parts.slice(1).join('');
+                        }
+                        event.target.value = value;
+                    });
+                    
+                    // Cancel handler
+                    cancelBtn.addEventListener('click', () => {
+                        document.body.removeChild(modalElement);
+                    });
+                    
+                    // Confirm handler
+                    confirmBtn.addEventListener('click', async () => {
+                        const cashOutValue = parseFloat(cashoutInput.value);
                         
-                        await this.api.put(`sessions/${sessionId}/entries/${playerId}/payout`, { 
-                            payout_amount: cashOutValue 
-                        });
+                        if (isNaN(cashOutValue) || cashOutValue < 0 || cashoutInput.value === '') {
+                            alert('Please enter a valid numeric cash-out amount');
+                            return;
+                        }
                         
-                        // Reload the session detail page
-                        this.load(sessionId);
-                    } catch (error) {
-                        console.error('Error updating player:', error);
-                        alert(`Error: ${error.message}`);
+                        try {
+                            // Show loading state
+                            button.disabled = true;
+                            button.textContent = 'Processing...';
+                            confirmBtn.disabled = true;
+                            confirmBtn.textContent = 'Processing...';
+                            
+                            // Record payout (this will automatically set is_cashed_out = true)
+                            await this.api.put(`sessions/${sessionId}/entries/${playerId}/payout`, { 
+                                payout_amount: cashOutValue 
+                            });
+                            
+                            // Remove modal
+                            document.body.removeChild(modalElement);
+                            
+                            // Update button appearance and displayed values immediately without page reload
+                            this.updatePlayerDisplay(button, playerId, { cashOut: cashOutValue, isCashedOut: true }, sessionId);
+                            
+                        } catch (error) {
+                            console.error('Error processing cash-out:', error);
+                            alert(`Error: ${error.message}`);
+                            
+                            // Restore button state
+                            button.disabled = false;
+                            button.textContent = 'Cash Out';
+                            confirmBtn.disabled = false;
+                            confirmBtn.textContent = 'Cash Out';
+                        }
+                    });
+                    
+                    // Enter key handler
+                    cashoutInput.addEventListener('keypress', (event) => {
+                        if (event.key === 'Enter') {
+                            confirmBtn.click();
+                        }
+                    });
+                });
+            });
+            
+            // Buy in button - collect buy-in amount and mark as active
+            document.querySelectorAll('.buy-in-player-btn').forEach(button => {
+                button.addEventListener('click', async (e) => {
+                    const playerId = e.target.dataset.playerId;
+                    
+                    // Create a custom modal-like dialog for buy-in
+                    const modalHtml = `
+                        <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; display: flex; align-items: center; justify-content: center;">
+                            <div style="background: white; padding: 20px; border-radius: 8px; max-width: 400px; width: 90%;">
+                                <h3>Buy In Player</h3>
+                                <label for="buyin-amount">Enter buy-in amount ($):</label>
+                                <input type="number" id="buyin-amount" inputmode="decimal" step="0.01" min="0" value="${session.default_buy_in_value ? session.default_buy_in_value.toFixed(2) : '20.00'}" style="width: 100%; padding: 10px; margin: 10px 0; font-size: 16px; border: 2px solid #ddd; border-radius: 4px;">
+                                <div style="text-align: right; margin-top: 15px;">
+                                    <button id="cancel-buyin" style="margin-right: 10px; padding: 8px 16px; background: #ccc; border: none; border-radius: 4px; cursor: pointer;">Cancel</button>
+                                    <button id="confirm-buyin" style="padding: 8px 16px; background: #2196F3; color: white; border: none; border-radius: 4px; cursor: pointer;">Buy In</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    
+                    const modalElement = document.createElement('div');
+                    modalElement.innerHTML = modalHtml;
+                    document.body.appendChild(modalElement);
+                    
+                    const buyinInput = document.getElementById('buyin-amount');
+                    const cancelBtn = document.getElementById('cancel-buyin');
+                    const confirmBtn = document.getElementById('confirm-buyin');
+                    
+                    // Focus and select the input for better UX
+                    setTimeout(() => {
+                        buyinInput.focus();
+                        buyinInput.select();
+                    }, 100);
+                    
+                    // Input validation - numbers only
+                    buyinInput.addEventListener('input', (event) => {
+                        let value = event.target.value;
+                        value = value.replace(/[^0-9.]/g, '');
+                        const parts = value.split('.');
+                        if (parts.length > 2) {
+                            value = parts[0] + '.' + parts.slice(1).join('');
+                        }
+                        event.target.value = value;
+                    });
+                    
+                    // Cancel handler
+                    cancelBtn.addEventListener('click', () => {
+                        document.body.removeChild(modalElement);
+                    });
+                    
+                    // Confirm handler
+                    confirmBtn.addEventListener('click', async () => {
+                        const buyinValue = parseFloat(buyinInput.value);
                         
-                        // Restore button state
-                        button.disabled = false;
-                        button.textContent = 'Cash Out';
-                    }
+                        if (isNaN(buyinValue) || buyinValue <= 0 || buyinInput.value === '') {
+                            alert('Please enter a valid buy-in amount');
+                            return;
+                        }
+                        
+                        try {
+                            // Show loading state
+                            button.disabled = true;
+                            button.textContent = 'Processing...';
+                            confirmBtn.disabled = true;
+                            confirmBtn.textContent = 'Processing...';
+                            
+                            // Calculate number of buy-ins and add to session
+                            const defaultBuyin = session.default_buy_in_value || 20;
+                            const numBuyIns = Math.round(buyinValue / defaultBuyin);
+                            
+                            await this.api.post(`sessions/${sessionId}/entries/${playerId}/buy-in`, { 
+                                num_buy_ins: numBuyIns 
+                            });
+                            
+                            // Remove modal
+                            document.body.removeChild(modalElement);
+                            
+                            // Update button appearance and buy-in amount immediately without page reload
+                            this.updatePlayerDisplay(button, playerId, { addBuyIn: buyinValue, isCashedOut: false }, sessionId);
+                            
+                        } catch (error) {
+                            console.error('Error processing buy-in:', error);
+                            alert(`Error: ${error.message}`);
+                            
+                            // Restore button state
+                            button.disabled = false;
+                            button.textContent = 'Buy In';
+                            confirmBtn.disabled = false;
+                            confirmBtn.textContent = 'Buy In';
+                        }
+                    });
+                    
+                    // Enter key handler
+                    buyinInput.addEventListener('keypress', (event) => {
+                        if (event.key === 'Enter') {
+                            confirmBtn.click();
+                        }
+                    });
                 });
             });
             
@@ -587,6 +784,51 @@ export default class SessionDetailPage {
                 });
             });
             
+            // Strikes buttons
+            document.querySelectorAll('.strikes-increment-btn').forEach(button => {
+                button.addEventListener('click', async (e) => {
+                    const playerId = e.target.dataset.playerId;
+                    
+                    try {
+                        // Disable button to prevent double-clicks
+                        button.disabled = true;
+                        
+                        await this.api.put(`sessions/${sessionId}/players/${playerId}/strikes/increment`);
+                        
+                        // Reload the session detail page
+                        this.load(sessionId);
+                    } catch (error) {
+                        console.error('Error incrementing session strikes:', error);
+                        alert(`Error: ${error.message}`);
+                        
+                        // Re-enable button on error
+                        button.disabled = false;
+                    }
+                });
+            });
+            
+            document.querySelectorAll('.strikes-decrement-btn').forEach(button => {
+                button.addEventListener('click', async (e) => {
+                    const playerId = e.target.dataset.playerId;
+                    
+                    try {
+                        // Disable button to prevent double-clicks
+                        button.disabled = true;
+                        
+                        await this.api.put(`sessions/${sessionId}/players/${playerId}/strikes/decrement`);
+                        
+                        // Reload the session detail page
+                        this.load(sessionId);
+                    } catch (error) {
+                        console.error('Error decrementing session strikes:', error);
+                        alert(`Error: ${error.message}`);
+                        
+                        // Re-enable button on error
+                        button.disabled = false;
+                    }
+                });
+            });
+            
             // Set up notification functionality for active sessions
             this.setupNotificationHandlers(sessionId);
         }
@@ -610,6 +852,255 @@ export default class SessionDetailPage {
             element.style.cursor = 'pointer';
         });
         
+    }
+    
+    /**
+     * Update player display including button and values dynamically without page reload
+     */
+    updatePlayerDisplay(button, playerId, updateData, sessionId) {
+        // Find the player's details section
+        const playerDetailsDiv = button.closest('li').querySelector('.session-player-details');
+        
+        if (playerDetailsDiv) {
+            // Get current values from the display
+            const detailsText = playerDetailsDiv.innerHTML;
+            const buyInMatch = detailsText.match(/Buy-in: \$(\d+\.?\d*)/);
+            const cashOutMatch = detailsText.match(/Cash-out: \$(\d+\.?\d*)/);
+            
+            let currentBuyIn = buyInMatch ? parseFloat(buyInMatch[1]) : 0;
+            let currentCashOut = cashOutMatch ? parseFloat(cashOutMatch[1]) : 0;
+            
+            // Update values based on the action
+            if (updateData.cashOut !== undefined) {
+                currentCashOut = updateData.cashOut;
+            }
+            if (updateData.addBuyIn !== undefined) {
+                currentBuyIn += updateData.addBuyIn;
+            }
+            
+            // Calculate new profit
+            const newProfit = currentCashOut - currentBuyIn;
+            const profitClass = newProfit >= 0 ? 'profit-positive' : 'profit-negative';
+            
+            // Extract player name from existing content
+            const nameMatch = detailsText.match(/<strong><a[^>]*>([^<]+)<\/a><\/strong>/);
+            const playerName = nameMatch ? nameMatch[1] : 'Unknown Player';
+            
+            // Update the player details display
+            playerDetailsDiv.innerHTML = `
+                <p><strong><a href="#player/${playerId}">${playerName}</a></strong></p>
+                <p>Buy-in: $${currentBuyIn.toFixed(2)} | 
+                   Cash-out: $${currentCashOut.toFixed(2)} |
+                   Profit: <span class="${profitClass}">$${newProfit.toFixed(2)}</span></p>
+            `;
+        }
+        
+        // Update button state
+        const isCashedOut = updateData.isCashedOut;
+        
+        if (isCashedOut) {
+            // Change to Buy In button
+            button.className = 'buy-in-player-btn';
+            button.textContent = 'Buy In';
+            button.dataset.isCashedOut = 'true';
+        } else {
+            // Change to Cash Out button
+            button.className = 'cash-out-player-btn';
+            button.textContent = 'Cash Out';
+            button.dataset.isCashedOut = 'false';
+        }
+        
+        // Re-enable the button
+        button.disabled = false;
+        
+        // Update event listeners by replacing the button
+        const newButton = button.cloneNode(true);
+        button.parentNode.replaceChild(newButton, button);
+        
+        // Add the appropriate event listener based on current state
+        if (isCashedOut) {
+            this.addBuyInListener(newButton, playerId, sessionId);
+        } else {
+            this.addCashOutListener(newButton, playerId, sessionId);
+        }
+    }
+    
+    /**
+     * Add full cash-out event listener to a button
+     */
+    addCashOutListener(button, playerId, sessionId) {
+        const session = { default_buy_in_value: 20.00 }; // We'll need to pass this properly
+        
+        button.addEventListener('click', async (e) => {
+            // Create a custom modal-like dialog for cash-out amount
+            const modalHtml = `
+                <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; display: flex; align-items: center; justify-content: center;">
+                    <div style="background: white; padding: 20px; border-radius: 8px; max-width: 400px; width: 90%;">
+                        <h3>Cash Out Player</h3>
+                        <label for="cashout-amount-dynamic">Enter cash-out amount ($):</label>
+                        <input type="number" id="cashout-amount-dynamic" inputmode="decimal" step="0.01" min="0" style="width: 100%; padding: 10px; margin: 10px 0; font-size: 16px; border: 2px solid #ddd; border-radius: 4px;">
+                        <div style="text-align: right; margin-top: 15px;">
+                            <button id="cancel-cashout-dynamic" style="margin-right: 10px; padding: 8px 16px; background: #ccc; border: none; border-radius: 4px; cursor: pointer;">Cancel</button>
+                            <button id="confirm-cashout-dynamic" style="padding: 8px 16px; background: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer;">Cash Out</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            const modalElement = document.createElement('div');
+            modalElement.innerHTML = modalHtml;
+            document.body.appendChild(modalElement);
+            
+            const cashoutInput = document.getElementById('cashout-amount-dynamic');
+            const cancelBtn = document.getElementById('cancel-cashout-dynamic');
+            const confirmBtn = document.getElementById('confirm-cashout-dynamic');
+            
+            setTimeout(() => cashoutInput.focus(), 100);
+            
+            // Input validation
+            cashoutInput.addEventListener('input', (event) => {
+                let value = event.target.value;
+                value = value.replace(/[^0-9.]/g, '');
+                const parts = value.split('.');
+                if (parts.length > 2) {
+                    value = parts[0] + '.' + parts.slice(1).join('');
+                }
+                event.target.value = value;
+            });
+            
+            cancelBtn.addEventListener('click', () => {
+                document.body.removeChild(modalElement);
+            });
+            
+            confirmBtn.addEventListener('click', async () => {
+                const cashOutValue = parseFloat(cashoutInput.value);
+                
+                if (isNaN(cashOutValue) || cashOutValue < 0 || cashoutInput.value === '') {
+                    alert('Please enter a valid numeric cash-out amount');
+                    return;
+                }
+                
+                try {
+                    button.disabled = true;
+                    button.textContent = 'Processing...';
+                    confirmBtn.disabled = true;
+                    confirmBtn.textContent = 'Processing...';
+                    
+                    await this.api.put(`sessions/${sessionId}/entries/${playerId}/payout`, { 
+                        payout_amount: cashOutValue 
+                    });
+                    
+                    document.body.removeChild(modalElement);
+                    this.updatePlayerDisplay(button, playerId, { cashOut: cashOutValue, isCashedOut: true }, sessionId);
+                    
+                } catch (error) {
+                    console.error('Error processing cash-out:', error);
+                    alert(`Error: ${error.message}`);
+                    button.disabled = false;
+                    button.textContent = 'Cash Out';
+                    confirmBtn.disabled = false;
+                    confirmBtn.textContent = 'Cash Out';
+                }
+            });
+            
+            cashoutInput.addEventListener('keypress', (event) => {
+                if (event.key === 'Enter') {
+                    confirmBtn.click();
+                }
+            });
+        });
+    }
+    
+    /**
+     * Add full buy-in event listener to a button
+     */
+    addBuyInListener(button, playerId, sessionId) {
+        const session = { default_buy_in_value: 20.00 }; // We'll need to pass this properly
+        
+        button.addEventListener('click', async (e) => {
+            // Create a custom modal-like dialog for buy-in
+            const modalHtml = `
+                <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; display: flex; align-items: center; justify-content: center;">
+                    <div style="background: white; padding: 20px; border-radius: 8px; max-width: 400px; width: 90%;">
+                        <h3>Buy In Player</h3>
+                        <label for="buyin-amount-dynamic">Enter buy-in amount ($):</label>
+                        <input type="number" id="buyin-amount-dynamic" inputmode="decimal" step="0.01" min="0" value="${session.default_buy_in_value.toFixed(2)}" style="width: 100%; padding: 10px; margin: 10px 0; font-size: 16px; border: 2px solid #ddd; border-radius: 4px;">
+                        <div style="text-align: right; margin-top: 15px;">
+                            <button id="cancel-buyin-dynamic" style="margin-right: 10px; padding: 8px 16px; background: #ccc; border: none; border-radius: 4px; cursor: pointer;">Cancel</button>
+                            <button id="confirm-buyin-dynamic" style="padding: 8px 16px; background: #2196F3; color: white; border: none; border-radius: 4px; cursor: pointer;">Buy In</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            const modalElement = document.createElement('div');
+            modalElement.innerHTML = modalHtml;
+            document.body.appendChild(modalElement);
+            
+            const buyinInput = document.getElementById('buyin-amount-dynamic');
+            const cancelBtn = document.getElementById('cancel-buyin-dynamic');
+            const confirmBtn = document.getElementById('confirm-buyin-dynamic');
+            
+            setTimeout(() => {
+                buyinInput.focus();
+                buyinInput.select();
+            }, 100);
+            
+            // Input validation
+            buyinInput.addEventListener('input', (event) => {
+                let value = event.target.value;
+                value = value.replace(/[^0-9.]/g, '');
+                const parts = value.split('.');
+                if (parts.length > 2) {
+                    value = parts[0] + '.' + parts.slice(1).join('');
+                }
+                event.target.value = value;
+            });
+            
+            cancelBtn.addEventListener('click', () => {
+                document.body.removeChild(modalElement);
+            });
+            
+            confirmBtn.addEventListener('click', async () => {
+                const buyinValue = parseFloat(buyinInput.value);
+                
+                if (isNaN(buyinValue) || buyinValue <= 0 || buyinInput.value === '') {
+                    alert('Please enter a valid buy-in amount');
+                    return;
+                }
+                
+                try {
+                    button.disabled = true;
+                    button.textContent = 'Processing...';
+                    confirmBtn.disabled = true;
+                    confirmBtn.textContent = 'Processing...';
+                    
+                    const defaultBuyin = session.default_buy_in_value || 20;
+                    const numBuyIns = Math.round(buyinValue / defaultBuyin);
+                    
+                    await this.api.post(`sessions/${sessionId}/entries/${playerId}/buy-in`, { 
+                        num_buy_ins: numBuyIns 
+                    });
+                    
+                    document.body.removeChild(modalElement);
+                    this.updatePlayerDisplay(button, playerId, { addBuyIn: buyinValue, isCashedOut: false }, sessionId);
+                    
+                } catch (error) {
+                    console.error('Error processing buy-in:', error);
+                    alert(`Error: ${error.message}`);
+                    button.disabled = false;
+                    button.textContent = 'Buy In';
+                    confirmBtn.disabled = false;
+                    confirmBtn.textContent = 'Buy In';
+                }
+            });
+            
+            buyinInput.addEventListener('keypress', (event) => {
+                if (event.key === 'Enter') {
+                    confirmBtn.click();
+                }
+            });
+        });
     }
 
     /**

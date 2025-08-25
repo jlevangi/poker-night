@@ -20,6 +20,7 @@ from .routes.dashboard import dashboard_bp
 from .routes.notifications import notifications_bp
 from .routes.config import config_bp
 from .database.models import db
+from .database.migrations import AutoMigration
 
 
 def create_app(config_class: type = Config) -> Flask:
@@ -59,6 +60,8 @@ def create_app(config_class: type = Config) -> Flask:
     # Create database tables if they don't exist
     with app.app_context():
         db.create_all()
+        # Run auto-migrations to handle schema updates
+        AutoMigration.run_auto_migrations(app)
     
     # Register blueprints
     app.register_blueprint(dashboard_bp, url_prefix='/api')
@@ -77,6 +80,29 @@ def create_app(config_class: type = Config) -> Flask:
             from flask import url_for
             return url_for('static', filename=filename, v=app.config.get('APP_VERSION', '1.0.0'))
         return dict(versioned_url=versioned_url)
+    
+    # Add security headers
+    @app.after_request
+    def add_security_headers(response):
+        # Content Security Policy that allows necessary sources while being secure
+        csp_policy = (
+            "default-src 'self'; "
+            "script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; "
+            "style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; "
+            "font-src 'self' https://cdnjs.cloudflare.com; "
+            "img-src 'self' data:; "
+            "connect-src 'self'; "
+            "manifest-src 'self'; "
+            "worker-src 'self'"
+        )
+        response.headers['Content-Security-Policy'] = csp_policy
+        
+        # Other security headers
+        response.headers['X-Content-Type-Options'] = 'nosniff'
+        response.headers['X-Frame-Options'] = 'DENY'
+        response.headers['X-XSS-Protection'] = '1; mode=block'
+        
+        return response
     
     return app
 
