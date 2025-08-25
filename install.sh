@@ -5,6 +5,17 @@ set -e
 
 echo "Starting Poker Night application setup..."
 
+# Get the actual script directory (not the symlink)
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+APP_DIR="/root/poker-night"
+
+echo "=== DEBUGGING PATH INFORMATION ==="
+echo "Script directory: '$SCRIPT_DIR'"
+echo "App directory: '$APP_DIR'"
+echo "Current working directory: '$(pwd)'"
+echo "Script name: '${BASH_SOURCE[0]}'"
+echo "==================================="
+
 # Check if service is already running and stop it
 if systemctl is-active --quiet poker-night.service; then
     echo "Stopping existing Poker Night service..."
@@ -114,13 +125,24 @@ fi
 
 # Set proper permissions (only on app directory, not git repo)
 echo "Setting permissions..."
+echo "APP_DIR variable is: '$APP_DIR'"
+
 if [ -f "$APP_DIR/backend/run.py" ]; then
-    chmod +x $APP_DIR/backend/run.py
+    chmod +x "$APP_DIR/backend/run.py"
     echo "Made backend/run.py executable"
 else
     echo "Warning: backend/run.py not found at $APP_DIR/backend/run.py"
+    echo "Contents of $APP_DIR:"
+    ls -la "$APP_DIR" 2>/dev/null || echo "Directory $APP_DIR does not exist"
 fi
-chmod -R 755 $APP_DIR
+
+if [ -d "$APP_DIR" ] && [ "$APP_DIR" != "" ]; then
+    chmod -R 755 "$APP_DIR"
+    echo "Set permissions on $APP_DIR"
+else
+    echo "Error: APP_DIR is empty or directory doesn't exist: '$APP_DIR'"
+    exit 1
+fi
 
 # Enable and start the service
 echo "Enabling and starting the service..."
