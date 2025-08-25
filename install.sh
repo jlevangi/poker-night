@@ -88,13 +88,38 @@ mkdir -p $APP_DIR/poker_data/archives
 
 # Copy application files if running from a different location
 if [ "$SCRIPT_DIR" != "$APP_DIR" ]; then
-    echo "Copying application files to $APP_DIR..."
+    echo "Copying application files from $SCRIPT_DIR to $APP_DIR..."
+    
+    # Check if source directory has the expected structure
+    if [ ! -d "$SCRIPT_DIR/backend" ]; then
+        echo "ERROR: backend directory not found in $SCRIPT_DIR"
+        echo "Contents of $SCRIPT_DIR:"
+        ls -la "$SCRIPT_DIR"
+        exit 1
+    fi
+    
+    # Copy files
     rsync -av --exclude='.git' --exclude='venv' --exclude='__pycache__' --exclude='*.pyc' "$SCRIPT_DIR/" "$APP_DIR/"
+    
+    echo "File copy completed. Verifying structure..."
+    if [ -d "$APP_DIR/backend" ]; then
+        echo "✓ Backend directory copied successfully"
+    else
+        echo "✗ Backend directory missing after copy"
+        exit 1
+    fi
+else
+    echo "Running from app directory, skipping file copy..."
 fi
 
 # Set proper permissions (only on app directory, not git repo)
 echo "Setting permissions..."
-chmod +x $APP_DIR/backend/run.py
+if [ -f "$APP_DIR/backend/run.py" ]; then
+    chmod +x $APP_DIR/backend/run.py
+    echo "Made backend/run.py executable"
+else
+    echo "Warning: backend/run.py not found at $APP_DIR/backend/run.py"
+fi
 chmod -R 755 $APP_DIR
 
 # Enable and start the service
