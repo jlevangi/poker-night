@@ -15,32 +15,32 @@ fi
 echo "Updating package repositories..."
 apt-get update -y
 
-# Install Python3, pip, and virtual environment support
+# Install Python3, pip, virtual environment support, and rsync
 echo "Installing Python3 and dependencies..."
-apt-get install -y python3 python3-full python3-venv
+apt-get install -y python3 python3-full python3-venv rsync
 
-# Create a virtual environment
+# Create a virtual environment outside the git repo
 echo "Creating virtual environment..."
-python3 -m venv /root/poker-night/venv
+python3 -m venv $APP_DIR/venv
 
 # Install Python dependencies in virtual environment
 echo "Installing Python dependencies..."
-if [ -f "requirements.txt" ]; then
+if [ -f "$SCRIPT_DIR/requirements.txt" ]; then
     echo "Upgrading pip..."
-    /root/poker-night/venv/bin/pip install --upgrade pip
+    $APP_DIR/venv/bin/pip install --upgrade pip
     echo "Installing requirements..."
-    /root/poker-night/venv/bin/pip install -r requirements.txt
+    $APP_DIR/venv/bin/pip install -r "$SCRIPT_DIR/requirements.txt"
 else
     echo "Warning: requirements.txt not found."
     # Install essential packages if requirements.txt is missing
-    /root/poker-night/venv/bin/pip install Flask Flask-SQLAlchemy Werkzeug python-dotenv pywebpush py-vapid cryptography
+    $APP_DIR/venv/bin/pip install Flask Flask-SQLAlchemy Werkzeug python-dotenv pywebpush py-vapid cryptography
 fi
 
 # Ensure .env file exists with default values if missing
 echo "Checking environment configuration..."
-if [ ! -f "/root/poker-night/.env" ]; then
+if [ ! -f "$APP_DIR/.env" ]; then
     echo "Creating default .env file..."
-    cat > /root/poker-night/.env << 'EOL'
+    cat > $APP_DIR/.env << 'EOL'
 # Frontend Configuration
 APP_VERSION=1.0.5
 
@@ -66,14 +66,14 @@ Description=Poker Night Application
 After=network.target
 
 [Service]
-ExecStart=/root/poker-night/venv/bin/python /root/poker-night/backend/run.py
+ExecStart=$APP_DIR/venv/bin/python $APP_DIR/backend/run.py
 Restart=always
 RestartSec=3
 User=root
 Group=root
-Environment=PATH=/usr/bin:/usr/local/bin:/root/poker-night/venv/bin
-Environment=PYTHONPATH=/root/poker-night/backend
-WorkingDirectory=/root/poker-night
+Environment=PATH=/usr/bin:/usr/local/bin:$APP_DIR/venv/bin
+Environment=PYTHONPATH=$APP_DIR/backend
+WorkingDirectory=$APP_DIR
 StandardOutput=journal
 StandardError=journal
 
@@ -83,13 +83,19 @@ EOL
 
 # Create directories for data persistence if they don't exist
 echo "Creating data directories..."
-mkdir -p /root/poker-night/poker_data
-mkdir -p /root/poker-night/poker_data/archives
+mkdir -p $APP_DIR/poker_data
+mkdir -p $APP_DIR/poker_data/archives
 
-# Set proper permissions
+# Copy application files if running from a different location
+if [ "$SCRIPT_DIR" != "$APP_DIR" ]; then
+    echo "Copying application files to $APP_DIR..."
+    rsync -av --exclude='.git' --exclude='venv' --exclude='__pycache__' --exclude='*.pyc' "$SCRIPT_DIR/" "$APP_DIR/"
+fi
+
+# Set proper permissions (only on app directory, not git repo)
 echo "Setting permissions..."
-chmod +x /root/poker-night/backend/run.py
-chmod -R 755 /root/poker-night
+chmod +x $APP_DIR/backend/run.py
+chmod -R 755 $APP_DIR
 
 # Enable and start the service
 echo "Enabling and starting the service..."
