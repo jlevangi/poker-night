@@ -717,6 +717,83 @@ class DatabaseService:
             self.logger.error(f"Failed to decrement session 7-2 wins: {str(e)}")
             return False
     
+    def increment_session_strikes(self, session_id: str, player_id: str) -> bool:
+        """
+        Increment session-specific strikes for a player in a specific session.
+        
+        Args:
+            session_id: Session's unique identifier
+            player_id: Player's unique identifier
+            
+        Returns:
+            True if successful, False otherwise
+        """
+        try:
+            entry = Entry.query.filter_by(
+                session_id=session_id, 
+                player_id=player_id
+            ).first()
+            
+            if not entry:
+                self.logger.error(f"Player {player_id} not found in session {session_id} to update session strikes.")
+                return False
+            
+            entry.session_strikes += 1
+            db.session.commit()
+            
+            self.logger.info(
+                f"Player {entry.player.name} now has {entry.session_strikes} "
+                f"strikes in session {session_id}."
+            )
+            return True
+            
+        except Exception as e:
+            db.session.rollback()
+            self.logger.error(f"Failed to increment session strikes: {str(e)}")
+            return False
+    
+    def decrement_session_strikes(self, session_id: str, player_id: str) -> bool:
+        """
+        Decrement session-specific strikes for a player in a specific session.
+        
+        Args:
+            session_id: Session's unique identifier
+            player_id: Player's unique identifier
+            
+        Returns:
+            True if successful, False otherwise
+        """
+        try:
+            entry = Entry.query.filter_by(
+                session_id=session_id, 
+                player_id=player_id
+            ).first()
+            
+            if not entry:
+                self.logger.error(f"Player {player_id} not found in session {session_id} to update session strikes.")
+                return False
+            
+            if entry.session_strikes > 0:
+                entry.session_strikes -= 1
+                db.session.commit()
+                
+                self.logger.info(
+                    f"Player {entry.player.name} now has {entry.session_strikes} "
+                    f"strikes in session {session_id}."
+                )
+            else:
+                self.logger.warning(
+                    f"Player {entry.player.name} already has 0 session strikes "
+                    f"in session {session_id}, cannot decrement."
+                )
+            
+            return True
+            
+        except Exception as e:
+            db.session.rollback()
+            self.logger.error(f"Failed to decrement session strikes: {str(e)}")
+            return False
+    
     def get_player_session_history(self, player_id: str) -> List[PlayerSessionHistory]:
         """
         Get a player's session history.

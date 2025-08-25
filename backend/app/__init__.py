@@ -78,6 +78,29 @@ def create_app(config_class: type = Config) -> Flask:
             return url_for('static', filename=filename, v=app.config.get('APP_VERSION', '1.0.0'))
         return dict(versioned_url=versioned_url)
     
+    # Add security headers
+    @app.after_request
+    def add_security_headers(response):
+        # Content Security Policy that allows necessary sources while being secure
+        csp_policy = (
+            "default-src 'self'; "
+            "script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; "
+            "style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; "
+            "font-src 'self' https://cdnjs.cloudflare.com; "
+            "img-src 'self' data:; "
+            "connect-src 'self'; "
+            "manifest-src 'self'; "
+            "worker-src 'self'"
+        )
+        response.headers['Content-Security-Policy'] = csp_policy
+        
+        # Other security headers
+        response.headers['X-Content-Type-Options'] = 'nosniff'
+        response.headers['X-Frame-Options'] = 'DENY'
+        response.headers['X-XSS-Protection'] = '1; mode=block'
+        
+        return response
+    
     return app
 
 

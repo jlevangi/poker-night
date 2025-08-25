@@ -44,9 +44,14 @@
       "Bash(cp:*)",
       "Bash(find:*)",
       "Bash(sed:*)",
-      "Bash(git rm:*)"
+      "Bash(git rm:*)",
+      "Bash(chmod:*)",
+      "Bash(timeout:*)"
     ],
     "deny": [],
-    "ask": []
+    "ask": [],
+    "additionalDirectories": [
+      "/usr/bin"
+    ]
   }
 }

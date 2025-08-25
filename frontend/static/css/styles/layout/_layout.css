@@ -37,6 +37,34 @@
     margin-left: 10px;
 }
 
+/* Strikes Layout */
+.strikes-label {
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.strikes-value {
+    font-size: 1rem;
+    font-weight: bold;
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-pill);
+    padding: 4px 12px;
+    min-width: 30px;
+    text-align: center;
+    color: var(--text-primary);
+}
+
+.strikes-stat {
+    display: flex;
+    align-items: center;
+}
+
+.strikes-buttons {
+    display: flex;
+    margin-left: 10px;
+}
+
 /* Mobile Layout Adjustments */
 @media (max-width: 600px) {
     #app-content {

@@ -44,7 +44,8 @@ export default class SessionDetailPage {
                     buyIn: entry.total_buy_in_amount,
                     cashOut: entry.payout,
                     isCashedOut: entry.is_cashed_out || false,
-                    sevenTwoWins: entry.session_seven_two_wins || 0
+                    sevenTwoWins: entry.session_seven_two_wins || 0,
+                    strikes: entry.session_strikes || 0
                 }));
             } else {
                 session.totalValue = 0;
@@ -242,6 +243,18 @@ export default class SessionDetailPage {
                                 <div class="seven-two-buttons">
                                     <button class="seven-two-increment-btn" data-player-id="${player.id}">+</button>
                                     <button class="seven-two-decrement-btn" data-player-id="${player.id}">-</button>
+                                </div>
+                            ` : ''}
+                        </div>
+                        
+                        <div class="session-strikes-controls">
+                            <div class="strikes-label">Strikes (Session):</div>
+                            <div class="strikes-value">${player.strikes || 0}</div>
+                            
+                            ${isActive ? `
+                                <div class="strikes-buttons">
+                                    <button class="strikes-increment-btn" data-player-id="${player.id}">+</button>
+                                    <button class="strikes-decrement-btn" data-player-id="${player.id}">-</button>
                                 </div>
                             ` : ''}
                         </div>
@@ -763,6 +776,51 @@ export default class SessionDetailPage {
                         this.load(sessionId);
                     } catch (error) {
                         console.error('Error decrementing session 7-2 wins:', error);
+                        alert(`Error: ${error.message}`);
+                        
+                        // Re-enable button on error
+                        button.disabled = false;
+                    }
+                });
+            });
+            
+            // Strikes buttons
+            document.querySelectorAll('.strikes-increment-btn').forEach(button => {
+                button.addEventListener('click', async (e) => {
+                    const playerId = e.target.dataset.playerId;
+                    
+                    try {
+                        // Disable button to prevent double-clicks
+                        button.disabled = true;
+                        
+                        await this.api.put(`sessions/${sessionId}/players/${playerId}/strikes/increment`);
+                        
+                        // Reload the session detail page
+                        this.load(sessionId);
+                    } catch (error) {
+                        console.error('Error incrementing session strikes:', error);
+                        alert(`Error: ${error.message}`);
+                        
+                        // Re-enable button on error
+                        button.disabled = false;
+                    }
+                });
+            });
+            
+            document.querySelectorAll('.strikes-decrement-btn').forEach(button => {
+                button.addEventListener('click', async (e) => {
+                    const playerId = e.target.dataset.playerId;
+                    
+                    try {
+                        // Disable button to prevent double-clicks
+                        button.disabled = true;
+                        
+                        await this.api.put(`sessions/${sessionId}/players/${playerId}/strikes/decrement`);
+                        
+                        // Reload the session detail page
+                        this.load(sessionId);
+                    } catch (error) {
+                        console.error('Error decrementing session strikes:', error);
                         alert(`Error: ${error.message}`);
                         
                         // Re-enable button on error

@@ -7,7 +7,15 @@ It handles command-line arguments and starts the development server.
 
 import argparse
 import logging
+import os
 from typing import Type
+
+# Load environment variables from .env file
+from dotenv import load_dotenv
+# Load from project root .env file
+project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+env_path = os.path.join(project_root, '.env')
+load_dotenv(env_path)
 
 from app import create_app
 from app.config import Config, DevelopmentConfig, ProductionConfig
@@ -29,8 +37,8 @@ def parse_arguments() -> argparse.Namespace:
     parser.add_argument(
         '--port',
         type=int,
-        default=5000,
-        help="Port number to run the Flask server on (default: 5000)."
+        default=int(os.getenv('PORT', 5000)),
+        help="Port number to run the Flask server on (default: from PORT env var or 5000)."
     )
     parser.add_argument(
         '--config',
@@ -68,6 +76,11 @@ def get_config_class(config_name: str) -> Type[Config]:
 def main() -> None:
     """Main function to run the application."""
     args = parse_arguments()
+    
+    # Debug: Print the port value being used
+    port_env = os.getenv('PORT')
+    print(f"PORT environment variable: {port_env}")
+    print(f"Using port: {args.port}")
     
     # Get configuration class
     config_class = get_config_class(args.config)
