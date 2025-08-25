@@ -20,6 +20,7 @@ from .routes.dashboard import dashboard_bp
 from .routes.notifications import notifications_bp
 from .routes.config import config_bp
 from .database.models import db
+from .database.migrations import AutoMigration
 
 
 def create_app(config_class: type = Config) -> Flask:
@@ -59,6 +60,8 @@ def create_app(config_class: type = Config) -> Flask:
     # Create database tables if they don't exist
     with app.app_context():
         db.create_all()
+        # Run auto-migrations to handle schema updates
+        AutoMigration.run_auto_migrations(app)
     
     # Register blueprints
     app.register_blueprint(dashboard_bp, url_prefix='/api')
