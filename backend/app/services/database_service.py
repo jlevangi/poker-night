@@ -536,6 +536,7 @@ class DatabaseService:
                 return False
             
             entry.payout = round_to_cents(float(payout_amount))
+            entry.is_cashed_out = True
             entry.calculate_profit()
             db.session.commit()
             
@@ -551,6 +552,80 @@ class DatabaseService:
         except Exception as e:
             db.session.rollback()
             self.logger.error(f"Failed to record payout: {str(e)}")
+            return False
+    
+    def set_player_cash_out_status(self, session_id: str, player_id: str, is_cashed_out: bool) -> bool:
+        """
+        Set the cash-out status for a player in a session.
+        
+        Args:
+            session_id: Session's unique identifier
+            player_id: Player's unique identifier
+            is_cashed_out: Whether the player is cashed out
+            
+        Returns:
+            True if successful, False otherwise
+        """
+        try:
+            entry = Entry.query.filter_by(
+                session_id=session_id, 
+                player_id=player_id
+            ).first()
+            
+            if not entry:
+                self.logger.error(f"No entry found for player {player_id} in session {session_id} to update cash-out status.")
+                return False
+            
+            entry.is_cashed_out = is_cashed_out
+            db.session.commit()
+            
+            player = self.get_player_by_id(player_id)
+            player_name = player.name if player else player_id
+            status = "cashed out" if is_cashed_out else "active"
+            
+            self.logger.info(f"Player {player_name} in session {session_id} marked as {status}")
+            return True
+            
+        except Exception as e:
+            db.session.rollback()
+            self.logger.error(f"Failed to set cash-out status: {str(e)}")
+            return False
+    
+    def toggle_player_cash_out_status(self, session_id: str, player_id: str) -> bool:
+        """
+        Toggle the cash-out status for a player in a session.
+        
+        Args:
+            session_id: Session's unique identifier
+            player_id: Player's unique identifier
+            
+        Returns:
+            True if successful, False otherwise
+        """
+        try:
+            entry = Entry.query.filter_by(
+                session_id=session_id, 
+                player_id=player_id
+            ).first()
+            
+            if not entry:
+                self.logger.error(f"No entry found for player {player_id} in session {session_id} to toggle cash-out status.")
+                return False
+            
+            # Toggle the status
+            entry.is_cashed_out = not entry.is_cashed_out
+            db.session.commit()
+            
+            player = self.get_player_by_id(player_id)
+            player_name = player.name if player else player_id
+            status = "cashed out" if entry.is_cashed_out else "active"
+            
+            self.logger.info(f"Player {player_name} in session {session_id} toggled to {status}")
+            return True
+            
+        except Exception as e:
+            db.session.rollback()
+            self.logger.error(f"Failed to toggle cash-out status: {str(e)}")
             return False
     
     def get_entries_for_session(self, session_id: str) -> List[Entry]:

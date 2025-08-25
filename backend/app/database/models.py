@@ -223,6 +223,7 @@ class Entry(db.Model):
     total_buy_in_amount = Column(Float, default=0.0, nullable=False)
     payout = Column(Float, default=0.0, nullable=False)
     profit = Column(Float, default=0.0, nullable=False)
+    is_cashed_out = Column(Boolean, default=False, nullable=False)
     session_seven_two_wins = Column(Integer, default=0, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
@@ -250,6 +251,7 @@ class Entry(db.Model):
             'total_buy_in_amount': round_to_cents(self.total_buy_in_amount),
             'payout': round_to_cents(self.payout),
             'profit': round_to_cents(self.profit),
+            'is_cashed_out': self.is_cashed_out,
             'session_seven_two_wins': self.session_seven_two_wins,
             'created_at': self.created_at.isoformat() if self.created_at else None,
             'updated_at': self.updated_at.isoformat() if self.updated_at else None
@@ -274,6 +276,7 @@ class Entry(db.Model):
             total_buy_in_amount=round_to_cents(data.get('total_buy_in_amount', 0.0)),
             payout=round_to_cents(data.get('payout', 0.0)),
             profit=round_to_cents(data.get('profit', 0.0)),
+            is_cashed_out=data.get('is_cashed_out', False),
             session_seven_two_wins=data.get('session_seven_two_wins', 0)
         )
     
