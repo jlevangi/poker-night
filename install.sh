@@ -97,52 +97,56 @@ echo "Creating data directories..."
 mkdir -p $APP_DIR/poker_data
 mkdir -p $APP_DIR/poker_data/archives
 
-# Copy application files if running from a different location
-if [ "$SCRIPT_DIR" != "$APP_DIR" ]; then
-    echo "Copying application files from $SCRIPT_DIR to $APP_DIR..."
-    
-    # Check if source directory has the expected structure
-    if [ ! -d "$SCRIPT_DIR/backend" ]; then
-        echo "ERROR: backend directory not found in $SCRIPT_DIR"
-        echo "Contents of $SCRIPT_DIR:"
-        ls -la "$SCRIPT_DIR"
-        exit 1
-    fi
-    
-    # Copy files
-    rsync -av --exclude='.git' --exclude='venv' --exclude='__pycache__' --exclude='*.pyc' "$SCRIPT_DIR/" "$APP_DIR/"
-    
-    echo "File copy completed. Verifying structure..."
-    if [ -d "$APP_DIR/backend" ]; then
-        echo "✓ Backend directory copied successfully"
-    else
-        echo "✗ Backend directory missing after copy"
-        exit 1
-    fi
-else
-    echo "Running from app directory, skipping file copy..."
-fi
-
-# Set proper permissions (only on app directory, not git repo)
-echo "Setting permissions..."
-echo "APP_DIR variable is: '$APP_DIR'"
-
-if [ -f "$APP_DIR/backend/run.py" ]; then
-    chmod +x "$APP_DIR/backend/run.py"
-    echo "Made backend/run.py executable"
-else
-    echo "Warning: backend/run.py not found at $APP_DIR/backend/run.py"
-    echo "Contents of $APP_DIR:"
-    ls -la "$APP_DIR" 2>/dev/null || echo "Directory $APP_DIR does not exist"
-fi
-
-if [ -d "$APP_DIR" ] && [ "$APP_DIR" != "" ]; then
-    chmod -R 755 "$APP_DIR"
-    echo "Set permissions on $APP_DIR"
-else
-    echo "Error: APP_DIR is empty or directory doesn't exist: '$APP_DIR'"
+# SAFETY CHECK: Never run this script from /root/poker-night
+if [ "$SCRIPT_DIR" = "/root/poker-night" ]; then
+    echo "ERROR: Do not run this script from /root/poker-night!"
+    echo "This script should be run from your git repository directory."
+    echo "Example: cd /home/git/poker-night && sudo ./install.sh"
     exit 1
 fi
+
+# Backup database before making changes
+if [ -f "$APP_DIR/poker_data/poker_night.db" ]; then
+    echo "Backing up database..."
+    cp "$APP_DIR/poker_data/poker_night.db" "$APP_DIR/poker_data/poker_night.db.backup.$(date +%Y%m%d_%H%M%S)"
+    echo "Database backed up"
+fi
+
+# Copy application files from git repo to app directory
+echo "Copying application files from $SCRIPT_DIR to $APP_DIR..."
+
+# Check if source directory has the expected structure
+if [ ! -d "$SCRIPT_DIR/backend" ]; then
+    echo "ERROR: backend directory not found in $SCRIPT_DIR"
+    echo "This doesn't look like a poker-night git repository."
+    echo "Contents of $SCRIPT_DIR:"
+    ls -la "$SCRIPT_DIR"
+    exit 1
+fi
+
+# Copy files (excluding git and temporary files)
+rsync -av \
+    --exclude='.git' \
+    --exclude='venv' \
+    --exclude='__pycache__' \
+    --exclude='*.pyc' \
+    --exclude='*.log' \
+    --exclude='poker_data' \
+    "$SCRIPT_DIR/" "$APP_DIR/"
+
+echo "File copy completed. Verifying structure..."
+if [ -d "$APP_DIR/backend" ] && [ -f "$APP_DIR/backend/run.py" ]; then
+    echo "✓ Application files copied successfully"
+else
+    echo "✗ Copy failed - missing required files"
+    exit 1
+fi
+
+# Set permissions ONLY on the app directory (never on git files)
+echo "Setting permissions on app directory only..."
+chmod +x "$APP_DIR/backend/run.py"
+chmod -R 755 "$APP_DIR"
+echo "Permissions set on $APP_DIR"
 
 # Enable and start the service
 echo "Enabling and starting the service..."
