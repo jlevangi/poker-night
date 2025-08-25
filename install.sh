@@ -188,11 +188,14 @@ elif [ "$DEPLOYMENT_MODE" = "production" ]; then
         exit 1
     fi
     
-    # Ensure permissions are correct
-    echo "Ensuring proper permissions..."
-    chmod +x "$SCRIPT_DIR/backend/run.py"
-    chmod -R 755 "$SCRIPT_DIR"
-    echo "Permissions verified"
+    # Only ensure run.py is executable - don't change other permissions
+    echo "Ensuring run.py is executable..."
+    if [ ! -x "$SCRIPT_DIR/backend/run.py" ]; then
+        chmod +x "$SCRIPT_DIR/backend/run.py"
+        echo "Made run.py executable"
+    else
+        echo "run.py already executable"
+    fi
     
     # APP_DIR already set to SCRIPT_DIR above
 fi
