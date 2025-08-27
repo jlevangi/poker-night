@@ -8,7 +8,7 @@ import os
 import logging
 import functools
 from typing import Dict, Any, Optional
-from flask import Blueprint, request, jsonify, session, current_app, render_template
+from flask import Blueprint, request, jsonify, session, current_app, render_template, make_response
 from werkzeug.security import check_password_hash
 
 from ..services.database_service import DatabaseService
@@ -18,6 +18,7 @@ from ..database.migration import DataMigration
 
 logger = logging.getLogger(__name__)
 admin_bp = Blueprint('admin', __name__)
+
 
 
 @admin_bp.route('/')
@@ -32,7 +33,12 @@ def admin_interface():
     Returns:
         Rendered admin interface template
     """
-    return render_template('admin.html')
+    response = make_response(render_template('admin.html'))
+    # Prevent browser caching for development
+    response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '0'
+    return response
 
 
 def require_admin_auth(f):
@@ -493,6 +499,9 @@ def admin_update_entry(entry_id: str) -> Dict[str, Any]:
         
         if 'session_seven_two_wins' in data:
             entry.session_seven_two_wins = int(data['session_seven_two_wins'])
+        
+        if 'session_strikes' in data:
+            entry.session_strikes = int(data['session_strikes'])
         
         # Recalculate profit
         entry.calculate_profit()

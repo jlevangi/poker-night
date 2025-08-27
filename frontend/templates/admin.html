@@ -154,6 +154,116 @@
         .logout-btn {
             float: right;
         }
+        
+        /* Mobile responsive table wrapper */
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            margin: 10px 0;
+        }
+        
+        .table-wrapper table {
+            min-width: 1000px; /* Force horizontal scroll on mobile */
+            margin: 0;
+        }
+        
+        /* Mobile styles */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .container {
+                margin: 0;
+                border-radius: 0;
+                box-shadow: none;
+            }
+            
+            .header {
+                padding: 15px;
+                text-align: center;
+            }
+            
+            .header h1 {
+                font-size: 1.5em;
+                margin: 0;
+            }
+            
+            .header p {
+                font-size: 0.9em;
+                margin: 5px 0;
+            }
+            
+            .tabs {
+                flex-wrap: wrap;
+                gap: 5px;
+                margin-bottom: 15px;
+            }
+            
+            .tab {
+                flex: 1;
+                min-width: 80px;
+                padding: 8px 12px;
+                font-size: 14px;
+                text-align: center;
+            }
+            
+            .toolbar {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+                padding: 15px 10px;
+                margin-bottom: 15px;
+            }
+            
+            .toolbar button {
+                flex: 1;
+                min-width: 100px;
+                padding: 12px 8px;
+                font-size: 14px;
+                margin: 0;
+            }
+            
+            .logout-btn {
+                float: none;
+                background: #e74c3c !important;
+            }
+            
+            /* Enhanced mobile table scrolling */
+            .table-wrapper {
+                border: 2px solid #007bff;
+                background: #f8f9fa;
+            }
+            
+            .table-wrapper table {
+                min-width: 1200px; /* Wider for strikes column */
+            }
+            
+            /* Touch-friendly inputs */
+            .table-wrapper input[type="number"], 
+            .table-wrapper input[type="text"], 
+            .table-wrapper input[type="date"],
+            .table-wrapper select {
+                min-height: 44px;
+                padding: 8px;
+                font-size: 16px; /* Prevents iOS zoom */
+                border-radius: 4px;
+            }
+            
+            .table-wrapper button {
+                min-height: 44px;
+                padding: 8px 12px;
+                font-size: 14px;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 15px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -405,7 +515,7 @@
         // Display Functions
         function displayPlayersTable(players) {
             const tableDiv = document.getElementById('playersTable');
-            let html = '<table><thead><tr><th>Player ID</th><th>Name</th><th>7-2 Wins</th><th>Created</th><th>Actions</th></tr></thead><tbody>';
+            let html = '<div class="table-wrapper"><table><thead><tr><th>Player ID</th><th>Name</th><th>7-2 Wins</th><th>Created</th><th>Actions</th></tr></thead><tbody>';
             
             players.forEach(player => {
                 const created = new Date(player.created_at).toLocaleDateString();
@@ -422,13 +532,13 @@
                 `;
             });
             
-            html += '</tbody></table>';
+            html += '</tbody></table></div>';
             tableDiv.innerHTML = html;
         }
 
         function displaySessionsTable(sessions) {
             const tableDiv = document.getElementById('sessionsTable');
-            let html = '<table><thead><tr><th>Session ID</th><th>Date</th><th>Buy-in</th><th>Status</th><th>Actions</th></tr></thead><tbody>';
+            let html = '<div class="table-wrapper"><table><thead><tr><th>Session ID</th><th>Date</th><th>Buy-in</th><th>Status</th><th>Actions</th></tr></thead><tbody>';
             
             sessions.forEach(session => {
                 html += `
@@ -447,13 +557,13 @@
                 `;
             });
             
-            html += '</tbody></table>';
+            html += '</tbody></table></div>';
             tableDiv.innerHTML = html;
         }
 
         function displayEntriesTable(entries) {
             const tableDiv = document.getElementById('entriesTable');
-            let html = '<table><thead><tr><th>Entry ID</th><th>Player</th><th>Session ID</th><th>Buy-in Count</th><th>Total Buy-in $</th><th>Payout</th><th>7-2 Wins</th><th>Profit</th><th>Actions</th></tr></thead><tbody>';
+            let html = '<div class="table-wrapper"><table><thead><tr><th>Entry ID</th><th>Player</th><th>Session ID</th><th>Buy-in Count</th><th>Total Buy-in $</th><th>Payout</th><th>7-2 Wins</th><th>Strikes</th><th>Profit</th><th>Actions</th></tr></thead><tbody>';
             
             entries.forEach(entry => {
                 const profitClass = entry.profit > 0 ? 'style="color: green"' : entry.profit < 0 ? 'style="color: red"' : '';
@@ -466,6 +576,7 @@
                         <td><input type="number" value="${entry.total_buy_in_amount}" onchange="updateEntryField('${entry.entry_id}', 'total_buy_in_amount', this.value)" style="border: 1px solid #ddd; padding: 5px; width: 100px;" min="0" step="0.01"></td>
                         <td><input type="number" value="${entry.payout}" onchange="updateEntryField('${entry.entry_id}', 'payout', this.value)" style="border: 1px solid #ddd; padding: 5px; width: 100px;" min="0" step="0.01"></td>
                         <td><input type="number" value="${entry.session_seven_two_wins}" onchange="updateEntryField('${entry.entry_id}', 'session_seven_two_wins', this.value)" style="border: 1px solid #ddd; padding: 5px; width: 60px;" min="0"></td>
+                        <td><input type="number" value="${entry.session_strikes || 0}" onchange="updateEntryField('${entry.entry_id}', 'session_strikes', this.value)" style="border: 1px solid #ddd; padding: 5px; width: 60px;" min="0"></td>
                         <td ${profitClass}>$${entry.profit.toFixed(2)}</td>
                         <td>
                             <button class="danger" onclick="deleteEntry('${entry.entry_id}')">Delete</button>
@@ -474,13 +585,13 @@
                 `;
             });
             
-            html += '</tbody></table>';
+            html += '</tbody></table></div>';
             tableDiv.innerHTML = html;
         }
 
         function displayBackupsTable(backups) {
             const tableDiv = document.getElementById('backupsTable');
-            let html = '<table><thead><tr><th>Date</th><th>Description</th><th>Size</th><th>Status</th></tr></thead><tbody>';
+            let html = '<div class="table-wrapper"><table><thead><tr><th>Date</th><th>Description</th><th>Size</th><th>Status</th></tr></thead><tbody>';
             
             backups.forEach(backup => {
                 const date = new Date(backup.backup_date).toLocaleString();
@@ -496,7 +607,7 @@
                 `;
             });
             
-            html += '</tbody></table>';
+            html += '</tbody></table></div>';
             tableDiv.innerHTML = html;
         }
 
@@ -722,7 +833,7 @@ This action cannot be undone. Are you absolutely sure you want to delete this se
         async function updateEntryField(entryId, field, value) {
             try {
                 // Validate input
-                if (field === 'buy_in_count' || field === 'session_seven_two_wins') {
+                if (field === 'buy_in_count' || field === 'session_seven_two_wins' || field === 'session_strikes') {
                     const intValue = parseInt(value);
                     if (isNaN(intValue) || intValue < 0) {
                         showMessage(`${field.replace('_', ' ')} must be a non-negative integer`, 'error');
