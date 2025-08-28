@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  poker-night:
+    build: .
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./poker_data:/app/poker_data
+      - .env:/app/.env:ro  # Mount .env file if it exists
+    environment:
+      - FLASK_ENV=production
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Alternative service using pre-built image from Docker Hub
+  poker-night-hub:
+    image: ${DOCKERHUB_USERNAME}/poker-night:latest
+    ports:
+      - "5000:5000"
+    volumes:
+      - poker_data:/app/poker_data
+      - .env:/app/.env:ro
+    environment:
+      - FLASK_ENV=production
+    restart: unless-stopped
+    profiles:
+      - hub  # Only run when --profile hub is specified
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
