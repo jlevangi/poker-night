@@ -75,7 +75,40 @@ Once installed, the application will automatically start on system boot.
 - Manage games through the web dashboard
 - Track player statistics and game history
 
-## 📄 License
+## � Admin Password Configuration
+
+The admin interface allows you to manage players, sessions, and database backups. By default, the admin password is `admin123`.
+
+### Changing the Admin Password
+
+To set a new admin password:
+
+1. Generate a password hash using the provided script:
+   ```bash
+   cd /root/poker-night
+   ./venv/bin/python scripts/generate_password_hash.py "YourNewPassword"
+   ```
+
+2. Copy the generated hash (it will start with `scrypt:...`)
+
+3. Edit the `.env` file:
+   ```bash
+   nano /root/poker-night/.env
+   ```
+
+4. Replace the `ADMIN_PASSWORD_HASH` value with your new hash:
+   ```bash
+   ADMIN_PASSWORD_HASH=scrypt:32768:8:1$...your-new-hash...
+   ```
+
+5. Save the file (Ctrl+O, Enter, Ctrl+X in nano)
+
+6. Restart the service to apply changes:
+   ```bash
+   systemctl restart poker-night.service
+   ```
+
+## �📄 License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 

@@ -149,6 +149,13 @@ class Session(db.Model):
             'updated_at': self.updated_at.isoformat() if self.updated_at else None
         }
         
+        # Calculate total value from entries
+        if self.entries:
+            total_value = sum(entry.total_buy_in_amount or 0 for entry in self.entries)
+            result['total_value'] = round_to_cents(total_value)
+        else:
+            result['total_value'] = 0.0
+        
         # Parse chip distribution if it exists
         if self.chip_distribution:
             import json
