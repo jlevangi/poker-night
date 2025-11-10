@@ -149,24 +149,12 @@ export default class DashboardPage {
                             <span style="display: block;">🎯</span>
                             <span style="display: block; font-size: 0.9rem;">View Active Session</span>
                         </a>
-                        <a href="#sessions" class="btn btn-secondary ripple hover-lift" style="flex: 1; min-width: 120px; max-width: 200px; text-align: center; white-space: normal; line-height: 1.3; padding: 1rem 0.75rem;">
-                            <span style="display: block;">📊</span>
-                            <span style="display: block; font-size: 0.9rem;">All Sessions</span>
-                        </a>
                     ` : `
                         <button id="quick-start-session-btn" class="btn btn-primary btn-lg ripple hover-lift" style="flex: 1; min-width: 140px; max-width: 300px; text-align: center; white-space: normal; line-height: 1.3; padding: 1rem 0.75rem;">
                             <span style="display: block;">🎮</span>
                             <span style="display: block; font-size: 0.9rem;">Start New Session</span>
                         </button>
-                        <a href="#sessions" class="btn btn-secondary ripple hover-lift" style="flex: 1; min-width: 120px; max-width: 200px; text-align: center; white-space: normal; line-height: 1.3; padding: 1rem 0.75rem;">
-                            <span style="display: block;">📊</span>
-                            <span style="display: block; font-size: 0.9rem;">View Sessions</span>
-                        </a>
                     `}
-                    <a href="#players" class="btn btn-secondary ripple hover-lift" style="flex: 1; min-width: 120px; max-width: 200px; text-align: center; white-space: normal; line-height: 1.3; padding: 1rem 0.75rem;">
-                        <span style="display: block;">👥</span>
-                        <span style="display: block; font-size: 0.9rem;">Manage Players</span>
-                    </a>
                 </div>
             </div>
         `;

@@ -554,7 +554,7 @@ export default class SessionDetailPage {
                             <div style="background: white; padding: 20px; border-radius: 8px; max-width: 400px; width: 90%;">
                                 <h3>Cash Out Player</h3>
                                 <label for="cashout-amount">Enter cash-out amount ($):</label>
-                                <input type="number" id="cashout-amount" inputmode="decimal" step="0.01" min="0" style="width: 100%; padding: 10px; margin: 10px 0; font-size: 16px; border: 2px solid #ddd; border-radius: 4px;">
+                                <input type="text" id="cashout-amount" inputmode="decimal" pattern="[0-9]*\.?[0-9]*" style="width: 100%; padding: 10px; margin: 10px 0; font-size: 16px; border: 2px solid #ddd; border-radius: 4px;">
                                 <div style="text-align: right; margin-top: 15px;">
                                     <button id="cancel-cashout" style="margin-right: 10px; padding: 8px 16px; background: #ccc; border: none; border-radius: 4px; cursor: pointer;">Cancel</button>
                                     <button id="confirm-cashout" style="padding: 8px 16px; background: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer;">Cash Out</button>
@@ -938,7 +938,7 @@ export default class SessionDetailPage {
                     <div style="background: white; padding: 20px; border-radius: 8px; max-width: 400px; width: 90%;">
                         <h3>Cash Out Player</h3>
                         <label for="cashout-amount-dynamic">Enter cash-out amount ($):</label>
-                        <input type="number" id="cashout-amount-dynamic" inputmode="decimal" step="0.01" min="0" style="width: 100%; padding: 10px; margin: 10px 0; font-size: 16px; border: 2px solid #ddd; border-radius: 4px;">
+                        <input type="text" id="cashout-amount-dynamic" inputmode="decimal" pattern="[0-9]*\.?[0-9]*" style="width: 100%; padding: 10px; margin: 10px 0; font-size: 16px; border: 2px solid #ddd; border-radius: 4px;">
                         <div style="text-align: right; margin-top: 15px;">
                             <button id="cancel-cashout-dynamic" style="margin-right: 10px; padding: 8px 16px; background: #ccc; border: none; border-radius: 4px; cursor: pointer;">Cancel</button>
                             <button id="confirm-cashout-dynamic" style="padding: 8px 16px; background: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer;">Cash Out</button>

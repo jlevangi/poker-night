@@ -15,7 +15,7 @@ export default class SessionsPage {    constructor(appContent, apiService) {
                 ...session,
                 id: session.session_id,
                 buyin: session.default_buy_in_value,
-                totalValue: 0, // Sessions list doesn't include calculated totals
+                totalValue: session.total_value || 0,
                 unpaidValue: 0 // Sessions list doesn't include calculated totals
             }));
             
@@ -48,7 +48,7 @@ export default class SessionsPage {    constructor(appContent, apiService) {
                         <a href="#session/${session.session_id}" class="session-link">
                             <span class="session-date">${session.date}</span>
                             <span class="session-buyin">Buy-in: $${session.buyin ? session.buyin.toFixed(2) : '0.00'}</span>
-                            <span class="session-info">Click to view details</span>
+                            <span class="session-info">Session Value: $${session.totalValue ? session.totalValue.toFixed(2) : '0.00'}</span>
                         </a>                        <span class="session-status status-${session.status && typeof session.status === 'string' ? session.status.toLowerCase() : 'unknown'}">
                             ${session.status || 'Unknown'}
                             ${session.status === 'ENDED' ? 
