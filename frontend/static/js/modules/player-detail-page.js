@@ -62,8 +62,7 @@ export default class PlayerDetailPage {    constructor(appContent, apiService) {
                 <!-- Player Header Card -->
                 <div class="neo-card ${isTopPerformer ? 'neo-card-gold' : 'neo-card-primary'}">
                     <h2 style="font-size: 2.5rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1.5rem; color: inherit; display: flex; align-items: center; gap: 1rem;">
-                        🎭 ${player.name}
-                        ${isTopPerformer ? '<span style="font-size: 2rem; animation: bounce 2s infinite;">👑</span>' : ''}
+                        ${player.name}
                     </h2>
                     
                     <!-- Main Stats Grid -->
