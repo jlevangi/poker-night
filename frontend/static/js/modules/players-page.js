@@ -22,60 +22,77 @@ export default class PlayersPage {
     // Render players content
     render(players) {
         let html = `
-            <div class="fade-in">
-                <h2>Players</h2>
+            <div class="fade-in" style="padding: 1.5rem; max-width: 1200px; margin: 0 auto;">
+                <h2 style="font-size: 2.5rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 2rem; color: var(--text-primary); text-shadow: 3px 3px 0px var(--casino-purple);">🎭 Players</h2>
                 
-                <div class="add-player-form">
-                    <h3>Add New Player</h3>
-                    <div class="form-row">
-                        <input type="text" id="new-player-name" placeholder="Player Name">
-                        <button id="add-player-btn" class="action-btn">Add Player</button>
+                <div class="neo-card neo-card-purple" style="margin-bottom: 2rem;">
+                    <h3 style="font-size: 1.25rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1.5rem; color: var(--casino-purple-dark);">➕ Add New Player</h3>
+                    <div style="display: flex; gap: 1rem; align-items: baseline; flex-wrap: wrap;">
+                        <input type="text" id="new-player-name" placeholder="Enter player name..." style="flex: 1; min-width: 200px; padding: 0.875rem 1rem; border: var(--neo-border); font-size: 1rem; font-weight: 600; background: var(--bg-card);">
+                        <button id="add-player-btn" class="neo-btn neo-btn-purple neo-btn-lg">Add Player</button>
                     </div>
                 </div>
                 
-                <h3>Player List</h3>
+                <h3 style="font-size: 1.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1.5rem; color: var(--text-primary);">🏆 Player Roster</h3>
         `;
         
         if (players && players.length > 0) {
             html += `
-                <div class="players-list-container">
-                    <ul class="players-list enhanced">
+                <div style="display: grid; gap: 1.5rem;">
             `;
             
-            players.forEach(player => {
+            players.forEach((player, index) => {
+                const isGambleKing = index === 0 && player.net_profit > 0;
+                const cardColor = isGambleKing ? 'neo-card-gold' : 
+                                 player.net_profit >= 50 ? 'neo-card-green' :
+                                 player.net_profit < 0 ? 'neo-card-primary' : '';
+                
                 html += `
-                    <li>
-                        <div class="player-row">
-                            <div class="player-name">
-                                <a href="#player/${player.player_id}" class="player-name-link">${player.name}</a>
-                            </div>
-                            <div class="player-stats-container clickable-player-stats" data-player-id="${player.player_id}">
-                                <div class="player-quick-stats">
-                                    <span class="stat">
-                                        Profit: <span class="${player.net_profit >= 0 ? 'profit-positive' : 'profit-negative'}">
+                    <div class="neo-card ${cardColor} clickable-player-stats" data-player-id="${player.player_id}" style="cursor: pointer; transition: all var(--transition-neo);" onmouseover="this.style.transform='translate(-3px, -3px)'; this.style.boxShadow='var(--neo-shadow-lg)'" onmouseout="this.style.transform='translate(0, 0)'; this.style.boxShadow='var(--neo-shadow-md)'">
+                        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                            <div>
+                                <h4 style="font-size: 1.5rem; font-weight: 800; margin: 0 0 0.5rem 0; display: flex; align-items: center; gap: 0.5rem;">
+                                    <a href="#player/${player.player_id}" style="color: inherit; text-decoration: none; text-transform: uppercase; letter-spacing: 0.05em;">${player.name}</a>
+                                    ${isGambleKing ? '<span style="font-size: 1.5rem; animation: bounce 2s infinite;">👑</span>' : ''}
+                                </h4>
+                                <div style="display: flex; gap: 1.5rem; flex-wrap: wrap;">
+                                    <div>
+                                        <span style="font-size: 0.875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.8; display: block;">Net Profit</span>
+                                        <div class="${player.net_profit >= 0 ? 'profit-positive' : 'profit-negative'}" style="font-size: 1.25rem; font-weight: 800;">
                                             $${player.net_profit ? player.net_profit.toFixed(2) : '0.00'}
-                                        </span>
-                                    </span>
-                                    <span class="stat">
-                                        Sessions: ${player.games_played || 0}
-                                    </span>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <span style="font-size: 0.875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.8; display: block;">Sessions</span>
+                                        <div style="font-size: 1.25rem; font-weight: 800; color: inherit;">
+                                            ${player.games_played || 0}
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="seven-two-counter">
-                                    <span class="seven-two-label">7-2 Wins:</span>
-                                    <span class="seven-two-value">${player.seven_two_wins || 0}</span>
+                            </div>
+                            <div class="neo-stat-card" style="min-width: 120px; text-align: center; margin: 0; border-color: var(--casino-gold);">
+                                <div style="font-size: 1.5rem; font-weight: 900; color: var(--casino-gold-dark); margin-bottom: 0.25rem;">
+                                    ${player.seven_two_wins || 0}
+                                </div>
+                                <div style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--casino-gold-dark);">
+                                    7-2 Wins
                                 </div>
                             </div>
                         </div>
-                    </li>
+                    </div>
                 `;
             });
             
             html += `
-                    </ul>
                 </div>
             `;
         } else {
-            html += `<p>No players found. Add your first player above!</p>`;
+            html += `
+                <div class="neo-card" style="text-align: center; padding: 3rem;">
+                    <div style="font-size: 4rem; margin-bottom: 1rem;">🎲</div>
+                    <p style="font-size: 1.25rem; font-weight: 700; opacity: 0.8; margin: 0;">No players found. Add your first player above!</p>
+                </div>
+            `;
         }
         
         html += `

@@ -39,7 +39,7 @@ export default class DashboardPage {
     // Render dashboard content
     render(data) {
         let html = `
-            <div class="fade-in">
+            <div class="fade-in" style="padding: 1.5rem; max-width: 1200px; margin: 0 auto;">
                 
                 <!-- Gamble King Section -->
                 ${data.gambleKing ? this.renderGambleKingSection(data.gambleKing) : ''}
@@ -69,18 +69,18 @@ export default class DashboardPage {
         const { totalGambled, totalPlayers, totalSessions } = data;
         
         return `
-            <div class="stats-grid" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 1.5rem;">
-                <div class="stat-card" style="padding: 1rem; text-align: center; border: 1px solid var(--neutral-200); background: white;">
-                    <span class="stat-value" style="font-size: 1.5rem; font-weight: 600;">${totalPlayers || 0}</span>
-                    <span class="stat-label" style="font-size: 0.75rem;">Total Players</span>
+            <div class="neo-stats-grid">
+                <div class="neo-stat-card neo-card-purple">
+                    <div class="neo-stat-value">${totalPlayers || 0}</div>
+                    <div class="neo-stat-label">Total Players</div>
                 </div>
-                <div class="stat-card" style="padding: 1rem; text-align: center; border: 1px solid var(--neutral-200); background: white;">
-                    <span class="stat-value" style="font-size: 1.5rem; font-weight: 600;">${totalSessions || 0}</span>
-                    <span class="stat-label" style="font-size: 0.75rem;">Sessions Played</span>
+                <div class="neo-stat-card neo-card-green">
+                    <div class="neo-stat-value">${totalSessions || 0}</div>
+                    <div class="neo-stat-label">Sessions Played</div>
                 </div>
-                <div class="stat-card" style="padding: 1rem; text-align: center; border: 1px solid var(--neutral-200); background: white;">
-                    <span class="stat-value" style="font-size: 1.5rem; font-weight: 600; color: var(--neutral-800);">$${totalGambled ? totalGambled.toFixed(2) : '0.00'}</span>
-                    <span class="stat-label" style="font-size: 0.75rem;">Total Gambled</span>
+                <div class="neo-stat-card neo-card-gold">
+                    <div class="neo-stat-value">$${totalGambled ? totalGambled.toFixed(2) : '0.00'}</div>
+                    <div class="neo-stat-label">Total Gambled</div>
                 </div>
             </div>
         `;
@@ -90,46 +90,36 @@ export default class DashboardPage {
     renderGambleKingSection(gambleKing) {
         if (!gambleKing || gambleKing.net_profit <= 0) {
             return `
-                <div class="ui-card" style="background: linear-gradient(135deg, #fefce8 0%, #fef3c7 100%); border: 2px solid #f59e0b; margin-bottom: 2rem;">
-                    <div class="ui-card-header" style="border-bottom: 1px solid #f59e0b;">
-                        <h3 class="ui-card-title" style="font-size: 1.5rem; color: #d97706;">👑 Gamble King</h3>
-                    </div>
-                    <div style="text-align: center; padding: 2rem; font-size: 1.125rem; color: #92400e;">
+                <div class="neo-gamble-king">
+                    <div class="neo-gamble-king-title">👑 Gamble King 👑</div>
+                    <div style="text-align: center; font-size: 1.25rem; font-weight: 700; color: var(--casino-gold-dark);">
                         <strong>No Gamble King crowned yet!</strong><br>
-                        <span style="font-size: 1rem; color: #a16207;">Play some games to claim the throne!</span>
+                        <span style="font-size: 1rem; margin-top: 0.5rem; display: block;">Play some games to claim the throne!</span>
                     </div>
                 </div>
             `;
         }
         
         return `
-            <div class="ui-card gamble-king-card" style="background: linear-gradient(135deg, #fefce8 0%, #fef3c7 100%); border: 3px solid #f59e0b; margin-bottom: 1.5rem; box-shadow: 0 10px 15px -3px rgba(245, 158, 11, 0.1), 0 4px 6px -2px rgba(245, 158, 11, 0.04);">
-                <div class="gamble-king-header" style="text-align: center; padding: 1.25rem 1.5rem 0.5rem 1.5rem;">
-                    <h3 class="gamble-king-title" style="font-size: 1.5rem; color: #d97706; font-weight: 800; margin: 0 0 0.75rem 0;">
-                        👑 CURRENT GAMBLE KING 👑
-                    </h3>
-                    <div class="gamble-king-name" style="font-size: 2.25rem; font-weight: 900; background: linear-gradient(45deg, #d97706, #f59e0b, #fbbf24, #f59e0b, #d97706); background-size: 300% 300%; -webkit-background-clip: text; background-clip: text; color: transparent; margin-bottom: 1rem; text-align: center; animation: goldShine 3s ease-in-out infinite;">
-                        ${gambleKing.name}
+            <div class="neo-gamble-king neo-bounce">
+                <div class="neo-gamble-king-title">Current Gamble King</div>
+                <div class="neo-gamble-king-name">👑${gambleKing.name}👑</div>
+                <div class="neo-stats-grid" style="grid-template-columns: repeat(4, 1fr);">
+                    <div class="neo-stat-card" style="border-color: var(--casino-gold); background: var(--bg-card);">
+                        <div class="neo-stat-value profit-${gambleKing.net_profit >= 0 ? 'positive' : 'negative'}">$${gambleKing.net_profit ? gambleKing.net_profit.toFixed(2) : '0.00'}</div>
+                        <div class="neo-stat-label">Total Profit</div>
                     </div>
-                </div>
-                <div class="gamble-king-content" style="padding: 0 1.5rem 1.5rem 1.5rem;">
-                    <div class="gamble-king-stats" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem;">
-                        <div style="background: white; border: 2px solid #f59e0b; border-left: 2px solid #f59e0b; padding: 1rem; text-align: center; border-radius: var(--radius-lg);">
-                            <span class="stat-value profit-${gambleKing.net_profit >= 0 ? 'positive' : 'negative'}" style="font-size: 1.5rem; font-weight: 800; display: block;">$${gambleKing.net_profit ? gambleKing.net_profit.toFixed(2) : '0.00'}</span>
-                            <span class="stat-label" style="color: #92400e; font-weight: 600; font-size: 0.75rem; display: block;">Total Profit</span>
-                        </div>
-                        <div style="background: white; border: 2px solid #f59e0b; border-left: 2px solid #f59e0b; padding: 1rem; text-align: center; border-radius: var(--radius-lg);">
-                            <span class="stat-value" style="font-size: 1.5rem; font-weight: 800; color: #d97706; display: block;">${gambleKing.games_played || 0}</span>
-                            <span class="stat-label" style="color: #92400e; font-weight: 600; font-size: 0.75rem; display: block;">Sessions</span>
-                        </div>
-                        <div style="background: white; border: 2px solid #f59e0b; border-left: 2px solid #f59e0b; padding: 1rem; text-align: center; border-radius: var(--radius-lg);">
-                            <span class="stat-value" style="font-size: 1.5rem; font-weight: 800; color: #d97706; display: block;">${gambleKing.win_percentage ? gambleKing.win_percentage.toFixed(1) : '0'}%</span>
-                            <span class="stat-label" style="color: #92400e; font-weight: 600; font-size: 0.75rem; display: block;">Win Rate</span>
-                        </div>
-                        <div style="background: white; border: 2px solid #f59e0b; border-left: 2px solid #f59e0b; padding: 1rem; text-align: center; border-radius: var(--radius-lg);">
-                            <span class="stat-value" style="font-size: 1.5rem; font-weight: 800; color: #d97706; display: block;">${gambleKing.seven_two_wins || 0}</span>
-                            <span class="stat-label" style="color: #92400e; font-weight: 600; font-size: 0.75rem; display: block;">7-2 Wins</span>
-                        </div>
+                    <div class="neo-stat-card" style="border-color: var(--casino-gold); background: var(--bg-card);">
+                        <div class="neo-stat-value">${gambleKing.games_played || 0}</div>
+                        <div class="neo-stat-label">Sessions</div>
+                    </div>
+                    <div class="neo-stat-card" style="border-color: var(--casino-gold); background: var(--bg-card);">
+                        <div class="neo-stat-value">${gambleKing.win_percentage ? gambleKing.win_percentage.toFixed(1) : '0'}%</div>
+                        <div class="neo-stat-label">Win Rate</div>
+                    </div>
+                    <div class="neo-stat-card" style="border-color: var(--casino-gold); background: var(--bg-card);">
+                        <div class="neo-stat-value">${gambleKing.seven_two_wins || 0}</div>
+                        <div class="neo-stat-label">7-2 Wins</div>
                     </div>
                 </div>
             </div>
@@ -139,20 +129,17 @@ export default class DashboardPage {
     // Render quick action buttons
     renderQuickActionsSection(activeSession) {
         return `
-            <div class="ui-card">
-                <div class="ui-card-header">
-                    <h3 class="ui-card-title">Quick Actions</h3>
-                </div>
-                <div class="quick-actions" style="display: flex; gap: 0.75rem; flex-wrap: wrap; justify-content: center;">
+            <div class="neo-card">
+                <div class="neo-quick-actions">
                     ${activeSession ? `
-                        <a href="#session/${activeSession.session_id}" class="btn btn-primary btn-lg ripple hover-lift" style="flex: 1; min-width: 140px; max-width: 300px; text-align: center; white-space: normal; line-height: 1.3; padding: 1rem 0.75rem;">
-                            <span style="display: block;">🎯</span>
-                            <span style="display: block; font-size: 0.9rem;">View Active Session</span>
+                        <a href="#session/${activeSession.session_id}" class="neo-quick-action">
+                            <span class="neo-quick-action-icon">🎯</span>
+                            <span>View Active Session</span>
                         </a>
                     ` : `
-                        <button id="quick-start-session-btn" class="btn btn-primary btn-lg ripple hover-lift" style="flex: 1; min-width: 140px; max-width: 300px; text-align: center; white-space: normal; line-height: 1.3; padding: 1rem 0.75rem;">
-                            <span style="display: block;">🎮</span>
-                            <span style="display: block; font-size: 0.9rem;">Start New Session</span>
+                        <button id="quick-start-session-btn" class="neo-quick-action" style="border: none; cursor: pointer;">
+                            <span class="neo-quick-action-icon">🎮</span>
+                            <span>Start New Session</span>
                         </button>
                     `}
                 </div>
@@ -164,22 +151,18 @@ export default class DashboardPage {
     renderStandingsSection(players) {
         if (!players || players.length === 0) {
             return `
-                <div class="ui-card">
-                    <div class="ui-card-header">
-                        <h3 class="ui-card-title">Player Standings</h3>
-                    </div>
-                    <p>No players found.</p>
+                <div class="neo-card">
+                    <h3 style="font-size: 1.25rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1.5rem; color: var(--text-primary);">🏆 Player Standings</h3>
+                    <p style="font-weight: 600; color: var(--text-secondary);">No players found.</p>
                 </div>
             `;
         }
         
         let html = `
-            <div class="ui-card">
-                <div class="ui-card-header">
-                    <h3 class="ui-card-title">🏆 Player Standings</h3>
-                </div>
+            <div class="neo-card">
+                <h3 style="font-size: 1.25rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1.5rem; color: var(--text-primary);">🏆 Player Standings</h3>
                 <div class="table-responsive">
-                    <table class="modern-table">
+                    <table class="neo-table">
                         <thead>
                             <tr>
                                 <th>Rank</th>
@@ -194,18 +177,18 @@ export default class DashboardPage {
         players.forEach((player, index) => {
             const isGambleKing = index === 0 && player.net_profit > 0;
             html += `
-                <tr${isGambleKing ? ' style="background: linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgba(255, 215, 0, 0.05) 100%);"' : ''}>
-                    <td style="font-weight: 600; color: var(--neutral-700);">${index + 1}</td>
+                <tr${isGambleKing ? ' style="background: var(--casino-gold-light);"' : ''}>
+                    <td style="font-weight: 700;">${index + 1}</td>
                     <td>
-                        <a href="#player/${player.player_id}" style="color: var(--primary-color); text-decoration: none; font-weight: 500; display: flex; align-items: center; gap: 0.5rem;">
+                        <a href="#player/${player.player_id}" style="color: var(--primary-color); text-decoration: none; font-weight: 700; display: flex; align-items: center; gap: 0.5rem;">
                             ${player.name}
                             ${isGambleKing ? '<span style="font-size: 1.2rem;">👑</span>' : ''}
                         </a>
                     </td>                    
-                    <td class="${player.net_profit >= 0 ? 'profit-positive' : 'profit-negative'}" style="font-weight: 600;">
+                    <td class="${player.net_profit >= 0 ? 'profit-positive' : 'profit-negative'}" style="font-weight: 700;">
                         $${player.net_profit ? player.net_profit.toFixed(2) : '0.00'}
                     </td>
-                    <td style="font-weight: 500; color: var(--neutral-600);">${player.win_percentage ? player.win_percentage.toFixed(1) : '0'}%</td>
+                    <td style="font-weight: 600;">${player.win_percentage ? player.win_percentage.toFixed(1) : '0'}%</td>
                 </tr>
             `;
         });
@@ -232,55 +215,53 @@ export default class DashboardPage {
     renderRecentSessionsSection(sessions) {
         if (!sessions || sessions.length === 0) {
             return `
-                <div class="ui-card">
-                    <div class="ui-card-header">
-                        <h3 class="ui-card-title">Recent Sessions</h3>
-                    </div>
-                    <p>No recent sessions found.</p>
+                <div class="neo-card">
+                    <h3 style="font-size: 1.25rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1.5rem; color: var(--text-primary);">🃏 Recent Sessions</h3>
+                    <p style="font-weight: 600; color: var(--text-secondary);">No recent sessions found.</p>
                 </div>
             `;
         }
         
         let html = `
-            <div class="ui-card">
-                <div class="ui-card-header">
-                    <h3 class="ui-card-title">🃏 Recent Sessions</h3>
-                    <a href="#sessions" class="btn btn-sm btn-secondary">View All</a>
+            <div class="neo-card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <h3 style="font-size: 1.25rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; margin: 0; color: var(--text-primary);">🃏 Recent Sessions</h3>
+                    <a href="#sessions" class="neo-btn neo-btn-sm neo-btn-purple">View All</a>
                 </div>
-                <ul class="modern-list">
+                <div style="display: flex; flex-direction: column; gap: 1rem;">
         `;
         
         sessions.forEach(session => {
-            const statusColor = session.is_active ? 'var(--success-color)' : 'var(--neutral-500)';
+            const statusColor = session.is_active ? 'var(--casino-green)' : 'var(--text-secondary)';
             const statusText = session.is_active ? 'Active' : 'Ended';
             const statusIcon = session.is_active ? '🟢' : '⚪';
             
+            const cardColor = session.is_active ? 'neo-card-gold' : '';
+            
             html += `
-                <li class="modern-list-item">
-                    <a href="#session/${session.session_id}" style="text-decoration: none; color: inherit; display: block;">
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <div>
-                                <div style="font-weight: 600; color: var(--neutral-800); margin-bottom: 0.25rem;">
-                                    ${this.formatDate(session.date)}
-                                </div>
-                                <div style="font-size: 0.875rem; color: var(--neutral-600);">
-                                    Buy-in: $${session.default_buy_in_value ? session.default_buy_in_value.toFixed(2) : '0.00'}
-                                </div>
+                <a href="#session/${session.session_id}" class="neo-card ${cardColor}" style="text-decoration: none; color: inherit; padding: 1rem; margin: 0; transition: all var(--transition-neo);" onmouseover="this.style.transform='translate(-2px, -2px)'; this.style.boxShadow='var(--neo-shadow-lg)'" onmouseout="this.style.transform='translate(0, 0)'; this.style.boxShadow='var(--neo-shadow-md)'">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <div style="font-weight: 800; color: inherit; margin-bottom: 0.25rem; font-size: 1.125rem; text-transform: uppercase; letter-spacing: 0.05em;">
+                                📅 ${this.formatDate(session.date)}
                             </div>
-                            <div style="display: flex; align-items: center; gap: 0.5rem;">
-                                <span style="color: ${statusColor};">${statusIcon}</span>
-                                <span style="font-size: 0.875rem; font-weight: 500; color: ${statusColor};">
-                                    ${statusText}
-                                </span>
+                            <div style="font-size: 0.875rem; color: inherit; font-weight: 600; opacity: 0.8;">
+                                Buy-in: $${session.default_buy_in_value ? session.default_buy_in_value.toFixed(2) : '0.00'}
                             </div>
                         </div>
-                    </a>
-                </li>
+                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                            <span style="color: ${statusColor}; font-size: 1.25rem;">${statusIcon}</span>
+                            <span style="font-size: 0.875rem; font-weight: 700; color: ${statusColor}; text-transform: uppercase; letter-spacing: 0.05em;">
+                                ${statusText}
+                            </span>
+                        </div>
+                    </div>
+                </a>
             `;
         });
         
         html += `
-                </ul>
+                </div>
             </div>
         `;
         

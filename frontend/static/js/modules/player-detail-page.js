@@ -40,38 +40,71 @@ export default class PlayerDetailPage {    constructor(appContent, apiService) {
         });
     }
     
+    // Helper to format date as 'MMM DD, YYYY' or fallback
+    formatDate(dateStr) {
+        if (!dateStr) return 'Unknown Date';
+        const date = new Date(dateStr);
+        if (isNaN(date.getTime())) return dateStr; // Return original if can't parse
+        return date.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+    }
+    
     // Render player detail content
     render(player) {
+        const isTopPerformer = player.totalProfit > 0;
+        
         let html = `
-            <a href="#players" class="back-nav-btn">Back to Players</a>
-            <h2>Player Details: ${player.name}</h2>
-              <div class="player-stats-summary">
-                <p>Total Profit: <span class="${player.totalProfit >= 0 ? 'profit-positive' : 'profit-negative'}">$${player.totalProfit !== undefined ? player.totalProfit.toFixed(2) : '0.00'}</span></p>
-                <p>Sessions Played: ${player.sessionsPlayed || 0}</p>
-                <p>Win Rate: ${player.winRate !== undefined ? (player.winRate * 100).toFixed(0) : '0'}%</p>
-            </div>
-            
-            <div class="seven-two-stats-detail">
-                <span class="seven-two-label">7-2 Wins (Total):</span>
-                <span class="seven-two-value">${player.seven_two_wins || 0}</span>
-            </div>
+            <div style="padding: 1.5rem; max-width: 1200px; margin: 0 auto;">
+                <!-- Header with navigation -->
+                <div style="margin-bottom: 2rem;">
+                    <a href="#players" class="neo-btn neo-btn-purple">← Back to Players</a>
+                </div>
+                
+                <!-- Player Header Card -->
+                <div class="neo-card ${isTopPerformer ? 'neo-card-gold' : 'neo-card-primary'}">
+                    <h2 style="font-size: 2.5rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1.5rem; color: inherit; display: flex; align-items: center; gap: 1rem;">
+                        🎭 ${player.name}
+                        ${isTopPerformer ? '<span style="font-size: 2rem; animation: bounce 2s infinite;">👑</span>' : ''}
+                    </h2>
+                    
+                    <!-- Main Stats Grid -->
+                    <div class="neo-stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); margin-bottom: 1.5rem;">
+                        <div class="neo-stat-card" style="border-color: ${player.totalProfit >= 0 ? 'var(--casino-green)' : 'var(--casino-red)'};">
+                            <div class="neo-stat-value ${player.totalProfit >= 0 ? 'profit-positive' : 'profit-negative'}">$${player.totalProfit !== undefined ? player.totalProfit.toFixed(2) : '0.00'}</div>
+                            <div class="neo-stat-label">Total Profit</div>
+                        </div>
+                        <div class="neo-stat-card" style="border-color: var(--casino-purple);">
+                            <div class="neo-stat-value">${player.sessionsPlayed || 0}</div>
+                            <div class="neo-stat-label">Sessions Played</div>
+                        </div>
+                        <div class="neo-stat-card" style="border-color: var(--casino-gold);">
+                            <div class="neo-stat-value">${player.winRate !== undefined ? (player.winRate * 100).toFixed(0) : '0'}%</div>
+                            <div class="neo-stat-label">Win Rate</div>
+                        </div>
+                        <div class="neo-stat-card" style="border-color: var(--casino-gold);">
+                            <div class="neo-stat-value">${player.seven_two_wins || 0}</div>
+                            <div class="neo-stat-label">7-2 Wins Total</div>
+                        </div>
+                    </div>
+                </div>
         `;
         
         // Add sessions section
         if (player.sessions && player.sessions.length > 0) {
             html += `
-                <h3>Sessions</h3>
-                <div class="table-responsive">
-                    <table class="players-stats-table">
-                        <thead>
-                            <tr>
-                                <th>Date</th>
-                                <th>Buy-In</th>
-                                <th>Cash Out</th>
-                                <th>Profit</th>
-                            </tr>
-                        </thead>
-                        <tbody>
+                <!-- Sessions History -->
+                <div class="neo-card">
+                    <h3 style="font-size: 1.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1.5rem;">📊 Session History</h3>
+                    <div class="table-responsive">
+                        <table class="neo-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Buy-In</th>
+                                    <th>Cash Out</th>
+                                    <th>Profit</th>
+                                </tr>
+                            </thead>
+                            <tbody>
             `;
               player.sessions.forEach(session => {
                 // Ensure buyIn and cashOut are defined before calculating profit
@@ -81,22 +114,32 @@ export default class PlayerDetailPage {    constructor(appContent, apiService) {
                 
                 html += `
                     <tr>
-                        <td><a href="#session/${session.sessionId}">${session.date}</a></td>
-                        <td>$${buyIn.toFixed(2)}</td>
-                        <td>$${cashOut.toFixed(2)}</td>
-                        <td class="${profit >= 0 ? 'profit-positive' : 'profit-negative'}">$${profit.toFixed(2)}</td>
+                        <td><a href="#session/${session.sessionId}" style="color: var(--primary-color); text-decoration: none; font-weight: 700;">${this.formatDate(session.date)}</a></td>
+                        <td style="font-weight: 700; color: var(--casino-red);">$${buyIn.toFixed(2)}</td>
+                        <td style="font-weight: 700; color: var(--casino-gold);">$${cashOut.toFixed(2)}</td>
+                        <td class="${profit >= 0 ? 'profit-positive' : 'profit-negative'}" style="font-weight: 700;">$${profit.toFixed(2)}</td>
                     </tr>
                 `;
             });
             
             html += `
-                        </tbody>
-                    </table>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             `;
         } else {
-            html += `<p>No sessions found for this player.</p>`;
+            html += `
+                <div class="neo-card" style="text-align: center; padding: 3rem;">
+                    <div style="font-size: 4rem; margin-bottom: 1rem;">📈</div>
+                    <p style="font-size: 1.25rem; font-weight: 700; color: var(--text-secondary); margin: 0;">No sessions found for this player.</p>
+                </div>
+            `;
         }
+        
+        html += `
+            </div>
+        `;
         
         
         this.appContent.innerHTML = html;

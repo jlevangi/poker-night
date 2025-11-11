@@ -57,12 +57,25 @@ export default class Router {
     // Update active nav button based on current hash
     updateActiveNavButton() {
         const currentHash = window.location.hash.slice(1) || 'dashboard';
-        document.querySelectorAll('.bottom-nav .nav-btn').forEach(btn => {
-            if (btn.dataset.hash === `#${currentHash}` || 
-               (btn.dataset.hash === '#dashboard' && currentHash === '')) {
+        
+        // Update bottom navigation (mobile) - exclude settings button
+        document.querySelectorAll('.bottom-nav .nav-btn, .neo-bottom-nav .neo-nav-mobile-btn:not(#settings-trigger)').forEach(btn => {
+            if (btn.dataset && btn.dataset.hash && (btn.dataset.hash === `#${currentHash}` || 
+               (btn.dataset.hash === '#dashboard' && currentHash === ''))) {
                 btn.classList.add('active');
             } else {
                 btn.classList.remove('active');
+            }
+        });
+        
+        // Update desktop navigation
+        document.querySelectorAll('.desktop-nav a, .neo-desktop-nav .neo-nav-btn').forEach(link => {
+            const linkHash = link.getAttribute('href');
+            if (linkHash === `#${currentHash}` || 
+               (linkHash === '#dashboard' && currentHash === '')) {
+                link.classList.add('active');
+            } else {
+                link.classList.remove('active');
             }
         });
     }

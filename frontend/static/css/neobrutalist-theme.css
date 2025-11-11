@@ -1,0 +1,1384 @@
+/* Neobrutalist Casino Theme for Poker Night */
+
+:root {
+    /* Casino Color Palette */
+    --casino-red: #DC2626;
+    --casino-red-dark: #991B1B;
+    --casino-red-light: #FEE2E2;
+    
+    --casino-gold: #D97706;
+    --casino-gold-dark: #B45309;
+    --casino-gold-light: #FEF3C7;
+
+    --casino-green: #059669;
+    --casino-green-dark: #047857;
+    --casino-green-light: #D1FAE5;
+    
+    --casino-purple: #7C3AED;
+    --casino-purple-dark: #5B21B6;
+    --casino-purple-light: #EDE9FE;
+    
+    --casino-black: #111827;
+    --casino-gray: #374151;
+    --casino-cream: #FEF7ED;
+    
+    /* Neobrutalist Shadows */
+    --neo-shadow-sm: 4px 4px 0px var(--casino-black);
+    --neo-shadow-md: 6px 6px 0px var(--casino-black);
+    --neo-shadow-lg: 8px 8px 0px var(--casino-black);
+    --neo-shadow-xl: 12px 12px 0px var(--casino-black);
+    
+    /* Neobrutalist Borders */
+    --neo-border: 3px solid var(--casino-black);
+    --neo-border-thin: 2px solid var(--casino-black);
+    --neo-border-thick: 4px solid var(--casino-black);
+    
+    /* Updated Primary Colors for Neobrutalism */
+    --primary-color: var(--casino-red);
+    --primary-hover: var(--casino-red-dark);
+    --primary-light: var(--casino-red-light);
+    
+    /* Background Updates */
+    --bg-body: var(--casino-cream);
+    --bg-content: #FFFFFF;
+    --bg-card: #FFFFFF;
+    --bg-header: var(--casino-black);
+    
+    /* Text Updates */
+    --text-primary: var(--casino-black);
+    --text-secondary: var(--casino-gray);
+    --text-muted: #6B7280;
+    --text-white: #FFFFFF;
+    
+    /* Success/Error Colors - Casino Style */
+    --color-success: var(--casino-green);
+    --color-success-hover: var(--casino-green-dark);
+    --color-danger: var(--casino-red);
+    --color-danger-hover: var(--casino-red-dark);
+    --color-warning: var(--casino-gold);
+    --color-warning-hover: var(--casino-gold-dark);
+    --color-info: var(--casino-purple);
+    --color-info-hover: var(--casino-purple-dark);
+    
+    /* Profit Colors */
+    --profit-positive: var(--casino-green);
+    --profit-negative: var(--casino-red);
+    --profit-unpaid: var(--casino-gold);
+    
+    /* Neobrutalist Typography */
+    --font-weight-bold: 800;
+    --font-weight-black: 900;
+    
+    /* Spacing */
+    --spacing-neo: 1.5rem;
+    
+    /* Transitions - Snappier for neobrutalism */
+    --transition-neo: 0.15s ease-out;
+}
+
+/* Dark Mode Overrides for Casino Theme */
+[data-theme="dark"] {
+    --bg-body: #0F172A;
+    --bg-content: #1E293B;
+    --bg-card: #1E293B;
+    --bg-header: var(--casino-black);
+    
+    --text-primary: #F8FAFC;
+    --text-secondary: #CBD5E1;
+    --text-muted: #94A3B8;
+    
+    --casino-cream: #1E293B;
+    
+    /* Adjust shadows for dark mode */
+    --neo-shadow-sm: 4px 4px 0px #000000;
+    --neo-shadow-md: 6px 6px 0px #000000;
+    --neo-shadow-lg: 8px 8px 0px #000000;
+    --neo-shadow-xl: 12px 12px 0px #000000;
+    
+    /* Keep vibrant colors in dark mode but adjust borders */
+    --neo-border: 3px solid #000000;
+    --neo-border-thin: 2px solid #000000;
+    --neo-border-thick: 4px solid #000000;
+    
+    /* Dark mode card colors - use darker backgrounds with light text */
+    --casino-red-light: #450A0A;
+    --casino-gold-light: #453003;
+    --casino-green-light: #052E16;
+    --casino-purple-light: #2E1065;
+    
+    /* Update dark variants for better contrast in dark mode */
+    --casino-red-dark: #FCA5A5;
+    --casino-gold-dark: #FCD34D;
+    --casino-green-dark: #86EFAC;
+    --casino-purple-dark: #C4B5FD;
+}
+
+/* Dark mode casino card overrides */
+[data-theme="dark"] .neo-card-red {
+    background: var(--casino-red-light) !important;
+    color: var(--casino-red-dark) !important;
+}
+
+[data-theme="dark"] .neo-card-gold {
+    background: var(--casino-gold-light) !important;
+    color: var(--casino-gold-dark) !important;
+}
+
+[data-theme="dark"] .neo-card-green {
+    background: var(--casino-green-light) !important;
+    color: var(--casino-green-dark) !important;
+}
+
+[data-theme="dark"] .neo-card-purple {
+    background: var(--casino-purple-light) !important;
+    color: var(--casino-purple-dark) !important;
+}
+
+[data-theme="dark"] .neo-card-primary {
+    background: #1E293B !important;
+    color: var(--text-primary) !important;
+}
+
+/* Dark mode Gamble King overrides */
+[data-theme="dark"] .neo-gamble-king {
+    background: var(--casino-gold-light) !important;
+    color: var(--casino-gold-dark) !important;
+    border-color: var(--casino-gold-dark) !important;
+}
+
+[data-theme="dark"] .neo-gamble-king-name {
+    color: var(--casino-gold-dark) !important;
+    text-shadow: 3px 3px 0px #000000 !important;
+}
+
+/* ============================================================================ */
+/* NEOBRUTALIST HEADER & NAVIGATION STYLES */
+/* ============================================================================ */
+
+/* Neobrutalist Header */
+.neo-header {
+    background: var(--casino-black);
+    border-bottom: var(--neo-border-thick);
+    border-bottom-color: var(--casino-gold);
+    box-shadow: var(--neo-shadow-lg);
+    padding: var(--spacing-neo);
+    position: relative;
+    overflow: hidden;
+}
+
+.neo-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, var(--casino-black) 0%, #1a1a1a 50%, var(--casino-black) 100%);
+    z-index: 1;
+}
+
+.neo-header > * {
+    position: relative;
+    z-index: 2;
+}
+
+/* Royal Header with Neobrutalist Style */
+.neo-royal-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+}
+
+.neo-royal-crown {
+    font-size: 2rem;
+    filter: drop-shadow(2px 2px 0px var(--casino-gold));
+    animation: crownGlow 3s ease-in-out infinite alternate;
+}
+
+@keyframes crownGlow {
+    0% { filter: drop-shadow(2px 2px 0px var(--casino-gold)); }
+    100% { filter: drop-shadow(4px 4px 8px var(--casino-gold-light)); }
+}
+
+.neo-header h1 {
+    font-size: 2.5rem;
+    font-weight: var(--font-weight-black);
+    color: var(--casino-gold);
+    text-shadow: 
+        3px 3px 0px var(--casino-red),
+        6px 6px 0px var(--casino-black);
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+/* Desktop Navigation - Neobrutalist Style */
+.neo-desktop-nav {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.neo-nav-btn {
+    background: var(--casino-red);
+    color: var(--text-white);
+    border: var(--neo-border);
+    border-color: var(--casino-red-dark);
+    box-shadow: var(--neo-shadow-md);
+    padding: 0.75rem 1.5rem;
+    font-weight: var(--font-weight-bold);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    text-decoration: none;
+    position: relative;
+    transition: all var(--transition-neo);
+    cursor: pointer;
+    font-size: 0.875rem;
+}
+
+.neo-nav-btn:hover {
+    background: var(--casino-red-dark);
+    transform: translate(-2px, -2px);
+    box-shadow: var(--neo-shadow-lg);
+    color: var(--text-white);
+}
+
+.neo-nav-btn.active {
+    background: var(--casino-gold);
+    border-color: var(--casino-gold-dark);
+    color: var(--casino-black);
+    box-shadow: var(--neo-shadow-sm);
+    transform: translate(2px, 2px);
+}
+
+/* Header Controls - Neobrutalist Style */
+.neo-header-controls {
+    position: fixed;
+    top: 1rem;
+    left: 0;
+    right: 0;
+    z-index: var(--z-modal);
+    display: flex;
+    justify-content: space-between;
+    padding: 0 1.5rem;
+    pointer-events: none;
+}
+
+.neo-header-btn {
+    pointer-events: all;
+    background: var(--casino-purple);
+    color: var(--text-white);
+    border: var(--neo-border);
+    border-color: var(--casino-purple-dark);
+    box-shadow: var(--neo-shadow-md);
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all var(--transition-neo);
+    position: relative;
+}
+
+.neo-header-btn:hover {
+    background: var(--casino-purple-dark);
+    transform: translate(-3px, -3px);
+    box-shadow: var(--neo-shadow-lg);
+    color: var(--text-white);
+}
+
+.neo-header-btn:active {
+    transform: translate(1px, 1px);
+    box-shadow: var(--neo-shadow-sm);
+}
+
+/* Bottom Navigation - Neobrutalist Style */
+.neo-bottom-nav {
+    display: none;
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 1rem;
+    background: var(--casino-green);
+    border: var(--neo-border-thick);
+    border-color: var(--casino-green-dark);
+    box-shadow: var(--neo-shadow-xl);
+    z-index: var(--z-nav);
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 75vw;
+    max-width: 400px;
+    padding: 0.5rem;
+    gap: 0.25rem;
+}
+
+.neo-nav-mobile-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-white);
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 0.5rem;
+    cursor: pointer;
+    transition: all var(--transition-neo);
+    border: 2px solid transparent;
+    height: 100%;
+}
+
+.neo-nav-mobile-btn:hover,
+.neo-nav-mobile-btn.active {
+    background: var(--casino-green-dark);
+    border-color: var(--text-white);
+    box-shadow: inset var(--neo-shadow-sm);
+    transform: scale(0.95);
+}
+
+.neo-nav-mobile-btn .nav-icon {
+    font-size: 1.25rem;
+    filter: drop-shadow(1px 1px 0px var(--casino-green-dark));
+}
+
+/* Settings Slide-out Menu */
+.neo-settings-menu {
+    position: fixed;
+    top: 0;
+    right: -350px;
+    width: 300px;
+    height: 100vh;
+    background: var(--casino-black);
+    border-left: var(--neo-border-thick);
+    border-left-color: var(--casino-gold);
+    box-shadow: var(--neo-shadow-xl);
+    z-index: calc(var(--z-modal) + 1);
+    transition: right var(--transition-neo);
+}
+
+.neo-settings-menu.open {
+    right: 0;
+}
+
+.neo-settings-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: var(--z-modal);
+    opacity: 0;
+    visibility: hidden;
+    transition: all var(--transition-neo);
+}
+
+.neo-settings-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.neo-settings-content {
+    padding: var(--spacing-neo);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.neo-settings-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: var(--neo-border);
+    border-bottom-color: var(--casino-gold);
+}
+
+.neo-settings-header h3 {
+    color: var(--casino-gold);
+    font-size: 1.5rem;
+    font-weight: var(--font-weight-black);
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.neo-settings-close {
+    background: var(--casino-red);
+    color: var(--text-white);
+    border: var(--neo-border);
+    border-color: var(--casino-red-dark);
+    box-shadow: var(--neo-shadow-md);
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: var(--font-weight-bold);
+    cursor: pointer;
+    transition: all var(--transition-neo);
+}
+
+.neo-settings-close:hover {
+    background: var(--casino-red-dark);
+    transform: translate(-2px, -2px);
+    box-shadow: var(--neo-shadow-lg);
+}
+
+.neo-settings-options {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.neo-setting-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background: var(--bg-card);
+    border: var(--neo-border);
+    box-shadow: var(--neo-shadow-md);
+}
+
+.neo-setting-label {
+    font-weight: var(--font-weight-bold);
+    color: var(--casino-gold);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.neo-setting-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--casino-purple);
+    color: var(--text-white);
+    border: var(--neo-border);
+    border-color: var(--casino-purple-dark);
+    box-shadow: var(--neo-shadow-sm);
+    padding: 0.5rem 1rem;
+    font-weight: var(--font-weight-bold);
+    cursor: pointer;
+    transition: all var(--transition-neo);
+    text-decoration: none;
+    font-size: 0.875rem;
+}
+
+.neo-setting-btn:hover {
+    background: var(--casino-purple-dark);
+    transform: translate(-1px, -1px);
+    box-shadow: var(--neo-shadow-md);
+    color: var(--text-white);
+}
+
+/* Dark Mode Header Overrides */
+[data-theme="dark"] .neo-header {
+    background: var(--bg-content);
+    border-bottom-color: var(--casino-gold-dark);
+}
+
+[data-theme="dark"] .neo-header::before {
+    background: linear-gradient(135deg, var(--bg-content) 0%, var(--bg-card) 50%, var(--bg-content) 100%);
+}
+
+[data-theme="dark"] .neo-header h1 {
+    color: var(--casino-gold-dark);
+    text-shadow: 
+        3px 3px 0px var(--casino-red-dark),
+        6px 6px 0px #000000;
+}
+
+[data-theme="dark"] .neo-royal-crown {
+    filter: drop-shadow(2px 2px 0px var(--casino-gold-dark));
+}
+
+[data-theme="dark"] .neo-nav-btn {
+    background: var(--casino-red-light);
+    border-color: var(--casino-red-dark);
+    color: var(--casino-red-dark);
+}
+
+[data-theme="dark"] .neo-nav-btn:hover {
+    background: var(--casino-red-dark);
+    color: var(--text-white);
+}
+
+[data-theme="dark"] .neo-nav-btn.active {
+    background: var(--casino-gold-dark);
+    color: var(--casino-black);
+}
+
+[data-theme="dark"] .neo-header-btn {
+    background: var(--casino-purple-light);
+    border-color: var(--casino-purple-dark);
+    color: var(--casino-purple-dark);
+}
+
+[data-theme="dark"] .neo-header-btn:hover {
+    background: var(--casino-purple-dark);
+    color: var(--text-white);
+}
+
+[data-theme="dark"] .neo-bottom-nav {
+    background: var(--casino-green-light);
+    border-color: var(--casino-green-dark);
+}
+
+[data-theme="dark"] .neo-nav-mobile-btn {
+    color: var(--casino-green-dark);
+}
+
+[data-theme="dark"] .neo-nav-mobile-btn:hover,
+[data-theme="dark"] .neo-nav-mobile-btn.active {
+    background: var(--casino-green-dark);
+    color: var(--text-white);
+}
+
+/* Dark mode settings menu overrides */
+[data-theme="dark"] .neo-settings-menu {
+    background: var(--bg-content);
+    border-left-color: var(--casino-gold-dark);
+}
+
+[data-theme="dark"] .neo-settings-header {
+    border-bottom-color: var(--casino-gold-dark);
+}
+
+[data-theme="dark"] .neo-settings-header h3 {
+    color: var(--casino-gold-dark);
+}
+
+[data-theme="dark"] .neo-settings-close {
+    background: var(--casino-red-light);
+    border-color: var(--casino-red-dark);
+    color: var(--casino-red-dark);
+}
+
+[data-theme="dark"] .neo-settings-close:hover {
+    background: var(--casino-red-dark);
+    color: var(--text-white);
+}
+
+[data-theme="dark"] .neo-setting-label {
+    color: var(--casino-gold-dark);
+}
+
+[data-theme="dark"] .neo-setting-btn {
+    background: var(--casino-purple-light);
+    border-color: var(--casino-purple-dark);
+    color: var(--casino-purple-dark);
+}
+
+[data-theme="dark"] .neo-setting-btn:hover {
+    background: var(--casino-purple-dark);
+    color: var(--text-white);
+}
+
+/* Dark mode button overrides */
+[data-theme="dark"] .neo-btn-purple {
+    background: var(--casino-purple-light) !important;
+    border-color: var(--casino-purple-dark) !important;
+    color: var(--casino-purple-dark) !important;
+}
+
+[data-theme="dark"] .neo-btn-purple:hover {
+    background: var(--casino-purple-dark) !important;
+    color: var(--text-white) !important;
+}
+
+[data-theme="dark"] .neo-btn-green {
+    background: var(--casino-green-light) !important;
+    border-color: var(--casino-green-dark) !important;
+    color: var(--casino-green-dark) !important;
+}
+
+[data-theme="dark"] .neo-btn-green:hover {
+    background: var(--casino-green-dark) !important;
+    color: var(--text-white) !important;
+}
+
+[data-theme="dark"] .neo-btn-red {
+    background: var(--casino-red-light) !important;
+    border-color: var(--casino-red-dark) !important;
+    color: var(--casino-red-dark) !important;
+}
+
+[data-theme="dark"] .neo-btn-red:hover {
+    background: var(--casino-red-dark) !important;
+    color: var(--text-white) !important;
+}
+
+[data-theme="dark"] .neo-btn-gold {
+    background: var(--casino-gold-light) !important;
+    border-color: var(--casino-gold-dark) !important;
+    color: var(--casino-gold-dark) !important;
+}
+
+[data-theme="dark"] .neo-btn-gold:hover {
+    background: var(--casino-gold-dark) !important;
+    color: var(--text-white) !important;
+}
+
+/* Force flat colors on all neobrutalist button variants */
+.neo-btn-red,
+.neo-btn-green,
+.neo-btn-purple,
+.neo-btn-gold,
+.neo-btn-red:hover,
+.neo-btn-green:hover,
+.neo-btn-purple:hover,
+.neo-btn-gold:hover,
+.neo-btn-red:focus,
+.neo-btn-green:focus,
+.neo-btn-purple:focus,
+.neo-btn-gold:focus,
+.neo-btn-red:active,
+.neo-btn-green:active,
+.neo-btn-purple:active,
+.neo-btn-gold:active {
+    background-image: none !important;
+}
+
+/* Override any legacy button gradients for neobrutalist buttons */
+button.neo-btn,
+input.neo-btn,
+a.neo-btn,
+.neo-btn.primary-btn,
+.neo-btn.secondary-btn,
+.neo-btn.btn {
+    background-image: none !important;
+    background: var(--casino-red-light) !important;
+    border: var(--neo-border) !important;
+    border-color: var(--casino-red-dark) !important;
+    box-shadow: var(--neo-shadow-sm) !important;
+}
+
+/* Specific override for create session button */
+#create-session-btn {
+    background: var(--casino-green-light) !important;
+    background-image: none !important;
+    border: var(--neo-border) !important;
+    border-color: var(--casino-green-dark) !important;
+    color: var(--casino-green-dark) !important;
+}
+
+#create-session-btn:hover {
+    background: var(--casino-green) !important;
+    background-image: none !important;
+    color: var(--text-white) !important;
+}
+
+/* Modal create session button override */
+#modal-create-session-btn {
+    background: var(--casino-green-light) !important;
+    background-image: none !important;
+    border: var(--neo-border) !important;
+    border-color: var(--casino-green-dark) !important;
+    color: var(--casino-green-dark) !important;
+}
+
+#modal-create-session-btn:hover {
+    background: var(--casino-green) !important;
+    background-image: none !important;
+    color: var(--text-white) !important;
+}
+
+/* Dark mode overrides for specific buttons */
+[data-theme="dark"] #create-session-btn,
+[data-theme="dark"] #modal-create-session-btn {
+    background: var(--casino-green-light) !important;
+    background-image: none !important;
+    border-color: var(--casino-green-dark) !important;
+    color: var(--casino-green-dark) !important;
+}
+
+[data-theme="dark"] #create-session-btn:hover,
+[data-theme="dark"] #modal-create-session-btn:hover {
+    background: var(--casino-green-dark) !important;
+    background-image: none !important;
+    color: var(--text-white) !important;
+}
+
+/* Ultra-specific override for create session button with multiple classes */
+.neo-btn.neo-btn-green.neo-btn-lg,
+button.neo-btn.neo-btn-green.neo-btn-lg,
+#create-session-btn.neo-btn.neo-btn-green.neo-btn-lg {
+    background: var(--casino-green-light) !important;
+    background-image: none !important;
+    background-color: var(--casino-green-light) !important;
+    border: var(--neo-border) !important;
+    border-color: var(--casino-green-dark) !important;
+    color: var(--casino-green-dark) !important;
+    box-shadow: var(--neo-shadow-sm) !important;
+}
+
+.neo-btn.neo-btn-green.neo-btn-lg:hover,
+button.neo-btn.neo-btn-green.neo-btn-lg:hover,
+#create-session-btn.neo-btn.neo-btn-green.neo-btn-lg:hover {
+    background: var(--casino-green) !important;
+    background-image: none !important;
+    background-color: var(--casino-green) !important;
+    color: var(--text-white) !important;
+    transform: translate(-2px, -2px) !important;
+    box-shadow: var(--neo-shadow-md) !important;
+}
+
+/* Nuclear option - override ALL possible gradient sources */
+*[class*="neo-btn"][class*="green"] {
+    background-image: none !important;
+}
+
+div button.neo-btn.neo-btn-green,
+div .neo-btn.neo-btn-green,
+.neo-card button.neo-btn.neo-btn-green,
+.neo-card .neo-btn.neo-btn-green {
+    background: var(--casino-green-light) !important;
+    background-image: none !important;
+    background-color: var(--casino-green-light) !important;
+    border: var(--neo-border) !important;
+    border-color: var(--casino-green-dark) !important;
+    color: var(--casino-green-dark) !important;
+}
+
+div button.neo-btn.neo-btn-green:hover,
+div .neo-btn.neo-btn-green:hover,
+.neo-card button.neo-btn.neo-btn-green:hover,
+.neo-card .neo-btn.neo-btn-green:hover {
+    background: var(--casino-green) !important;
+    background-image: none !important;
+    background-color: var(--casino-green) !important;
+    color: var(--text-white) !important;
+}
+
+/* Mobile Responsive Adjustments */
+@media (max-width: 768px) {
+    .neo-header h1 {
+        font-size: 2rem;
+    }
+    
+    .neo-royal-crown {
+        font-size: 1.5rem;
+    }
+    
+    .neo-desktop-nav {
+        display: none;
+    }
+    
+    .neo-bottom-nav {
+        display: flex;
+    }
+    
+    .neo-header-controls {
+        top: 0.75rem;
+        padding: 0 1rem;
+    }
+    
+    .neo-header-btn {
+        width: 50px;
+        height: 50px;
+        font-size: 1.25rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .neo-header h1 {
+        font-size: 1.75rem;
+    }
+    
+    .neo-royal-crown {
+        font-size: 1.25rem;
+    }
+    
+    .neo-header-btn {
+        width: 45px;
+        height: 45px;
+        font-size: 1.1rem;
+    }
+    
+    .neo-bottom-nav {
+        width: 85vw;
+        bottom: 0.75rem;
+    }
+}
+
+@media (max-width: 360px) {
+    .neo-header h1 {
+        font-size: 1.5rem;
+    }
+    
+    .neo-bottom-nav {
+        width: 90vw;
+    }
+    
+    .neo-settings-menu {
+        width: 280px;
+        right: -320px;
+    }
+}
+
+@media (max-width: 320px) {
+    .neo-settings-menu {
+        width: 100vw;
+        right: -100vw;
+    }
+}
+
+/* Neobrutalist Base Elements */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", system-ui, sans-serif;
+    font-weight: 500;
+    letter-spacing: -0.025em;
+}
+
+/* Neobrutalist Cards */
+.neo-card {
+    background: var(--bg-card);
+    border: var(--neo-border);
+    box-shadow: var(--neo-shadow-md);
+    border-radius: 0;
+    padding: var(--spacing-neo);
+    margin-bottom: var(--spacing-neo);
+    position: relative;
+    transition: all var(--transition-neo);
+}
+
+.neo-card:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: var(--neo-shadow-lg);
+}
+
+.neo-card-primary {
+    background: var(--casino-red-light);
+    border-color: var(--casino-red);
+    color: var(--casino-red-dark);
+}
+
+.neo-card-gold {
+    background: var(--casino-gold-light);
+    border-color: var(--casino-gold);
+    color: var(--casino-gold-dark);
+}
+
+.neo-card-green {
+    background: var(--casino-green-light);
+    border-color: var(--casino-green);
+    color: var(--casino-green-dark);
+}
+
+.neo-card-purple {
+    background: var(--casino-purple-light);
+    border-color: var(--casino-purple);
+    color: var(--casino-purple-dark);
+}
+
+/* Neobrutalist Buttons */
+.neo-btn {
+    background: var(--casino-red-light);
+    color: var(--casino-red-dark);
+    border: var(--neo-border);
+    border-color: var(--casino-red-dark);
+    border-radius: 0;
+    padding: 0.875rem 1.5rem;
+    font-weight: var(--font-weight-bold);
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: all var(--transition-neo);
+    box-shadow: var(--neo-shadow-sm);
+    position: relative;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+}
+
+.neo-btn:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: var(--neo-shadow-md);
+    background: var(--casino-red);
+    color: var(--text-white);
+}
+
+.neo-btn:active {
+    transform: translate(0, 0);
+    box-shadow: var(--neo-shadow-sm);
+}
+
+/* Ensure no gradients on neobrutalist buttons */
+.neo-btn,
+.neo-btn:hover,
+.neo-btn:focus,
+.neo-btn:active {
+    background-image: none !important;
+}
+
+.neo-btn-gold {
+    background: var(--casino-gold-light);
+    border-color: var(--casino-gold-dark);
+    color: var(--casino-gold-dark);
+}
+
+.neo-btn-gold:hover {
+    background: var(--casino-gold);
+    color: var(--text-white);
+}
+
+.neo-btn-green {
+    background: var(--casino-green-light);
+    border-color: var(--casino-green-dark);
+    color: var(--casino-green-dark);
+}
+
+.neo-btn-green:hover {
+    background: var(--casino-green);
+    color: var(--text-white);
+}
+
+.neo-btn-purple {
+    background: var(--casino-purple-light);
+    border-color: var(--casino-purple-dark);
+    color: var(--casino-purple-dark);
+}
+
+.neo-btn-purple:hover {
+    background: var(--casino-purple);
+    color: var(--text-white);
+}
+
+.neo-btn-red {
+    background: var(--casino-red-light);
+    border-color: var(--casino-red-dark);
+    color: var(--casino-red-dark);
+}
+
+.neo-btn-red:hover {
+    background: var(--casino-red);
+    color: var(--text-white);
+}
+
+.neo-btn-lg {
+    padding: 1.25rem 2rem;
+    font-size: 1.125rem;
+}
+
+.neo-btn-sm {
+    padding: 0.625rem 1rem;
+    font-size: 0.875rem;
+}
+
+/* Neobrutalist Stats Cards */
+.neo-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--spacing-neo);
+    margin-bottom: var(--spacing-neo);
+}
+
+.neo-stat-card {
+    background: var(--bg-card);
+    border: var(--neo-border);
+    box-shadow: var(--neo-shadow-md);
+    padding: var(--spacing-neo);
+    text-align: center;
+    position: relative;
+    transition: all var(--transition-neo);
+}
+
+.neo-stat-card:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: var(--neo-shadow-lg);
+}
+
+.neo-stat-value {
+    font-size: 2.5rem;
+    font-weight: var(--font-weight-black);
+    line-height: 1;
+    margin-bottom: 0.5rem;
+    color: inherit;
+}
+
+.neo-stat-label {
+    font-size: 0.875rem;
+    font-weight: var(--font-weight-bold);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: inherit;
+    opacity: 0.8;
+}
+
+/* Gamble King Neobrutalist Style */
+.neo-gamble-king {
+    background: var(--casino-gold-light);
+    border: var(--neo-border-thick);
+    border-color: var(--casino-gold-dark);
+    box-shadow: var(--neo-shadow-xl);
+    padding: var(--spacing-neo);
+    margin-bottom: var(--spacing-neo);
+    position: relative;
+    overflow: hidden;
+}
+
+.neo-gamble-king::before {
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 10px,
+        rgba(255, 215, 0, 0.1) 10px,
+        rgba(255, 215, 0, 0.1) 20px
+    );
+    animation: shine 3s linear infinite;
+    pointer-events: none;
+}
+
+.neo-gamble-king-title {
+    font-size: 1.5rem;
+    font-weight: var(--font-weight-black);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--casino-gold-dark);
+    margin-bottom: 1rem;
+    text-align: center;
+    text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.2);
+}
+
+.neo-gamble-king-name {
+    font-size: 2.5rem;
+    font-weight: var(--font-weight-black);
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: var(--casino-black);
+    text-shadow: 3px 3px 0px var(--casino-gold-dark);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Neobrutalist Table */
+.neo-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border: var(--neo-border);
+    box-shadow: var(--neo-shadow-md);
+    background: var(--bg-card);
+}
+
+.neo-table th {
+    background: var(--casino-black);
+    color: var(--text-white);
+    padding: 1rem;
+    font-weight: var(--font-weight-bold);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-right: var(--neo-border-thin);
+}
+
+.neo-table th:last-child {
+    border-right: none;
+}
+
+.neo-table td {
+    padding: 1rem;
+    border-right: var(--neo-border-thin);
+    border-bottom: var(--neo-border-thin);
+    font-weight: 500;
+}
+
+.neo-table td:last-child {
+    border-right: none;
+}
+
+.neo-table tr:last-child td {
+    border-bottom: none;
+}
+
+.neo-table tr:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+/* Quick Actions Neobrutalist Style */
+.neo-quick-actions {
+    display: flex;
+    gap: var(--spacing-neo);
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: var(--spacing-neo);
+}
+
+.neo-quick-action {
+    flex: 1;
+    min-width: 200px;
+    max-width: 300px;
+    background: var(--casino-purple-light);
+    border: var(--neo-border);
+    border-color: var(--casino-purple-dark);
+    box-shadow: var(--neo-shadow-md);
+    padding: .5rem .5rem;
+    text-align: center;
+    text-decoration: none;
+    color: var(--casino-purple-dark);
+    font-weight: var(--font-weight-bold);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    transition: all var(--transition-neo);
+    position: relative;
+}
+
+.neo-quick-action:hover {
+    transform: translate(-3px, -3px);
+    box-shadow: var(--neo-shadow-lg);
+    color: var(--casino-purple-dark);
+    text-decoration: none;
+}
+
+.neo-quick-action-icon {
+    font-size: 2rem;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+/* Animations */
+@keyframes shine {
+    0% { transform: translateX(-100%) translateY(-100%); }
+    100% { transform: translateX(100%) translateY(100%); }
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-10px);
+    }
+    60% {
+        transform: translateY(-5px);
+    }
+}
+
+/* Bounce animation class (currently disabled) */
+.neo-bounce {
+    /* animation: bounce 2s infinite; */
+    transition: transform var(--transition-neo);
+}
+
+/* Neobrutalist Profit/Loss Styling */
+.profit-positive {
+    color: var(--casino-green) !important;
+    font-weight: var(--font-weight-bold) !important;
+    text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.1);
+}
+
+.profit-negative {
+    color: var(--casino-red) !important;
+    font-weight: var(--font-weight-bold) !important;
+    text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.1);
+}
+
+.profit-unpaid {
+    color: var(--casino-gold) !important;
+    font-weight: var(--font-weight-bold) !important;
+    text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.1);
+}
+
+/* Neobrutalist List Items */
+.neo-list-item {
+    background: var(--bg-card);
+    border: var(--neo-border-thin);
+    box-shadow: var(--neo-shadow-sm);
+    padding: 1rem;
+    margin-bottom: 0.75rem;
+    transition: all var(--transition-neo);
+}
+
+.neo-list-item:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: var(--neo-shadow-md);
+}
+
+/* Neobrutalist Form Elements */
+.neo-input,
+.neo-select {
+    background: var(--bg-card);
+    border: var(--neo-border);
+    padding: 0.875rem 1rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    transition: all var(--transition-neo);
+    outline: none;
+}
+
+.neo-input:focus,
+.neo-select:focus {
+    transform: translate(-2px, -2px);
+    box-shadow: var(--neo-shadow-md);
+    border-color: var(--primary-color);
+}
+
+.neo-input::placeholder {
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+/* Neobrutalist Counter Buttons */
+.neo-counter-btn {
+    width: 32px;
+    height: 32px;
+    border: var(--neo-border-thin);
+    background: var(--casino-green);
+    color: var(--text-white);
+    font-size: 18px;
+    font-weight: var(--font-weight-bold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all var(--transition-neo);
+    box-shadow: var(--neo-shadow-sm);
+}
+
+.neo-counter-btn:hover {
+    transform: translate(-1px, -1px);
+    box-shadow: var(--neo-shadow-md);
+}
+
+.neo-counter-btn.decrement {
+    background: var(--casino-red);
+}
+
+.neo-counter-btn.decrement:hover {
+    background: var(--casino-red-dark);
+}
+
+/* Override any existing fade-in animations to be snappier */
+.fade-in {
+    animation: neoFadeIn 0.3s ease-out;
+}
+
+@keyframes neoFadeIn {
+    0% {
+        opacity: 0;
+        transform: translate(10px, 10px);
+    }
+    100% {
+        opacity: 1;
+        transform: translate(0, 0);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .neo-stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+    
+    .neo-gamble-king-name {
+        font-size: 2rem;
+    }
+    
+    .neo-quick-actions {
+        flex-direction: column;
+    }
+    
+    .neo-quick-action {
+        max-width: none;
+    }
+    
+    .neo-stat-value {
+        font-size: 2rem;
+    }
+    
+    /* Mobile spacing adjustments */
+    :root {
+        --spacing-neo: 1rem;
+    }
+    
+    /* Remove app-content padding on mobile to prevent overflow */
+    #app-content {
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+    
+    /* Adjust dashboard page padding specifically */
+    .fade-in {
+        padding: 1rem 0.5rem !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .neo-stats-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .neo-gamble-king-name {
+        font-size: 1.75rem;
+    }
+    
+    .neo-stat-value {
+        font-size: 1.5rem;
+    }
+    
+    .neo-table th,
+    .neo-table td {
+        padding: 0.75rem 0.5rem;
+        font-size: 0.875rem;
+    }
+    
+    .neo-btn {
+        padding: 0.75rem 1.25rem;
+        font-size: 0.875rem;
+    }
+    
+    /* Specific mobile adjustments for Gamble King stats */
+    .neo-gamble-king .neo-stats-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 0.5rem !important;
+    }
+    
+    .neo-gamble-king .neo-stat-card {
+        padding: 0.5rem !important;
+        margin: 0 !important;
+    }
+    
+    .neo-gamble-king .neo-stat-value {
+        font-size: 1rem !important;
+    }
+    
+    .neo-gamble-king .neo-stat-label {
+        font-size: 0.5rem !important;
+        line-height: 1.2 !important;
+    }
+}
+
+@media (max-width: 360px) {
+    /* Extra small screens - ensure Gamble King fits */
+    .neo-gamble-king .neo-stat-value {
+        font-size: 0.875rem !important;
+    }
+    
+    .neo-gamble-king .neo-stat-label {
+        font-size: 0.45rem !important;
+    }
+    
+    .neo-gamble-king-name {
+        font-size: 1.5rem !important;
+    }
+    
+    .neo-gamble-king-title {
+        font-size: 1rem !important;
+    }
+}

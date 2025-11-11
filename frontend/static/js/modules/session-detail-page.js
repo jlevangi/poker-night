@@ -75,9 +75,9 @@ export default class SessionDetailPage {
         
         // Check if session and chip_distribution exist
         if (!session || !session.session_info || !session.session_info.chip_distribution) {
-            return `<div class="chip-distribution">
-                <h3>Chip Distribution</h3>
-                <p>No chip distribution data available.</p>
+            return `<div class="neo-card" style="margin-bottom: 2rem;">
+                <h3 style="font-size: 1.25rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1rem; color: var(--text-primary);">🎰 Chip Distribution</h3>
+                <p style="font-weight: 600; color: var(--text-secondary);">No chip distribution data available.</p>
             </div>`;
         }
         
@@ -90,24 +90,26 @@ export default class SessionDetailPage {
         console.log("Buy-in value:", buyInValue);
         console.log("Total chips:", totalChips);
         
-        // Define colors for styling
+        // Define colors for styling with neobrutalist approach
         const chipColors = {
-            'Black': '#000000',
-            'Blue': '#0e1b63',
-            'Green': '#008000',
-            'Red': '#FF0000',
-            'White': '#FFFFFF'
+            'Black': '#1F2937',
+            'Blue': '#1E3A8A',
+            'Green': '#065F46',
+            'Red': '#991B1B',
+            'White': '#F9FAFB'
         };
         
         // Sort chips by value (highest first)
         const chipOrder = ['Black', 'Blue', 'Green', 'Red', 'White'];
         
         let html = `
-            <div class="chip-distribution">
-                <h3>Chip Distribution</h3>
-                <p class="chip-description">For a buy-in of $${buyInValue.toFixed(2)}, 
-                   use the following chip distribution (${totalChips} total chips):</p>
-                <div class="chip-container">`;
+            <div class="neo-card neo-card-purple" style="margin-bottom: 2rem;">
+                <h3 style="font-size: 1.25rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1rem; color: var(--casino-purple-dark);">🎰 Chip Distribution</h3>
+                <p style="font-weight: 600; color: var(--casino-purple-dark); margin-bottom: 1.5rem;">
+                    For a buy-in of <span style="color: var(--casino-green); font-weight: 800;">$${buyInValue.toFixed(2)}</span>, 
+                    use the following chip distribution (<span style="color: var(--casino-gold); font-weight: 800;">${totalChips} total chips</span>):
+                </p>
+                <div style="display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;">`;
         
         // Create a chip element for each type
         for (const chipColor of chipOrder) {
@@ -115,19 +117,34 @@ export default class SessionDetailPage {
                 const backgroundColor = chipColors[chipColor];
                 const textColor = ['White'].includes(chipColor) ? '#000000' : '#FFFFFF';
                 
-                // Define border styles based on chip color to match real poker chips
-                let borderStyle;
-                if (chipColor === 'White') {
-                    borderStyle = '3px dashed #000000'; // Black dashed border for white chips only
-                } else {
-                    // All colored chips (Red, Blue, Green, Black) have white dashes in real life
-                    borderStyle = '3px dashed #ffffff';
-                }
-                
                 html += `
-                    <div class="chip" style="background-color: ${backgroundColor}; color: ${textColor}; border: ${borderStyle}">
-                        <span class="chip-count">${chipDistribution[chipColor]}</span>
-                        <span class="chip-name">${chipColor}</span>
+                    <div style="
+                        width: 80px; 
+                        height: 80px; 
+                        border-radius: 50%; 
+                        background-color: ${backgroundColor}; 
+                        color: ${textColor}; 
+                        border: var(--neo-border-thick);
+                        display: flex; 
+                        flex-direction: column; 
+                        align-items: center; 
+                        justify-content: center;
+                        font-weight: 800;
+                        text-align: center;
+                        box-shadow: var(--neo-shadow-md);
+                        position: relative;
+                        overflow: hidden;
+                    ">
+                        <div style="font-size: 1rem; line-height: 1;">${chipDistribution[chipColor]}</div>
+                        <div style="font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 2px;">${chipColor}</div>
+                        
+                        <!-- Chip texture lines -->
+                        <div style="
+                            position: absolute;
+                            top: 10px; left: 10px; right: 10px; bottom: 10px;
+                            border: 2px dashed ${textColor === '#FFFFFF' ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.2)'};
+                            border-radius: 50%;
+                        "></div>
                     </div>`;
             }
         }
@@ -158,35 +175,51 @@ export default class SessionDetailPage {
             "final isActive =", isActive);
         
         let html = `
-            <!-- Header with navigation and notification controls -->
-            <div class="session-header">
-                <a href="#sessions" class="back-nav-btn">Back to Sessions</a>
-                ${isActive ? 
-                    `<button id="notification-btn" class="notification-btn" data-state="loading">
-                        <span class="btn-text">Loading...</span>
-                    </button>` : 
-                    ''
-                }
-            </div>
-            
-            <h2>Session Details</h2>
-            <p><strong>Date:</strong> ${this.formatDate(sessionData.date)}</p>
-            <p><strong>Default Buy-in:</strong> $${sessionData.default_buy_in_value ? sessionData.default_buy_in_value.toFixed(2) : '0.00'}</p>
-            <p><strong>Status:</strong> <span class="session-status status-${isActive ? 'active' : 'ended'}">${isActive ? 'ACTIVE' : 'ENDED'}</span></p>
-              <div class="session-value-summary">
-                <p class="session-total-value">Total Value: $${session.totalValue ? session.totalValue.toFixed(2) : '0.00'}</p>
-                ${session.unpaidValue > 0.01 ? 
-                    `<p class="session-unpaid-value">Unpaid Amount: $${session.unpaidValue.toFixed(2)}</p>` : 
-                    (!isActive ? `<p class="session-unpaid-value paid-out">Fully Paid Out</p>` : '')}
-            </div>
-            
+            <div style="padding: 1.5rem; max-width: 1200px; margin: 0 auto;">
+                <!-- Header with navigation and notification controls -->
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
+                    <a href="#sessions" class="neo-btn neo-btn-purple">← Back to Sessions</a>
+                    ${isActive ? 
+                        `<button id="notification-btn" class="neo-btn neo-btn-gold" data-state="loading">
+                            <span class="btn-text">🔔 Loading...</span>
+                        </button>` : 
+                        ''
+                    }
+                </div>
+                
+                <!-- Session Info Card -->
+                <div class="neo-card ${isActive ? 'neo-card-gold' : 'neo-card-primary'}">
+                    <h2 style="font-size: 2rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1.5rem; color: var(--text-primary); display: flex; align-items: center; gap: 0.5rem;">
+                        🎯 ${this.formatDate(sessionData.date)}
+                        <span style="font-size: 1rem; padding: 0.25rem 0.75rem; background: ${isActive ? 'var(--casino-gold)' : 'var(--text-secondary)'}; color: var(--text-white); text-transform: uppercase; font-weight: 800; margin-left: 1rem;">${isActive ? 'ACTIVE' : 'ENDED'}</span>
+                    </h2>
+                    
+                    <div class="neo-stats-grid" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 1.5rem;">
+                        <div class="neo-stat-card" style="border-color: var(--casino-green);">
+                            <div class="neo-stat-value">$${sessionData.default_buy_in_value ? sessionData.default_buy_in_value.toFixed(2) : '0.00'}</div>
+                            <div class="neo-stat-label">Default Buy-in</div>
+                        </div>
+                        <div class="neo-stat-card" style="border-color: var(--casino-purple);">
+                            <div class="neo-stat-value">$${session.totalValue ? session.totalValue.toFixed(2) : '0.00'}</div>
+                            <div class="neo-stat-label">Total Value</div>
+                        </div>
+                        <div class="neo-stat-card" style="border-color: ${session.unpaidValue > 0.01 ? 'var(--casino-red)' : 'var(--casino-green)'};">
+                            <div class="neo-stat-value ${session.unpaidValue > 0.01 ? 'profit-negative' : 'profit-positive'}">
+                                ${session.unpaidValue > 0.01 ? 
+                                    `$${session.unpaidValue.toFixed(2)}` : 
+                                    (!isActive ? 'PAID OUT' : '$0.00')}
+                            </div>
+                            <div class="neo-stat-label">Unpaid Amount</div>
+                        </div>
+                    </div>
+                </div>
 
-            <!-- Chip Distribution Section -->
-            <div id="chip-distribution-container">
-            ${this.renderChipDistribution(session)}
-            </div>
-            
-            <h3>Players</h3>
+                <!-- Chip Distribution Section -->
+                <div id="chip-distribution-container">
+                ${this.renderChipDistribution(session)}
+                </div>
+                
+                <h3 style="font-size: 1.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; margin: 2rem 0 1.5rem 0; color: var(--text-primary);">👥 Players</h3>
         `;
         
         if (isActive) {
@@ -194,16 +227,17 @@ export default class SessionDetailPage {
             console.log("Available players for dropdown:", session.availablePlayers);
             
             html += `
-                <div class="add-player-form">
-                    <div class="form-row">
-                        <select id="add-player-select">
+                <div class="neo-card neo-card-green" style="margin-bottom: 2rem;">
+                    <h4 style="font-size: 1.25rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1.5rem; color: var(--casino-green-dark);">➕ Add Player to Session</h4>
+                    <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+                        <select id="add-player-select" style="flex: 1; min-width: 200px; padding: 0.875rem 1rem; border: var(--neo-border); font-size: 1rem; font-weight: 600; background: var(--bg-card);">
                             <option value="">-- Select Player --</option>
                             ${(session.availablePlayers || []).map(player => 
                                 `<option value="${player.player_id}">${player.name}</option>`
                             ).join('')}
                         </select>
-                        <input type="number" id="player-buyin" placeholder="Buy-in Amount ($)" value="${sessionData.default_buy_in_value ? sessionData.default_buy_in_value.toFixed(2) : '20.00'}" step="0.01">
-                        <button id="add-player-to-session-btn" class="action-btn">Add Player</button>
+                        <input type="number" id="player-buyin" placeholder="Buy-in Amount ($)" value="${sessionData.default_buy_in_value ? sessionData.default_buy_in_value.toFixed(2) : '20.00'}" step="0.01" style="flex: 1; min-width: 150px; padding: 0.875rem 1rem; border: var(--neo-border); font-size: 1rem; font-weight: 600; background: var(--bg-card);">
+                        <button id="add-player-to-session-btn" class="neo-btn neo-btn-green">Add Player</button>
                     </div>
                 </div>
             `;
@@ -211,73 +245,107 @@ export default class SessionDetailPage {
         
         // Render players list
         if (session.players && session.players.length > 0) {
-            html += `<ul class="session-players-list">`;
+            html += `<div style="display: grid; gap: 1.5rem;">`;
             session.players.forEach(player => {
                 // Ensure buyIn and cashOut are defined before calculating profit
                 const buyIn = player.buyIn || 0;
                 const cashOut = player.cashOut || 0;
                 const profit = cashOut - buyIn;
+                const profitColor = profit >= 0 ? 'neo-card-green' : 'neo-card-primary';
                 
                 html += `
-                    <li>
-                        <div class="session-player-details clickable-player-details" data-player-id="${player.id}">
-                            <p><strong><a href="#player/${player.id}">${player.name}</a></strong></p>
-                            <p>Buy-in: $${buyIn.toFixed(2)} | 
-                               Cash-out: $${cashOut.toFixed(2)} |
-                               Profit: <span class="${profit >= 0 ? 'profit-positive' : 'profit-negative'}">$${profit.toFixed(2)}</span></p>
-                        </div>
-                        
-                        <div class="session-player-actions">
+                    <div class="neo-card ${profitColor} clickable-player-details" data-player-id="${player.id}" style="cursor: pointer; transition: all var(--transition-neo);" onmouseover="this.style.transform='translate(-2px, -2px)'; this.style.boxShadow='var(--neo-shadow-lg)'" onmouseout="this.style.transform='translate(0, 0)'; this.style.boxShadow='var(--neo-shadow-md)'">
+                        <!-- Player Header -->
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+                            <div>
+                                <h4 style="font-size: 1.5rem; font-weight: 800; margin: 0 0 0.5rem 0; text-transform: uppercase; letter-spacing: 0.05em;">
+                                    <a href="#player/${player.id}" style="color: inherit; text-decoration: none;">${player.name}</a>
+                                </h4>
+                                <div style="display: flex; gap: 2rem; flex-wrap: wrap;">
+                                    <div>
+                                        <span style="font-size: 0.875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.8; display: block;">Buy-in</span>
+                                        <span style="font-size: 1.25rem; font-weight: 800; color: var(--casino-red);">$${buyIn.toFixed(2)}</span>
+                                    </div>
+                                    <div>
+                                        <span style="font-size: 0.875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.8; display: block;">Cash-out</span>
+                                        <span style="font-size: 1.25rem; font-weight: 800; color: var(--casino-gold);">$${cashOut.toFixed(2)}</span>
+                                    </div>
+                                    <div>
+                                        <span style="font-size: 0.875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.8; display: block;">Profit</span>
+                                        <span class="${profit >= 0 ? 'profit-positive' : 'profit-negative'}" style="font-size: 1.25rem; font-weight: 800;">$${profit.toFixed(2)}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Action Button -->
                             ${isActive ? (
                                 player.isCashedOut ? 
-                                    `<button class="buy-in-player-btn" data-player-id="${player.id}" data-is-cashed-out="${player.isCashedOut}">Buy In</button>` :
-                                    `<button class="cash-out-player-btn" data-player-id="${player.id}" data-is-cashed-out="${player.isCashedOut}">Cash Out</button>`
+                                    `<button class="neo-btn neo-btn-green buy-in-player-btn" data-player-id="${player.id}" data-is-cashed-out="${player.isCashedOut}">💰 Buy In</button>` :
+                                    `<button class="neo-btn neo-btn-gold cash-out-player-btn" data-player-id="${player.id}" data-is-cashed-out="${player.isCashedOut}">💸 Cash Out</button>`
                             ) : ''}
                         </div>
                         
-                        <div class="session-seven-two-controls">
-                            <div class="seven-two-label">7-2 Wins (Session):</div>
-                            <div class="seven-two-value">${player.sevenTwoWins || 0}</div>
-                            
-                            ${isActive ? `
-                                <div class="seven-two-buttons">
-                                    <button class="seven-two-increment-btn" data-player-id="${player.id}">+</button>
-                                    <button class="seven-two-decrement-btn" data-player-id="${player.id}">-</button>
+                        <!-- Stats and Controls -->
+                        <div style="display: flex; gap: 2rem; flex-wrap: wrap; align-items: center;">
+                            <!-- 7-2 Wins -->
+                            <div class="neo-stat-card" style="min-width: 140px; border-color: var(--casino-gold); margin: 0;">
+                                <div style="font-size: 1.25rem; font-weight: 800; color: var(--casino-gold-dark); margin-bottom: 0.25rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                                    ${player.sevenTwoWins || 0}
+                                    ${isActive ? `
+                                        <div style="display: flex; gap: 0.25rem;">
+                                            <button class="counter-btn counter-btn-increment seven-two-increment-btn" data-player-id="${player.id}" style="width: 24px; height: 24px; font-size: 14px;">+</button>
+                                            <button class="counter-btn counter-btn-decrement seven-two-decrement-btn" data-player-id="${player.id}" style="width: 24px; height: 24px; font-size: 14px;">−</button>
+                                        </div>
+                                    ` : ''}
                                 </div>
-                            ` : ''}
-                        </div>
-                        
-                        <div class="session-strikes-controls">
-                            <div class="strikes-label">Strikes (Session):</div>
-                            <div class="strikes-value">${player.strikes || 0}</div>
-                            
-                            ${isActive ? `
-                                <div class="strikes-buttons">
-                                    <button class="strikes-increment-btn" data-player-id="${player.id}">+</button>
-                                    <button class="strikes-decrement-btn" data-player-id="${player.id}">-</button>
+                                <div style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--casino-gold-dark);">
+                                    7-2 Wins
                                 </div>
-                            ` : ''}
+                            </div>
+                            
+                            <!-- Strikes -->
+                            <div class="neo-stat-card" style="min-width: 120px; border-color: var(--casino-red); margin: 0;">
+                                <div style="font-size: 1.25rem; font-weight: 800; color: var(--casino-red); margin-bottom: 0.25rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                                    ${player.strikes || 0}
+                                    ${isActive ? `
+                                        <div style="display: flex; gap: 0.25rem;">
+                                            <button class="counter-btn counter-btn-increment strikes-increment-btn" data-player-id="${player.id}" style="width: 24px; height: 24px; font-size: 14px;">+</button>
+                                            <button class="counter-btn counter-btn-decrement strikes-decrement-btn" data-player-id="${player.id}" style="width: 24px; height: 24px; font-size: 14px;">−</button>
+                                        </div>
+                                    ` : ''}
+                                </div>
+                                <div style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--casino-red);">
+                                    Strikes
+                                </div>
+                            </div>
                         </div>
-                    </li>
+                    </div>
                 `;
             });
             
-            html += `</ul>`;
+            html += `</div>`;
         } else {
-            html += `<p>No players in this session yet.</p>`;
+            html += `
+                <div class="neo-card" style="text-align: center; padding: 3rem;">
+                    <div style="font-size: 4rem; margin-bottom: 1rem;">👤</div>
+                    <p style="font-size: 1.25rem; font-weight: 700; color: var(--text-secondary); margin: 0;">No players in this session yet.</p>
+                </div>
+            `;
         }
         
         // Add session control buttons at the bottom
         html += `
-            <div class="session-bottom-controls">
-                ${isActive ? 
-                    `<button id="end-session-btn" class="action-btn danger-btn">
-                        End Session
-                    </button>` : 
-                    `<button id="reactivate-session-btn" class="action-btn success-btn">
-                        Reactivate Session
-                    </button>`
-                }
+                <!-- Session Controls -->
+                <div style="margin-top: 2rem; text-align: center;">
+                    ${isActive ? 
+                        `<button id="end-session-btn" class="neo-btn neo-btn-red neo-btn-lg">
+                            End Session
+                        </button>` : 
+                        `<button id="reactivate-session-btn" class="neo-btn neo-btn-green neo-btn-lg">
+                            ▶️ Reactivate Session
+                        </button>`
+                    }
+                </div>
             </div>
         `;
         
@@ -297,47 +365,7 @@ export default class SessionDetailPage {
                 text-align: center;
             }
             
-            #end-session-btn {
-                background-color: #E53935;
-                color: white;
-                font-weight: bold;
-                padding: 10px 20px;
-                box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-                border-radius: 4px;
-                text-transform: uppercase;
-                letter-spacing: 0.5px;
-                display: inline-block;
-                width: auto;
-                min-width: 200px;
-                margin: 10px 5px;
-            }
-            
-            #reactivate-session-btn {
-                background-color: #4CAF50;
-                color: white;
-                font-weight: bold;
-                padding: 10px 20px;
-                box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-                border-radius: 4px;
-                text-transform: uppercase;
-                letter-spacing: 0.5px;
-                display: inline-block;
-                width: auto;
-                min-width: 200px;
-                margin: 10px 5px;
-            }
-            
-            #end-session-btn:hover {
-                background-color: #D32F2F;
-                box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-                transform: translateY(-1px);
-            }
-            
-            #reactivate-session-btn:hover {
-                background-color: #45a049;
-                box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-                transform: translateY(-1px);
-            }
+            /* Session control buttons now use neobrutalist styling */
             
             /* Ensure proper spacing for session reactivate button */
             .session-reactivate-container {
@@ -345,45 +373,7 @@ export default class SessionDetailPage {
                 margin: 20px 0;
             }
             
-            /* Style for Cash Out button */
-            .cash-out-player-btn {
-                padding: 8px 16px;
-                border-radius: 4px;
-                border: none;
-                background-color: #4CAF50 !important;
-                color: white !important;
-                font-weight: bold;
-                cursor: pointer;
-                margin-right: 8px;
-                transition: all 0.2s ease;
-                box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-            }
-            
-            .cash-out-player-btn:hover {
-                background-color: #45a049 !important;
-                box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-                transform: translateY(-1px);
-            }
-            
-            /* Style for Buy In button */
-            .buy-in-player-btn {
-                padding: 8px 16px;
-                border-radius: 4px;
-                border: none;
-                background-color: #2196F3 !important;
-                color: white !important;
-                font-weight: bold;
-                cursor: pointer;
-                margin-right: 8px;
-                transition: all 0.2s ease;
-                box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-            }
-            
-            .buy-in-player-btn:hover {
-                background-color: #1976D2 !important;
-                box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-                transform: translateY(-1px);
-            }
+            /* Cash Out and Buy In buttons now use neobrutalist styling */
             
             /* Generic success button style */
             .success-btn {

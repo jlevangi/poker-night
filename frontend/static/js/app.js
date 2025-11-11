@@ -9,6 +9,7 @@ import SessionDetailPage from './modules/session-detail-page.js';
 import PlayerDetailPage from './modules/player-detail-page.js';
 import ServiceWorkerManager from './modules/service-worker-manager.js';
 import DarkModeManager from './modules/dark-mode-manager.js';
+import SettingsManager from './modules/settings-manager.js';
 import appConfig from './config.js';
 
 // Service worker update handling
@@ -143,6 +144,15 @@ window.dismissUpdate = function() {
 };
 
 document.addEventListener('DOMContentLoaded', async () => {
+    // Apply dark mode immediately to prevent flash
+    if (!localStorage.getItem('gamble-king-dark-mode')) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        localStorage.setItem('gamble-king-dark-mode', 'dark');
+    } else {
+        const savedTheme = localStorage.getItem('gamble-king-dark-mode');
+        document.documentElement.setAttribute('data-theme', savedTheme);
+    }
+    
     const appContent = document.getElementById('app-content');
     
     // Load configuration first
@@ -159,6 +169,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (!localStorage.getItem('gamble-king-dark-mode')) {
         darkModeManager.setTheme('dark');
     }
+    
+    // Initialize settings manager
+    const settingsManager = new SettingsManager(darkModeManager);
     
     // Initialize modules
     const dashboardPage = new DashboardPage(appContent, apiService);
@@ -245,16 +258,16 @@ document.addEventListener('DOMContentLoaded', async () => {
         const currentHash = window.location.hash || '#dashboard';
         const currentPage = currentHash.split('/')[0].replace('#', '') || 'dashboard';
         
-        // Update desktop navigation
-        document.querySelectorAll('.desktop-nav a').forEach(link => {
+        // Update desktop navigation (both old and new classes)
+        document.querySelectorAll('.desktop-nav a, .neo-desktop-nav .neo-nav-btn').forEach(link => {
             link.classList.remove('active');
             if (link.getAttribute('href') === `#${currentPage}`) {
                 link.classList.add('active');
             }
         });
         
-        // Update mobile navigation
-        document.querySelectorAll('.bottom-nav .nav-btn').forEach(btn => {
+        // Update mobile navigation (both old and new classes)
+        document.querySelectorAll('.bottom-nav .nav-btn, .neo-bottom-nav .neo-nav-mobile-btn').forEach(btn => {
             btn.classList.remove('active');
             const hash = btn.getAttribute('data-hash');
             if (hash === `#${currentPage}`) {
@@ -265,8 +278,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     // Setup navigation event listeners
     function setupNavigation() {
-        // Desktop navigation
-        document.querySelectorAll('.desktop-nav a').forEach(link => {
+        // Desktop navigation (both old and new classes)
+        document.querySelectorAll('.desktop-nav a, .neo-desktop-nav .neo-nav-btn').forEach(link => {
             link.addEventListener('click', (e) => {
                 e.preventDefault();
                 const href = link.getAttribute('href');
@@ -275,13 +288,15 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
         });
         
-        // Mobile navigation
-        document.querySelectorAll('.bottom-nav .nav-btn').forEach(btn => {
+        // Mobile navigation (both old and new classes, excluding settings button)
+        document.querySelectorAll('.bottom-nav .nav-btn, .neo-bottom-nav .neo-nav-mobile-btn:not(#settings-trigger)').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 e.preventDefault();
                 const hash = btn.getAttribute('data-hash');
-                window.location.hash = hash;
-                updateActiveNavigation();
+                if (hash) {  // Only navigate if there's a hash (not for settings button)
+                    window.location.hash = hash;
+                    updateActiveNavigation();
+                }
             });
         });
         

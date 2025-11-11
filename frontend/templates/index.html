@@ -29,30 +29,47 @@
         href="{{ versioned_url('images/icon-512x512.png') }}">
 </head>
 
-<body>    <header>
-        <div class="royal-header">
-            <span class="royal-crown left">👑</span>
+<body>    <header class="neo-header">
+        <div class="neo-royal-header">
+            <span class="neo-royal-crown left">👑</span>
             <h1>Gamble King</h1>
-            <span class="royal-crown right">👑</span>
+            <span class="neo-royal-crown right">👑</span>
         </div>
-        <nav class="desktop-nav">
-            <a href="#dashboard">Dashboard</a>
-            <a href="#players">Players</a>
-            <a href="#sessions">Sessions</a>
+        <nav class="neo-desktop-nav">
+            <a href="#dashboard" class="neo-nav-btn">Dashboard</a>
+            <a href="#players" class="neo-nav-btn">Players</a>
+            <a href="#sessions" class="neo-nav-btn">Sessions</a>
         </nav>
     </header>
 
-    <!-- Header Controls Container -->
-    <div class="header-controls">
-        <!-- Settings Button -->
-        <a href="/admin/" target="_blank" id="settings-btn" class="header-btn settings-btn" title="Admin Settings">
-            ⚙️
-        </a>
-        <!-- Dark Mode Toggle -->
-        <button id="dark-mode-toggle" class="header-btn dark-mode-btn" title="Toggle Dark Mode">
-            🌙
-        </button>
+    <!-- Settings Slide-out Menu -->
+    <div id="settings-menu" class="neo-settings-menu">
+        <div class="neo-settings-content">
+            <div class="neo-settings-header">
+                <h3>Settings</h3>
+                <button id="settings-close" class="neo-settings-close">×</button>
+            </div>
+            <div class="neo-settings-options">
+                <div class="neo-setting-item">
+                    <span class="neo-setting-label">Theme</span>
+                    <button id="theme-toggle" class="neo-setting-btn">
+                        <span class="theme-icon">🌙</span>
+                        <span class="theme-text">Dark Mode</span>
+                    </button>
+                </div>
+                <div class="neo-setting-item">
+                    <span class="neo-setting-label">Admin</span>
+                    <a href="/admin/" target="_blank" class="neo-setting-btn admin-link">
+                        <span>⚙️</span>
+                        <span>Admin Panel</span>
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
+
+    <!-- Settings Overlay -->
+    <div id="settings-overlay" class="neo-settings-overlay"></div>
 
     <main id="app-content">
         <p>Loading...</p>
@@ -73,25 +90,25 @@
                 <input type="number" id="modal-session-buyin" value="20" min="0" step="0.01">
             </div>
             <div class="modal-actions">
-                <button id="modal-create-session-btn" class="primary-btn">Create Session</button>
-                <button id="modal-cancel-session-btn" class="secondary-btn">Cancel</button>
+                <button id="modal-create-session-btn" class="neo-btn neo-btn-green neo-btn-lg">Create Session</button>
+                <button id="modal-cancel-session-btn" class="neo-btn neo-btn-red">Cancel</button>
             </div>
         </div>
     </div>
 
     <!-- Bottom Navigation for Mobile -->
-    <nav class="bottom-nav">
-        <button class="nav-btn" data-hash="#dashboard">
+    <nav class="neo-bottom-nav">
+        <button class="neo-nav-mobile-btn" data-hash="#dashboard">
             <span class="nav-icon">🏠</span>
-            <span class="nav-label">Dashboard</span>
         </button>
-        <button class="nav-btn" data-hash="#players">
+        <button class="neo-nav-mobile-btn" data-hash="#players">
             <span class="nav-icon">👥</span>
-            <span class="nav-label">Players</span>
         </button>
-        <button class="nav-btn" data-hash="#sessions">
+        <button class="neo-nav-mobile-btn" data-hash="#sessions">
             <span class="nav-icon">🃏</span>
-            <span class="nav-label">Sessions</span>
+        </button>
+        <button class="neo-nav-mobile-btn" id="settings-trigger">
+            <span class="nav-icon">⚙️</span>
         </button>
     </nav>    <!-- PWA update handler -->
     <script>
