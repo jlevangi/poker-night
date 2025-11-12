@@ -288,6 +288,14 @@ h3 {
     min-height: 44px;
     position: relative;
     overflow: hidden;
+    /* Remove mobile tap highlights */
+    -webkit-tap-highlight-color: transparent !important;
+    outline: none !important;
+    touch-action: manipulation;
+}
+
+.btn:focus {
+    outline: none !important;
 }
 
 .btn::before {

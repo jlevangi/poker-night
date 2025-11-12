@@ -24,7 +24,8 @@ export default class Router {
     
     // Load content for the current route
     async loadContent(path) {
-        this.appContent.innerHTML = `<p>Loading ${path}...</p>`;
+        // Remove loading message - just show empty content while loading
+        this.appContent.innerHTML = '';
         
         try {
             // Check if it's a path with parameters
