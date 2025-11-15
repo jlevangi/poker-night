@@ -23,17 +23,20 @@ def get_stats_summary():
                 'house_loss': 0
             })
         
-        total_buy_ins = sum(getattr(session, 'total_buy_ins', 0) or 0 for session in sessions)
-        total_payouts = sum(getattr(session, 'total_payouts', 0) or 0 for session in sessions)
-        
-        # Get unique player count
+        # Calculate totals from all entries across all sessions
+        total_buy_ins = 0
+        total_payouts = 0
         all_players = set()
+        
         for session in sessions:
             entries = database_service.get_entries_for_session(session.session_id)
             for entry in entries:
+                # Add up buy-ins and payouts from entry data
+                total_buy_ins += entry.total_buy_in_amount or 0
+                total_payouts += entry.payout or 0
                 all_players.add(entry.player_id)
         
-        # Calculate house loss as payouts over buy-ins (negative means house wins)
+        # Calculate house loss as payouts minus buy-ins (negative means house wins)
         house_loss = total_payouts - total_buy_ins if total_buy_ins > 0 else 0
         
         stats = {
@@ -72,17 +75,18 @@ def get_gambling_over_time():
         chart_data = []
         
         for session in sorted_sessions:
-            buy_ins = getattr(session, 'total_buy_ins', 0) or 0
-            cumulative_amount += buy_ins
+            # Calculate session buy-ins from entries
+            entries = database_service.get_entries_for_session(session.session_id)
+            session_buy_ins = sum(entry.total_buy_in_amount or 0 for entry in entries)
+            cumulative_amount += session_buy_ins
             
             # Get player count for this session
-            entries = database_service.get_entries_for_session(session.session_id)
             player_count = len(entries)
             
             chart_data.append({
                 'session_id': session.session_id,
-                'date': getattr(session, 'session_date', '') or '',
-                'session_amount': buy_ins,
+                'date': session.date,
+                'session_amount': session_buy_ins,
                 'cumulative_amount': cumulative_amount,
                 'player_count': player_count
             })
