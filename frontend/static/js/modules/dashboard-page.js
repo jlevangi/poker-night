@@ -44,11 +44,8 @@ export default class DashboardPage {
                 <!-- Gamble King Section -->
                 ${data.gambleKing ? this.renderGambleKingSection(data.gambleKing) : ''}
                 
-                <!-- Quick Actions Section -->
-                ${this.renderQuickActionsSection(data.activeSession)}
-                
-                <!-- Stats Overview -->
-                ${this.renderStatsOverview(data)}
+                <!-- Quick Actions and Stats Grid -->
+                ${this.renderQuickActionsAndStatsGrid(data)}
                 
                 <!-- Top Players Section -->
                 ${this.renderStandingsSection(data.players)}
@@ -64,20 +61,38 @@ export default class DashboardPage {
         this.setupEventListeners(data.activeSession);
     }
     
-    // Render stats overview section
-    renderStatsOverview(data) {
-        const { totalGambled, totalPlayers, totalSessions } = data;
+    // Render quick actions and stats in a 2x2 grid
+    renderQuickActionsAndStatsGrid(data) {
+        const { totalGambled, totalPlayers, totalSessions, activeSession } = data;
         
         return `
-            <div class="neo-stats-grid">
+            <div class="neo-stats-grid" style="grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 1rem;">
+                <!-- Quick Action Card (Top Left) -->
+                ${activeSession ? `
+                    <a href="#session/${activeSession.session_id}" class="neo-stat-card neo-card-primary" style="text-decoration: none; color: inherit; cursor: pointer;">
+                        <div class="neo-stat-value" style="font-size: 2rem;">🎯</div>
+                        <div class="neo-stat-label">View Active Session</div>
+                    </a>
+                ` : `
+                    <button id="quick-start-session-btn" class="neo-stat-card neo-card-primary" style="background: var(--bg-card); border: var(--neo-border); cursor: pointer; color: inherit; padding: var(--spacing-neo); box-shadow: var(--neo-shadow-md); transition: all var(--transition-neo); text-align: center; position: relative; width: 100%; font-family: inherit;" onmouseover="this.style.transform='translate(-2px, -2px)'; this.style.boxShadow='var(--neo-shadow-lg)'" onmouseout="this.style.transform='translate(0, 0)'; this.style.boxShadow='var(--neo-shadow-md)'">
+                        <div class="neo-stat-value" style="font-size: 2rem;">🃏</div>
+                        <div class="neo-stat-label">Start New Session</div>
+                    </button>
+                `}
+                
+                <!-- Total Players Card (Top Right) -->
                 <div class="neo-stat-card neo-card-purple">
                     <div class="neo-stat-value">${totalPlayers || 0}</div>
                     <div class="neo-stat-label">Total Players</div>
                 </div>
+                
+                <!-- Sessions Played Card (Bottom Left) -->
                 <div class="neo-stat-card neo-card-green">
                     <div class="neo-stat-value">${totalSessions || 0}</div>
                     <div class="neo-stat-label">Sessions Played</div>
                 </div>
+                
+                <!-- Total Gambled Card (Bottom Right) -->
                 <div class="neo-stat-card neo-card-gold">
                     <div class="neo-stat-value">$${totalGambled ? totalGambled.toFixed(2) : '0.00'}</div>
                     <div class="neo-stat-label">Total Gambled</div>
@@ -105,43 +120,22 @@ export default class DashboardPage {
                 <div class="neo-gamble-king-title">Current Gamble King</div>
                 <div class="neo-gamble-king-name">👑${gambleKing.name}👑</div>
                 <div class="neo-stats-grid" style="grid-template-columns: repeat(4, 1fr);">
-                    <div class="neo-stat-card" style="border-color: var(--casino-gold); background: var(--bg-card);">
+                    <div class="neo-stat-card" style="background: var(--bg-card);">
                         <div class="neo-stat-value profit-${gambleKing.net_profit >= 0 ? 'positive' : 'negative'}">$${gambleKing.net_profit ? gambleKing.net_profit.toFixed(2) : '0.00'}</div>
                         <div class="neo-stat-label">Total Profit</div>
                     </div>
-                    <div class="neo-stat-card" style="border-color: var(--casino-gold); background: var(--bg-card);">
+                    <div class="neo-stat-card" style="background: var(--bg-card);">
                         <div class="neo-stat-value">${gambleKing.games_played || 0}</div>
                         <div class="neo-stat-label">Sessions</div>
                     </div>
-                    <div class="neo-stat-card" style="border-color: var(--casino-gold); background: var(--bg-card);">
+                    <div class="neo-stat-card" style="background: var(--bg-card);">
                         <div class="neo-stat-value">${gambleKing.win_percentage ? gambleKing.win_percentage.toFixed(1) : '0'}%</div>
                         <div class="neo-stat-label">Win Rate</div>
                     </div>
-                    <div class="neo-stat-card" style="border-color: var(--casino-gold); background: var(--bg-card);">
+                    <div class="neo-stat-card" style="background: var(--bg-card);">
                         <div class="neo-stat-value">${gambleKing.seven_two_wins || 0}</div>
                         <div class="neo-stat-label">7-2 Wins</div>
                     </div>
-                </div>
-            </div>
-        `;
-    }
-    
-    // Render quick action buttons
-    renderQuickActionsSection(activeSession) {
-        return `
-            <div class="neo-card">
-                <div class="neo-quick-actions">
-                    ${activeSession ? `
-                        <a href="#session/${activeSession.session_id}" class="neo-quick-action">
-                            <span class="neo-quick-action-icon">🎯</span>
-                            <span>View Active Session</span>
-                        </a>
-                    ` : `
-                        <button id="quick-start-session-btn" class="neo-quick-action" style="border: none; cursor: pointer;">
-                            <span class="neo-quick-action-icon">🎮</span>
-                            <span>Start New Session</span>
-                        </button>
-                    `}
                 </div>
             </div>
         `;

@@ -43,16 +43,16 @@ textarea,
     --casino-gray: #374151;
     --casino-cream: #FEF7ED;
     
-    /* Neobrutalist Shadows */
-    --neo-shadow-sm: 4px 4px 0px var(--casino-black);
-    --neo-shadow-md: 6px 6px 0px var(--casino-black);
-    --neo-shadow-lg: 8px 8px 0px var(--casino-black);
-    --neo-shadow-xl: 12px 12px 0px var(--casino-black);
+    /* Neobrutalist Shadows - Always pure black for consistency */
+    --neo-shadow-sm: 4px 4px 0px #000000;
+    --neo-shadow-md: 6px 6px 0px #000000;
+    --neo-shadow-lg: 8px 8px 0px #000000;
+    --neo-shadow-xl: 12px 12px 0px #000000;
     
-    /* Neobrutalist Borders */
-    --neo-border: 3px solid var(--casino-black);
-    --neo-border-thin: 2px solid var(--casino-black);
-    --neo-border-thick: 4px solid var(--casino-black);
+    /* Neobrutalist Borders - Always pure black for consistency */
+    --neo-border: 3px solid #000000;
+    --neo-border-thin: 2px solid #000000;
+    --neo-border-thick: 4px solid #000000;
     
     /* Updated Primary Colors for Neobrutalism */
     --primary-color: var(--casino-red);
@@ -172,6 +172,16 @@ textarea,
     text-shadow: 3px 3px 0px #000000 !important;
 }
 
+/* Dark mode neo-card border override for consistency */
+[data-theme="dark"] .neo-card,
+[data-theme="dark"] .neo-card-red,
+[data-theme="dark"] .neo-card-gold,
+[data-theme="dark"] .neo-card-green,
+[data-theme="dark"] .neo-card-purple,
+[data-theme="dark"] .neo-card-primary {
+    border: var(--neo-border) !important;
+}
+
 /* ============================================================================ */
 /* NEOBRUTALIST HEADER & NAVIGATION STYLES */
 /* ============================================================================ */
@@ -180,7 +190,7 @@ textarea,
 .neo-header {
     background: var(--casino-black);
     border-bottom: var(--neo-border-thick);
-    border-bottom-color: var(--casino-gold);
+    border-bottom-color: #000000;
     box-shadow: var(--neo-shadow-lg);
     padding: var(--spacing-neo);
     position: relative;
@@ -391,7 +401,7 @@ textarea,
     height: 100vh;
     background: var(--casino-black);
     border-left: var(--neo-border-thick);
-    border-left-color: var(--casino-gold);
+    border-left-color: #000000;
     box-shadow: var(--neo-shadow-xl);
     z-index: calc(var(--z-modal) + 1);
     transition: right var(--transition-neo);
@@ -433,7 +443,7 @@ textarea,
     margin-bottom: 2rem;
     padding-bottom: 1rem;
     border-bottom: var(--neo-border);
-    border-bottom-color: var(--casino-gold);
+    border-bottom-color: #000000;
 }
 
 .neo-settings-header h3 {
@@ -893,25 +903,25 @@ body {
 
 .neo-card-primary {
     background: var(--casino-red-light);
-    border-color: var(--casino-red);
+    border-color: #000000;
     color: var(--casino-red-dark);
 }
 
 .neo-card-gold {
     background: var(--casino-gold-light);
-    border-color: var(--casino-gold);
+    border-color: #000000;
     color: var(--casino-gold-dark);
 }
 
 .neo-card-green {
     background: var(--casino-green-light);
-    border-color: var(--casino-green);
+    border-color: #000000;
     color: var(--casino-green-dark);
 }
 
 .neo-card-purple {
     background: var(--casino-purple-light);
-    border-color: var(--casino-purple);
+    border-color: #000000;
     color: var(--casino-purple-dark);
 }
 
@@ -1044,7 +1054,7 @@ body {
 .neo-stat-value {
     font-size: 2.5rem;
     font-weight: var(--font-weight-black);
-    line-height: 1;
+    line-height: 1.6;
     margin-bottom: 0.5rem;
     color: inherit;
 }
@@ -1399,11 +1409,11 @@ body {
     }
     
     .neo-gamble-king .neo-stat-value {
-        font-size: 1rem !important;
+        font-size: 1.5rem !important;
     }
     
     .neo-gamble-king .neo-stat-label {
-        font-size: 0.5rem !important;
+        font-size: 1rem !important;
         line-height: 1.2 !important;
     }
 }
