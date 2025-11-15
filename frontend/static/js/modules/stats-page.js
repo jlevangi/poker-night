@@ -87,14 +87,14 @@ export default class StatsPage {
                 </div>
                 <div class="neo-stat-card neo-card-green">
                     <div class="neo-stat-value">${stats.total_sessions || 0}</div>
-                    <div class="neo-stat-label">Gaming Sessions</div>
+                    <div class="neo-stat-label">Poker Sessions</div>
                 </div>
                 <div class="neo-stat-card neo-card-purple">
                     <div class="neo-stat-value">$${(stats.average_session_value || 0).toLocaleString()}</div>
                     <div class="neo-stat-label">Avg Session Value</div>
                 </div>
                 <div class="neo-stat-card neo-card-red">
-                    <div class="neo-stat-value">$${Math.abs(stats.house_loss || 0).toLocaleString()}</div>
+                    <div class="neo-stat-value">-$${Math.abs(stats.house_loss || 0).toLocaleString()}</div>
                     <div class="neo-stat-label">House Loss</div>
                 </div>
             </div>
@@ -159,8 +159,8 @@ export default class StatsPage {
                         </div>
                         <div class="neo-insight-item">
                             <span class="neo-insight-label">House Loss:</span>
-                            <span class="neo-insight-value ${(stats.house_loss || 0) >= 0 ? 'positive' : 'negative'}">
-                                ${(stats.house_loss || 0) >= 0 ? '+' : ''}$${(stats.house_loss || 0).toLocaleString()}
+                            <span class="neo-insight-value negative">
+                                -$${Math.abs(stats.house_loss || 0).toLocaleString()}
                             </span>
                         </div>
                     </div>
@@ -176,10 +176,6 @@ export default class StatsPage {
                         <div class="neo-insight-item">
                             <span class="neo-insight-label">Total Gambled:</span>
                             <span class="neo-insight-value">$${(stats.total_buy_ins || 0).toLocaleString()}</span>
-                        </div>
-                        <div class="neo-insight-item">
-                            <span class="neo-insight-label">Growth Rate:</span>
-                            <span class="neo-insight-value">${stats.total_sessions > 1 ? 'Active' : 'Getting Started'}</span>
                         </div>
                     </div>
                 </div>
@@ -205,8 +201,8 @@ export default class StatsPage {
         // Chart dimensions
         const containerWidth = chartContainer.offsetWidth || 800;
         const width = Math.max(400, containerWidth - 120);
-        const height = 300;
-        const padding = { top: 20, right: 20, bottom: 60, left: 0 };
+        const height = 250;
+        const padding = { top: 15, right: 15, bottom: 30, left: 0 };
         
         // Find max value and create $500 increment scale
         const dataMaxValue = Math.max(...data.map(d => d.cumulative_amount));
@@ -216,15 +212,15 @@ export default class StatsPage {
         const maxValue = Math.ceil((dataMaxValue + increment) / increment) * increment;
         const minValue = 0;
         
-        // Generate Y-axis labels at $500 increments
+        // Generate Y-axis labels at $500 increments (high to low for display)
         const yLabels = [];
-        for (let value = 0; value <= maxValue; value += increment) {
+        for (let value = maxValue; value >= 0; value -= increment) {
             yLabels.push(value);
         }
         
         // Create SVG area chart with dynamic Y-axis
         let yAxisHTML = '';
-        yLabels.reverse().forEach((value) => {
+        yLabels.forEach((value) => {
             yAxisHTML += `<div class="neo-y-label">$${value.toLocaleString()}</div>`;
         });
         
@@ -280,30 +276,30 @@ export default class StatsPage {
         
         const chartWidth = width - padding.right;
         const chartHeight = height - padding.top - padding.bottom;
+        const bottomY = height - padding.bottom; // Y position for value 0
         
         let pathD = '';
-        let points = [];
         
+        // Start the path from the bottom left (at value 0)
+        const firstX = 0;
+        pathD += `M ${firstX} ${bottomY}`;
+        
+        // Draw line up to first data point
+        const firstDataY = padding.top + chartHeight - (data[0].cumulative_amount / maxValue) * chartHeight;
+        pathD += ` L ${firstX} ${firstDataY}`;
+        
+        // Draw the line through all data points
         data.forEach((point, index) => {
             const x = (index / Math.max(data.length - 1, 1)) * chartWidth;
             const y = padding.top + chartHeight - (point.cumulative_amount / maxValue) * chartHeight;
-            
-            points.push({ x, y });
-            
-            if (index === 0) {
-                pathD += `M ${x} ${y}`;
-            } else {
-                pathD += ` L ${x} ${y}`;
-            }
+            pathD += ` L ${x} ${y}`;
         });
         
-        // Close the area path to bottom
-        if (points.length > 0) {
-            const lastPoint = points[points.length - 1];
-            const firstPoint = points[0];
-            const bottomY = height - padding.bottom;
-            pathD += ` L ${lastPoint.x} ${bottomY}`;
-            pathD += ` L ${firstPoint.x} ${bottomY}`;
+        // Close the area by going down to the bottom and back to start
+        if (data.length > 0) {
+            const lastX = ((data.length - 1) / Math.max(data.length - 1, 1)) * chartWidth;
+            pathD += ` L ${lastX} ${bottomY}`;
+            pathD += ` L ${firstX} ${bottomY}`;
             pathD += ' Z';
         }
         
