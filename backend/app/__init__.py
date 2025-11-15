@@ -19,6 +19,7 @@ from .routes.admin import admin_bp
 from .routes.dashboard import dashboard_bp
 from .routes.notifications import notifications_bp
 from .routes.config import config_bp
+from .routes.stats import stats_bp
 from .database.models import db
 from .database.migrations import AutoMigration
 
@@ -70,6 +71,7 @@ def create_app(config_class: type = Config) -> Flask:
     app.register_blueprint(chip_calculator_bp, url_prefix='/api')
     app.register_blueprint(notifications_bp, url_prefix='/api/notifications')
     app.register_blueprint(config_bp, url_prefix='/api')
+    app.register_blueprint(stats_bp)
     app.register_blueprint(admin_bp, url_prefix='/admin')
     app.register_blueprint(frontend_bp)
     
@@ -91,7 +93,7 @@ def create_app(config_class: type = Config) -> Flask:
             "style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; "
             "font-src 'self' https://cdnjs.cloudflare.com; "
             "img-src 'self' data:; "
-            "connect-src 'self'; "
+            "connect-src 'self' https://cdnjs.cloudflare.com; "
             "manifest-src 'self'; "
             "worker-src 'self'"
         )

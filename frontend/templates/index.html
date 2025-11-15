@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="{{ versioned_url('css/button-styles.css') }}">
     <link rel="stylesheet" href="{{ versioned_url('css/player-stats-restructure.css') }}">
     <link rel="stylesheet" href="{{ versioned_url('css/dark-mode.css') }}">
+    <link rel="stylesheet" href="{{ versioned_url('css/chart-styles.css') }}">
     <link rel="manifest" href="{{ url_for('frontend.serve_manifest') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
@@ -36,9 +37,11 @@
             <span class="neo-royal-crown right">👑</span>
         </div>
         <nav class="neo-desktop-nav">
-            <a href="#dashboard" class="neo-nav-btn">Dashboard</a>
-            <a href="#players" class="neo-nav-btn">Players</a>
-            <a href="#sessions" class="neo-nav-btn">Sessions</a>
+            <button id="settings-btn" class="neo-nav-btn">&#9881;&#65039; Settings</button>
+            <a href="#sessions" class="neo-nav-btn">&#127183; Sessions</a>
+            <a href="#dashboard" class="neo-nav-btn">&#127968; Home</a>
+            <a href="#players" class="neo-nav-btn">&#127917; Players</a>
+            <a href="#stats" class="neo-nav-btn">&#128202; Stats</a>
         </nav>
     </header>
 
@@ -46,23 +49,25 @@
     <div id="settings-menu" class="neo-settings-menu">
         <div class="neo-settings-content">
             <div class="neo-settings-header">
-                <h3>Settings</h3>
+                <h3>&#9881;&#65039; Settings</h3>
                 <button id="settings-close" class="neo-settings-close">×</button>
             </div>
-            <div class="neo-settings-options">
-                <div class="neo-setting-item">
-                    <span class="neo-setting-label">Theme</span>
-                    <button id="theme-toggle" class="neo-setting-btn">
-                        <span class="theme-icon">🌙</span>
-                        <span class="theme-text">Dark Mode</span>
-                    </button>
-                </div>
-                <div class="neo-setting-item">
-                    <span class="neo-setting-label">Admin</span>
-                    <a href="/admin/" target="_blank" class="neo-setting-btn admin-link">
-                        <span>⚙️</span>
-                        <span>Admin Panel</span>
-                    </a>
+            <div class="neo-settings-body">
+                <div class="neo-settings-main">
+                    <div class="neo-setting-item">
+                        <span class="neo-setting-label">Admin Panel</span>
+                        <a href="/admin/" target="_blank" class="neo-setting-btn admin-link">
+                            <span>&#128295;</span>
+                            <span>Open Admin</span>
+                        </a>
+                    </div>
+                    <div class="neo-setting-item">
+                        <span class="neo-setting-label">Theme</span>
+                        <button id="theme-toggle" class="neo-setting-btn">
+                            <span class="theme-icon">&#127769;</span>
+                            <span class="theme-text">Dark Mode</span>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -98,19 +103,22 @@
 
     <!-- Bottom Navigation for Mobile -->
     <nav class="neo-bottom-nav">
-        <button class="neo-nav-mobile-btn" data-hash="#dashboard">
-            <span class="nav-icon">🏠</span>
-        </button>
-        <button class="neo-nav-mobile-btn" data-hash="#players">
-            <span class="nav-icon">🎭</span>
+        <button class="neo-nav-mobile-btn" id="settings-trigger">
+            <span class="nav-icon">&#9881;&#65039;</span>
         </button>
         <button class="neo-nav-mobile-btn" data-hash="#sessions">
-            <span class="nav-icon">🃏</span>
+            <span class="nav-icon">&#127183;</span>
         </button>
-        <button class="neo-nav-mobile-btn" id="settings-trigger">
-            <span class="nav-icon">⚙️</span>
+        <button class="neo-nav-mobile-btn" data-hash="#dashboard">
+            <span class="nav-icon">&#127968;</span>
         </button>
-    </nav>    <!-- PWA update handler -->
+        <button class="neo-nav-mobile-btn" data-hash="#players">
+            <span class="nav-icon">&#127917;</span>
+        </button>
+        <button class="neo-nav-mobile-btn" data-hash="#stats">
+            <span class="nav-icon">&#128202;</span>
+        </button>
+    </nav>
     <script>
         // Register service worker
         if ('serviceWorker' in navigator) {

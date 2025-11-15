@@ -7,6 +7,7 @@ import PlayersPage from './modules/players-page.js';
 import SessionsPage from './modules/sessions-page.js';
 import SessionDetailPage from './modules/session-detail-page.js';
 import PlayerDetailPage from './modules/player-detail-page.js';
+import StatsPage from './modules/stats-page.js';
 import ServiceWorkerManager from './modules/service-worker-manager.js';
 import DarkModeManager from './modules/dark-mode-manager.js';
 import SettingsManager from './modules/settings-manager.js';
@@ -179,6 +180,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const sessionsPage = new SessionsPage(appContent, apiService);
     const sessionDetailPage = new SessionDetailPage(appContent, apiService);
     const playerDetailPage = new PlayerDetailPage(appContent, apiService);
+    const statsPage = new StatsPage(appContent, apiService);
     
     // Setup new session modal
     setupNewSessionModal();
@@ -300,6 +302,65 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
         });
         
+        // Settings button functionality (desktop)
+        const settingsBtn = document.getElementById('settings-btn');
+        if (settingsBtn) {
+            settingsBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                showSettings();
+            });
+        }
+        
+        // Settings button functionality (mobile)
+        const settingsTrigger = document.getElementById('settings-trigger');
+        if (settingsTrigger) {
+            settingsTrigger.addEventListener('click', (e) => {
+                e.preventDefault();
+                showSettings();
+            });
+        }
+        
+        // Settings close button functionality
+        const settingsClose = document.getElementById('settings-close');
+        if (settingsClose) {
+            settingsClose.addEventListener('click', (e) => {
+                e.preventDefault();
+                hideSettings();
+            });
+        }
+        
+        // Settings overlay close functionality
+        const settingsOverlay = document.getElementById('settings-overlay');
+        if (settingsOverlay) {
+            settingsOverlay.addEventListener('click', (e) => {
+                hideSettings();
+            });
+        }
+    }
+    
+    // Helper function to show settings
+    function showSettings() {
+        const settingsMenu = document.getElementById('settings-menu');
+        const settingsOverlay = document.getElementById('settings-overlay');
+        if (settingsMenu) {
+            settingsMenu.classList.add('show');
+        }
+        if (settingsOverlay) {
+            settingsOverlay.classList.add('active');
+        }
+    }
+    
+    // Helper function to hide settings
+    function hideSettings() {
+        const settingsMenu = document.getElementById('settings-menu');
+        const settingsOverlay = document.getElementById('settings-overlay');
+        if (settingsMenu) {
+            settingsMenu.classList.remove('show');
+        }
+        if (settingsOverlay) {
+            settingsOverlay.classList.remove('active');
+        }
+        
         // Update navigation on hash change
         window.addEventListener('hashchange', updateActiveNavigation);
         
@@ -319,6 +380,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         })
         .register('sessions', () => {
             sessionsPage.load();
+            updateActiveNavigation();
+        })
+        .register('stats', () => {
+            statsPage.load();
             updateActiveNavigation();
         })
         .register('player/:id', (id) => {

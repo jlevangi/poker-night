@@ -1,0 +1,451 @@
+/* Neobrutalist Chart Styles */
+/* Inspired by https://www.neobrutalism.dev/charts */
+
+/* Chart Container */
+.neo-chart-container {
+    background: var(--bg-card);
+    border: var(--neo-border);
+    box-shadow: var(--neo-shadow-md);
+    padding: 1.5rem;
+    margin: 1rem 0;
+    min-height: 400px;
+    position: relative;
+}
+
+.neo-chart-header {
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.neo-chart-header h2 {
+    font-size: 1.75rem;
+    font-weight: var(--font-weight-black);
+    color: var(--text-primary);
+    margin: 0 0 0.5rem 0;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.neo-chart-subtitle {
+    font-size: 1rem;
+    font-weight: var(--font-weight-bold);
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Chart Wrapper */
+.neo-chart-wrapper {
+    display: flex;
+    height: 300px;
+    width: 100%;
+    position: relative;
+}
+
+/* Y-Axis */
+.neo-chart-y-axis {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding-right: 1rem;
+    width: 100px;
+    height: 100%;
+}
+
+.neo-y-label {
+    font-size: 0.75rem;
+    font-weight: var(--font-weight-bold);
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    line-height: 1;
+    transform: translateY(-50%);
+}
+
+/* Chart Area */
+.neo-chart-area {
+    flex: 1;
+    position: relative;
+    height: 100%;
+    border-left: var(--neo-border-thin);
+    border-bottom: var(--neo-border-thin);
+}
+
+/* Grid Lines */
+.neo-chart-grid {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    z-index: 1;
+}
+
+.neo-grid-line {
+    height: 2px;
+    background: var(--text-muted);
+    opacity: 0.3;
+    width: 100%;
+}
+
+/* SVG Area Chart */
+.neo-area-chart {
+    width: 100%;
+    height: 100%;
+    background: transparent;
+}
+
+/* Area Path Styling - Flat colors (no gradients for neobrutalist style) */
+.neo-area-path {
+    fill: var(--casino-green);
+    stroke: var(--casino-green-dark);
+    stroke-width: 3;
+    fill-opacity: 0.6;
+    transition: all 0.2s ease;
+}
+
+.neo-area-path:hover {
+    fill-opacity: 0.8;
+}
+
+/* Data Points */
+.neo-data-point {
+    fill: var(--casino-gold);
+    stroke: var(--casino-black);
+    stroke-width: 2;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    r: 6;
+}
+
+.neo-data-point:hover {
+    fill: var(--casino-red);
+    r: 8;
+    stroke-width: 3;
+}
+
+/* Chart Tooltip */
+.neo-chart-tooltip {
+    position: absolute;
+    background: var(--casino-black);
+    color: var(--casino-white);
+    border: 3px solid var(--casino-gold);
+    padding: 0.75rem;
+    font-size: 0.8rem;
+    font-weight: var(--font-weight-bold);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    box-shadow: var(--neo-shadow-md);
+    z-index: var(--z-modal, 2000);
+    transform: translate(-50%, -100%);
+    margin-top: -10px;
+    pointer-events: none;
+    animation: neo-tooltip-appear 0.2s ease-out;
+}
+
+.neo-chart-tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 8px solid var(--casino-gold);
+}
+
+/* Insights Section */
+.neo-insight-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.neo-insight-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem;
+    background: var(--bg-secondary);
+    border: 2px solid var(--casino-black);
+    box-shadow: 4px 4px 0 var(--casino-black);
+}
+
+.neo-insight-label {
+    font-size: 0.9rem;
+    font-weight: var(--font-weight-bold);
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.neo-insight-value {
+    font-size: 1.1rem;
+    font-weight: var(--font-weight-black);
+    color: var(--text-primary);
+}
+
+.neo-insight-value.positive {
+    color: var(--casino-green);
+}
+
+.neo-insight-value.negative {
+    color: var(--casino-red);
+}
+
+/* Stats Page Specific Grid - Ensures 2x2 layout without affecting dashboard */
+.stats-page .neo-stats-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: var(--spacing-neo) !important;
+}
+
+/* Session Modal Styles - Neobrutalist Design */
+.neo-session-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(4px);
+    z-index: var(--z-modal, 2000);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: neo-modal-fade-in 0.2s ease-out;
+}
+
+.neo-session-modal-content {
+    background: var(--casino-bg);
+    border: 4px solid var(--casino-black);
+    border-radius: 0;
+    box-shadow: 12px 12px 0 var(--casino-black);
+    max-width: 500px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    animation: neo-modal-slide-up 0.3s ease-out;
+}
+
+.neo-session-modal-header {
+    background: var(--casino-gold);
+    border-bottom: 4px solid var(--casino-black);
+    padding: 1rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.neo-session-modal-header h3 {
+    margin: 0;
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: var(--casino-black);
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+}
+
+.neo-session-modal-close {
+    background: var(--casino-red);
+    border: 3px solid var(--casino-black);
+    color: var(--casino-white);
+    font-size: 1.5rem;
+    font-weight: bold;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.1s ease;
+    border-radius: 0;
+    box-shadow: 4px 4px 0 var(--casino-black);
+}
+
+.neo-session-modal-close:hover {
+    background: var(--casino-black);
+    color: var(--casino-red);
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0 var(--casino-black);
+}
+
+.neo-session-modal-body {
+    padding: 1.5rem;
+}
+
+.neo-session-info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.neo-session-info-card {
+    background: var(--casino-white);
+    border: 3px solid var(--casino-black);
+    padding: 1rem;
+    box-shadow: 6px 6px 0 var(--casino-black);
+}
+
+.neo-session-info-card.neo-highlight {
+    background: var(--casino-green);
+    color: var(--casino-white);
+}
+
+.neo-session-info-label {
+    font-size: 0.8rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    margin-bottom: 0.5rem;
+    opacity: 0.8;
+}
+
+.neo-session-info-value {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: var(--casino-black);
+}
+
+.neo-session-info-card.neo-highlight .neo-session-info-value {
+    color: var(--casino-white);
+}
+
+.neo-session-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: space-between;
+}
+
+.neo-session-actions .neo-btn {
+    flex: 1;
+    text-align: center;
+    text-decoration: none;
+    padding: 0.75rem 1rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    transition: all 0.1s ease;
+}
+
+/* Animations */
+@keyframes neo-tooltip-appear {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -100%) scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -100%) scale(1);
+    }
+}
+
+@keyframes neo-modal-fade-in {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes neo-modal-slide-up {
+    from {
+        transform: translateY(50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .neo-chart-container {
+        padding: 1rem;
+        min-height: 350px;
+    }
+    
+    .neo-chart-wrapper {
+        height: 250px;
+    }
+    
+    .neo-chart-y-axis {
+        width: 80px;
+        padding-right: 0.5rem;
+    }
+    
+    .neo-y-label {
+        font-size: 0.7rem;
+    }
+    
+    .neo-chart-header h2 {
+        font-size: 1.5rem;
+    }
+    
+    .neo-chart-subtitle {
+        font-size: 0.9rem;
+    }
+    
+    .stats-page .neo-stats-grid {
+        grid-template-columns: 1fr !important;
+        gap: 1rem !important;
+    }
+    
+    .neo-session-modal-content {
+        width: 95%;
+        margin: 1rem;
+    }
+    
+    .neo-session-info-grid {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+    }
+    
+    .neo-session-modal-header {
+        padding: 0.75rem 1rem;
+    }
+    
+    .neo-session-modal-header h3 {
+        font-size: 1.1rem;
+    }
+    
+    .neo-session-actions {
+        flex-direction: column;
+    }
+}
+
+/* Touch improvements */
+@media (hover: none) and (pointer: coarse) {
+    .neo-data-point:hover {
+        fill: var(--casino-gold);
+        r: 6;
+        stroke-width: 2;
+    }
+    
+    .neo-session-modal-close:hover {
+        transform: none;
+        box-shadow: 4px 4px 0 var(--casino-black);
+    }
+}
+
+/* Dark mode compatibility */
+@media (prefers-color-scheme: dark) {
+    .neo-chart-tooltip {
+        background: var(--casino-white);
+        color: var(--casino-black);
+        border-color: var(--casino-gold);
+    }
+    
+    .neo-chart-tooltip::after {
+        border-top-color: var(--casino-gold);
+    }
+}
