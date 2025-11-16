@@ -280,16 +280,26 @@ export default class StatsPage {
         
         let pathD = '';
         
-        // Start the path from the bottom left (at value 0)
+        // Always start from the baseline (value 0) at the beginning of the chart
         const firstX = 0;
         pathD += `M ${firstX} ${bottomY}`;
         
-        // Draw line up to first data point
+        // If the first data point is not at x=0, we need to extend from x=0 to the first point
+        const firstDataX = (0 / Math.max(data.length - 1, 1)) * chartWidth;
         const firstDataY = padding.top + chartHeight - (data[0].cumulative_amount / maxValue) * chartHeight;
-        pathD += ` L ${firstX} ${firstDataY}`;
         
-        // Draw the line through all data points
+        // Create a 0-value starting point if needed
+        if (data[0].cumulative_amount > 0) {
+            pathD += ` L ${firstX} ${bottomY}`;
+            pathD += ` L ${firstDataX} ${bottomY}`;
+            pathD += ` L ${firstDataX} ${firstDataY}`;
+        } else {
+            pathD += ` L ${firstDataX} ${firstDataY}`;
+        }
+        
+        // Draw the line through all data points (starting from index 1 since we handled 0 above)
         data.forEach((point, index) => {
+            if (index === 0) return; // Skip first point as we already handled it
             const x = (index / Math.max(data.length - 1, 1)) * chartWidth;
             const y = padding.top + chartHeight - (point.cumulative_amount / maxValue) * chartHeight;
             pathD += ` L ${x} ${y}`;
