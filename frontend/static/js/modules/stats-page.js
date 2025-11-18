@@ -181,12 +181,6 @@ export default class StatsPage {
                     </div>
                 </div>
 
-                <div class="neo-leaderboard-stat blue">
-                    <div class="neo-leaderboard-stat-label">🃏 Most Games Played</div>
-                    <div class="neo-leaderboard-stat-value">${formatPlayers(data.most_games_played?.players)}</div>
-                    <div class="neo-leaderboard-stat-subtitle">${data.most_games_played?.games || 0} games</div>
-                </div>
-
                 <div class="neo-leaderboard-stat black">
                     <div class="neo-leaderboard-stat-label">🔄 Biggest Grinder</div>
                     <div class="neo-leaderboard-stat-value">${formatPlayers(data.biggest_grinder?.players)}</div>
@@ -235,6 +229,14 @@ export default class StatsPage {
                     </div>
                 </div>
 
+                <div class="neo-leaderboard-stat gold">
+                    <div class="neo-leaderboard-stat-label">🏅 Most Decorated</div>
+                    <div class="neo-leaderboard-stat-value">${formatPlayers(data.most_decorated?.players)}</div>
+                    <div class="neo-leaderboard-stat-subtitle">${data.most_decorated?.awards || 0} awards
+                        <div class="neo-leaderboard-stat-explanation">Most awards on this page</div>
+                    </div>
+                </div>
+
             </div>
         `;
     }
@@ -259,72 +261,86 @@ export default class StatsPage {
         const containerWidth = chartContainer.offsetWidth || 800;
         
         // Chart configuration
-        const margin = { top: 20, right: 20, bottom: 0, left: 80 }; // No bottom margin - $0 sits on border
+        const margin = { top: 20, right: 20, bottom: 30, left: 80 }; // Bottom margin for x-axis labels
         const padding = 10; // Horizontal padding for circles
         const width = containerWidth - margin.left - margin.right - (padding * 2); // Account for circle padding
         const height = Math.max(300, Math.min(500, containerWidth * 0.4)) - margin.top - margin.bottom;
         
         // Data configuration
         const values = data.map(d => d.cumulative_amount);
-        const minValue = 0; // Always start from $0
+        const minValue = values[0]; // Start from first session's cumulative amount
         const maxValue = Math.max(...values);
         const valueRange = maxValue - minValue;
-        
-        // Y-axis labels every $500
+
+        // Y-axis labels: start at first session value, then 500, 1000, 1500, etc.
         const increment = 500;
-        const yLabels = [];
-        for (let v = 0; v <= maxValue; v += increment) {
-            yLabels.push(v);
+        const yLabels = [minValue]; // Start with first session's cumulative amount
+
+        // Find the first multiple of 500 above minValue
+        const firstIncrement = Math.ceil(minValue / increment) * increment;
+        for (let v = firstIncrement; v <= maxValue; v += increment) {
+            if (v > minValue) { // Don't duplicate if minValue is exactly a multiple of 500
+                yLabels.push(v);
+            }
         }
-        // Add max value if not already included
-        if (yLabels[yLabels.length - 1] < maxValue) {
-            yLabels.push(maxValue);
+        // Add next increment above max value
+        const lastLabel = Math.ceil(maxValue / increment) * increment;
+        if (yLabels[yLabels.length - 1] < lastLabel) {
+            yLabels.push(lastLabel);
         }
+
+        // Adjust scale to match label range
+        const scaleMin = minValue;
+        const scaleMax = yLabels[yLabels.length - 1];
+        const scaleRange = scaleMax - scaleMin;
+
+        // X-axis date labels (every 3 months)
+        const xLabels = this.generateXAxisLabels(data);
         
         // Scale functions - map data values to pixel positions (with horizontal padding)
         const xScale = (index) => padding + (index / Math.max(data.length - 1, 1)) * width;
-        const yScale = (value) => height - ((value - minValue) / valueRange) * height;
+        const yScale = (value) => height - ((value - scaleMin) / scaleRange) * height;
         
         // Build the chart HTML
         let html = `
             <div style="display: flex; width: 100%; height: ${height + margin.top + margin.bottom}px;">
                 <!-- Y-axis labels -->
-                <div style="width: ${margin.left}px; position: relative; height: ${height + margin.top + margin.bottom}px;">
-                    ${yLabels.reverse().map(value => {
+                <div style="width: ${margin.left}px; position: relative; height: ${height + margin.top}px;">
+                    ${[...yLabels].reverse().map(value => {
                         const y = margin.top + yScale(value);
                         return `<div style="position: absolute; top: ${y}px; right: 10px; transform: translateY(-50%); font-size: 0.75rem; font-weight: bold; color: var(--text-secondary);">$${value.toLocaleString()}</div>`;
                     }).join('')}
                 </div>
-                
+
                 <!-- Chart area -->
                 <div style="flex: 1; border-left: 3px solid var(--casino-black); border-bottom: 3px solid var(--casino-black); position: relative;">
-                    <svg width="${width + padding * 2}" height="${height + margin.top + margin.bottom}" style="display: block;">
+                    <svg width="${width + padding * 2}" height="${height + margin.top + 10}" style="display: block; overflow: visible;">
                         <!-- Grid lines -->
                         <g>
                             ${yLabels.map(value => {
                                 const y = margin.top + yScale(value);
-                                return `<line x1="${padding}" y1="${y}" x2="${width + padding}" y2="${y}" stroke="${value === 0 ? 'var(--casino-black)' : 'var(--text-muted)'}" stroke-width="${value === 0 ? 2 : 1}" opacity="${value === 0 ? 1 : 0.3}" />`;
+                                return `<line x1="${padding}" y1="${y}" x2="${width + padding}" y2="${y}" stroke="var(--text-muted)" stroke-width="1" opacity="0.3" />`;
                             }).join('')}
                         </g>
-                        
+
                         <!-- Area fill -->
-                        <path d="${this.buildAreaPath(data, xScale, yScale, margin.top, height)}" 
-                              fill="var(--casino-green)" 
+                        <path d="${this.buildAreaPath(data, xScale, yScale, margin.top, height)}"
+                              fill="var(--casino-green)"
                               fill-opacity="0.3"
-                              stroke="var(--casino-green-dark)" 
+                              stroke="var(--casino-green-dark)"
                               stroke-width="3" />
-                        
+
                         <!-- Data points -->
                         ${data.map((point, index) => {
                             const cx = xScale(index);
                             const cy = margin.top + yScale(point.cumulative_amount);
                             return `
-                                <circle cx="${cx}" 
-                                        cy="${cy}" 
-                                        r="6" 
-                                        fill="var(--casino-gold)" 
-                                        stroke="var(--casino-black)" 
-                                        stroke-width="2" 
+                                <circle cx="${cx}"
+                                        cy="${cy}"
+                                        r="6"
+                                        fill="var(--casino-gold)"
+                                        stroke="var(--casino-black)"
+                                        stroke-width="2"
                                         class="neo-data-point"
                                         data-session-id="${point.session_id}"
                                         data-date="${point.date}"
@@ -334,6 +350,14 @@ export default class StatsPage {
                             `;
                         }).join('')}
                     </svg>
+
+                    <!-- X-axis labels -->
+                    <div style="position: relative; height: ${margin.bottom}px; margin-left: ${padding}px; margin-right: ${padding}px;">
+                        ${xLabels.map(label => {
+                            const x = (label.index / Math.max(data.length - 1, 1)) * width;
+                            return `<div style="position: absolute; left: ${x}px; transform: translateX(-50%); font-size: 0.75rem; font-weight: bold; color: var(--text-secondary);">${label.text}</div>`;
+                        }).join('')}
+                    </div>
                 </div>
             </div>
         `;
@@ -346,24 +370,81 @@ export default class StatsPage {
     
     // Build the SVG path for the area chart
     buildAreaPath(data, xScale, yScale, marginTop, height) {
-        const baselineY = marginTop + height; // Bottom of chart ($0 line)
-        
+        const baselineY = marginTop + height; // Bottom of chart
+
         const firstX = xScale(0);
         let path = `M ${firstX} ${baselineY}`; // Start at bottom left (first point)
-        
+
         // Draw line through all data points
         data.forEach((point, index) => {
             const x = xScale(index);
             const y = marginTop + yScale(point.cumulative_amount);
             path += ` L ${x} ${y}`;
         });
-        
+
         // Close the path back to baseline
         const lastX = xScale(data.length - 1);
         path += ` L ${lastX} ${baselineY}`;
         path += ` Z`;
-        
+
         return path;
+    }
+
+    // Generate x-axis labels for every 3 months
+    generateXAxisLabels(data) {
+        if (!data || data.length === 0) return [];
+
+        const labels = [];
+
+        // Get first and last dates
+        const firstDate = new Date(data[0].date);
+        const lastDate = new Date(data[data.length - 1].date);
+
+        // Find the first quarter month on or after the first date
+        let currentDate = new Date(firstDate);
+        const firstMonth = currentDate.getMonth();
+        // Round up to next quarter (0, 3, 6, 9)
+        const nextQuarter = Math.ceil((firstMonth + 1) / 3) * 3;
+        if (nextQuarter <= 11) {
+            currentDate.setMonth(nextQuarter);
+        } else {
+            currentDate.setMonth(0);
+            currentDate.setFullYear(currentDate.getFullYear() + 1);
+        }
+        currentDate.setDate(1);
+
+        // Generate labels every 3 months
+        while (currentDate <= lastDate) {
+            const month = currentDate.getMonth();
+            const year = currentDate.getFullYear();
+
+            // Find the closest data point index to this date
+            let closestIndex = 0;
+            let closestDiff = Infinity;
+
+            data.forEach((point, index) => {
+                const pointDate = new Date(point.date);
+                const diff = Math.abs(pointDate - currentDate);
+                if (diff < closestDiff) {
+                    closestDiff = diff;
+                    closestIndex = index;
+                }
+            });
+
+            // Format as "M/YY" (e.g., "6/25" for June 2025)
+            const shortYear = year.toString().slice(-2);
+            const displayMonth = month + 1;
+
+            labels.push({
+                index: closestIndex,
+                text: `${displayMonth}/${shortYear}`
+            });
+
+            // Move to next quarter
+            currentDate.setMonth(currentDate.getMonth() + 3);
+        }
+
+        return labels;
     }
 
     // Create Y-axis labels with absolute positioning

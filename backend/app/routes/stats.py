@@ -301,7 +301,40 @@ def get_leaderboard_stats():
             elif stats['max_losing_streak'] == longest_losing_streak['streak'] and stats['max_losing_streak'] > 0:
                 if stats['name'] not in longest_losing_streak['players']:
                     longest_losing_streak['players'].append(stats['name'])
-        
+
+        # Calculate Most Decorated - count awards per player
+        award_counts = {}
+
+        # Count awards from each category (excluding negative awards like longest_losing_streak)
+        award_categories = [
+            biggest_win,
+            highest_win_streak,
+            most_games,
+            highest_win_pct,
+            biggest_grinder,
+            century_club,
+            most_consistent,
+            best_attendance
+        ]
+
+        for award in award_categories:
+            if 'players' in award:
+                for player_name in award['players']:
+                    if player_name:
+                        award_counts[player_name] = award_counts.get(player_name, 0) + 1
+
+        # Find most decorated player(s)
+        most_decorated = {'awards': 0, 'players': []}
+        for player_name, count in award_counts.items():
+            if count > most_decorated['awards']:
+                most_decorated = {
+                    'awards': count,
+                    'players': [player_name]
+                }
+            elif count == most_decorated['awards'] and count > 0:
+                if player_name not in most_decorated['players']:
+                    most_decorated['players'].append(player_name)
+
         return jsonify({
             'biggest_session_win': biggest_win,
             'biggest_session_loss': biggest_loss,
@@ -312,7 +345,8 @@ def get_leaderboard_stats():
             'century_club': century_club,
             'most_consistent': most_consistent,
             'best_attendance': best_attendance,
-            'longest_losing_streak': longest_losing_streak
+            'longest_losing_streak': longest_losing_streak,
+            'most_decorated': most_decorated
         })
         
     except Exception as e:
