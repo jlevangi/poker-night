@@ -209,13 +209,15 @@ export default class SessionDetailPage {
                             <div class="neo-stat-value">$${session.totalValue ? session.totalValue.toFixed(2) : '0.00'}</div>
                             <div class="neo-stat-label">Total Value</div>
                         </div>
-                        <div class="neo-stat-card" style="border-color: ${session.unpaidValue > 0.01 ? 'var(--casino-red)' : 'var(--casino-green)'};">
-                            <div class="neo-stat-value ${session.unpaidValue > 0.01 ? 'profit-negative' : 'profit-positive'}">
-                                ${session.unpaidValue > 0.01 ? 
-                                    `$${session.unpaidValue.toFixed(2)}` : 
+                        <div class="neo-stat-card" style="border-color: ${session.unpaidValue > 0.01 || session.unpaidValue < -0.01 ? 'var(--casino-red)' : 'var(--casino-green)'};">
+                            <div class="neo-stat-value ${session.unpaidValue > 0.01 || session.unpaidValue < -0.01 ? 'profit-negative' : 'profit-positive'}">
+                                ${session.unpaidValue > 0.01 ?
+                                    `$${session.unpaidValue.toFixed(2)}` :
+                                    session.unpaidValue < -0.01 ?
+                                    `-$${Math.abs(session.unpaidValue).toFixed(2)}` :
                                     (!isActive ? 'PAID OUT' : '$0.00')}
                             </div>
-                            <div class="neo-stat-label">${session.unpaidValue > 0.01 ? 'Unpaid Amount' : 'Payout Status'}</div>
+                            <div class="neo-stat-label">${session.unpaidValue > 0.01 ? 'Unpaid Amount' : session.unpaidValue < -0.01 ? 'House Loss' : 'Payout Status'}</div>
                         </div>
                     </div>
                 </div>
