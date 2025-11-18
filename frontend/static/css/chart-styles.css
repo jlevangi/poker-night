@@ -37,20 +37,14 @@
 /* Chart Wrapper */
 .neo-chart-wrapper {
     display: flex;
-    height: 250px;
     width: 100%;
     position: relative;
 }
 
 /* Y-Axis */
 .neo-chart-y-axis {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: flex-end;
-    padding-right: 0.5rem;
     width: 85px;
-    height: 100%;
+    position: relative;
 }
 
 .neo-y-label {
@@ -60,14 +54,13 @@
     text-transform: uppercase;
     letter-spacing: 0.05em;
     line-height: 1;
-    transform: translateY(-50%);
+    white-space: nowrap;
 }
 
 /* Chart Area */
 .neo-chart-area {
     flex: 1;
     position: relative;
-    height: 100%;
     border-left: var(--neo-border-thin);
     border-bottom: var(--neo-border-thin);
 }

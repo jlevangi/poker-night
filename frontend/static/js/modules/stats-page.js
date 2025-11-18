@@ -255,118 +255,169 @@ export default class StatsPage {
             return;
         }
         
-        // Chart dimensions
+        // Get container dimensions
         const containerWidth = chartContainer.offsetWidth || 800;
-        const width = Math.max(400, containerWidth - 120);
-        const height = 250;
-        const padding = { top: 15, right: 15, bottom: 30, left: 0 };
         
-        // Find min and max values for dynamic Y-axis
-        const dataMinValue = Math.min(...data.map(d => d.cumulative_amount));
-        const dataMaxValue = Math.max(...data.map(d => d.cumulative_amount));
+        // Chart configuration
+        const margin = { top: 20, right: 20, bottom: 0, left: 80 }; // No bottom margin - $0 sits on border
+        const padding = 10; // Horizontal padding for circles
+        const width = containerWidth - margin.left - margin.right - (padding * 2); // Account for circle padding
+        const height = Math.max(300, Math.min(500, containerWidth * 0.4)) - margin.top - margin.bottom;
+        
+        // Data configuration
+        const values = data.map(d => d.cumulative_amount);
+        const minValue = 0; // Always start from $0
+        const maxValue = Math.max(...values);
+        const valueRange = maxValue - minValue;
+        
+        // Y-axis labels every $500
         const increment = 500;
-        
-        // Start from the first session's value, then count up by $500 increments
-        const minValue = dataMinValue;
-        const maxValue = Math.ceil((dataMaxValue + increment) / increment) * increment;
-        
-        // Generate Y-axis labels starting from minValue, going up by $500 increments (high to low for display)
         const yLabels = [];
-        // Start from minValue and create labels up to maxValue
-        let currentValue = minValue;
-        const labelsArray = [currentValue];
-        while (currentValue < maxValue) {
-            currentValue += increment;
-            labelsArray.push(Math.min(currentValue, maxValue));
+        for (let v = 0; v <= maxValue; v += increment) {
+            yLabels.push(v);
         }
-        // Reverse for display (high to low)
-        labelsArray.reverse().forEach(value => yLabels.push(value));
+        // Add max value if not already included
+        if (yLabels[yLabels.length - 1] < maxValue) {
+            yLabels.push(maxValue);
+        }
         
-        // Create SVG area chart with dynamic Y-axis
-        let yAxisHTML = '';
-        yLabels.forEach((value) => {
-            yAxisHTML += `<div class="neo-y-label">$${value.toLocaleString()}</div>`;
-        });
+        // Scale functions - map data values to pixel positions (with horizontal padding)
+        const xScale = (index) => padding + (index / Math.max(data.length - 1, 1)) * width;
+        const yScale = (value) => height - ((value - minValue) / valueRange) * height;
         
-        let chartHTML = `
-            <div class="neo-chart-wrapper">
-                <div class="neo-chart-y-axis">
-                    ${yAxisHTML}
+        // Build the chart HTML
+        let html = `
+            <div style="display: flex; width: 100%; height: ${height + margin.top + margin.bottom}px;">
+                <!-- Y-axis labels -->
+                <div style="width: ${margin.left}px; position: relative; height: ${height + margin.top + margin.bottom}px;">
+                    ${yLabels.reverse().map(value => {
+                        const y = margin.top + yScale(value);
+                        return `<div style="position: absolute; top: ${y}px; right: 10px; transform: translateY(-50%); font-size: 0.75rem; font-weight: bold; color: var(--text-secondary);">$${value.toLocaleString()}</div>`;
+                    }).join('')}
                 </div>
-                <div class="neo-chart-area">
-                    <svg class="neo-area-chart" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
-                        <!-- Dynamic Grid lines -->
-                        <g class="neo-chart-grid">
-                            ${this.createGridLines(yLabels, width, height, padding, minValue)}
+                
+                <!-- Chart area -->
+                <div style="flex: 1; border-left: 3px solid var(--casino-black); border-bottom: 3px solid var(--casino-black); position: relative;">
+                    <svg width="${width + padding * 2}" height="${height + margin.top + margin.bottom}" style="display: block;">
+                        <!-- Grid lines -->
+                        <g>
+                            ${yLabels.map(value => {
+                                const y = margin.top + yScale(value);
+                                return `<line x1="${padding}" y1="${y}" x2="${width + padding}" y2="${y}" stroke="${value === 0 ? 'var(--casino-black)' : 'var(--text-muted)'}" stroke-width="${value === 0 ? 2 : 1}" opacity="${value === 0 ? 1 : 0.3}" />`;
+                            }).join('')}
                         </g>
                         
-                        <!-- Area path -->
-                        ${this.createAreaPath(data, width, height, padding, maxValue, minValue)}
+                        <!-- Area fill -->
+                        <path d="${this.buildAreaPath(data, xScale, yScale, margin.top, height)}" 
+                              fill="var(--casino-green)" 
+                              fill-opacity="0.3"
+                              stroke="var(--casino-green-dark)" 
+                              stroke-width="3" />
                         
                         <!-- Data points -->
-                        ${this.createDataPoints(data, width, height, padding, maxValue, minValue)}
+                        ${data.map((point, index) => {
+                            const cx = xScale(index);
+                            const cy = margin.top + yScale(point.cumulative_amount);
+                            return `
+                                <circle cx="${cx}" 
+                                        cy="${cy}" 
+                                        r="6" 
+                                        fill="var(--casino-gold)" 
+                                        stroke="var(--casino-black)" 
+                                        stroke-width="2" 
+                                        class="neo-data-point"
+                                        data-session-id="${point.session_id}"
+                                        data-date="${point.date}"
+                                        data-session-amount="$${point.session_amount.toLocaleString()}"
+                                        data-value="$${point.cumulative_amount.toLocaleString()}"
+                                        data-players="${point.player_count}" />
+                            `;
+                        }).join('')}
                     </svg>
                 </div>
             </div>
         `;
         
-        chartContainer.innerHTML = chartHTML;
+        chartContainer.innerHTML = html;
         
         // Add interactions
         this.addChartInteractions();
     }
     
+    // Build the SVG path for the area chart
+    buildAreaPath(data, xScale, yScale, marginTop, height) {
+        const baselineY = marginTop + height; // Bottom of chart ($0 line)
+        
+        const firstX = xScale(0);
+        let path = `M ${firstX} ${baselineY}`; // Start at bottom left (first point)
+        
+        // Draw line through all data points
+        data.forEach((point, index) => {
+            const x = xScale(index);
+            const y = marginTop + yScale(point.cumulative_amount);
+            path += ` L ${x} ${y}`;
+        });
+        
+        // Close the path back to baseline
+        const lastX = xScale(data.length - 1);
+        path += ` L ${lastX} ${baselineY}`;
+        path += ` Z`;
+        
+        return path;
+    }
+
+    // Create Y-axis labels with absolute positioning
+    createYAxisLabels(coords) {
+        return coords.yLabels.map(value => {
+            const y = coords.getLabelYCoordinate(value);
+            return `<div class="neo-y-label" style="position: absolute; top: ${y}px; right: 0.5rem; transform: translateY(-50%);">$${value.toLocaleString()}</div>`;
+        }).join('');
+    }
+
     // Create grid lines for Y-axis values
-    createGridLines(yLabels, width, height, padding, minValue) {
-        // Grid lines should match exactly where the Y-axis labels are positioned
-        // Labels use justify-content: space-between, so they're at 0, 1/(n-1), 2/(n-1), ... 1 of the full height
+    createGridLines(coords) {
         let gridHTML = '';
         
-        yLabels.forEach((value, index) => {
-            // Match the exact positioning used by justify-content: space-between
-            const y = (index / (yLabels.length - 1)) * height;
+        coords.yLabels.forEach((value) => {
+            const y = coords.getLabelYCoordinate(value);
             
-            const strokeWidth = value === minValue ? "3" : "2";
-            const opacity = value === minValue ? "1" : "0.3";
-            const stroke = value === minValue ? "var(--casino-black)" : "var(--text-muted)";
+            const strokeWidth = value === coords.chartMinValue ? "3" : "2";
+            const opacity = value === coords.chartMinValue ? "1" : "0.3";
+            const stroke = value === coords.chartMinValue ? "var(--casino-black)" : "var(--text-muted)";
             
-            gridHTML += `<line x1="0" y1="${y}" x2="${width - padding.right}" y2="${y}" stroke="${stroke}" stroke-width="${strokeWidth}" opacity="${opacity}"/>`;
+            gridHTML += `<line x1="0" y1="${y}" x2="${coords.chartWidth}" y2="${y}" stroke="${stroke}" stroke-width="${strokeWidth}" opacity="${opacity}"/>`;
         });
         
         return gridHTML;
     }
-    
+
     // Create SVG area path
-    createAreaPath(data, width, height, padding, maxValue, minValue) {
+    createAreaPath(data, coords) {
         if (data.length === 0) return '';
         
-        const chartWidth = width - padding.right;
-        const valueRange = maxValue - minValue;
-        
-        // Y position for minValue (the baseline) - should match the bottom grid line
-        const bottomY = height;
+        // Y position for baseline ($0) - use same coordinate system as grid lines
+        const baselineY = coords.getYCoordinate(coords.chartMinValue);
         
         let pathD = '';
         
         // Start from the baseline at the first data point's X position
-        const firstX = 0;
+        const firstX = coords.getXCoordinate(0, data.length);
         
-        // Start the path from the bottom baseline
-        pathD += `M ${firstX} ${bottomY}`;
+        // Start the path from the bottom baseline ($0)
+        pathD += `M ${firstX} ${baselineY}`;
         
         // Draw the line through all data points
         data.forEach((point, index) => {
-            const x = (index / Math.max(data.length - 1, 1)) * chartWidth;
-            // Use the same Y positioning as grid lines (no padding offset)
-            const y = height - ((point.cumulative_amount - minValue) / valueRange) * height;
+            const x = coords.getXCoordinate(index, data.length);
+            const y = coords.getYCoordinate(point.cumulative_amount);
             pathD += ` L ${x} ${y}`;
         });
         
         // Close the area by going down to the bottom and back to start
         if (data.length > 0) {
-            const lastX = ((data.length - 1) / Math.max(data.length - 1, 1)) * chartWidth;
-            pathD += ` L ${lastX} ${bottomY}`;
-            pathD += ` L ${firstX} ${bottomY}`;
+            const lastX = coords.getXCoordinate(data.length - 1, data.length);
+            pathD += ` L ${lastX} ${baselineY}`;
+            pathD += ` L ${firstX} ${baselineY}`;
             pathD += ' Z';
         }
         
@@ -378,19 +429,14 @@ export default class StatsPage {
                   class="neo-area-path"/>
         `;
     }
-    
+
     // Create data points
-    createDataPoints(data, width, height, padding, maxValue, minValue) {
+    createDataPoints(data, coords) {
         if (data.length === 0) return '';
         
-        const chartWidth = width - padding.right;
-        const chartHeight = height - padding.top - padding.bottom;
-        const valueRange = maxValue - minValue;
-        
         return data.map((point, index) => {
-            const x = (index / Math.max(data.length - 1, 1)) * chartWidth;
-            // Use the same Y positioning as grid lines (no padding offset)
-            const y = height - ((point.cumulative_amount - minValue) / valueRange) * height;
+            const x = coords.getXCoordinate(index, data.length);
+            const y = coords.getYCoordinate(point.cumulative_amount);
             
             return `
                 <circle cx="${x}" 
@@ -407,9 +453,7 @@ export default class StatsPage {
                         data-players="${point.player_count}"/>
             `;
         }).join('');
-    }
-    
-    // Add chart interaction handlers
+    }    // Add chart interaction handlers
     addChartInteractions() {
         const dataPoints = document.querySelectorAll('.neo-data-point');
         
