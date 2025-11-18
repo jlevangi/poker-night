@@ -371,15 +371,6 @@ input:focus, textarea:focus, select:focus {
   }
 }
 
-/* Legacy classes for backward compatibility - redirect to new classes */
-.dark-mode-toggle {
-  /* Styles now handled by .header-btn class */
-}
-
-.settings-toggle {
-  /* Styles now handled by .header-btn class */
-}
-
 /* Stats cards */
 .stat-card {
   background-color: var(--card-bg) !important;
@@ -450,11 +441,6 @@ input:focus, textarea:focus, select:focus {
 .add-player-form h3 {
   color: var(--text-primary) !important;
   margin-top: 0;
-}
-
-/* Session actions */
-.sessions-actions {
-  /* Removed div styling */
 }
 
 /* All headings */

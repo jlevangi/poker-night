@@ -125,7 +125,7 @@ export default class StatsPage {
                     <h2>💰 Money Gambled Over Time</h2>
                     <div class="neo-chart-subtitle">
                         ${dateRange?.start && dateRange?.end 
-                            ? `${dateRange.start} - ${dateRange.end}` 
+                            ? `${dateRange.end} - ${dateRange.start}` 
                             : 'All Time'
                         } • Total: $${(this.chartData.total_gambled || 0).toLocaleString()}
                     </div>
