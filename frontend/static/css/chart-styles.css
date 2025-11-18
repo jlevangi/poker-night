@@ -441,14 +441,15 @@
 }
 
 /* Enhanced Leaderboard Stat Cards */
+/* Leaderboard Stats - Matching neo-stat-card style */
 .neo-leaderboard-stat {
     display: flex;
     flex-direction: column;
     text-align: center;
-    padding: 1.2rem 1rem;
-    border: 3px solid var(--casino-black);
+    padding: var(--spacing-neo);
+    border: var(--neo-border);
     box-shadow: var(--neo-shadow-md);
-    transition: all 0.1s ease;
+    transition: all var(--transition-neo);
     min-height: 130px;
     justify-content: center;
     gap: 0.5rem;
@@ -456,68 +457,108 @@
 }
 
 .neo-leaderboard-stat:hover {
-    transform: translate(2px, 2px);
-    box-shadow: var(--neo-shadow-sm);
+    transform: translate(-2px, -2px);
+    box-shadow: var(--neo-shadow-lg);
 }
 
 .neo-leaderboard-stat-label {
-    font-size: 0.9rem;
+    font-size: 0.875rem;
     font-weight: var(--font-weight-bold);
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.1em;
     margin-bottom: 0.25rem;
-    opacity: 0.95;
+    color: inherit;
 }
 
 .neo-leaderboard-stat-value {
-    font-size: 1.6rem;
+    font-size: 2rem;
     font-weight: var(--font-weight-black);
     margin-bottom: 0.25rem;
-    line-height: 1.1;
+    line-height: 1.2;
+    color: inherit;
 }
 
 .neo-leaderboard-stat-subtitle {
-    font-size: 0.85rem;
+    font-size: 1rem;
     font-weight: var(--font-weight-bold);
-    opacity: 0.9;
     line-height: 1.3;
+    color: inherit;
 }
 
 .neo-leaderboard-stat-explanation {
     font-size: 0.75rem;
-    opacity: 0.75;
     margin-top: 0.25rem;
     line-height: 1.2;
     font-style: italic;
+    opacity: 0.8;
+    color: inherit;
 }
 
-/* Color variants for leaderboard stats */
+/* Color variants for leaderboard stats - light backgrounds with dark text */
 .neo-leaderboard-stat.green {
-    background: var(--casino-green);
-    color: var(--casino-white);
+    background: var(--casino-green-light);
+    border-color: #000000;
+    color: var(--casino-green-dark);
 }
 
 .neo-leaderboard-stat.red {
-    background: var(--casino-red);
-    color: var(--casino-white);
+    background: var(--casino-red-light);
+    border-color: #000000;
+    color: var(--casino-red-dark);
 }
 
 .neo-leaderboard-stat.blue {
-    background: var(--casino-blue);
-    color: var(--casino-white);
+    background: #DBEAFE; /* Light blue */
+    border-color: #000000;
+    color: #1E40AF; /* Dark blue */
 }
 
 .neo-leaderboard-stat.purple {
-    background: var(--casino-purple);
-    color: var(--casino-white);
+    background: var(--casino-purple-light);
+    border-color: #000000;
+    color: var(--casino-purple-dark);
 }
 
 .neo-leaderboard-stat.gold {
-    background: var(--casino-gold);
-    color: var(--casino-black);
+    background: var(--casino-gold-light);
+    border-color: #000000;
+    color: var(--casino-gold-dark);
 }
 
 .neo-leaderboard-stat.black {
-    background: var(--casino-black);
-    color: var(--casino-white);
+    background: #E5E7EB; /* Light gray */
+    border-color: #000000;
+    color: #1F2937; /* Dark gray */
 }
+
+/* Dark mode overrides - keep same light backgrounds for readability */
+[data-theme="dark"] .neo-leaderboard-stat.green {
+    background: var(--casino-green-light) !important;
+    color: var(--casino-green-dark) !important;
+}
+
+[data-theme="dark"] .neo-leaderboard-stat.red {
+    background: var(--casino-red-light) !important;
+    color: var(--casino-red-dark) !important;
+}
+
+[data-theme="dark"] .neo-leaderboard-stat.blue {
+    background: #DBEAFE !important;
+    color: #1E40AF !important;
+}
+
+[data-theme="dark"] .neo-leaderboard-stat.purple {
+    background: var(--casino-purple-light) !important;
+    color: var(--casino-purple-dark) !important;
+}
+
+[data-theme="dark"] .neo-leaderboard-stat.gold {
+    background: var(--casino-gold-light) !important;
+    color: var(--casino-gold-dark) !important;
+}
+
+[data-theme="dark"] .neo-leaderboard-stat.black {
+    background: #E5E7EB !important;
+    color: #1F2937 !important;
+}
+
