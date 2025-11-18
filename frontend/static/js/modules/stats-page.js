@@ -21,13 +21,15 @@ export default class StatsPage {
             `;
             
             // Fetch stats data
-            const [gamblingData, summaryData] = await Promise.all([
+            const [gamblingData, summaryData, leaderboardData] = await Promise.all([
                 this.api.get('stats/gambling-over-time'),
-                this.api.get('stats/summary')
+                this.api.get('stats/summary'),
+                this.api.get('stats/leaderboards')
             ]);
             
             this.chartData = gamblingData;
             this.summaryData = summaryData;
+            this.leaderboardData = leaderboardData;
             
             // Render the stats page
             this.render();
@@ -59,8 +61,8 @@ export default class StatsPage {
                 <!-- Main Chart Section -->
                 ${this.renderChartSection()}
                 
-                <!-- Additional Insights -->
-                ${this.renderInsights()}
+                <!-- Leaderboards Section -->
+                ${this.renderLeaderboards()}
                 
             </div>
         `;
@@ -135,53 +137,108 @@ export default class StatsPage {
         `;
     }
     
-    // Render additional insights
-    renderInsights() {
-        if (!this.summaryData) return '';
+    // Render leaderboards section
+    renderLeaderboards() {
+        if (!this.leaderboardData) return '';
         
-        const stats = this.summaryData;
-        const winRate = stats.total_payouts && stats.total_buy_ins 
-            ? ((stats.total_payouts / stats.total_buy_ins) * 100).toFixed(1)
-            : 0;
+        const data = this.leaderboardData;
+        
+        // Helper function to format multiple players
+        const formatPlayers = (players) => {
+            if (!players || players.length === 0) return 'N/A';
+            if (players.length === 1) return players[0];
+            if (players.length <= 3) return players.join(', ');
+            return `${players.slice(0, 3).join(', ')} +${players.length - 3} more`;
+        };
         
         return `
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
-                <div class="neo-card neo-card-green">
-                    <h3 style="font-size: 1.25rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1.5rem; color: var(--casino-green-dark);">🎯 Performance</h3>
-                    <div class="neo-insight-list">
-                        <div class="neo-insight-item">
-                            <span class="neo-insight-label">Sessions Played:</span>
-                            <span class="neo-insight-value">${stats.total_sessions || 0}</span>
-                        </div>
-                        <div class="neo-insight-item">
-                            <span class="neo-insight-label">Total Players:</span>
-                            <span class="neo-insight-value">${stats.total_players || 0}</span>
-                        </div>
-                        <div class="neo-insight-item">
-                            <span class="neo-insight-label">House Loss:</span>
-                            <span class="neo-insight-value negative">
-                                -$${Math.abs(stats.house_loss || 0).toLocaleString()}
-                            </span>
-                        </div>
-                    </div>
-                </div>
+            <h2 style="font-size: 2rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1.5rem; color: var(--text-primary); text-shadow: 3px 3px 0px var(--casino-red); text-align: center;">🏆 Leaderboards</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
                 
-                <div class="neo-card neo-card-purple">
-                    <h3 style="font-size: 1.25rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1.5rem; color: var(--casino-purple-dark);">📈 Trends</h3>
-                    <div class="neo-insight-list">
-                        <div class="neo-insight-item">
-                            <span class="neo-insight-label">Avg Session:</span>
-                            <span class="neo-insight-value">$${(stats.average_session_value || 0).toLocaleString()}</span>
-                        </div>
-                        <div class="neo-insight-item">
-                            <span class="neo-insight-label">Total Gambled:</span>
-                            <span class="neo-insight-value">$${(stats.total_buy_ins || 0).toLocaleString()}</span>
-                        </div>
+                <div class="neo-leaderboard-stat green">
+                    <div class="neo-leaderboard-stat-label">💰 Biggest Session Win</div>
+                    <div class="neo-leaderboard-stat-value">${formatPlayers(data.biggest_session_win?.players)}</div>
+                    <div class="neo-leaderboard-stat-subtitle">$${(data.biggest_session_win?.amount || 0).toLocaleString()}</div>
+                </div>
+
+                <div class="neo-leaderboard-stat red">
+                    <div class="neo-leaderboard-stat-label">💸 Biggest Session Loss</div>
+                    <div class="neo-leaderboard-stat-value">${formatPlayers(data.biggest_session_loss?.players)}</div>
+                    <div class="neo-leaderboard-stat-subtitle">-$${Math.abs(data.biggest_session_loss?.amount || 0).toLocaleString()}</div>
+                </div>
+
+                <div class="neo-leaderboard-stat purple">
+                    <div class="neo-leaderboard-stat-label">🔥 Highest Win Streak</div>
+                    <div class="neo-leaderboard-stat-value">${formatPlayers(data.highest_win_streak?.players)}</div>
+                    <div class="neo-leaderboard-stat-subtitle">${data.highest_win_streak?.streak || 0} wins</div>
+                </div>
+
+                <div class="neo-leaderboard-stat gold">
+                    <div class="neo-leaderboard-stat-label">📊 Highest Win Rate</div>
+                    <div class="neo-leaderboard-stat-value">${formatPlayers(data.highest_win_percentage?.players)}</div>
+                    <div class="neo-leaderboard-stat-subtitle">${(data.highest_win_percentage?.percentage || 0).toFixed(1)}%
+                        <div class="neo-leaderboard-stat-explanation">${data.highest_win_percentage?.games || 0} games minimum</div>
                     </div>
                 </div>
+
+                <div class="neo-leaderboard-stat blue">
+                    <div class="neo-leaderboard-stat-label">🃏 Most Games Played</div>
+                    <div class="neo-leaderboard-stat-value">${formatPlayers(data.most_games_played?.players)}</div>
+                    <div class="neo-leaderboard-stat-subtitle">${data.most_games_played?.games || 0} games</div>
+                </div>
+
+                <div class="neo-leaderboard-stat black">
+                    <div class="neo-leaderboard-stat-label">🔄 Biggest Grinder</div>
+                    <div class="neo-leaderboard-stat-value">${formatPlayers(data.biggest_grinder?.players)}</div>
+                    <div class="neo-leaderboard-stat-subtitle">${data.biggest_grinder?.rebuys || 0} rebuys
+                        <div class="neo-leaderboard-stat-explanation">Most additional buy-ins across all sessions</div>
+                    </div>
+                </div>
+
+                <div class="neo-leaderboard-stat gold">
+                    <div class="neo-leaderboard-stat-label">💯 Century Club</div>
+                    <div class="neo-leaderboard-stat-value">${formatPlayers(data.century_club?.players)}</div>
+                    <div class="neo-leaderboard-stat-subtitle">${data.century_club?.sessions || 0} sessions
+                        <div class="neo-leaderboard-stat-explanation">Sessions with $100+ profit</div>
+                    </div>
+                </div>
+
+                <div class="neo-leaderboard-stat blue">
+                    <div class="neo-leaderboard-stat-label">🏅 Veteran Status</div>
+                    <div class="neo-leaderboard-stat-value">${formatPlayers(data.most_games_played?.players)}</div>
+                    <div class="neo-leaderboard-stat-subtitle">${data.most_games_played?.games || 0} sessions
+                        <div class="neo-leaderboard-stat-explanation">Most poker sessions played overall</div>
+                    </div>
+                </div>
+
+                <div class="neo-leaderboard-stat green">
+                    <div class="neo-leaderboard-stat-label">🎯 Most Consistent</div>
+                    <div class="neo-leaderboard-stat-value">${formatPlayers(data.most_consistent?.players)}</div>
+                    <div class="neo-leaderboard-stat-subtitle">±$${Math.round(data.most_consistent?.std_dev || 0).toLocaleString()}
+                        <div class="neo-leaderboard-stat-explanation">Lowest variability (avg: $${Math.round(data.most_consistent?.avg_profit || 0).toLocaleString()})</div>
+                    </div>
+                </div>
+
+                <div class="neo-leaderboard-stat purple">
+                    <div class="neo-leaderboard-stat-label">🎖️ Attendance Award</div>
+                    <div class="neo-leaderboard-stat-value">${formatPlayers(data.best_attendance?.players)}</div>
+                    <div class="neo-leaderboard-stat-subtitle">${(data.best_attendance?.percentage || 0).toFixed(1)}%
+                        <div class="neo-leaderboard-stat-explanation">${data.best_attendance?.sessions_attended || 0}/${data.best_attendance?.total_sessions || 0} sessions attended</div>
+                    </div>
+                </div>
+
+                <div class="neo-leaderboard-stat red">
+                    <div class="neo-leaderboard-stat-label">😤 Longest Losing Streak</div>
+                    <div class="neo-leaderboard-stat-value">${formatPlayers(data.longest_losing_streak?.players)}</div>
+                    <div class="neo-leaderboard-stat-subtitle">${data.longest_losing_streak?.streak || 0} losses
+                        <div class="neo-leaderboard-stat-explanation">Consecutive sessions without profit</div>
+                    </div>
+                </div>
+
             </div>
         `;
     }
+
     
     // Initialize SVG area chart with neobrutalist styling
     initializeChart() {
@@ -451,10 +508,6 @@ export default class StatsPage {
                             <div class="neo-session-info-value">${sessionData.date}</div>
                         </div>
                         <div class="neo-session-info-card">
-                            <div class="neo-session-info-label">Session ID</div>
-                            <div class="neo-session-info-value">${sessionData.sessionId}</div>
-                        </div>
-                        <div class="neo-session-info-card">
                             <div class="neo-session-info-label">Players</div>
                             <div class="neo-session-info-value">${sessionData.players}</div>
                         </div>
@@ -471,9 +524,6 @@ export default class StatsPage {
                         <a href="#session/${sessionData.sessionId}" class="neo-btn neo-btn-green">
                             View Full Session
                         </a>
-                        <button class="neo-btn neo-btn-red neo-session-modal-close">
-                            Close
-                        </button>
                     </div>
                 </div>
             </div>

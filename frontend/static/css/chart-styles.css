@@ -173,7 +173,7 @@
     padding: 0.75rem;
     background: var(--bg-secondary);
     border: 2px solid var(--casino-black);
-    box-shadow: 4px 4px 0 var(--casino-black);
+    box-shadow: var(--neo-shadow-sm);
 }
 
 .neo-insight-label {
@@ -225,7 +225,7 @@
     background: var(--casino-bg);
     border: 4px solid var(--casino-black);
     border-radius: 0;
-    box-shadow: 12px 12px 0 var(--casino-black);
+    box-shadow: var(--neo-shadow-xl);
     max-width: 500px;
     width: 90%;
     max-height: 80vh;
@@ -265,14 +265,14 @@
     align-items: center;
     transition: all 0.1s ease;
     border-radius: 0;
-    box-shadow: 4px 4px 0 var(--casino-black);
+    box-shadow: var(--neo-shadow-sm);
 }
 
 .neo-session-modal-close:hover {
     background: var(--casino-black);
     color: var(--casino-red);
     transform: translate(2px, 2px);
-    box-shadow: 2px 2px 0 var(--casino-black);
+    box-shadow: 2px 2px 0 #000000;
 }
 
 .neo-session-modal-body {
@@ -290,7 +290,7 @@
     background: var(--casino-white);
     border: 3px solid var(--casino-black);
     padding: 1rem;
-    box-shadow: 6px 6px 0 var(--casino-black);
+    box-shadow: var(--neo-shadow-md);
 }
 
 .neo-session-info-card.neo-highlight {
@@ -430,7 +430,7 @@
     
     .neo-session-modal-close:hover {
         transform: none;
-        box-shadow: 4px 4px 0 var(--casino-black);
+        box-shadow: var(--neo-shadow-sm);
     }
 }
 
@@ -445,4 +445,86 @@
     .neo-chart-tooltip::after {
         border-top-color: var(--casino-gold);
     }
+}
+
+/* Enhanced Leaderboard Stat Cards */
+.neo-leaderboard-stat {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    padding: 1.2rem 1rem;
+    border: 3px solid var(--casino-black);
+    box-shadow: var(--neo-shadow-md);
+    transition: all 0.1s ease;
+    min-height: 130px;
+    justify-content: center;
+    gap: 0.5rem;
+    position: relative;
+}
+
+.neo-leaderboard-stat:hover {
+    transform: translate(2px, 2px);
+    box-shadow: var(--neo-shadow-sm);
+}
+
+.neo-leaderboard-stat-label {
+    font-size: 0.9rem;
+    font-weight: var(--font-weight-bold);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.25rem;
+    opacity: 0.95;
+}
+
+.neo-leaderboard-stat-value {
+    font-size: 1.6rem;
+    font-weight: var(--font-weight-black);
+    margin-bottom: 0.25rem;
+    line-height: 1.1;
+}
+
+.neo-leaderboard-stat-subtitle {
+    font-size: 0.85rem;
+    font-weight: var(--font-weight-bold);
+    opacity: 0.9;
+    line-height: 1.3;
+}
+
+.neo-leaderboard-stat-explanation {
+    font-size: 0.75rem;
+    opacity: 0.75;
+    margin-top: 0.25rem;
+    line-height: 1.2;
+    font-style: italic;
+}
+
+/* Color variants for leaderboard stats */
+.neo-leaderboard-stat.green {
+    background: var(--casino-green);
+    color: var(--casino-white);
+}
+
+.neo-leaderboard-stat.red {
+    background: var(--casino-red);
+    color: var(--casino-white);
+}
+
+.neo-leaderboard-stat.blue {
+    background: var(--casino-blue);
+    color: var(--casino-white);
+}
+
+.neo-leaderboard-stat.purple {
+    background: var(--casino-purple);
+    color: var(--casino-white);
+}
+
+.neo-leaderboard-stat.gold {
+    background: var(--casino-gold);
+    color: var(--casino-black);
+}
+
+.neo-leaderboard-stat.black {
+    background: var(--casino-black);
+    color: var(--casino-white);
 }
