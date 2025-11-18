@@ -204,19 +204,26 @@ export default class StatsPage {
         const height = 250;
         const padding = { top: 15, right: 15, bottom: 30, left: 0 };
         
-        // Find max value and create $500 increment scale
+        // Find min and max values for dynamic Y-axis
+        const dataMinValue = Math.min(...data.map(d => d.cumulative_amount));
         const dataMaxValue = Math.max(...data.map(d => d.cumulative_amount));
         const increment = 500;
         
-        // Round up to next $500 increment with some padding
+        // Start from the first session's value, then count up by $500 increments
+        const minValue = dataMinValue;
         const maxValue = Math.ceil((dataMaxValue + increment) / increment) * increment;
-        const minValue = 0;
         
-        // Generate Y-axis labels at $500 increments (high to low for display)
+        // Generate Y-axis labels starting from minValue, going up by $500 increments (high to low for display)
         const yLabels = [];
-        for (let value = maxValue; value >= 0; value -= increment) {
-            yLabels.push(value);
+        // Start from minValue and create labels up to maxValue
+        let currentValue = minValue;
+        const labelsArray = [currentValue];
+        while (currentValue < maxValue) {
+            currentValue += increment;
+            labelsArray.push(Math.min(currentValue, maxValue));
         }
+        // Reverse for display (high to low)
+        labelsArray.reverse().forEach(value => yLabels.push(value));
         
         // Create SVG area chart with dynamic Y-axis
         let yAxisHTML = '';
@@ -233,14 +240,14 @@ export default class StatsPage {
                     <svg class="neo-area-chart" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
                         <!-- Dynamic Grid lines -->
                         <g class="neo-chart-grid">
-                            ${this.createGridLines(yLabels, width, height, padding)}
+                            ${this.createGridLines(yLabels, width, height, padding, minValue)}
                         </g>
                         
                         <!-- Area path -->
-                        ${this.createAreaPath(data, width, height, padding, maxValue)}
+                        ${this.createAreaPath(data, width, height, padding, maxValue, minValue)}
                         
                         <!-- Data points -->
-                        ${this.createDataPoints(data, width, height, padding, maxValue)}
+                        ${this.createDataPoints(data, width, height, padding, maxValue, minValue)}
                     </svg>
                 </div>
             </div>
@@ -253,16 +260,18 @@ export default class StatsPage {
     }
     
     // Create grid lines for Y-axis values
-    createGridLines(yLabels, width, height, padding) {
-        const chartHeight = height - padding.top - padding.bottom;
+    createGridLines(yLabels, width, height, padding, minValue) {
+        // Grid lines should match exactly where the Y-axis labels are positioned
+        // Labels use justify-content: space-between, so they're at 0, 1/(n-1), 2/(n-1), ... 1 of the full height
         let gridHTML = '';
         
         yLabels.forEach((value, index) => {
-            const y = padding.top + (index / (yLabels.length - 1)) * chartHeight;
+            // Match the exact positioning used by justify-content: space-between
+            const y = (index / (yLabels.length - 1)) * height;
             
-            const strokeWidth = value === 0 ? "3" : "2";
-            const opacity = value === 0 ? "1" : "0.3";
-            const stroke = value === 0 ? "var(--casino-black)" : "var(--text-muted)";
+            const strokeWidth = value === minValue ? "3" : "2";
+            const opacity = value === minValue ? "1" : "0.3";
+            const stroke = value === minValue ? "var(--casino-black)" : "var(--text-muted)";
             
             gridHTML += `<line x1="0" y1="${y}" x2="${width - padding.right}" y2="${y}" stroke="${stroke}" stroke-width="${strokeWidth}" opacity="${opacity}"/>`;
         });
@@ -271,37 +280,28 @@ export default class StatsPage {
     }
     
     // Create SVG area path
-    createAreaPath(data, width, height, padding, maxValue) {
+    createAreaPath(data, width, height, padding, maxValue, minValue) {
         if (data.length === 0) return '';
         
         const chartWidth = width - padding.right;
-        const chartHeight = height - padding.top - padding.bottom;
-        const bottomY = height - padding.bottom; // Y position for value 0
+        const valueRange = maxValue - minValue;
+        
+        // Y position for minValue (the baseline) - should match the bottom grid line
+        const bottomY = height;
         
         let pathD = '';
         
-        // Always start from the baseline (value 0) at the beginning of the chart
+        // Start from the baseline at the first data point's X position
         const firstX = 0;
+        
+        // Start the path from the bottom baseline
         pathD += `M ${firstX} ${bottomY}`;
         
-        // If the first data point is not at x=0, we need to extend from x=0 to the first point
-        const firstDataX = (0 / Math.max(data.length - 1, 1)) * chartWidth;
-        const firstDataY = padding.top + chartHeight - (data[0].cumulative_amount / maxValue) * chartHeight;
-        
-        // Create a 0-value starting point if needed
-        if (data[0].cumulative_amount > 0) {
-            pathD += ` L ${firstX} ${bottomY}`;
-            pathD += ` L ${firstDataX} ${bottomY}`;
-            pathD += ` L ${firstDataX} ${firstDataY}`;
-        } else {
-            pathD += ` L ${firstDataX} ${firstDataY}`;
-        }
-        
-        // Draw the line through all data points (starting from index 1 since we handled 0 above)
+        // Draw the line through all data points
         data.forEach((point, index) => {
-            if (index === 0) return; // Skip first point as we already handled it
             const x = (index / Math.max(data.length - 1, 1)) * chartWidth;
-            const y = padding.top + chartHeight - (point.cumulative_amount / maxValue) * chartHeight;
+            // Use the same Y positioning as grid lines (no padding offset)
+            const y = height - ((point.cumulative_amount - minValue) / valueRange) * height;
             pathD += ` L ${x} ${y}`;
         });
         
@@ -323,15 +323,17 @@ export default class StatsPage {
     }
     
     // Create data points
-    createDataPoints(data, width, height, padding, maxValue) {
+    createDataPoints(data, width, height, padding, maxValue, minValue) {
         if (data.length === 0) return '';
         
         const chartWidth = width - padding.right;
         const chartHeight = height - padding.top - padding.bottom;
+        const valueRange = maxValue - minValue;
         
         return data.map((point, index) => {
             const x = (index / Math.max(data.length - 1, 1)) * chartWidth;
-            const y = padding.top + chartHeight - (point.cumulative_amount / maxValue) * chartHeight;
+            // Use the same Y positioning as grid lines (no padding offset)
+            const y = height - ((point.cumulative_amount - minValue) / valueRange) * height;
             
             return `
                 <circle cx="${x}" 
