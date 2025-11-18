@@ -261,7 +261,7 @@ export default class StatsPage {
         const containerWidth = chartContainer.offsetWidth || 800;
         
         // Chart configuration
-        const margin = { top: 20, right: 20, bottom: 30, left: 80 }; // Bottom margin for x-axis labels
+        const margin = { top: 20, right: 20, bottom: 10, left: 80 };
         const padding = 10; // Horizontal padding for circles
         const width = containerWidth - margin.left - margin.right - (padding * 2); // Account for circle padding
         const height = Math.max(300, Math.min(500, containerWidth * 0.4)) - margin.top - margin.bottom;
@@ -294,9 +294,6 @@ export default class StatsPage {
         const scaleMax = yLabels[yLabels.length - 1];
         const scaleRange = scaleMax - scaleMin;
 
-        // X-axis date labels (every 3 months)
-        const xLabels = this.generateXAxisLabels(data);
-        
         // Scale functions - map data values to pixel positions (with horizontal padding)
         const xScale = (index) => padding + (index / Math.max(data.length - 1, 1)) * width;
         const yScale = (value) => height - ((value - scaleMin) / scaleRange) * height;
@@ -323,10 +320,9 @@ export default class StatsPage {
                             }).join('')}
                         </g>
 
-                        <!-- Area fill -->
-                        <path d="${this.buildAreaPath(data, xScale, yScale, margin.top, height)}"
-                              fill="var(--casino-green)"
-                              fill-opacity="0.3"
+                        <!-- Line -->
+                        <path d="${this.buildLinePath(data, xScale, yScale, margin.top)}"
+                              fill="none"
                               stroke="var(--casino-green-dark)"
                               stroke-width="3" />
 
@@ -350,14 +346,6 @@ export default class StatsPage {
                             `;
                         }).join('')}
                     </svg>
-
-                    <!-- X-axis labels -->
-                    <div style="position: relative; height: ${margin.bottom}px; margin-left: ${padding}px; margin-right: ${padding}px;">
-                        ${xLabels.map(label => {
-                            const x = (label.index / Math.max(data.length - 1, 1)) * width;
-                            return `<div style="position: absolute; left: ${x}px; transform: translateX(-50%); font-size: 0.75rem; font-weight: bold; color: var(--text-secondary);">${label.text}</div>`;
-                        }).join('')}
-                    </div>
                 </div>
             </div>
         `;
@@ -368,24 +356,21 @@ export default class StatsPage {
         this.addChartInteractions();
     }
     
-    // Build the SVG path for the area chart
-    buildAreaPath(data, xScale, yScale, marginTop, height) {
-        const baselineY = marginTop + height; // Bottom of chart
+    // Build the SVG path for the line chart
+    buildLinePath(data, xScale, yScale, marginTop) {
+        if (data.length === 0) return '';
 
+        // Start at first point
         const firstX = xScale(0);
-        let path = `M ${firstX} ${baselineY}`; // Start at bottom left (first point)
+        const firstY = marginTop + yScale(data[0].cumulative_amount);
+        let path = `M ${firstX} ${firstY}`;
 
         // Draw line through all data points
-        data.forEach((point, index) => {
-            const x = xScale(index);
-            const y = marginTop + yScale(point.cumulative_amount);
+        for (let i = 1; i < data.length; i++) {
+            const x = xScale(i);
+            const y = marginTop + yScale(data[i].cumulative_amount);
             path += ` L ${x} ${y}`;
-        });
-
-        // Close the path back to baseline
-        const lastX = xScale(data.length - 1);
-        path += ` L ${lastX} ${baselineY}`;
-        path += ` Z`;
+        }
 
         return path;
     }
@@ -395,23 +380,33 @@ export default class StatsPage {
         if (!data || data.length === 0) return [];
 
         const labels = [];
+        const usedIndices = new Set();
 
         // Get first and last dates
         const firstDate = new Date(data[0].date);
         const lastDate = new Date(data[data.length - 1].date);
 
-        // Find the first quarter month on or after the first date
+        // Always show first date
+        const firstMonth = firstDate.getMonth() + 1;
+        const firstYear = firstDate.getFullYear().toString().slice(-2);
+        labels.push({
+            index: 0,
+            text: `${firstMonth}/${firstYear}`
+        });
+        usedIndices.add(0);
+
+        // Find quarter months between first and last date
         let currentDate = new Date(firstDate);
-        const firstMonth = currentDate.getMonth();
-        // Round up to next quarter (0, 3, 6, 9)
-        const nextQuarter = Math.ceil((firstMonth + 1) / 3) * 3;
+        currentDate.setDate(1);
+        // Move to next quarter (0, 3, 6, 9)
+        const startMonth = currentDate.getMonth();
+        const nextQuarter = Math.ceil((startMonth + 1) / 3) * 3;
         if (nextQuarter <= 11) {
             currentDate.setMonth(nextQuarter);
         } else {
             currentDate.setMonth(0);
             currentDate.setFullYear(currentDate.getFullYear() + 1);
         }
-        currentDate.setDate(1);
 
         // Generate labels every 3 months
         while (currentDate <= lastDate) {
@@ -431,17 +426,29 @@ export default class StatsPage {
                 }
             });
 
-            // Format as "M/YY" (e.g., "6/25" for June 2025)
-            const shortYear = year.toString().slice(-2);
-            const displayMonth = month + 1;
-
-            labels.push({
-                index: closestIndex,
-                text: `${displayMonth}/${shortYear}`
-            });
+            // Only add if not already used
+            if (!usedIndices.has(closestIndex)) {
+                const shortYear = year.toString().slice(-2);
+                const displayMonth = month + 1;
+                labels.push({
+                    index: closestIndex,
+                    text: `${displayMonth}/${shortYear}`
+                });
+                usedIndices.add(closestIndex);
+            }
 
             // Move to next quarter
             currentDate.setMonth(currentDate.getMonth() + 3);
+        }
+
+        // Always show last date if different from others
+        if (data.length > 1 && !usedIndices.has(data.length - 1)) {
+            const lastMonth = lastDate.getMonth() + 1;
+            const lastYear = lastDate.getFullYear().toString().slice(-2);
+            labels.push({
+                index: data.length - 1,
+                text: `${lastMonth}/${lastYear}`
+            });
         }
 
         return labels;
