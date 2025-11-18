@@ -79,24 +79,21 @@ export default class DashboardPage {
                         <div class="neo-stat-label">Start New Session</div>
                     </button>
                 `}
-                
-                <!-- Total Players Card (Top Right) -->
+                <div class="neo-stat-card neo-card-gold">
+                    <div class="neo-stat-value">$${totalGambled ? totalGambled.toFixed(2) : '0.00'}</div>
+                    <div class="neo-stat-label">Total Gambled</div>
+                </div>
+
                 <div class="neo-stat-card neo-card-purple">
                     <div class="neo-stat-value">${totalPlayers || 0}</div>
                     <div class="neo-stat-label">Total Players</div>
                 </div>
                 
-                <!-- Sessions Played Card (Bottom Left) -->
                 <div class="neo-stat-card neo-card-green">
                     <div class="neo-stat-value">${totalSessions || 0}</div>
                     <div class="neo-stat-label">Sessions Played</div>
                 </div>
-                
-                <!-- Total Gambled Card (Bottom Right) -->
-                <div class="neo-stat-card neo-card-gold">
-                    <div class="neo-stat-value">$${totalGambled ? totalGambled.toFixed(2) : '0.00'}</div>
-                    <div class="neo-stat-label">Total Gambled</div>
-                </div>
+
             </div>
         `;
     }
