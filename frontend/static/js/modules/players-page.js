@@ -130,7 +130,7 @@ export default class PlayersPage {
 
         let html = '';
         if (players && players.length > 0) {
-            html += `<div style="display: grid; gap: 1.5rem;">`;
+            html += `<div style="display: grid; gap: 1rem;">`;
 
             players.forEach((player, index) => {
                 const isGambleKing = this.sortBy === 'rank' && index === 0 && player.net_profit > 0;

@@ -248,7 +248,7 @@ export default class SessionDetailPage {
         
         // Render players list
         if (session.players && session.players.length > 0) {
-            html += `<div style="display: grid; gap: 1.5rem;">`;
+            html += `<div style="display: grid;">`;
             session.players.forEach(player => {
                 // Ensure buyIn and cashOut are defined before calculating profit
                 const buyIn = player.buyIn || 0;

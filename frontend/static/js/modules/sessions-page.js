@@ -41,7 +41,7 @@ export default class SessionsPage {    constructor(appContent, apiService) {
         `;
         
         if (sessions && sessions.length > 0) {
-            html += `<div style="display: grid; gap: 1.5rem;">`;
+            html += `<div style="display: grid; gap: 1rem;">`;
             
             sessions.forEach(session => {
                 const isActive = session.status === 'ACTIVE';
