@@ -280,13 +280,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     // Setup navigation event listeners
     function setupNavigation() {
-        // Desktop navigation (both old and new classes)
-        document.querySelectorAll('.desktop-nav a, .neo-desktop-nav .neo-nav-btn').forEach(link => {
+        // Desktop navigation (both old and new classes, excluding settings button)
+        document.querySelectorAll('.desktop-nav a, .neo-desktop-nav .neo-nav-btn:not(#settings-btn)').forEach(link => {
             link.addEventListener('click', (e) => {
                 e.preventDefault();
                 const href = link.getAttribute('href');
-                window.location.hash = href;
-                updateActiveNavigation();
+                if (href) {
+                    window.location.hash = href;
+                    updateActiveNavigation();
+                }
             });
         });
         

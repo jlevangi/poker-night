@@ -245,41 +245,7 @@ button:hover,
     background-color: var(--counter-decrement-hover);
 }
 
-/* Add Player Button Styling */
-#add-player-btn {
-    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-hover) 100%);
-    border: none;
-    border-radius: var(--radius-md);
-    padding: 0.75rem 1.5rem;
-    font-weight: 600;
-    font-size: 1rem;
-    color: var(--text-white);
-    cursor: pointer;
-    transition: all var(--transition-fast);
-    box-shadow: 0 4px 12px rgba(51, 103, 214, 0.2);
-    text-transform: none;
-    letter-spacing: 0.5px;
-}
-
-#add-player-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(51, 103, 214, 0.3);
-    background: linear-gradient(135deg, var(--primary-hover) 0%, #1a3a7a 100%);
-}
-
-#add-player-btn:active {
-    transform: translateY(0);
-    box-shadow: 0 2px 8px rgba(51, 103, 214, 0.2);
-}
-
-/* Dark mode styling for add player button */
-[data-theme="dark"] #add-player-btn {
-    box-shadow: 0 4px 12px rgba(96, 165, 250, 0.2);
-}
-
-[data-theme="dark"] #add-player-btn:hover {
-    box-shadow: 0 6px 20px rgba(96, 165, 250, 0.3);
-}
+/* Add Player Button - now uses neo-btn-purple class, legacy styles removed */
 
 /* Create Session Button Styling - Always Blue */
 #create-session-btn {

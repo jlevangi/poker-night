@@ -472,6 +472,14 @@ textarea,
     gap: 1.5rem;
 }
 
+/* Mobile: Position settings buttons lower for better reachability */
+@media (max-width: 768px) {
+    .neo-settings-body {
+        justify-content: flex-end;
+        padding-bottom: 10vh;
+    }
+}
+
 .neo-settings-close {
     background: var(--casino-red);
     color: var(--text-white);
@@ -674,13 +682,15 @@ textarea,
     color: var(--text-white) !important;
 }
 
-[data-theme="dark"] .neo-btn-red {
+[data-theme="dark"] .neo-btn-red,
+[data-theme="dark"] button.neo-btn-red {
     background: var(--casino-red-light) !important;
     border-color: var(--casino-red-dark) !important;
     color: var(--casino-red-dark) !important;
 }
 
-[data-theme="dark"] .neo-btn-red:hover {
+[data-theme="dark"] .neo-btn-red:hover,
+[data-theme="dark"] button.neo-btn-red:hover {
     background: var(--casino-red-dark) !important;
     color: var(--text-white) !important;
 }
@@ -724,10 +734,6 @@ a.neo-btn,
 .neo-btn.secondary-btn,
 .neo-btn.btn {
     background-image: none !important;
-    background: var(--casino-red-light) !important;
-    border: var(--neo-border) !important;
-    border-color: var(--casino-red-dark) !important;
-    box-shadow: var(--neo-shadow-sm) !important;
 }
 
 /* Specific override for create session button */

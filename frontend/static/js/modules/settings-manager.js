@@ -14,13 +14,21 @@ export default class SettingsManager {
     }
     
     init() {
-        // Settings trigger button
+        // Settings trigger button (mobile)
         if (this.settingsTrigger) {
             this.settingsTrigger.addEventListener('click', (e) => {
                 e.preventDefault();
                 this.toggle();
             });
         }
+
+        // Settings trigger buttons (desktop and any with class)
+        document.querySelectorAll('.settings-trigger').forEach(trigger => {
+            trigger.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.toggle();
+            });
+        });
         
         // Close button
         if (this.settingsClose) {
