@@ -47,7 +47,8 @@ export default class DarkModeManager {
             return savedTheme;
         }
 
-        // Default to dark mode if no user preference
+        // Default to dark mode if no user preference and save it
+        localStorage.setItem(this.storageKey, 'dark');
         return 'dark';
     }
 

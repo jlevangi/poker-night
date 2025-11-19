@@ -109,6 +109,14 @@ nav a:hover {
     margin: 0 10px;
     transition: background 0.18s, color 0.18s;
     min-width: 40px;
+    /* Remove mobile tap highlights */
+    -webkit-tap-highlight-color: transparent !important;
+    outline: none !important;
+    touch-action: manipulation;
+}
+
+.bottom-nav .nav-btn:focus {
+    outline: none !important;
 }
 
 .bottom-nav .nav-btn:active, .bottom-nav .nav-btn.active {

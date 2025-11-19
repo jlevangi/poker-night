@@ -26,8 +26,8 @@
   --text-primary: #ffffff;
   --text-secondary: #ffffff;
   --text-tertiary: #888888;
-  --border-color: #404040;
-  --border-light: #2d2d2d;
+  --border-color: #000000;
+  --border-light: #000000;
   --card-bg: #2d2d2d;
   --header-bg: #1a1a1a;
   --nav-bg: linear-gradient(90deg, #2851A7 60%, #1a3a7a 100%);
@@ -371,15 +371,6 @@ input:focus, textarea:focus, select:focus {
   }
 }
 
-/* Legacy classes for backward compatibility - redirect to new classes */
-.dark-mode-toggle {
-  /* Styles now handled by .header-btn class */
-}
-
-.settings-toggle {
-  /* Styles now handled by .header-btn class */
-}
-
 /* Stats cards */
 .stat-card {
   background-color: var(--card-bg) !important;
@@ -450,11 +441,6 @@ input:focus, textarea:focus, select:focus {
 .add-player-form h3 {
   color: var(--text-primary) !important;
   margin-top: 0;
-}
-
-/* Session actions */
-.sessions-actions {
-  /* Removed div styling */
 }
 
 /* All headings */
@@ -971,6 +957,15 @@ header nav a {
 /* Ensure proper text color inheritance */
 [data-theme="dark"] * {
   border-color: var(--border-color);
+}
+
+/* Remove borders from nav buttons in dark mode to match light mode */
+[data-theme="dark"] .neo-nav-btn,
+[data-theme="dark"] .neo-header-btn,
+[data-theme="dark"] .neo-nav-mobile-btn,
+[data-theme="dark"] .bottom-nav .nav-btn,
+[data-theme="dark"] header nav a {
+  border: none !important;
 }
 
 [data-theme="dark"] p,
