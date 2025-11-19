@@ -124,8 +124,8 @@ export default class StatsPage {
                 <div class="neo-chart-header">
                     <h2>💰 Money Gambled Over Time</h2>
                     <div class="neo-chart-subtitle">
-                        ${dateRange?.start && dateRange?.end 
-                            ? `${dateRange.end} - ${dateRange.start}` 
+                        ${dateRange?.start && dateRange?.end
+                            ? `${dateRange.start} - ${dateRange.end}`
                             : 'All Time'
                         } • Total: $${(this.chartData.total_gambled || 0).toLocaleString()}
                     </div>
@@ -154,17 +154,11 @@ export default class StatsPage {
         return `
             <h2 style="font-size: 2rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1.5rem; color: var(--text-primary); text-shadow: 3px 3px 0px var(--casino-red); text-align: center;">🏆 Leaderboards</h2>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
-                
+
                 <div class="neo-leaderboard-stat green">
                     <div class="neo-leaderboard-stat-label">💰 Biggest Session Win</div>
                     <div class="neo-leaderboard-stat-value">${formatPlayers(data.biggest_session_win?.players)}</div>
                     <div class="neo-leaderboard-stat-subtitle">$${(data.biggest_session_win?.amount || 0).toLocaleString()}</div>
-                </div>
-
-                <div class="neo-leaderboard-stat red">
-                    <div class="neo-leaderboard-stat-label">💸 Biggest Session Loss</div>
-                    <div class="neo-leaderboard-stat-value">${formatPlayers(data.biggest_session_loss?.players)}</div>
-                    <div class="neo-leaderboard-stat-subtitle">-$${Math.abs(data.biggest_session_loss?.amount || 0).toLocaleString()}</div>
                 </div>
 
                 <div class="neo-leaderboard-stat purple">
@@ -181,6 +175,30 @@ export default class StatsPage {
                     </div>
                 </div>
 
+                <div class="neo-leaderboard-stat green">
+                    <div class="neo-leaderboard-stat-label">💯 Century Club</div>
+                    <div class="neo-leaderboard-stat-value">${formatPlayers(data.century_club?.players)}</div>
+                    <div class="neo-leaderboard-stat-subtitle">${data.century_club?.sessions || 0} sessions
+                        <div class="neo-leaderboard-stat-explanation">Sessions with $100+ profit</div>
+                    </div>
+                </div>
+
+                <div class="neo-leaderboard-stat purple">
+                    <div class="neo-leaderboard-stat-label">🗣️ Speaker of the House</div>
+                    <div class="neo-leaderboard-stat-value">${formatPlayers(data.speaker_of_house?.players)}</div>
+                    <div class="neo-leaderboard-stat-subtitle">${data.speaker_of_house?.quotes || 0} quotes
+                        <div class="neo-leaderboard-stat-explanation">Most Words of Wisdom</div>
+                    </div>
+                </div>
+
+                <div class="neo-leaderboard-stat blue">
+                    <div class="neo-leaderboard-stat-label">🎯 Most Consistent</div>
+                    <div class="neo-leaderboard-stat-value">${formatPlayers(data.most_consistent?.players)}</div>
+                    <div class="neo-leaderboard-stat-subtitle">±$${Math.round(data.most_consistent?.std_dev || 0).toLocaleString()}
+                        <div class="neo-leaderboard-stat-explanation">Lowest variability (avg: $${Math.round(data.most_consistent?.avg_profit || 0).toLocaleString()})</div>
+                    </div>
+                </div>
+
                 <div class="neo-leaderboard-stat black">
                     <div class="neo-leaderboard-stat-label">🔄 Biggest Grinder</div>
                     <div class="neo-leaderboard-stat-value">${formatPlayers(data.biggest_grinder?.players)}</div>
@@ -189,36 +207,10 @@ export default class StatsPage {
                     </div>
                 </div>
 
-                <div class="neo-leaderboard-stat gold">
-                    <div class="neo-leaderboard-stat-label">💯 Century Club</div>
-                    <div class="neo-leaderboard-stat-value">${formatPlayers(data.century_club?.players)}</div>
-                    <div class="neo-leaderboard-stat-subtitle">${data.century_club?.sessions || 0} sessions
-                        <div class="neo-leaderboard-stat-explanation">Sessions with $100+ profit</div>
-                    </div>
-                </div>
-
-                <div class="neo-leaderboard-stat blue">
-                    <div class="neo-leaderboard-stat-label">🏅 Veteran Status</div>
-                    <div class="neo-leaderboard-stat-value">${formatPlayers(data.most_games_played?.players)}</div>
-                    <div class="neo-leaderboard-stat-subtitle">${data.most_games_played?.games || 0} sessions
-                        <div class="neo-leaderboard-stat-explanation">Most poker sessions played overall</div>
-                    </div>
-                </div>
-
-                <div class="neo-leaderboard-stat green">
-                    <div class="neo-leaderboard-stat-label">🎯 Most Consistent</div>
-                    <div class="neo-leaderboard-stat-value">${formatPlayers(data.most_consistent?.players)}</div>
-                    <div class="neo-leaderboard-stat-subtitle">±$${Math.round(data.most_consistent?.std_dev || 0).toLocaleString()}
-                        <div class="neo-leaderboard-stat-explanation">Lowest variability (avg: $${Math.round(data.most_consistent?.avg_profit || 0).toLocaleString()})</div>
-                    </div>
-                </div>
-
-                <div class="neo-leaderboard-stat purple">
-                    <div class="neo-leaderboard-stat-label">🎖️ Attendance Award</div>
-                    <div class="neo-leaderboard-stat-value">${formatPlayers(data.best_attendance?.players)}</div>
-                    <div class="neo-leaderboard-stat-subtitle">${(data.best_attendance?.percentage || 0).toFixed(1)}%
-                        <div class="neo-leaderboard-stat-explanation">${data.best_attendance?.sessions_attended || 0}/${data.best_attendance?.total_sessions || 0} sessions attended</div>
-                    </div>
+                <div class="neo-leaderboard-stat red">
+                    <div class="neo-leaderboard-stat-label">💸 Biggest Session Loss</div>
+                    <div class="neo-leaderboard-stat-value">${formatPlayers(data.biggest_session_loss?.players)}</div>
+                    <div class="neo-leaderboard-stat-subtitle">-$${Math.abs(data.biggest_session_loss?.amount || 0).toLocaleString()}</div>
                 </div>
 
                 <div class="neo-leaderboard-stat red">
@@ -226,6 +218,14 @@ export default class StatsPage {
                     <div class="neo-leaderboard-stat-value">${formatPlayers(data.longest_losing_streak?.players)}</div>
                     <div class="neo-leaderboard-stat-subtitle">${data.longest_losing_streak?.streak || 0} losses
                         <div class="neo-leaderboard-stat-explanation">Consecutive sessions without profit</div>
+                    </div>
+                </div>
+
+                <div class="neo-leaderboard-stat blue">
+                    <div class="neo-leaderboard-stat-label">🎖️ Attendance Award</div>
+                    <div class="neo-leaderboard-stat-value">${formatPlayers(data.best_attendance?.players)}</div>
+                    <div class="neo-leaderboard-stat-subtitle">${(data.best_attendance?.percentage || 0).toFixed(1)}%
+                        <div class="neo-leaderboard-stat-explanation">${data.best_attendance?.sessions_attended || 0}/${data.best_attendance?.total_sessions || 0} sessions attended</div>
                     </div>
                 </div>
 

@@ -221,7 +221,39 @@ export default class SessionDetailPage {
                         </div>
                     </div>
                 </div>
-                
+
+                <!-- Words of Wisdom Section -->
+                ${sessionData.wisdom_quote ? `
+                <div class="neo-card neo-card-gold" style="margin-top: 2rem; text-align: center;">
+                    <h3 style="font-size: 1.25rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1rem; color: var(--casino-gold-dark);">💬 Words of Wisdom</h3>
+                    <p style="font-size: 1.25rem; font-style: italic; color: var(--text-primary); margin-bottom: 0.5rem;">
+                        "${sessionData.wisdom_quote}"
+                    </p>
+                    <p style="font-size: 1rem; font-weight: 700; color: var(--text-secondary);">
+                        — ${session.players?.find(p => p.id === sessionData.wisdom_player_id)?.name || 'Unknown'}
+                    </p>
+                </div>
+                ` : ''}
+
+                ${isActive ? `
+                <!-- Words of Wisdom Input -->
+                <div class="neo-card" style="margin-top: 2rem;">
+                    <h4 style="font-size: 1.25rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1rem; color: var(--text-primary);">💬 ${sessionData.wisdom_quote ? 'Edit' : 'Add'} Words of Wisdom</h4>
+                    <div style="display: flex; flex-direction: column; gap: 1rem;">
+                        <textarea id="wisdom-quote-input" placeholder="Enter the quote..." style="padding: 0.875rem 1rem; border: var(--neo-border); font-size: 1rem; font-weight: 600; background: var(--bg-card); min-height: 80px; resize: vertical;">${sessionData.wisdom_quote || ''}</textarea>
+                        <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+                            <select id="wisdom-player-select" style="flex: 1; min-width: 200px; padding: 0.875rem 1rem; border: var(--neo-border); font-size: 1rem; font-weight: 600; background: var(--bg-card);">
+                                <option value="">-- Who said it? --</option>
+                                ${(session.players || []).map(player =>
+                                    `<option value="${player.id}" ${player.id === sessionData.wisdom_player_id ? 'selected' : ''}>${player.name}</option>`
+                                ).join('')}
+                            </select>
+                            <button id="save-wisdom-btn" class="neo-btn neo-btn-gold">Save Quote</button>
+                        </div>
+                    </div>
+                </div>
+                ` : ''}
+
                 <h3 style="font-size: 1.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; margin: 2rem 0 1.5rem 0; color: var(--text-primary);">🎭 Players</h3>
         `;
         
@@ -263,6 +295,7 @@ export default class SessionDetailPage {
                             <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; flex-wrap: wrap; gap: 1rem;">
                                 <h4 style="font-size: 1.5rem; font-weight: 800; margin: 0; text-transform: uppercase; letter-spacing: 0.05em;">
                                     <a href="#player/${player.id}" style="color: inherit; text-decoration: none;">${player.name}</a>
+                                    ${player.id === sessionData.wisdom_player_id ? ' 🗣️' : ''}
                                 </h4>
                             </div>
                             
@@ -548,6 +581,44 @@ export default class SessionDetailPage {
                 });
             }
             
+            // Save wisdom quote button
+            const saveWisdomBtn = document.getElementById('save-wisdom-btn');
+            const wisdomQuoteInput = document.getElementById('wisdom-quote-input');
+            const wisdomPlayerSelect = document.getElementById('wisdom-player-select');
+
+            if (saveWisdomBtn && wisdomQuoteInput && wisdomPlayerSelect) {
+                saveWisdomBtn.addEventListener('click', async () => {
+                    const quote = wisdomQuoteInput.value.trim();
+                    const playerId = wisdomPlayerSelect.value;
+
+                    if (quote && !playerId) {
+                        alert('Please select who said the quote');
+                        return;
+                    }
+
+                    try {
+                        // Show loading state
+                        saveWisdomBtn.disabled = true;
+                        saveWisdomBtn.textContent = 'Saving...';
+
+                        await this.api.put(`sessions/${sessionId}/wisdom`, {
+                            wisdom_quote: quote,
+                            wisdom_player_id: playerId || null
+                        });
+
+                        // Reload the session detail page
+                        this.load(sessionId);
+                    } catch (error) {
+                        console.error('Error saving wisdom quote:', error);
+                        alert(`Error: ${error.message}`);
+
+                        // Restore button state
+                        saveWisdomBtn.disabled = false;
+                        saveWisdomBtn.textContent = 'Save Quote';
+                    }
+                });
+            }
+
             // Add player to session button
             const addPlayerBtn = document.getElementById('add-player-to-session-btn');
             const playerSelect = document.getElementById('add-player-select');

@@ -123,6 +123,8 @@ class Session(db.Model):
     status = Column(String(10), default='ACTIVE', nullable=False)
     chip_distribution = Column(Text)  # JSON string
     total_chips = Column(Integer)
+    wisdom_quote = Column(Text)  # Words of Wisdom quote
+    wisdom_player_id = Column(String(20), ForeignKey('players.player_id'))  # Player who said the quote
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
     
@@ -145,6 +147,8 @@ class Session(db.Model):
             'default_buy_in_value': round_to_cents(self.default_buy_in_value),
             'is_active': self.is_active,
             'status': self.status,
+            'wisdom_quote': self.wisdom_quote,
+            'wisdom_player_id': self.wisdom_player_id,
             'created_at': self.created_at.isoformat() if self.created_at else None,
             'updated_at': self.updated_at.isoformat() if self.updated_at else None
         }
@@ -188,7 +192,9 @@ class Session(db.Model):
             default_buy_in_value=round_to_cents(data.get('default_buy_in_value', 20.00)),
             is_active=data.get('is_active', True),
             status=data.get('status', 'ACTIVE'),
-            total_chips=data.get('total_chips')
+            total_chips=data.get('total_chips'),
+            wisdom_quote=data.get('wisdom_quote'),
+            wisdom_player_id=data.get('wisdom_player_id')
         )
         
         # Handle chip distribution
