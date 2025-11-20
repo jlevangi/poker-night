@@ -82,13 +82,21 @@ elif [ "$DEPLOYMENT_MODE" = "production" ]; then
     fi
 fi
 
+# Ensure version.txt file exists
+echo "Checking version file..."
+if [ ! -f "$APP_DIR/version.txt" ]; then
+    echo "Creating default version.txt file..."
+    echo "1.0.5" > $APP_DIR/version.txt
+fi
+
 # Ensure .env file exists with default values if missing
 echo "Checking environment configuration..."
 if [ ! -f "$APP_DIR/.env" ]; then
     echo "Creating default .env file..."
     cat > $APP_DIR/.env << 'EOL'
-# Frontend Configuration
-APP_VERSION=1.0.5
+# Application Version
+# Version is managed in version.txt at the project root
+# To update the app version, edit version.txt (e.g., 2.1.5)
 
 # Backend Configuration
 # Admin authentication settings

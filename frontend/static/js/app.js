@@ -19,22 +19,37 @@ function setupServiceWorkerUpdates() {
         // Listen for service worker messages
         navigator.serviceWorker.addEventListener('message', event => {
             if (event.data.type === 'NEW_VERSION') {
-                console.log('New version available:', event.data.version);
-                showUpdateNotification();
+                const serverVersion = event.data.serverVersion;
+                const installedVersion = event.data.installedVersion;
+                console.log(`Update available: ${installedVersion} → ${serverVersion}`);
+
+                // Check if we've already shown notification for this update
+                const dismissedVersion = localStorage.getItem('gamble-king-dismissed-update');
+                if (dismissedVersion !== serverVersion) {
+                    showUpdateNotification(serverVersion, installedVersion);
+                }
             }
-            
+
             if (event.data.type === 'FORCE_REFRESH') {
                 console.log('Force refresh requested');
+                // Clear the dismissed update flag
+                localStorage.removeItem('gamble-king-dismissed-update');
                 window.location.reload();
             }
         });
-        
+
+        // Check for updates immediately after SW is ready
+        navigator.serviceWorker.ready.then(() => {
+            // Small delay to ensure SW is fully active
+            setTimeout(checkForUpdates, 1000);
+        });
+
         // Check for updates periodically
         setInterval(() => {
             checkForUpdates();
-        }, 30000); // Check every 30 seconds
-        
-        // Check for updates when page becomes visible
+        }, 60000); // Check every minute
+
+        // Check for updates when page becomes visible (e.g., user returns after weeks)
         document.addEventListener('visibilitychange', () => {
             if (!document.hidden) {
                 checkForUpdates();
@@ -57,14 +72,15 @@ async function checkForUpdates() {
     }
 }
 
-function showUpdateNotification() {
+function showUpdateNotification(serverVersion, installedVersion) {
     // Check if notification is already showing
     if (document.querySelector('.update-notification')) {
         return;
     }
-    
+
     const notification = document.createElement('div');
     notification.className = 'update-notification';
+    notification.dataset.serverVersion = serverVersion;
     notification.innerHTML = `
         <div style="
             position: fixed;
@@ -80,10 +96,10 @@ function showUpdateNotification() {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         ">
             <div style="margin-bottom: 10px; font-weight: 600;">
-                🎮 Update Available
+                Update Available
             </div>
             <div style="margin-bottom: 15px; font-size: 14px; opacity: 0.9;">
-                New features and improvements are ready!
+                Version ${serverVersion} is ready. Refresh to get new features and fixes.
             </div>
             <div>
                 <button id="update-now-btn" style="
@@ -107,39 +123,59 @@ function showUpdateNotification() {
             </div>
         </div>
     `;
-    
+
     document.body.appendChild(notification);
-    
-    // Add event listeners instead of inline handlers
+
+    // Add event listeners
     const updateBtn = notification.querySelector('#update-now-btn');
     const dismissBtn = notification.querySelector('#dismiss-update-btn');
-    
+
     updateBtn.addEventListener('click', updateApp);
-    dismissBtn.addEventListener('click', dismissUpdate);
+    dismissBtn.addEventListener('click', () => dismissUpdate(serverVersion));
 }
 
-window.updateApp = function() {
-    if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
-        // First dismiss the update notification
-        dismissUpdate();
-        
-        // Post message to service worker to clear caches and update
-        navigator.serviceWorker.controller.postMessage({
-            type: 'FORCE_UPDATE'
-        });
-        
-        // Also try to get a new service worker registration
-        navigator.serviceWorker.getRegistration().then(registration => {
+window.updateApp = async function() {
+    if ('serviceWorker' in navigator) {
+        // Remove the notification
+        const notification = document.querySelector('.update-notification');
+        if (notification) {
+            notification.remove();
+        }
+
+        // Clear the dismissed update flag
+        localStorage.removeItem('gamble-king-dismissed-update');
+
+        try {
+            // Unregister the current service worker
+            const registration = await navigator.serviceWorker.getRegistration();
             if (registration) {
-                registration.update();
+                await registration.unregister();
+                console.log('Service worker unregistered');
             }
-        });
+
+            // Clear all caches
+            const cacheNames = await caches.keys();
+            await Promise.all(cacheNames.map(name => caches.delete(name)));
+            console.log('All caches cleared');
+
+            // Hard reload to get fresh content and new service worker
+            window.location.reload(true);
+        } catch (error) {
+            console.error('Error during update:', error);
+            // Fallback: just reload
+            window.location.reload(true);
+        }
     }
 };
 
-window.dismissUpdate = function() {
+window.dismissUpdate = function(serverVersion) {
     const notification = document.querySelector('.update-notification');
     if (notification) {
+        // Store the dismissed version so we don't show notification again for this version
+        const version = serverVersion || notification.dataset.serverVersion;
+        if (version) {
+            localStorage.setItem('gamble-king-dismissed-update', version);
+        }
         notification.remove();
     }
 };

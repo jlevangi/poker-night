@@ -1,27 +1,13 @@
-// Get version dynamically from config API
-let APP_VERSION = null;
-let CACHE_NAME = null;
+// Get version from the service worker URL query parameter (set at registration time)
+// This ensures the SW version is locked to when it was installed
+const SW_VERSION = new URL(self.location).searchParams.get('v') || '1.0.0';
+const CACHE_NAME = `gamble-king-cache-v${SW_VERSION}`;
 
-// Function to fetch version from backend
-async function getAppVersion() {
-    if (APP_VERSION === null) {
-        try {
-            const response = await fetch('/api/config');
-            if (response.ok) {
-                const config = await response.json();
-                APP_VERSION = config.APP_VERSION || '1.0.0';
-                console.log('Service Worker loaded version:', APP_VERSION);
-            } else {
-                APP_VERSION = '1.0.0'; // Fallback
-                console.log('Service Worker using fallback version:', APP_VERSION);
-            }
-        } catch (error) {
-            console.error('Failed to fetch version:', error);
-            APP_VERSION = '1.0.0'; // Fallback
-        }
-        CACHE_NAME = `gamble-king-cache-v${APP_VERSION}`;
-    }
-    return APP_VERSION;
+console.log('Service Worker initialized with version:', SW_VERSION);
+
+// Helper function for backwards compatibility
+function getAppVersion() {
+    return Promise.resolve(SW_VERSION);
 }
 
 // Assets that should be cached for offline use
@@ -271,32 +257,25 @@ self.addEventListener('message', event => {
     }
     
     if (event.data.type === 'CHECK_VERSION') {
-        // Get current version and compare
-        event.waitUntil(
-            getAppVersion().then(swVersion => {
-                if (event.data.version !== swVersion) {
-                    // Only notify about new version if we haven't already notified recently
-                    // This prevents notification spam
-                    const lastNotification = self.lastVersionNotification || 0;
-                    const now = Date.now();
-                    
-                    if (now - lastNotification > 60000) { // Wait at least 1 minute between notifications
-                        self.lastVersionNotification = now;
-                        
-                        // Notify the client about the version mismatch
-                        return self.clients.matchAll().then(clients => {
-                            clients.forEach(client => {
-                                client.postMessage({
-                                    type: 'NEW_VERSION',
-                                    version: swVersion,
-                                    clientVersion: event.data.version
-                                });
-                            });
+        // Compare server version (from client) against installed SW version
+        const serverVersion = event.data.version;
+
+        if (serverVersion && serverVersion !== SW_VERSION) {
+            console.log(`Version mismatch: Server has ${serverVersion}, SW has ${SW_VERSION}`);
+
+            // Notify the client about the version mismatch
+            event.waitUntil(
+                self.clients.matchAll().then(clients => {
+                    clients.forEach(client => {
+                        client.postMessage({
+                            type: 'NEW_VERSION',
+                            serverVersion: serverVersion,
+                            installedVersion: SW_VERSION
                         });
-                    }
-                }
-            })
-        );
+                    });
+                })
+            );
+        }
     }
     
     if (event.data.type === 'CLEAR_CACHE') {
