@@ -1465,3 +1465,44 @@ body {
         font-size: 1rem !important;
     }
 }
+
+/* ============================================
+   Pie Chart Styles
+   ============================================ */
+
+.neo-pie-chart-container {
+    padding: 1rem;
+}
+
+.neo-pie-slice {
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.neo-pie-slice:hover {
+    filter: brightness(1.2);
+    transform: scale(1.02);
+    transform-origin: center;
+    stroke-width: 4;
+}
+
+.neo-pie-legend-item {
+    transition: all var(--transition-neo);
+}
+
+.neo-pie-legend-item:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: var(--neo-shadow-md);
+}
+
+@media (max-width: 768px) {
+    .neo-pie-chart-container > div {
+        flex-direction: column !important;
+    }
+
+    .neo-pie-chart-container svg {
+        max-width: 300px;
+        width: 100%;
+        height: auto;
+    }
+}

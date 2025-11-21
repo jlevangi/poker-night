@@ -21,15 +21,17 @@ export default class StatsPage {
             `;
             
             // Fetch stats data
-            const [gamblingData, summaryData, leaderboardData] = await Promise.all([
+            const [gamblingData, summaryData, leaderboardData, playersData] = await Promise.all([
                 this.api.get('stats/gambling-over-time'),
                 this.api.get('stats/summary'),
-                this.api.get('stats/leaderboards')
+                this.api.get('stats/leaderboards'),
+                this.api.get('players')
             ]);
-            
+
             this.chartData = gamblingData;
             this.summaryData = summaryData;
             this.leaderboardData = leaderboardData;
+            this.playersData = playersData;
             
             // Render the stats page
             this.render();
@@ -60,7 +62,10 @@ export default class StatsPage {
                 
                 <!-- Main Chart Section -->
                 ${this.renderChartSection()}
-                
+
+                <!-- Pie Chart Section -->
+                ${this.renderPieChartSection()}
+
                 <!-- Leaderboards Section -->
                 ${this.renderLeaderboards()}
                 
@@ -68,10 +73,11 @@ export default class StatsPage {
         `;
         
         this.appContent.innerHTML = html;
-        
-        // Initialize chart after DOM is rendered
+
+        // Initialize charts after DOM is rendered
         setTimeout(() => {
             this.initializeChart();
+            this.initializePieChart();
         }, 100);
     }
     
@@ -137,6 +143,36 @@ export default class StatsPage {
         `;
     }
     
+    // Render pie chart section
+    renderPieChartSection() {
+        if (!this.playersData || this.playersData.length === 0) {
+            return '';
+        }
+
+        // Filter players with buy-ins > 0
+        const playersWithBuyIns = this.playersData.filter(p => p.total_buy_ins_value > 0);
+
+        if (playersWithBuyIns.length === 0) {
+            return '';
+        }
+
+        const totalGambled = playersWithBuyIns.reduce((sum, p) => sum + p.total_buy_ins_value, 0);
+
+        return `
+            <div class="neo-card neo-card-purple" style="margin-bottom: 2rem;">
+                <div class="neo-chart-header">
+                    <h2>🎰 Total Money Gambled by Player</h2>
+                    <div class="neo-chart-subtitle">
+                        Who's contributing to the pot? • Total: $${totalGambled.toLocaleString()}
+                    </div>
+                </div>
+                <div id="pie-chart-container" class="neo-pie-chart-container">
+                    <!-- Pie chart will be rendered here -->
+                </div>
+            </div>
+        `;
+    }
+
     // Render leaderboards section
     renderLeaderboards() {
         if (!this.leaderboardData) return '';
@@ -687,5 +723,114 @@ export default class StatsPage {
             }
         };
         document.addEventListener('keydown', handleEscape);
+    }
+
+    // Initialize SVG pie chart with neobrutalist styling
+    initializePieChart() {
+        const pieContainer = document.getElementById('pie-chart-container');
+
+        if (!pieContainer || !this.playersData) {
+            return;
+        }
+
+        // Filter players with buy-ins > 0 and sort by total buy-ins (descending)
+        const playersWithBuyIns = this.playersData
+            .filter(p => p.total_buy_ins_value > 0)
+            .sort((a, b) => b.total_buy_ins_value - a.total_buy_ins_value);
+
+        if (playersWithBuyIns.length === 0) {
+            pieContainer.innerHTML = '<p style="text-align: center; padding: 2rem;">No data to display</p>';
+            return;
+        }
+
+        const totalGambled = playersWithBuyIns.reduce((sum, p) => sum + p.total_buy_ins_value, 0);
+
+        // Color palette for pie slices (neobrutalist colors)
+        const colors = [
+            '#10B981', // green
+            '#3B82F6', // blue
+            '#F59E0B', // gold/orange
+            '#EF4444', // red
+            '#8B5CF6', // purple
+            '#EC4899', // pink
+            '#14B8A6', // teal
+            '#F97316', // orange
+            '#06B6D4', // cyan
+            '#84CC16', // lime
+        ];
+
+        // Calculate percentages and angles
+        const slices = playersWithBuyIns.map((player, index) => {
+            const percentage = (player.total_buy_ins_value / totalGambled) * 100;
+            return {
+                name: player.name,
+                value: player.total_buy_ins_value,
+                percentage: percentage,
+                color: colors[index % colors.length]
+            };
+        });
+
+        // SVG configuration
+        const size = 400;
+        const centerX = size / 2;
+        const centerY = size / 2;
+        const radius = size / 2 - 20;
+
+        // Build SVG
+        let currentAngle = -90; // Start at top
+        const slicePaths = slices.map(slice => {
+            const angle = (slice.percentage / 100) * 360;
+            const path = this.createPieSlice(centerX, centerY, radius, currentAngle, currentAngle + angle, slice.color);
+            currentAngle += angle;
+            return path;
+        });
+
+        const legendItems = slices.map((slice, index) => `
+            <div class="neo-pie-legend-item" style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; border: var(--neo-border); background: var(--bg-card); margin-bottom: 0.5rem;">
+                <div style="width: 24px; height: 24px; background: ${slice.color}; border: var(--neo-border); flex-shrink: 0;"></div>
+                <div style="flex: 1; min-width: 0;">
+                    <div style="font-weight: 800; font-size: 0.875rem; color: var(--text-primary); text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${slice.name}</div>
+                    <div style="font-weight: 600; font-size: 0.75rem; color: var(--text-secondary);">$${slice.value.toLocaleString()} • ${slice.percentage.toFixed(1)}%</div>
+                </div>
+            </div>
+        `).join('');
+
+        pieContainer.innerHTML = `
+            <div style="display: flex; gap: 2rem; align-items: center; justify-content: center; flex-wrap: wrap; padding: 2rem;">
+                <!-- Pie Chart SVG -->
+                <div style="position: relative;">
+                    <svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" style="display: block;">
+                        ${slicePaths.join('')}
+                    </svg>
+                </div>
+
+                <!-- Legend -->
+                <div style="max-width: 300px; width: 100%;">
+                    ${legendItems}
+                </div>
+            </div>
+        `;
+    }
+
+    // Create SVG path for pie slice
+    createPieSlice(cx, cy, radius, startAngle, endAngle, color) {
+        const startRad = (startAngle * Math.PI) / 180;
+        const endRad = (endAngle * Math.PI) / 180;
+
+        const x1 = cx + radius * Math.cos(startRad);
+        const y1 = cy + radius * Math.sin(startRad);
+        const x2 = cx + radius * Math.cos(endRad);
+        const y2 = cy + radius * Math.sin(endRad);
+
+        const largeArc = endAngle - startAngle > 180 ? 1 : 0;
+
+        const pathData = [
+            `M ${cx} ${cy}`,
+            `L ${x1} ${y1}`,
+            `A ${radius} ${radius} 0 ${largeArc} 1 ${x2} ${y2}`,
+            'Z'
+        ].join(' ');
+
+        return `<path d="${pathData}" fill="${color}" stroke="var(--casino-black)" stroke-width="3" class="neo-pie-slice" />`;
     }
 }
