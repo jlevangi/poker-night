@@ -109,34 +109,34 @@ self.addEventListener('fetch', event => {
 async function networkFirstStrategy(request) {
     try {
         const networkResponse = await fetch(request);
-        
-        // If successful, update cache with fresh response
-        if (networkResponse.ok) {
+
+        // Only cache GET requests (Cache API doesn't support PUT/POST/DELETE)
+        if (networkResponse.ok && request.method === 'GET') {
             await getAppVersion(); // Ensure we have the cache name
             const cache = await caches.open(CACHE_NAME);
             cache.put(request, networkResponse.clone());
         }
-        
+
         return networkResponse;
     } catch (error) {
-        
-        // Try to get from cache
+
+        // Try to get from cache (only works for GET requests)
         const cachedResponse = await caches.match(request);
         if (cachedResponse) {
             return cachedResponse;
         }
-        
+
         // If no cache, return error response for API calls
         if (request.url.includes('/api/')) {
             return new Response(
-                JSON.stringify({ error: "Network unavailable and no cached data" }), 
+                JSON.stringify({ error: "Network unavailable and no cached data" }),
                 {
                     status: 503,
                     headers: { 'Content-Type': 'application/json' }
                 }
             );
         }
-        
+
         // For other requests, re-throw error
         throw error;
     }
@@ -146,18 +146,19 @@ async function networkFirstStrategy(request) {
 async function staleWhileRevalidate(request) {
     await getAppVersion(); // Ensure we have the cache name
     const cache = await caches.open(CACHE_NAME);
-    
+
     // Get from cache immediately (don't await)
     const cachedResponse = await cache.match(request);
-    
+
     // Start fetch for fresh version (don't await - runs in background)
     const fetchPromise = fetch(request).then(networkResponse => {
-        if (networkResponse.ok) {
+        // Only cache GET requests
+        if (networkResponse.ok && request.method === 'GET') {
             cache.put(request, networkResponse.clone());
         }
         return networkResponse;
     });
-    
+
     // Return cached version immediately if available, otherwise wait for network
     return cachedResponse || fetchPromise;
 }
