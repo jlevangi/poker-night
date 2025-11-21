@@ -5,6 +5,8 @@ export default class StatsPage {
         this.api = apiService;
         this.chartData = null;
         this.summaryData = null;
+        this.resizeTimeout = null;
+        this.boundHandleResize = null;
     }
     
     // Load the stats page
@@ -78,7 +80,44 @@ export default class StatsPage {
         setTimeout(() => {
             this.initializeChart();
             this.initializePieChart();
+            this.setupResizeListener();
         }, 100);
+    }
+
+    // Setup resize listener for responsive charts
+    setupResizeListener() {
+        // Remove existing listener if any
+        if (this.boundHandleResize) {
+            window.removeEventListener('resize', this.boundHandleResize);
+        }
+
+        // Create bound handler
+        this.boundHandleResize = () => {
+            // Debounce resize events
+            if (this.resizeTimeout) {
+                clearTimeout(this.resizeTimeout);
+            }
+
+            this.resizeTimeout = setTimeout(() => {
+                this.initializeChart();
+                this.initializePieChart();
+            }, 250);
+        };
+
+        // Add resize listener
+        window.addEventListener('resize', this.boundHandleResize);
+    }
+
+    // Cleanup method to remove event listeners
+    cleanup() {
+        if (this.boundHandleResize) {
+            window.removeEventListener('resize', this.boundHandleResize);
+            this.boundHandleResize = null;
+        }
+        if (this.resizeTimeout) {
+            clearTimeout(this.resizeTimeout);
+            this.resizeTimeout = null;
+        }
     }
     
     // Render summary statistics
@@ -298,12 +337,18 @@ export default class StatsPage {
         
         // Get container dimensions
         const containerWidth = chartContainer.offsetWidth || 800;
-        
-        // Chart configuration
-        const margin = { top: 20, right: 20, bottom: 10, left: 80 };
+
+        // Chart configuration - responsive margins
+        const isMobile = containerWidth < 600;
+        const margin = {
+            top: 20,
+            right: isMobile ? 10 : 20,
+            bottom: 10,
+            left: isMobile ? 60 : 80
+        };
         const padding = 10; // Horizontal padding for circles
         const width = containerWidth - margin.left - margin.right - (padding * 2); // Account for circle padding
-        const height = Math.max(300, Math.min(500, containerWidth * 0.4)) - margin.top - margin.bottom;
+        const height = Math.max(250, Math.min(500, containerWidth * 0.4)) - margin.top - margin.bottom;
         
         // Data configuration
         const values = data.map(d => d.cumulative_amount);
@@ -336,7 +381,11 @@ export default class StatsPage {
         // Scale functions - map data values to pixel positions (with horizontal padding)
         const xScale = (index) => padding + (index / Math.max(data.length - 1, 1)) * width;
         const yScale = (value) => height - ((value - scaleMin) / scaleRange) * height;
-        
+
+        // Responsive font sizes
+        const labelFontSize = isMobile ? '0.65rem' : '0.75rem';
+        const labelRightMargin = isMobile ? '5px' : '10px';
+
         // Build the chart HTML
         let html = `
             <div style="display: flex; width: 100%; height: ${height + margin.top + margin.bottom}px;">
@@ -344,7 +393,7 @@ export default class StatsPage {
                 <div style="width: ${margin.left}px; position: relative; height: ${height + margin.top}px;">
                     ${[...yLabels].reverse().map(value => {
                         const y = margin.top + yScale(value);
-                        return `<div style="position: absolute; top: ${y}px; right: 10px; transform: translateY(-50%); font-size: 0.75rem; font-weight: bold; color: var(--text-secondary);">$${value.toLocaleString()}</div>`;
+                        return `<div style="position: absolute; top: ${y}px; right: ${labelRightMargin}; transform: translateY(-50%); font-size: ${labelFontSize}; font-weight: bold; color: var(--text-secondary);">$${value.toLocaleString()}</div>`;
                     }).join('')}
                 </div>
 
