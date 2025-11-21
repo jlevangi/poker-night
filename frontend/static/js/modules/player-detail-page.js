@@ -2,23 +2,28 @@
 export default class PlayerDetailPage {    constructor(appContent, apiService) {
         this.appContent = appContent;
         this.api = apiService;
+        this.chartData = null;
     }
       // Load player detail page
     async load(playerId) {
         try {
-            // Fetch player data and history
+            // Fetch player data, history, and profit over time
             const player = await this.api.get(`players/${playerId}/stats`);
             const history = await this.api.get(`players/${playerId}/history`);
+            this.chartData = await this.api.get(`players/${playerId}/profit-over-time`);
             player.sessions = this.processPlayerHistory(history);
-            
+
             // Map API response properties to match template expectations
             player.id = player.player_id;
             player.totalProfit = player.net_profit;
             player.sessionsPlayed = player.games_played;
             player.winRate = player.win_percentage / 100; // Convert percentage to decimal
-            
+
             // Render player details
             this.render(player);
+
+            // Initialize chart after rendering
+            this.initializeProfitChart();
         } catch (error) {
             console.error(`Error loading player details for ${playerId}:`, error);
             this.appContent.innerHTML = `<p>Could not load details for player ${playerId}. ${error.message}</p>`;
@@ -66,7 +71,7 @@ export default class PlayerDetailPage {    constructor(appContent, apiService) {
                     </h2>
                     
                     <!-- Main Stats Grid -->
-                    <div class="neo-stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); margin-bottom: 1.5rem;">
+                    <div class="neo-stats-grid" style="grid-template-columns: repeat(2, 1fr); margin-bottom: 1.5rem;">
                         <div class="neo-stat-card" style="border-color: ${player.totalProfit >= 0 ? 'var(--casino-green)' : 'var(--casino-red)'};">
                             <div class="neo-stat-value ${player.totalProfit >= 0 ? 'profit-positive' : 'profit-negative'}">$${player.totalProfit !== undefined ? player.totalProfit.toFixed(2) : '0.00'}</div>
                             <div class="neo-stat-label">Total Profit</div>
@@ -85,8 +90,17 @@ export default class PlayerDetailPage {    constructor(appContent, apiService) {
                         </div>
                     </div>
                 </div>
+
+                <!-- Profit/Loss Over Time Chart -->
+                <div class="neo-card">
+                    <div class="neo-chart-header">
+                        <h3 style="font-size: 1.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; margin: 0;">📈 Profit/Loss Over Time</h3>
+                        <div class="neo-chart-subtitle" id="profit-chart-subtitle"></div>
+                    </div>
+                    <div id="profit-chart" style="margin-top: 1.5rem;"></div>
+                </div>
         `;
-        
+
         // Add sessions section
         if (player.sessions && player.sessions.length > 0) {
             html += `
@@ -151,5 +165,252 @@ export default class PlayerDetailPage {    constructor(appContent, apiService) {
     setupEventListeners(player) {
         // No event listeners needed for player detail page
         // 7-2 win buttons are only available during active sessions
+    }
+
+    // Initialize profit/loss chart
+    initializeProfitChart() {
+        const chartContainer = document.getElementById('profit-chart');
+        const subtitleElement = document.getElementById('profit-chart-subtitle');
+
+        if (!chartContainer || !this.chartData || !this.chartData.data) {
+            return;
+        }
+
+        const data = this.chartData.data;
+
+        if (data.length === 0) {
+            chartContainer.innerHTML = '<p style="text-align: center; padding: 2rem;">No data to display</p>';
+            return;
+        }
+
+        // Update subtitle with date range and total
+        if (subtitleElement && this.chartData.date_range) {
+            const totalProfit = this.chartData.total_profit || 0;
+            const profitClass = totalProfit >= 0 ? 'profit-positive' : 'profit-negative';
+            subtitleElement.innerHTML = `${this.formatDate(this.chartData.date_range.start)} - ${this.formatDate(this.chartData.date_range.end)} | Total: <span class="${profitClass}">$${totalProfit.toFixed(2)}</span>`;
+        }
+
+        // Get container dimensions
+        const containerWidth = chartContainer.offsetWidth || 800;
+
+        // Chart configuration
+        const margin = { top: 20, right: 20, bottom: 10, left: 80 };
+        const padding = 10; // Horizontal padding for circles
+        const width = containerWidth - margin.left - margin.right - (padding * 2);
+        const height = Math.max(300, Math.min(500, containerWidth * 0.4)) - margin.top - margin.bottom;
+
+        // Data configuration
+        const values = data.map(d => d.cumulative_profit);
+        const minValue = Math.min(...values, 0); // Include 0 to show baseline
+        const maxValue = Math.max(...values, 0);
+        const valueRange = maxValue - minValue;
+
+        // Y-axis labels configuration
+        const increment = this.calculateIncrement(valueRange);
+        const yLabels = this.generateYAxisLabels(minValue, maxValue, increment);
+
+        // Adjust scale to match label range
+        const scaleMin = yLabels[0];
+        const scaleMax = yLabels[yLabels.length - 1];
+        const scaleRange = scaleMax - scaleMin;
+
+        // Scale functions
+        const xScale = (index) => padding + (index / Math.max(data.length - 1, 1)) * width;
+        const yScale = (value) => height - ((value - scaleMin) / scaleRange) * height;
+
+        // Determine line color based on final profit
+        const finalProfit = data[data.length - 1].cumulative_profit;
+        const lineColor = finalProfit >= 0 ? 'var(--casino-green-dark)' : 'var(--casino-red)';
+
+        // Build the chart HTML
+        let html = `
+            <div style="display: flex; width: 100%; height: ${height + margin.top + margin.bottom}px;">
+                <!-- Y-axis labels -->
+                <div style="width: ${margin.left}px; position: relative; height: ${height + margin.top}px;">
+                    ${[...yLabels].reverse().map(value => {
+                        const y = margin.top + yScale(value);
+                        const displayValue = value >= 0 ? `$${value.toLocaleString()}` : `-$${Math.abs(value).toLocaleString()}`;
+                        return `<div style="position: absolute; top: ${y}px; right: 10px; transform: translateY(-50%); font-size: 0.75rem; font-weight: bold; color: var(--text-secondary);">${displayValue}</div>`;
+                    }).join('')}
+                </div>
+
+                <!-- Chart area -->
+                <div style="flex: 1; border-left: 3px solid var(--casino-black); border-bottom: 3px solid var(--casino-black); position: relative;">
+                    <svg width="${width + padding * 2}" height="${height + margin.top + 10}" style="display: block; overflow: visible;">
+                        <!-- Grid lines -->
+                        <g>
+                            ${yLabels.map(value => {
+                                const y = margin.top + yScale(value);
+                                const isZeroLine = value === 0;
+                                const strokeWidth = isZeroLine ? '2' : '1';
+                                const opacity = isZeroLine ? '0.6' : '0.3';
+                                return `<line x1="${padding}" y1="${y}" x2="${width + padding}" y2="${y}" stroke="var(--text-muted)" stroke-width="${strokeWidth}" opacity="${opacity}" />`;
+                            }).join('')}
+                        </g>
+
+                        <!-- Line -->
+                        <path d="${this.buildLinePath(data, xScale, yScale, margin.top)}"
+                              fill="none"
+                              stroke="${lineColor}"
+                              stroke-width="3" />
+
+                        <!-- Data points -->
+                        ${data.map((point, index) => {
+                            const cx = xScale(index);
+                            const cy = margin.top + yScale(point.cumulative_profit);
+                            const pointColor = point.cumulative_profit >= 0 ? 'var(--casino-gold)' : 'var(--casino-red)';
+                            return `
+                                <circle cx="${cx}"
+                                        cy="${cy}"
+                                        r="6"
+                                        fill="${pointColor}"
+                                        stroke="var(--casino-black)"
+                                        stroke-width="2"
+                                        class="neo-data-point"
+                                        data-session-id="${point.session_id}"
+                                        data-date="${point.date}"
+                                        data-session-profit="${point.session_profit}"
+                                        data-cumulative-profit="${point.cumulative_profit}"
+                                        data-buy-in="${point.buy_in}"
+                                        data-cash-out="${point.cash_out}" />
+                            `;
+                        }).join('')}
+                    </svg>
+                </div>
+            </div>
+        `;
+
+        chartContainer.innerHTML = html;
+
+        // Add interactions
+        this.addChartInteractions();
+    }
+
+    // Calculate appropriate increment for Y-axis based on value range
+    calculateIncrement(range) {
+        if (range <= 100) return 20;
+        if (range <= 500) return 50;
+        if (range <= 1000) return 100;
+        if (range <= 2500) return 250;
+        return 500;
+    }
+
+    // Generate Y-axis labels
+    generateYAxisLabels(minValue, maxValue, increment) {
+        const labels = [];
+
+        // Find the first label below or at minValue
+        const firstLabel = Math.floor(minValue / increment) * increment;
+
+        // Find the last label above or at maxValue
+        const lastLabel = Math.ceil(maxValue / increment) * increment;
+
+        // Generate labels from first to last
+        for (let v = firstLabel; v <= lastLabel; v += increment) {
+            labels.push(v);
+        }
+
+        // Ensure we have at least 0 in the labels if range crosses zero
+        if (minValue < 0 && maxValue > 0 && !labels.includes(0)) {
+            labels.push(0);
+            labels.sort((a, b) => a - b);
+        }
+
+        return labels;
+    }
+
+    // Build the SVG path for the line chart
+    buildLinePath(data, xScale, yScale, marginTop) {
+        if (data.length === 0) return '';
+
+        // Start at first point
+        const firstX = xScale(0);
+        const firstY = marginTop + yScale(data[0].cumulative_profit);
+        let path = `M ${firstX} ${firstY}`;
+
+        // Draw line through all data points
+        for (let i = 1; i < data.length; i++) {
+            const x = xScale(i);
+            const y = marginTop + yScale(data[i].cumulative_profit);
+            path += ` L ${x} ${y}`;
+        }
+
+        return path;
+    }
+
+    // Add chart interaction handlers
+    addChartInteractions() {
+        const dataPoints = document.querySelectorAll('.neo-data-point');
+
+        dataPoints.forEach(point => {
+            // Hover effects
+            point.addEventListener('mouseenter', (e) => {
+                const cumulativeProfit = parseFloat(e.target.getAttribute('data-cumulative-profit'));
+                const sessionProfit = parseFloat(e.target.getAttribute('data-session-profit'));
+                const date = e.target.getAttribute('data-date');
+                const buyIn = parseFloat(e.target.getAttribute('data-buy-in'));
+                const cashOut = parseFloat(e.target.getAttribute('data-cash-out'));
+
+                // Highlight the point
+                e.target.setAttribute('r', '8');
+                const originalFill = e.target.style.fill || e.target.getAttribute('fill');
+                e.target.setAttribute('data-original-fill', originalFill);
+                e.target.style.fill = 'var(--casino-purple)';
+
+                // Show tooltip
+                const tooltip = document.createElement('div');
+                tooltip.className = 'neo-chart-tooltip';
+
+                const sessionProfitClass = sessionProfit >= 0 ? 'profit-positive' : 'profit-negative';
+                const cumulativeProfitClass = cumulativeProfit >= 0 ? 'profit-positive' : 'profit-negative';
+
+                tooltip.innerHTML = `
+                    <div><strong>${this.formatDate(date)}</strong></div>
+                    <div>Buy-In: $${buyIn.toFixed(2)}</div>
+                    <div>Cash Out: $${cashOut.toFixed(2)}</div>
+                    <div class="${sessionProfitClass}">Session: $${sessionProfit.toFixed(2)}</div>
+                    <div class="${cumulativeProfitClass}"><strong>Total: $${cumulativeProfit.toFixed(2)}</strong></div>
+                    <div style="margin-top: 0.5rem; font-size: 0.7rem; opacity: 0.8;">Click for session details</div>
+                `;
+
+                document.body.appendChild(tooltip);
+
+                // Position tooltip
+                const rect = e.target.getBoundingClientRect();
+                tooltip.style.left = `${rect.left + rect.width / 2}px`;
+                tooltip.style.top = `${rect.top - 10}px`;
+            });
+
+            point.addEventListener('mouseleave', (e) => {
+                // Reset point appearance
+                e.target.setAttribute('r', '6');
+                const originalFill = e.target.getAttribute('data-original-fill');
+                if (originalFill) {
+                    e.target.style.fill = originalFill;
+                }
+
+                // Remove tooltip
+                const tooltip = document.querySelector('.neo-chart-tooltip');
+                if (tooltip) {
+                    tooltip.remove();
+                }
+            });
+
+            // Click event to navigate to session
+            point.addEventListener('click', (e) => {
+                const sessionId = e.target.getAttribute('data-session-id');
+
+                // Remove tooltip
+                const tooltip = document.querySelector('.neo-chart-tooltip');
+                if (tooltip) {
+                    tooltip.remove();
+                }
+
+                // Navigate to session details
+                if (sessionId) {
+                    window.location.hash = `#session/${sessionId}`;
+                }
+            });
+        });
     }
 }
