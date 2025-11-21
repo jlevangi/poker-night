@@ -759,16 +759,38 @@ export default class StatsPage {
             '#84CC16', // lime
         ];
 
-        // Calculate percentages and angles
-        const slices = playersWithBuyIns.map((player, index) => {
+        // Separate top 10 and others
+        const TOP_COUNT = 10;
+        const topPlayers = playersWithBuyIns.slice(0, TOP_COUNT);
+        const otherPlayers = playersWithBuyIns.slice(TOP_COUNT);
+
+        // Calculate slices - top 10 + "Everyone Else"
+        const slices = [];
+
+        topPlayers.forEach((player, index) => {
             const percentage = (player.total_buy_ins_value / totalGambled) * 100;
-            return {
+            slices.push({
                 name: player.name,
                 value: player.total_buy_ins_value,
                 percentage: percentage,
-                color: colors[index % colors.length]
-            };
+                color: colors[index % colors.length],
+                isTopPlayer: true
+            });
         });
+
+        // Add "Everyone Else" slice if there are more players
+        if (otherPlayers.length > 0) {
+            const othersTotal = otherPlayers.reduce((sum, p) => sum + p.total_buy_ins_value, 0);
+            const othersPercentage = (othersTotal / totalGambled) * 100;
+            slices.push({
+                name: `Everyone Else (${otherPlayers.length})`,
+                value: othersTotal,
+                percentage: othersPercentage,
+                color: '#6B7280', // gray
+                isTopPlayer: false,
+                otherPlayers: otherPlayers
+            });
+        }
 
         // SVG configuration
         const size = 400;
@@ -776,44 +798,171 @@ export default class StatsPage {
         const centerY = size / 2;
         const radius = size / 2 - 20;
 
+        // Store slices data for access in createPieSlice method
+        this._currentPieSlices = slices;
+
         // Build SVG
         let currentAngle = -90; // Start at top
-        const slicePaths = slices.map(slice => {
+        const slicePaths = slices.map((slice, index) => {
             const angle = (slice.percentage / 100) * 360;
-            const path = this.createPieSlice(centerX, centerY, radius, currentAngle, currentAngle + angle, slice.color);
+            const path = this.createPieSlice(centerX, centerY, radius, currentAngle, currentAngle + angle, slice.color, slice.name, index);
             currentAngle += angle;
             return path;
         });
 
-        const legendItems = slices.map((slice, index) => `
-            <div class="neo-pie-legend-item" style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; border: var(--neo-border); background: var(--bg-card); margin-bottom: 0.5rem;">
-                <div style="width: 24px; height: 24px; background: ${slice.color}; border: var(--neo-border); flex-shrink: 0;"></div>
+        // Create legend items in a responsive grid
+        const topLegendItems = slices.filter(s => s.isTopPlayer).map((slice, index) => `
+            <div class="neo-pie-legend-item" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem; border: var(--neo-border); background: var(--bg-card);">
+                <div style="width: 20px; height: 20px; background: ${slice.color}; border: var(--neo-border); flex-shrink: 0;"></div>
                 <div style="flex: 1; min-width: 0;">
-                    <div style="font-weight: 800; font-size: 0.875rem; color: var(--text-primary); text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${slice.name}</div>
-                    <div style="font-weight: 600; font-size: 0.75rem; color: var(--text-secondary);">$${slice.value.toLocaleString()} • ${slice.percentage.toFixed(1)}%</div>
+                    <div style="font-weight: 800; font-size: 0.75rem; color: var(--text-primary); text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${slice.name}</div>
+                    <div style="font-weight: 600; font-size: 0.7rem; color: var(--text-secondary);">$${slice.value.toLocaleString()} • ${slice.percentage.toFixed(1)}%</div>
                 </div>
             </div>
         `).join('');
 
+        // Create "Everyone Else" section if applicable
+        const everyoneElseItem = otherPlayers.length > 0 ? `
+            <div class="neo-pie-legend-item" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem; border: var(--neo-border); background: var(--bg-card); cursor: pointer;" id="everyone-else-item">
+                <div style="width: 20px; height: 20px; background: #6B7280; border: var(--neo-border); flex-shrink: 0;"></div>
+                <div style="flex: 1; min-width: 0;">
+                    <div style="font-weight: 800; font-size: 0.75rem; color: var(--text-primary); text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Everyone Else (${otherPlayers.length})</div>
+                    <div style="font-weight: 600; font-size: 0.7rem; color: var(--text-secondary);">$${otherPlayers.reduce((sum, p) => sum + p.total_buy_ins_value, 0).toLocaleString()} • ${((otherPlayers.reduce((sum, p) => sum + p.total_buy_ins_value, 0) / totalGambled) * 100).toFixed(1)}%</div>
+                </div>
+                <div style="font-weight: 800; color: var(--casino-purple);">▼</div>
+            </div>
+        ` : '';
+
+        const everyoneElseExpanded = otherPlayers.length > 0 ? `
+            <!-- Expandable list of everyone else -->
+            <div id="everyone-else-expanded" style="display: none; margin-top: 0.5rem; padding: 0.5rem; border: var(--neo-border); background: var(--bg-content); grid-column: 1 / -1;">
+                ${otherPlayers.map((player, idx) => `
+                    <div style="display: flex; justify-content: space-between; padding: 0.5rem; border-bottom: ${idx < otherPlayers.length - 1 ? '1px solid var(--text-muted)' : 'none'};">
+                        <span style="font-weight: 700; font-size: 0.75rem; color: var(--text-primary);">${player.name}</span>
+                        <span style="font-weight: 600; font-size: 0.75rem; color: var(--text-secondary);">$${player.total_buy_ins_value.toLocaleString()} • ${((player.total_buy_ins_value / totalGambled) * 100).toFixed(1)}%</span>
+                    </div>
+                `).join('')}
+            </div>
+        ` : '';
+
         pieContainer.innerHTML = `
-            <div style="display: flex; gap: 2rem; align-items: center; justify-content: center; flex-wrap: wrap; padding: 2rem;">
+            <div style="display: flex; align-items: flex-start; justify-content: center; flex-wrap: wrap;">
                 <!-- Pie Chart SVG -->
-                <div style="position: relative;">
+                <div style="position: relative; flex-shrink: 0;">
                     <svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" style="display: block;">
                         ${slicePaths.join('')}
                     </svg>
                 </div>
 
-                <!-- Legend -->
-                <div style="max-width: 300px; width: 100%;">
-                    ${legendItems}
+                <!-- Legend Grid -->
+                <div style="flex: 1; min-width: 300px; max-width: 700px;">
+                    <div class="neo-pie-legend-grid">
+                        ${topLegendItems}
+                        ${everyoneElseItem}
+                        ${everyoneElseExpanded}
+                    </div>
                 </div>
             </div>
         `;
+
+        // Add click handler for "Everyone Else" expansion
+        if (otherPlayers.length > 0) {
+            const everyoneElseItem = document.getElementById('everyone-else-item');
+            const everyoneElseExpanded = document.getElementById('everyone-else-expanded');
+
+            if (everyoneElseItem && everyoneElseExpanded) {
+                everyoneElseItem.addEventListener('click', () => {
+                    const isExpanded = everyoneElseExpanded.style.display !== 'none';
+                    everyoneElseExpanded.style.display = isExpanded ? 'none' : 'block';
+                    const arrow = everyoneElseItem.querySelector('div:last-child');
+                    arrow.textContent = isExpanded ? '▼' : '▲';
+                });
+            }
+        }
+
+        // Add click handlers to pie slices
+        this.addPieSliceInteractions();
+    }
+
+    // Add click interactions to pie slices
+    addPieSliceInteractions() {
+        const pieSlices = document.querySelectorAll('.neo-pie-slice');
+
+        pieSlices.forEach(slice => {
+            slice.addEventListener('click', (e) => {
+                const playerName = e.target.getAttribute('data-player-name');
+                const playerValue = e.target.getAttribute('data-player-value');
+                const playerPercentage = e.target.getAttribute('data-player-percentage');
+
+                // Create a tooltip/popup showing player details
+                const existingTooltip = document.querySelector('.neo-pie-tooltip');
+                if (existingTooltip) {
+                    existingTooltip.remove();
+                }
+
+                const tooltip = document.createElement('div');
+                tooltip.className = 'neo-pie-tooltip';
+                tooltip.innerHTML = `
+                    <div style="
+                        position: fixed;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
+                        background: var(--bg-card);
+                        padding: 1.5rem;
+                        border: var(--neo-border-thick);
+                        box-shadow: var(--neo-shadow-lg);
+                        z-index: 10002;
+                        max-width: 90%;
+                        text-align: center;
+                    ">
+                        <h3 style="
+                            font-size: 1.5rem;
+                            font-weight: 900;
+                            text-transform: uppercase;
+                            letter-spacing: 0.05em;
+                            margin-bottom: 1rem;
+                            color: var(--text-primary);
+                        ">${playerName}</h3>
+                        <div style="font-size: 1.25rem; font-weight: 700; color: var(--casino-gold); margin-bottom: 0.5rem;">
+                            $${playerValue}
+                        </div>
+                        <div style="font-size: 1rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 1.5rem;">
+                            ${playerPercentage}% of total
+                        </div>
+                        <button class="neo-btn neo-btn-primary" id="close-pie-tooltip">
+                            Close
+                        </button>
+                    </div>
+                    <div style="
+                        position: fixed;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        background: rgba(0,0,0,0.5);
+                        z-index: 10001;
+                    " id="pie-tooltip-overlay"></div>
+                `;
+
+                document.body.appendChild(tooltip);
+
+                // Close handlers
+                const closeBtn = document.getElementById('close-pie-tooltip');
+                const overlay = document.getElementById('pie-tooltip-overlay');
+
+                const closeTooltip = () => {
+                    tooltip.remove();
+                };
+
+                closeBtn.addEventListener('click', closeTooltip);
+                overlay.addEventListener('click', closeTooltip);
+            });
+        });
     }
 
     // Create SVG path for pie slice
-    createPieSlice(cx, cy, radius, startAngle, endAngle, color) {
+    createPieSlice(cx, cy, radius, startAngle, endAngle, color, playerName = '', sliceIndex = 0) {
         const startRad = (startAngle * Math.PI) / 180;
         const endRad = (endAngle * Math.PI) / 180;
 
@@ -831,6 +980,23 @@ export default class StatsPage {
             'Z'
         ].join(' ');
 
-        return `<path d="${pathData}" fill="${color}" stroke="var(--casino-black)" stroke-width="3" class="neo-pie-slice" />`;
+        // Get player data from slices array
+        const slice = this.getCurrentSliceData(sliceIndex);
+        const playerValue = slice ? slice.value.toLocaleString() : '0';
+        const playerPercentage = slice ? slice.percentage.toFixed(1) : '0';
+
+        return `<path d="${pathData}"
+                      fill="${color}"
+                      stroke="var(--casino-black)"
+                      stroke-width="3"
+                      class="neo-pie-slice"
+                      data-player-name="${playerName}"
+                      data-player-value="${playerValue}"
+                      data-player-percentage="${playerPercentage}" />`;
+    }
+
+    // Helper to get current slice data (stored temporarily during pie chart rendering)
+    getCurrentSliceData(index) {
+        return this._currentPieSlices ? this._currentPieSlices[index] : null;
     }
 }

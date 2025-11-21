@@ -1481,9 +1481,20 @@ body {
 
 .neo-pie-slice:hover {
     filter: brightness(1.2);
-    transform: scale(1.02);
+    transform: scale(1.05);
     transform-origin: center;
     stroke-width: 4;
+}
+
+.neo-pie-slice:active {
+    transform: scale(0.98);
+}
+
+.neo-pie-legend-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
 }
 
 .neo-pie-legend-item {
@@ -1495,7 +1506,23 @@ body {
     box-shadow: var(--neo-shadow-md);
 }
 
-@media (max-width: 768px) {
+/* Make "Everyone Else" and expanded list span full width */
+#everyone-else-item,
+#everyone-else-expanded {
+    grid-column: 1 / -1;
+}
+
+@media (max-width: 480px) {
+    .neo-pie-legend-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 481px) and (max-width: 768px) {
+    .neo-pie-legend-grid {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    }
+
     .neo-pie-chart-container > div {
         flex-direction: column !important;
     }
