@@ -5,6 +5,8 @@ export default class StatsPage {
         this.api = apiService;
         this.chartData = null;
         this.summaryData = null;
+        this.resizeTimeout = null;
+        this.boundHandleResize = null;
     }
     
     // Load the stats page
@@ -21,15 +23,17 @@ export default class StatsPage {
             `;
             
             // Fetch stats data
-            const [gamblingData, summaryData, leaderboardData] = await Promise.all([
+            const [gamblingData, summaryData, leaderboardData, playersData] = await Promise.all([
                 this.api.get('stats/gambling-over-time'),
                 this.api.get('stats/summary'),
-                this.api.get('stats/leaderboards')
+                this.api.get('stats/leaderboards'),
+                this.api.get('players')
             ]);
-            
+
             this.chartData = gamblingData;
             this.summaryData = summaryData;
             this.leaderboardData = leaderboardData;
+            this.playersData = playersData;
             
             // Render the stats page
             this.render();
@@ -60,7 +64,10 @@ export default class StatsPage {
                 
                 <!-- Main Chart Section -->
                 ${this.renderChartSection()}
-                
+
+                <!-- Pie Chart Section -->
+                ${this.renderPieChartSection()}
+
                 <!-- Leaderboards Section -->
                 ${this.renderLeaderboards()}
                 
@@ -68,11 +75,49 @@ export default class StatsPage {
         `;
         
         this.appContent.innerHTML = html;
-        
-        // Initialize chart after DOM is rendered
+
+        // Initialize charts after DOM is rendered
         setTimeout(() => {
             this.initializeChart();
+            this.initializePieChart();
+            this.setupResizeListener();
         }, 100);
+    }
+
+    // Setup resize listener for responsive charts
+    setupResizeListener() {
+        // Remove existing listener if any
+        if (this.boundHandleResize) {
+            window.removeEventListener('resize', this.boundHandleResize);
+        }
+
+        // Create bound handler
+        this.boundHandleResize = () => {
+            // Debounce resize events
+            if (this.resizeTimeout) {
+                clearTimeout(this.resizeTimeout);
+            }
+
+            this.resizeTimeout = setTimeout(() => {
+                this.initializeChart();
+                this.initializePieChart();
+            }, 250);
+        };
+
+        // Add resize listener
+        window.addEventListener('resize', this.boundHandleResize);
+    }
+
+    // Cleanup method to remove event listeners
+    cleanup() {
+        if (this.boundHandleResize) {
+            window.removeEventListener('resize', this.boundHandleResize);
+            this.boundHandleResize = null;
+        }
+        if (this.resizeTimeout) {
+            clearTimeout(this.resizeTimeout);
+            this.resizeTimeout = null;
+        }
     }
     
     // Render summary statistics
@@ -124,8 +169,8 @@ export default class StatsPage {
                 <div class="neo-chart-header">
                     <h2>💰 Money Gambled Over Time</h2>
                     <div class="neo-chart-subtitle">
-                        ${dateRange?.start && dateRange?.end 
-                            ? `${dateRange.end} - ${dateRange.start}` 
+                        ${dateRange?.start && dateRange?.end
+                            ? `${dateRange.start} - ${dateRange.end}`
                             : 'All Time'
                         } • Total: $${(this.chartData.total_gambled || 0).toLocaleString()}
                     </div>
@@ -137,6 +182,39 @@ export default class StatsPage {
         `;
     }
     
+    // Render pie chart section
+    renderPieChartSection() {
+        if (!this.playersData || this.playersData.length === 0) {
+            return '';
+        }
+
+        // Filter players with buy-ins > 0
+        const playersWithBuyIns = this.playersData.filter(p => p.total_buy_ins_value > 0);
+
+        if (playersWithBuyIns.length === 0) {
+            return '';
+        }
+
+        const totalGambled = playersWithBuyIns.reduce((sum, p) => sum + p.total_buy_ins_value, 0);
+
+        return `
+            <div class="neo-card neo-card-purple" style="margin-bottom: 2rem;">
+                <div class="neo-chart-header">
+                    <h2>🎰 Money Gambled by Player</h2>
+                    <div class="neo-chart-subtitle">
+                        Who's contributing to the pot?
+                    </div>
+                    <div class="neo-chart-subtitle">
+                        • Total: $${totalGambled.toLocaleString()}
+                    </div>
+                </div>
+                <div id="pie-chart-container" class="neo-pie-chart-container">
+                    <!-- Pie chart will be rendered here -->
+                </div>
+            </div>
+        `;
+    }
+
     // Render leaderboards section
     renderLeaderboards() {
         if (!this.leaderboardData) return '';
@@ -154,17 +232,11 @@ export default class StatsPage {
         return `
             <h2 style="font-size: 2rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1.5rem; color: var(--text-primary); text-shadow: 3px 3px 0px var(--casino-red); text-align: center;">🏆 Leaderboards</h2>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
-                
+
                 <div class="neo-leaderboard-stat green">
                     <div class="neo-leaderboard-stat-label">💰 Biggest Session Win</div>
                     <div class="neo-leaderboard-stat-value">${formatPlayers(data.biggest_session_win?.players)}</div>
                     <div class="neo-leaderboard-stat-subtitle">$${(data.biggest_session_win?.amount || 0).toLocaleString()}</div>
-                </div>
-
-                <div class="neo-leaderboard-stat red">
-                    <div class="neo-leaderboard-stat-label">💸 Biggest Session Loss</div>
-                    <div class="neo-leaderboard-stat-value">${formatPlayers(data.biggest_session_loss?.players)}</div>
-                    <div class="neo-leaderboard-stat-subtitle">-$${Math.abs(data.biggest_session_loss?.amount || 0).toLocaleString()}</div>
                 </div>
 
                 <div class="neo-leaderboard-stat purple">
@@ -181,6 +253,30 @@ export default class StatsPage {
                     </div>
                 </div>
 
+                <div class="neo-leaderboard-stat green">
+                    <div class="neo-leaderboard-stat-label">💯 Century Club</div>
+                    <div class="neo-leaderboard-stat-value">${formatPlayers(data.century_club?.players)}</div>
+                    <div class="neo-leaderboard-stat-subtitle">${data.century_club?.sessions || 0} sessions
+                        <div class="neo-leaderboard-stat-explanation">Sessions with $100+ profit</div>
+                    </div>
+                </div>
+
+                <div class="neo-leaderboard-stat purple">
+                    <div class="neo-leaderboard-stat-label">🗣️ Speaker of the House</div>
+                    <div class="neo-leaderboard-stat-value">${formatPlayers(data.speaker_of_house?.players)}</div>
+                    <div class="neo-leaderboard-stat-subtitle">${data.speaker_of_house?.quotes || 0} quotes
+                        <div class="neo-leaderboard-stat-explanation">Most Words of Wisdom</div>
+                    </div>
+                </div>
+
+                <div class="neo-leaderboard-stat blue">
+                    <div class="neo-leaderboard-stat-label">🎯 Most Consistent</div>
+                    <div class="neo-leaderboard-stat-value">${formatPlayers(data.most_consistent?.players)}</div>
+                    <div class="neo-leaderboard-stat-subtitle">±$${Math.round(data.most_consistent?.std_dev || 0).toLocaleString()}
+                        <div class="neo-leaderboard-stat-explanation">Lowest variability (avg: $${Math.round(data.most_consistent?.avg_profit || 0).toLocaleString()})</div>
+                    </div>
+                </div>
+
                 <div class="neo-leaderboard-stat black">
                     <div class="neo-leaderboard-stat-label">🔄 Biggest Grinder</div>
                     <div class="neo-leaderboard-stat-value">${formatPlayers(data.biggest_grinder?.players)}</div>
@@ -189,36 +285,10 @@ export default class StatsPage {
                     </div>
                 </div>
 
-                <div class="neo-leaderboard-stat gold">
-                    <div class="neo-leaderboard-stat-label">💯 Century Club</div>
-                    <div class="neo-leaderboard-stat-value">${formatPlayers(data.century_club?.players)}</div>
-                    <div class="neo-leaderboard-stat-subtitle">${data.century_club?.sessions || 0} sessions
-                        <div class="neo-leaderboard-stat-explanation">Sessions with $100+ profit</div>
-                    </div>
-                </div>
-
-                <div class="neo-leaderboard-stat blue">
-                    <div class="neo-leaderboard-stat-label">🏅 Veteran Status</div>
-                    <div class="neo-leaderboard-stat-value">${formatPlayers(data.most_games_played?.players)}</div>
-                    <div class="neo-leaderboard-stat-subtitle">${data.most_games_played?.games || 0} sessions
-                        <div class="neo-leaderboard-stat-explanation">Most poker sessions played overall</div>
-                    </div>
-                </div>
-
-                <div class="neo-leaderboard-stat green">
-                    <div class="neo-leaderboard-stat-label">🎯 Most Consistent</div>
-                    <div class="neo-leaderboard-stat-value">${formatPlayers(data.most_consistent?.players)}</div>
-                    <div class="neo-leaderboard-stat-subtitle">±$${Math.round(data.most_consistent?.std_dev || 0).toLocaleString()}
-                        <div class="neo-leaderboard-stat-explanation">Lowest variability (avg: $${Math.round(data.most_consistent?.avg_profit || 0).toLocaleString()})</div>
-                    </div>
-                </div>
-
-                <div class="neo-leaderboard-stat purple">
-                    <div class="neo-leaderboard-stat-label">🎖️ Attendance Award</div>
-                    <div class="neo-leaderboard-stat-value">${formatPlayers(data.best_attendance?.players)}</div>
-                    <div class="neo-leaderboard-stat-subtitle">${(data.best_attendance?.percentage || 0).toFixed(1)}%
-                        <div class="neo-leaderboard-stat-explanation">${data.best_attendance?.sessions_attended || 0}/${data.best_attendance?.total_sessions || 0} sessions attended</div>
-                    </div>
+                <div class="neo-leaderboard-stat red">
+                    <div class="neo-leaderboard-stat-label">💸 Biggest Session Loss</div>
+                    <div class="neo-leaderboard-stat-value">${formatPlayers(data.biggest_session_loss?.players)}</div>
+                    <div class="neo-leaderboard-stat-subtitle">-$${Math.abs(data.biggest_session_loss?.amount || 0).toLocaleString()}</div>
                 </div>
 
                 <div class="neo-leaderboard-stat red">
@@ -226,6 +296,14 @@ export default class StatsPage {
                     <div class="neo-leaderboard-stat-value">${formatPlayers(data.longest_losing_streak?.players)}</div>
                     <div class="neo-leaderboard-stat-subtitle">${data.longest_losing_streak?.streak || 0} losses
                         <div class="neo-leaderboard-stat-explanation">Consecutive sessions without profit</div>
+                    </div>
+                </div>
+
+                <div class="neo-leaderboard-stat blue">
+                    <div class="neo-leaderboard-stat-label">🎖️ Attendance Award</div>
+                    <div class="neo-leaderboard-stat-value">${formatPlayers(data.best_attendance?.players)}</div>
+                    <div class="neo-leaderboard-stat-subtitle">${(data.best_attendance?.percentage || 0).toFixed(1)}%
+                        <div class="neo-leaderboard-stat-explanation">${data.best_attendance?.sessions_attended || 0}/${data.best_attendance?.total_sessions || 0} sessions attended</div>
                     </div>
                 </div>
 
@@ -259,12 +337,18 @@ export default class StatsPage {
         
         // Get container dimensions
         const containerWidth = chartContainer.offsetWidth || 800;
-        
-        // Chart configuration
-        const margin = { top: 20, right: 20, bottom: 10, left: 80 };
+
+        // Chart configuration - responsive margins
+        const isMobile = containerWidth < 600;
+        const margin = {
+            top: 20,
+            right: isMobile ? 10 : 20,
+            bottom: 10,
+            left: isMobile ? 60 : 80
+        };
         const padding = 10; // Horizontal padding for circles
         const width = containerWidth - margin.left - margin.right - (padding * 2); // Account for circle padding
-        const height = Math.max(300, Math.min(500, containerWidth * 0.4)) - margin.top - margin.bottom;
+        const height = Math.max(250, Math.min(500, containerWidth * 0.4)) - margin.top - margin.bottom;
         
         // Data configuration
         const values = data.map(d => d.cumulative_amount);
@@ -297,7 +381,11 @@ export default class StatsPage {
         // Scale functions - map data values to pixel positions (with horizontal padding)
         const xScale = (index) => padding + (index / Math.max(data.length - 1, 1)) * width;
         const yScale = (value) => height - ((value - scaleMin) / scaleRange) * height;
-        
+
+        // Responsive font sizes
+        const labelFontSize = isMobile ? '0.65rem' : '0.75rem';
+        const labelRightMargin = isMobile ? '5px' : '10px';
+
         // Build the chart HTML
         let html = `
             <div style="display: flex; width: 100%; height: ${height + margin.top + margin.bottom}px;">
@@ -305,7 +393,7 @@ export default class StatsPage {
                 <div style="width: ${margin.left}px; position: relative; height: ${height + margin.top}px;">
                     ${[...yLabels].reverse().map(value => {
                         const y = margin.top + yScale(value);
-                        return `<div style="position: absolute; top: ${y}px; right: 10px; transform: translateY(-50%); font-size: 0.75rem; font-weight: bold; color: var(--text-secondary);">$${value.toLocaleString()}</div>`;
+                        return `<div style="position: absolute; top: ${y}px; right: ${labelRightMargin}; transform: translateY(-50%); font-size: ${labelFontSize}; font-weight: bold; color: var(--text-secondary);">$${value.toLocaleString()}</div>`;
                     }).join('')}
                 </div>
 
@@ -687,5 +775,279 @@ export default class StatsPage {
             }
         };
         document.addEventListener('keydown', handleEscape);
+    }
+
+    // Initialize SVG pie chart with neobrutalist styling
+    initializePieChart() {
+        const pieContainer = document.getElementById('pie-chart-container');
+
+        if (!pieContainer || !this.playersData) {
+            return;
+        }
+
+        // Filter players with buy-ins > 0 and sort by total buy-ins (descending)
+        const playersWithBuyIns = this.playersData
+            .filter(p => p.total_buy_ins_value > 0)
+            .sort((a, b) => b.total_buy_ins_value - a.total_buy_ins_value);
+
+        if (playersWithBuyIns.length === 0) {
+            pieContainer.innerHTML = '<p style="text-align: center; padding: 2rem;">No data to display</p>';
+            return;
+        }
+
+        const totalGambled = playersWithBuyIns.reduce((sum, p) => sum + p.total_buy_ins_value, 0);
+
+        // Color palette for pie slices (neobrutalist colors)
+        const colors = [
+            '#10B981', // green
+            '#3B82F6', // blue
+            '#F59E0B', // gold/orange
+            '#EF4444', // red
+            '#8B5CF6', // purple
+            '#EC4899', // pink
+            '#14B8A6', // teal
+            '#F97316', // orange
+            '#06B6D4', // cyan
+            '#84CC16', // lime
+        ];
+
+        // Separate top 10 and others
+        const TOP_COUNT = 10;
+        const topPlayers = playersWithBuyIns.slice(0, TOP_COUNT);
+        const otherPlayers = playersWithBuyIns.slice(TOP_COUNT);
+
+        // Calculate slices - top 10 + "Everyone Else"
+        const slices = [];
+
+        topPlayers.forEach((player, index) => {
+            const percentage = (player.total_buy_ins_value / totalGambled) * 100;
+            slices.push({
+                name: player.name,
+                value: player.total_buy_ins_value,
+                percentage: percentage,
+                color: colors[index % colors.length],
+                isTopPlayer: true
+            });
+        });
+
+        // Add "Everyone Else" slice if there are more players
+        if (otherPlayers.length > 0) {
+            const othersTotal = otherPlayers.reduce((sum, p) => sum + p.total_buy_ins_value, 0);
+            const othersPercentage = (othersTotal / totalGambled) * 100;
+            slices.push({
+                name: `Everyone Else (${otherPlayers.length})`,
+                value: othersTotal,
+                percentage: othersPercentage,
+                color: '#6B7280', // gray
+                isTopPlayer: false,
+                otherPlayers: otherPlayers
+            });
+        }
+
+        // SVG configuration
+        const size = 400;
+        const centerX = size / 2;
+        const centerY = size / 2;
+        const radius = size / 2 - 20;
+
+        // Store slices data for access in createPieSlice method
+        this._currentPieSlices = slices;
+
+        // Build SVG
+        let currentAngle = -90; // Start at top
+        const slicePaths = slices.map((slice, index) => {
+            const angle = (slice.percentage / 100) * 360;
+            const path = this.createPieSlice(centerX, centerY, radius, currentAngle, currentAngle + angle, slice.color, slice.name, index);
+            currentAngle += angle;
+            return path;
+        });
+
+        // Create legend items in a responsive grid
+        const topLegendItems = slices.filter(s => s.isTopPlayer).map((slice, index) => `
+            <div class="neo-pie-legend-item" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem; border: var(--neo-border); background: var(--bg-card);">
+                <div style="width: 20px; height: 20px; background: ${slice.color}; border: var(--neo-border); flex-shrink: 0;"></div>
+                <div style="flex: 1; min-width: 0;">
+                    <div style="font-weight: 800; font-size: 0.75rem; color: var(--text-primary); text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${slice.name}</div>
+                    <div style="font-weight: 600; font-size: 0.7rem; color: var(--text-secondary);">$${slice.value.toLocaleString()} • ${slice.percentage.toFixed(1)}%</div>
+                </div>
+            </div>
+        `).join('');
+
+        // Create "Everyone Else" section if applicable
+        const everyoneElseItem = otherPlayers.length > 0 ? `
+            <div class="neo-pie-legend-item" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem; border: var(--neo-border); background: var(--bg-card); cursor: pointer;" id="everyone-else-item">
+                <div style="width: 20px; height: 20px; background: #6B7280; border: var(--neo-border); flex-shrink: 0;"></div>
+                <div style="flex: 1; min-width: 0;">
+                    <div style="font-weight: 800; font-size: 0.75rem; color: var(--text-primary); text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Everyone Else (${otherPlayers.length})</div>
+                    <div style="font-weight: 600; font-size: 0.7rem; color: var(--text-secondary);">$${otherPlayers.reduce((sum, p) => sum + p.total_buy_ins_value, 0).toLocaleString()} • ${((otherPlayers.reduce((sum, p) => sum + p.total_buy_ins_value, 0) / totalGambled) * 100).toFixed(1)}%</div>
+                </div>
+                <div class="everyone-else-arrow" style="font-weight: 800; color: var(--casino-purple); font-size: 1rem;">▼</div>
+            </div>
+        ` : '';
+
+        const everyoneElseExpanded = otherPlayers.length > 0 ? `
+            <!-- Expandable list of everyone else -->
+            <div id="everyone-else-expanded" style="display: none; margin-top: 0.5rem; padding: 0.5rem; border: var(--neo-border); background: var(--bg-content); grid-column: 1 / -1;">
+                ${otherPlayers.map((player, idx) => `
+                    <div style="display: flex; justify-content: space-between; padding: 0.5rem; border-bottom: ${idx < otherPlayers.length - 1 ? '1px solid var(--text-muted)' : 'none'};">
+                        <span style="font-weight: 700; font-size: 0.75rem; color: var(--text-primary);">${player.name}</span>
+                        <span style="font-weight: 600; font-size: 0.75rem; color: var(--text-secondary);">$${player.total_buy_ins_value.toLocaleString()} • ${((player.total_buy_ins_value / totalGambled) * 100).toFixed(1)}%</span>
+                    </div>
+                `).join('')}
+            </div>
+        ` : '';
+
+        pieContainer.innerHTML = `
+            <div style="display: flex; align-items: flex-start; justify-content: center; flex-wrap: wrap;">
+                <!-- Pie Chart SVG -->
+                <div style="position: relative; flex-shrink: 0;">
+                    <svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" style="display: block;">
+                        ${slicePaths.join('')}
+                    </svg>
+                </div>
+
+                <!-- Legend Grid -->
+                <div style="flex: 1; min-width: 300px; max-width: 700px;">
+                    <div class="neo-pie-legend-grid">
+                        ${topLegendItems}
+                        ${everyoneElseItem}
+                        ${everyoneElseExpanded}
+                    </div>
+                </div>
+            </div>
+        `;
+
+        // Add click handler for "Everyone Else" expansion
+        if (otherPlayers.length > 0) {
+            const everyoneElseItem = document.getElementById('everyone-else-item');
+            const everyoneElseExpanded = document.getElementById('everyone-else-expanded');
+
+            if (everyoneElseItem && everyoneElseExpanded) {
+                everyoneElseItem.addEventListener('click', () => {
+                    const isExpanded = everyoneElseExpanded.style.display !== 'none';
+                    everyoneElseExpanded.style.display = isExpanded ? 'none' : 'block';
+                    const arrow = everyoneElseItem.querySelector('.everyone-else-arrow');
+                    if (arrow) {
+                        arrow.textContent = isExpanded ? '▼' : '▲';
+                    }
+                });
+            }
+        }
+
+        // Add click handlers to pie slices
+        this.addPieSliceInteractions();
+    }
+
+    // Add click interactions to pie slices
+    addPieSliceInteractions() {
+        const pieSlices = document.querySelectorAll('.neo-pie-slice');
+        const pieChartSvg = document.querySelector('#pie-chart-container svg');
+
+        if (!pieChartSvg) return;
+
+        pieSlices.forEach(slice => {
+            slice.addEventListener('click', (e) => {
+                const playerName = e.target.getAttribute('data-player-name');
+                const playerValue = e.target.getAttribute('data-player-value');
+                const playerPercentage = e.target.getAttribute('data-player-percentage');
+
+                // Remove any existing tooltip
+                const existingTooltip = document.querySelector('.neo-pie-click-tooltip');
+                if (existingTooltip) {
+                    existingTooltip.remove();
+                }
+
+                // Get click position
+                const clickX = e.clientX;
+                const clickY = e.clientY;
+
+                // Create tooltip at click position
+                const tooltip = document.createElement('div');
+                tooltip.className = 'neo-pie-click-tooltip';
+                tooltip.innerHTML = `
+                    <div style="font-weight: 900; font-size: 1.25rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-primary); margin-bottom: 0.5rem;">
+                        ${playerName}
+                    </div>
+                    <div style="font-size: 1.125rem; font-weight: 700; color: var(--casino-gold); margin-bottom: 0.25rem;">
+                        $${playerValue}
+                    </div>
+                    <div style="font-size: 0.875rem; font-weight: 600; color: var(--text-secondary);">
+                        ${playerPercentage}% of total
+                    </div>
+                `;
+
+                tooltip.style.cssText = `
+                    position: fixed;
+                    left: ${clickX}px;
+                    top: ${clickY}px;
+                    transform: translate(-50%, calc(-100% - 10px));
+                    background: var(--bg-card);
+                    padding: 1rem 1.5rem;
+                    border: var(--neo-border-thick);
+                    box-shadow: var(--neo-shadow-lg);
+                    z-index: 1000;
+                    text-align: center;
+                    pointer-events: none;
+                `;
+
+                document.body.appendChild(tooltip);
+
+                // Remove tooltip after 3 seconds or on next click
+                setTimeout(() => {
+                    if (tooltip.parentElement) {
+                        tooltip.remove();
+                    }
+                }, 3000);
+            });
+        });
+
+        // Click anywhere to dismiss tooltip
+        document.addEventListener('click', (e) => {
+            if (!e.target.classList.contains('neo-pie-slice')) {
+                const tooltip = document.querySelector('.neo-pie-click-tooltip');
+                if (tooltip) {
+                    tooltip.remove();
+                }
+            }
+        });
+    }
+
+    // Create SVG path for pie slice
+    createPieSlice(cx, cy, radius, startAngle, endAngle, color, playerName = '', sliceIndex = 0) {
+        const startRad = (startAngle * Math.PI) / 180;
+        const endRad = (endAngle * Math.PI) / 180;
+
+        const x1 = cx + radius * Math.cos(startRad);
+        const y1 = cy + radius * Math.sin(startRad);
+        const x2 = cx + radius * Math.cos(endRad);
+        const y2 = cy + radius * Math.sin(endRad);
+
+        const largeArc = endAngle - startAngle > 180 ? 1 : 0;
+
+        const pathData = [
+            `M ${cx} ${cy}`,
+            `L ${x1} ${y1}`,
+            `A ${radius} ${radius} 0 ${largeArc} 1 ${x2} ${y2}`,
+            'Z'
+        ].join(' ');
+
+        // Get player data from slices array
+        const slice = this.getCurrentSliceData(sliceIndex);
+        const playerValue = slice ? slice.value.toLocaleString() : '0';
+        const playerPercentage = slice ? slice.percentage.toFixed(1) : '0';
+
+        return `<path d="${pathData}"
+                      fill="${color}"
+                      stroke="var(--casino-black)"
+                      stroke-width="3"
+                      class="neo-pie-slice"
+                      data-player-name="${playerName}"
+                      data-player-value="${playerValue}"
+                      data-player-percentage="${playerPercentage}" />`;
+    }
+
+    // Helper to get current slice data (stored temporarily during pie chart rendering)
+    getCurrentSliceData(index) {
+        return this._currentPieSlices ? this._currentPieSlices[index] : null;
     }
 }

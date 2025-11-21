@@ -159,7 +159,10 @@ export default class SessionDetailPage {
     // Render session detail content
     render(session, sessionId) {
         console.log("Full session in render:", JSON.stringify(session, null, 2));
-        
+
+        // Store session for use in event handlers
+        this.currentSession = session;
+
         // Extract the session data from the response structure
         const sessionData = session.session_info || session;
         console.log("Session data extracted:", JSON.stringify(sessionData, null, 2));
@@ -221,7 +224,39 @@ export default class SessionDetailPage {
                         </div>
                     </div>
                 </div>
-                
+
+                <!-- Words of Wisdom Section -->
+                ${sessionData.wisdom_quote ? `
+                <div class="neo-card neo-card-gold" style="margin-top: 2rem; text-align: center;">
+                    <h3 style="font-size: 1.25rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1rem; color: var(--casino-gold-dark);">💬 Words of Wisdom</h3>
+                    <p style="font-size: 1.25rem; font-style: italic; color: var(--text-primary); margin-bottom: 0.5rem;">
+                        "${sessionData.wisdom_quote}"
+                    </p>
+                    <p style="font-size: 1rem; font-weight: 700; color: var(--text-secondary);">
+                        — ${session.players?.find(p => p.id === sessionData.wisdom_player_id)?.name || 'Unknown'}
+                    </p>
+                </div>
+                ` : ''}
+
+                ${isActive ? `
+                <!-- Words of Wisdom Input -->
+                <div class="neo-card" style="margin-top: 2rem;">
+                    <h4 style="font-size: 1.25rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1rem; color: var(--text-primary);">💬 ${sessionData.wisdom_quote ? 'Edit' : 'Add'} Words of Wisdom</h4>
+                    <div style="display: flex; flex-direction: column; gap: 1rem;">
+                        <textarea id="wisdom-quote-input" placeholder="Enter the quote..." style="padding: 0.875rem 1rem; border: var(--neo-border); font-size: 1rem; font-weight: 600; background: var(--bg-card); min-height: 80px; resize: vertical;">${sessionData.wisdom_quote || ''}</textarea>
+                        <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+                            <select id="wisdom-player-select" style="flex: 1; min-width: 200px; padding: 0.875rem 1rem; border: var(--neo-border); font-size: 1rem; font-weight: 600; background: var(--bg-card);">
+                                <option value="">-- Who said it? --</option>
+                                ${(session.players || []).map(player =>
+                                    `<option value="${player.id}" ${player.id === sessionData.wisdom_player_id ? 'selected' : ''}>${player.name}</option>`
+                                ).join('')}
+                            </select>
+                            <button id="save-wisdom-btn" class="neo-btn neo-btn-gold">Save Quote</button>
+                        </div>
+                    </div>
+                </div>
+                ` : ''}
+
                 <h3 style="font-size: 1.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; margin: 2rem 0 1.5rem 0; color: var(--text-primary);">🎭 Players</h3>
         `;
         
@@ -263,6 +298,7 @@ export default class SessionDetailPage {
                             <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; flex-wrap: wrap; gap: 1rem;">
                                 <h4 style="font-size: 1.5rem; font-weight: 800; margin: 0; text-transform: uppercase; letter-spacing: 0.05em;">
                                     <a href="#player/${player.id}" style="color: inherit; text-decoration: none;">${player.name}</a>
+                                    ${player.id === sessionData.wisdom_player_id ? ' 🗣️' : ''}
                                 </h4>
                             </div>
                             
@@ -526,28 +562,60 @@ export default class SessionDetailPage {
             if (endSessionBtn) {
                 console.log("Found end session button");
                 endSessionBtn.addEventListener('click', async () => {
-                    if (confirm("Are you sure you want to end this session? This will finalize profits.")) {
-                        try {
-                            // Show loading state
-                            endSessionBtn.disabled = true;
-                            endSessionBtn.textContent = 'Ending...';
-                            
-                            await this.api.put(`sessions/${sessionId}/end`);
-                            
-                            // Reload the page to show updated session state
-                            this.load(sessionId);
-                        } catch (error) {
-                            console.error('Error ending session:', error);
-                            alert(`Error: ${error.message}`);
-                            
-                            // Restore button state
-                            endSessionBtn.disabled = false;
-                            endSessionBtn.textContent = 'End Session';
+                    // Check for money discrepancy
+                    const unpaidValue = this.currentSession?.unpaidValue || 0;
+                    const hasDiscrepancy = Math.abs(unpaidValue) > 0.01;
+
+                    if (hasDiscrepancy) {
+                        // Show custom confirmation modal for discrepancy
+                        this.showDiscrepancyModal(unpaidValue, sessionId, endSessionBtn);
+                    } else {
+                        // No discrepancy - proceed with standard confirmation
+                        if (confirm("Are you sure you want to end this session? This will finalize profits.")) {
+                            await this.endSession(sessionId, endSessionBtn);
                         }
                     }
                 });
             }
             
+            // Save wisdom quote button
+            const saveWisdomBtn = document.getElementById('save-wisdom-btn');
+            const wisdomQuoteInput = document.getElementById('wisdom-quote-input');
+            const wisdomPlayerSelect = document.getElementById('wisdom-player-select');
+
+            if (saveWisdomBtn && wisdomQuoteInput && wisdomPlayerSelect) {
+                saveWisdomBtn.addEventListener('click', async () => {
+                    const quote = wisdomQuoteInput.value.trim();
+                    const playerId = wisdomPlayerSelect.value;
+
+                    if (quote && !playerId) {
+                        alert('Please select who said the quote');
+                        return;
+                    }
+
+                    try {
+                        // Show loading state
+                        saveWisdomBtn.disabled = true;
+                        saveWisdomBtn.textContent = 'Saving...';
+
+                        await this.api.put(`sessions/${sessionId}/wisdom`, {
+                            wisdom_quote: quote,
+                            wisdom_player_id: playerId || null
+                        });
+
+                        // Reload the session detail page
+                        this.load(sessionId);
+                    } catch (error) {
+                        console.error('Error saving wisdom quote:', error);
+                        alert(`Error: ${error.message}`);
+
+                        // Restore button state
+                        saveWisdomBtn.disabled = false;
+                        saveWisdomBtn.textContent = 'Save Quote';
+                    }
+                });
+            }
+
             // Add player to session button
             const addPlayerBtn = document.getElementById('add-player-to-session-btn');
             const playerSelect = document.getElementById('add-player-select');
@@ -667,27 +735,26 @@ export default class SessionDetailPage {
                             button.textContent = 'Processing...';
                             confirmBtn.disabled = true;
                             confirmBtn.textContent = 'Processing...';
-                            
+
                             // Record payout (this will automatically set is_cashed_out = true)
-                            await this.api.put(`sessions/${sessionId}/entries/${playerId}/payout`, { 
-                                payout_amount: cashOutValue 
+                            await this.api.put(`sessions/${sessionId}/entries/${playerId}/payout`, {
+                                payout_amount: cashOutValue
                             });
-                            
+
                             // Remove modal
                             document.body.removeChild(modalElement);
-                            
-                            // Update button appearance and displayed values immediately without page reload
-                            this.updatePlayerDisplay(button, playerId, { cashOut: cashOutValue, isCashedOut: true }, sessionId);
-                            
+
+                            // Reload the session detail page to show updated values
+                            this.load(sessionId);
+
                         } catch (error) {
                             console.error('Error processing cash-out:', error);
                             alert(`Error: ${error.message}`);
-                            
-                            // Restore button state
+
+                            // Remove modal and restore button state
+                            document.body.removeChild(modalElement);
                             button.disabled = false;
                             button.textContent = 'Cash Out';
-                            confirmBtn.disabled = false;
-                            confirmBtn.textContent = 'Cash Out';
                         }
                     });
                     
@@ -765,30 +832,29 @@ export default class SessionDetailPage {
                             button.textContent = 'Processing...';
                             confirmBtn.disabled = true;
                             confirmBtn.textContent = 'Processing...';
-                            
+
                             // Calculate number of buy-ins and add to session
                             const defaultBuyin = session.default_buy_in_value || 20;
                             const numBuyIns = Math.round(buyinValue / defaultBuyin);
-                            
-                            await this.api.post(`sessions/${sessionId}/entries/${playerId}/buy-in`, { 
-                                num_buy_ins: numBuyIns 
+
+                            await this.api.post(`sessions/${sessionId}/entries/${playerId}/buy-in`, {
+                                num_buy_ins: numBuyIns
                             });
-                            
+
                             // Remove modal
                             document.body.removeChild(modalElement);
-                            
-                            // Update button appearance and buy-in amount immediately without page reload
-                            this.updatePlayerDisplay(button, playerId, { addBuyIn: buyinValue, isCashedOut: false }, sessionId);
-                            
+
+                            // Reload the session detail page to show updated values
+                            this.load(sessionId);
+
                         } catch (error) {
                             console.error('Error processing buy-in:', error);
                             alert(`Error: ${error.message}`);
-                            
-                            // Restore button state
+
+                            // Remove modal and restore button state
+                            document.body.removeChild(modalElement);
                             button.disabled = false;
                             button.textContent = 'Buy In';
-                            confirmBtn.disabled = false;
-                            confirmBtn.textContent = 'Buy In';
                         }
                     });
                     
@@ -917,255 +983,6 @@ export default class SessionDetailPage {
     }
     
     /**
-     * Update player display including button and values dynamically without page reload
-     */
-    updatePlayerDisplay(button, playerId, updateData, sessionId) {
-        // Find the player's details section
-        const playerDetailsDiv = button.closest('li').querySelector('.session-player-details');
-        
-        if (playerDetailsDiv) {
-            // Get current values from the display
-            const detailsText = playerDetailsDiv.innerHTML;
-            const buyInMatch = detailsText.match(/Buy-in: \$(\d+\.?\d*)/);
-            const cashOutMatch = detailsText.match(/Cash-out: \$(\d+\.?\d*)/);
-            
-            let currentBuyIn = buyInMatch ? parseFloat(buyInMatch[1]) : 0;
-            let currentCashOut = cashOutMatch ? parseFloat(cashOutMatch[1]) : 0;
-            
-            // Update values based on the action
-            if (updateData.cashOut !== undefined) {
-                currentCashOut = updateData.cashOut;
-            }
-            if (updateData.addBuyIn !== undefined) {
-                currentBuyIn += updateData.addBuyIn;
-            }
-            
-            // Calculate new profit
-            const newProfit = currentCashOut - currentBuyIn;
-            const profitClass = newProfit >= 0 ? 'profit-positive' : 'profit-negative';
-            
-            // Extract player name from existing content
-            const nameMatch = detailsText.match(/<strong><a[^>]*>([^<]+)<\/a><\/strong>/);
-            const playerName = nameMatch ? nameMatch[1] : 'Unknown Player';
-            
-            // Update the player details display
-            playerDetailsDiv.innerHTML = `
-                <p><strong><a href="#player/${playerId}">${playerName}</a></strong></p>
-                <p>Buy-in: $${currentBuyIn.toFixed(2)} | 
-                   Cash-out: $${currentCashOut.toFixed(2)} |
-                   Profit: <span class="${profitClass}">$${newProfit.toFixed(2)}</span></p>
-            `;
-        }
-        
-        // Update button state
-        const isCashedOut = updateData.isCashedOut;
-        
-        if (isCashedOut) {
-            // Change to Buy In button
-            button.className = 'buy-in-player-btn';
-            button.textContent = 'Buy In';
-            button.dataset.isCashedOut = 'true';
-        } else {
-            // Change to Cash Out button
-            button.className = 'cash-out-player-btn';
-            button.textContent = 'Cash Out';
-            button.dataset.isCashedOut = 'false';
-        }
-        
-        // Re-enable the button
-        button.disabled = false;
-        
-        // Update event listeners by replacing the button
-        const newButton = button.cloneNode(true);
-        button.parentNode.replaceChild(newButton, button);
-        
-        // Add the appropriate event listener based on current state
-        if (isCashedOut) {
-            this.addBuyInListener(newButton, playerId, sessionId);
-        } else {
-            this.addCashOutListener(newButton, playerId, sessionId);
-        }
-    }
-    
-    /**
-     * Add full cash-out event listener to a button
-     */
-    addCashOutListener(button, playerId, sessionId) {
-        const session = { default_buy_in_value: 20.00 }; // We'll need to pass this properly
-        
-        button.addEventListener('click', async (e) => {
-            // Create a custom modal-like dialog for cash-out amount
-            const modalHtml = `
-                <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; display: flex; align-items: center; justify-content: center;">
-                    <div style="background: white; padding: 20px; border-radius: 8px; max-width: 400px; width: 90%;">
-                        <h3>Cash Out Player</h3>
-                        <label for="cashout-amount-dynamic">Enter cash-out amount ($):</label>
-                        <input type="text" id="cashout-amount-dynamic" inputmode="decimal" pattern="[0-9]*\.?[0-9]*" style="width: 100%; padding: 10px; margin: 10px 0; font-size: 16px; border: 2px solid #ddd; border-radius: 4px;">
-                        <div style="text-align: right; margin-top: 15px;">
-                            <button id="cancel-cashout-dynamic" style="margin-right: 10px; padding: 8px 16px; background: #ccc; border: none; border-radius: 4px; cursor: pointer;">Cancel</button>
-                            <button id="confirm-cashout-dynamic" style="padding: 8px 16px; background: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer;">Cash Out</button>
-                        </div>
-                    </div>
-                </div>
-            `;
-            
-            const modalElement = document.createElement('div');
-            modalElement.innerHTML = modalHtml;
-            document.body.appendChild(modalElement);
-            
-            const cashoutInput = document.getElementById('cashout-amount-dynamic');
-            const cancelBtn = document.getElementById('cancel-cashout-dynamic');
-            const confirmBtn = document.getElementById('confirm-cashout-dynamic');
-            
-            setTimeout(() => cashoutInput.focus(), 100);
-            
-            // Input validation
-            cashoutInput.addEventListener('input', (event) => {
-                let value = event.target.value;
-                value = value.replace(/[^0-9.]/g, '');
-                const parts = value.split('.');
-                if (parts.length > 2) {
-                    value = parts[0] + '.' + parts.slice(1).join('');
-                }
-                event.target.value = value;
-            });
-            
-            cancelBtn.addEventListener('click', () => {
-                document.body.removeChild(modalElement);
-            });
-            
-            confirmBtn.addEventListener('click', async () => {
-                const cashOutValue = parseFloat(cashoutInput.value);
-                
-                if (isNaN(cashOutValue) || cashOutValue < 0 || cashoutInput.value === '') {
-                    alert('Please enter a valid numeric cash-out amount');
-                    return;
-                }
-                
-                try {
-                    button.disabled = true;
-                    button.textContent = 'Processing...';
-                    confirmBtn.disabled = true;
-                    confirmBtn.textContent = 'Processing...';
-                    
-                    await this.api.put(`sessions/${sessionId}/entries/${playerId}/payout`, { 
-                        payout_amount: cashOutValue 
-                    });
-                    
-                    document.body.removeChild(modalElement);
-                    this.updatePlayerDisplay(button, playerId, { cashOut: cashOutValue, isCashedOut: true }, sessionId);
-                    
-                } catch (error) {
-                    console.error('Error processing cash-out:', error);
-                    alert(`Error: ${error.message}`);
-                    button.disabled = false;
-                    button.textContent = 'Cash Out';
-                    confirmBtn.disabled = false;
-                    confirmBtn.textContent = 'Cash Out';
-                }
-            });
-            
-            cashoutInput.addEventListener('keypress', (event) => {
-                if (event.key === 'Enter') {
-                    confirmBtn.click();
-                }
-            });
-        });
-    }
-    
-    /**
-     * Add full buy-in event listener to a button
-     */
-    addBuyInListener(button, playerId, sessionId) {
-        const session = { default_buy_in_value: 20.00 }; // We'll need to pass this properly
-        
-        button.addEventListener('click', async (e) => {
-            // Create a custom modal-like dialog for buy-in
-            const modalHtml = `
-                <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; display: flex; align-items: center; justify-content: center;">
-                    <div style="background: white; padding: 20px; border-radius: 8px; max-width: 400px; width: 90%;">
-                        <h3>Buy In Player</h3>
-                        <label for="buyin-amount-dynamic">Enter buy-in amount ($):</label>
-                        <input type="number" id="buyin-amount-dynamic" inputmode="decimal" step="0.01" min="0" value="${session.default_buy_in_value.toFixed(2)}" style="width: 100%; padding: 10px; margin: 10px 0; font-size: 16px; border: 2px solid #ddd; border-radius: 4px;">
-                        <div style="text-align: right; margin-top: 15px;">
-                            <button id="cancel-buyin-dynamic" style="margin-right: 10px; padding: 8px 16px; background: #ccc; border: none; border-radius: 4px; cursor: pointer;">Cancel</button>
-                            <button id="confirm-buyin-dynamic" style="padding: 8px 16px; background: #2196F3; color: white; border: none; border-radius: 4px; cursor: pointer;">Buy In</button>
-                        </div>
-                    </div>
-                </div>
-            `;
-            
-            const modalElement = document.createElement('div');
-            modalElement.innerHTML = modalHtml;
-            document.body.appendChild(modalElement);
-            
-            const buyinInput = document.getElementById('buyin-amount-dynamic');
-            const cancelBtn = document.getElementById('cancel-buyin-dynamic');
-            const confirmBtn = document.getElementById('confirm-buyin-dynamic');
-            
-            setTimeout(() => {
-                buyinInput.focus();
-                buyinInput.select();
-            }, 100);
-            
-            // Input validation
-            buyinInput.addEventListener('input', (event) => {
-                let value = event.target.value;
-                value = value.replace(/[^0-9.]/g, '');
-                const parts = value.split('.');
-                if (parts.length > 2) {
-                    value = parts[0] + '.' + parts.slice(1).join('');
-                }
-                event.target.value = value;
-            });
-            
-            cancelBtn.addEventListener('click', () => {
-                document.body.removeChild(modalElement);
-            });
-            
-            confirmBtn.addEventListener('click', async () => {
-                const buyinValue = parseFloat(buyinInput.value);
-                
-                if (isNaN(buyinValue) || buyinValue <= 0 || buyinInput.value === '') {
-                    alert('Please enter a valid buy-in amount');
-                    return;
-                }
-                
-                try {
-                    button.disabled = true;
-                    button.textContent = 'Processing...';
-                    confirmBtn.disabled = true;
-                    confirmBtn.textContent = 'Processing...';
-                    
-                    const defaultBuyin = session.default_buy_in_value || 20;
-                    const numBuyIns = Math.round(buyinValue / defaultBuyin);
-                    
-                    await this.api.post(`sessions/${sessionId}/entries/${playerId}/buy-in`, { 
-                        num_buy_ins: numBuyIns 
-                    });
-                    
-                    document.body.removeChild(modalElement);
-                    this.updatePlayerDisplay(button, playerId, { addBuyIn: buyinValue, isCashedOut: false }, sessionId);
-                    
-                } catch (error) {
-                    console.error('Error processing buy-in:', error);
-                    alert(`Error: ${error.message}`);
-                    button.disabled = false;
-                    button.textContent = 'Buy In';
-                    confirmBtn.disabled = false;
-                    confirmBtn.textContent = 'Buy In';
-                }
-            });
-            
-            buyinInput.addEventListener('keypress', (event) => {
-                if (event.key === 'Enter') {
-                    confirmBtn.click();
-                }
-            });
-        });
-    }
-
-    /**
      * Set up notification handlers for active sessions
      */
     async setupNotificationHandlers(sessionId) {
@@ -1287,5 +1104,168 @@ export default class SessionDetailPage {
         // This could be from localStorage, session storage, or API call
         // For now, returning a default player ID for testing
         return localStorage.getItem('current_player_id') || 'pid_001';
+    }
+
+    /**
+     * Show discrepancy modal when trying to end a session with money mismatch
+     */
+    showDiscrepancyModal(unpaidValue, sessionId, endSessionBtn) {
+        const discrepancyType = unpaidValue > 0 ? 'Unpaid' : 'House Loss';
+        const discrepancyAmount = Math.abs(unpaidValue).toFixed(2);
+        const discrepancyColor = unpaidValue > 0 ? '#991B1B' : '#EA580C';
+
+        const modalHtml = `
+            <div class="discrepancy-modal-overlay" style="
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.6);
+                z-index: 10001;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 1rem;
+            ">
+                <div style="
+                    background: var(--bg-card);
+                    padding: 2rem;
+                    border: var(--neo-border-thick);
+                    box-shadow: var(--neo-shadow-lg);
+                    max-width: 500px;
+                    width: 100%;
+                ">
+                    <h2 style="
+                        font-size: 1.5rem;
+                        font-weight: 900;
+                        text-transform: uppercase;
+                        letter-spacing: 0.05em;
+                        margin-bottom: 1.5rem;
+                        color: ${discrepancyColor};
+                        display: flex;
+                        align-items: center;
+                        gap: 0.5rem;
+                    ">
+                        ⚠️ Money Discrepancy
+                    </h2>
+
+                    <div style="
+                        background: ${unpaidValue > 0 ? 'rgba(153, 27, 27, 0.1)' : 'rgba(234, 88, 12, 0.1)'};
+                        border: 3px solid ${discrepancyColor};
+                        padding: 1.5rem;
+                        margin-bottom: 1.5rem;
+                    ">
+                        <p style="
+                            font-size: 1.125rem;
+                            font-weight: 700;
+                            color: var(--text-primary);
+                            margin-bottom: 0.75rem;
+                        ">
+                            The session money does not balance:
+                        </p>
+                        <p style="
+                            font-size: 1.75rem;
+                            font-weight: 900;
+                            color: ${discrepancyColor};
+                            margin: 0;
+                        ">
+                            ${discrepancyType}: $${discrepancyAmount}
+                        </p>
+                    </div>
+
+                    <p style="
+                        font-size: 1rem;
+                        font-weight: 600;
+                        color: var(--text-secondary);
+                        margin-bottom: 1.5rem;
+                        line-height: 1.5;
+                    ">
+                        ${unpaidValue > 0
+                            ? 'There is unpaid money. Players may not have cashed out all their chips.'
+                            : 'The house paid out more than was bought in. This indicates a counting error.'}
+                    </p>
+
+                    <p style="
+                        font-size: 0.875rem;
+                        font-weight: 600;
+                        color: var(--text-secondary);
+                        margin-bottom: 1.5rem;
+                    ">
+                        Do you want to end the session anyway, or go back to recount?
+                    </p>
+
+                    <div style="display: flex; gap: 1rem; justify-content: flex-end; flex-wrap: wrap;">
+                        <button id="cancel-end-session" class="neo-btn neo-btn-primary" style="flex: 1; min-width: 120px;">
+                            No, Recount
+                        </button>
+                        <button id="confirm-end-session" class="neo-btn neo-btn-red" style="flex: 1; min-width: 120px;">
+                            Yes, End Anyway
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        const modalElement = document.createElement('div');
+        modalElement.innerHTML = modalHtml;
+        document.body.appendChild(modalElement);
+
+        const cancelBtn = document.getElementById('cancel-end-session');
+        const confirmBtn = document.getElementById('confirm-end-session');
+
+        // Cancel handler - just close modal
+        cancelBtn.addEventListener('click', () => {
+            document.body.removeChild(modalElement);
+        });
+
+        // Confirm handler - proceed with ending session
+        confirmBtn.addEventListener('click', async () => {
+            // Disable buttons
+            cancelBtn.disabled = true;
+            confirmBtn.disabled = true;
+            confirmBtn.textContent = 'Ending...';
+
+            try {
+                await this.endSession(sessionId, endSessionBtn);
+                document.body.removeChild(modalElement);
+            } catch (error) {
+                // Error already handled in endSession
+                document.body.removeChild(modalElement);
+            }
+        });
+
+        // Close on overlay click
+        const overlay = modalElement.querySelector('.discrepancy-modal-overlay');
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) {
+                document.body.removeChild(modalElement);
+            }
+        });
+    }
+
+    /**
+     * End the session - extracted to a separate method for reusability
+     */
+    async endSession(sessionId, endSessionBtn) {
+        try {
+            // Show loading state
+            endSessionBtn.disabled = true;
+            endSessionBtn.textContent = 'Ending...';
+
+            await this.api.put(`sessions/${sessionId}/end`);
+
+            // Reload the page to show updated session state
+            this.load(sessionId);
+        } catch (error) {
+            console.error('Error ending session:', error);
+            alert(`Error: ${error.message}`);
+
+            // Restore button state
+            endSessionBtn.disabled = false;
+            endSessionBtn.textContent = 'End Session';
+
+            throw error; // Re-throw so modal can handle it
+        }
     }
 }

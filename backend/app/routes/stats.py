@@ -302,6 +302,27 @@ def get_leaderboard_stats():
                 if stats['name'] not in longest_losing_streak['players']:
                     longest_losing_streak['players'].append(stats['name'])
 
+        # Calculate Speaker of the House - most wisdom quotes
+        speaker_of_house = {'quotes': 0, 'players': []}
+        wisdom_counts = {}
+
+        for session in sessions:
+            if session.wisdom_player_id and session.wisdom_quote:
+                player = database_service.get_player_by_id(session.wisdom_player_id)
+                if player:
+                    player_name = player.name
+                    wisdom_counts[player_name] = wisdom_counts.get(player_name, 0) + 1
+
+        for player_name, count in wisdom_counts.items():
+            if count > speaker_of_house['quotes']:
+                speaker_of_house = {
+                    'quotes': count,
+                    'players': [player_name]
+                }
+            elif count == speaker_of_house['quotes'] and count > 0:
+                if player_name not in speaker_of_house['players']:
+                    speaker_of_house['players'].append(player_name)
+
         # Calculate Most Decorated - count awards per player
         award_counts = {}
 
@@ -314,7 +335,8 @@ def get_leaderboard_stats():
             biggest_grinder,
             century_club,
             most_consistent,
-            best_attendance
+            best_attendance,
+            speaker_of_house
         ]
 
         for award in award_categories:
@@ -346,7 +368,8 @@ def get_leaderboard_stats():
             'most_consistent': most_consistent,
             'best_attendance': best_attendance,
             'longest_losing_streak': longest_losing_streak,
-            'most_decorated': most_decorated
+            'most_decorated': most_decorated,
+            'speaker_of_house': speaker_of_house
         })
         
     except Exception as e:
@@ -367,7 +390,7 @@ def get_gambling_over_time():
             })
         
         # Sort sessions by date
-        sorted_sessions = sorted(sessions, key=lambda x: getattr(x, 'session_date', '') or '')
+        sorted_sessions = sorted(sessions, key=lambda x: x.date or '')
         
         # Build cumulative data for chart
         cumulative_amount = 0

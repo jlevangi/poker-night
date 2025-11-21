@@ -41,23 +41,23 @@ class Config:
         self.SECRET_KEY = os.environ.get('SECRET_KEY', 'poker-night-admin-secret-key-change-in-production')
         
     def _load_app_version(self) -> None:
-        """Load APP_VERSION from root .env file."""
-        env_file_path = os.path.join(self.PROJECT_ROOT, '.env')
+        """Load APP_VERSION from root version.txt file."""
+        version_file_path = os.path.join(self.PROJECT_ROOT, 'version.txt')
         self.APP_VERSION = '1.0.0'  # Default fallback version
-        
+
         try:
-            with open(env_file_path, 'r') as f:
-                for line in f:
-                    if line.strip() and not line.strip().startswith('#'):
-                        if '=' in line:
-                            key, value = line.strip().split('=', 1)
-                            if key.strip() == 'APP_VERSION':
-                                self.APP_VERSION = value.strip()
-                                break
+            with open(version_file_path, 'r') as f:
+                version = f.read().strip()
+                if version:
+                    self.APP_VERSION = version
+        except FileNotFoundError:
+            import logging
+            logger = logging.getLogger(__name__)
+            logger.warning(f"version.txt file not found at {version_file_path}, using default version")
         except Exception as e:
             import logging
             logger = logging.getLogger(__name__)
-            logger.warning(f"Error reading .env file: {e}")
+            logger.warning(f"Error reading version.txt file: {e}")
     
     def _load_admin_config(self) -> None:
         """Load admin configuration from environment variables and .env file."""

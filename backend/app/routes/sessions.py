@@ -545,28 +545,28 @@ def increment_session_strikes_api(session_id: str, player_id: str) -> Dict[str, 
 def decrement_session_strikes_api(session_id: str, player_id: str) -> Dict[str, Any]:
     """
     Decrement session-specific strikes for a player.
-    
+
     Args:
         session_id: Session's unique identifier
         player_id: Player's unique identifier
-        
+
     Returns:
         JSON response with updated session entries or error message
     """
     if not session_id or not player_id:
         return jsonify({"error": "Session ID and Player ID are required"}), 400
-    
+
     db_service = DatabaseService()
-    
+
     # Check if session and player exist
     session = db_service.get_session_by_id(session_id)
     if not session:
         return jsonify({"error": "Session not found"}), 404
-    
+
     player = db_service.get_player_by_id(player_id)
     if not player:
         return jsonify({"error": "Player not found"}), 404
-    
+
     try:
         if db_service.decrement_session_strikes(session_id, player_id):
             # Return updated session entries
@@ -575,4 +575,52 @@ def decrement_session_strikes_api(session_id: str, player_id: str) -> Dict[str, 
         return jsonify({"error": "Failed to decrement session strikes count"}), 500
     except Exception as e:
         logger.error(f"Error decrementing session strikes for player {player_id} in session {session_id}: {str(e)}")
+        return jsonify({"error": "Internal server error"}), 500
+
+
+@sessions_bp.route('/sessions/<string:session_id>/wisdom', methods=['PUT'])
+def set_session_wisdom_api(session_id: str) -> Dict[str, Any]:
+    """
+    Set the Words of Wisdom quote for a session.
+
+    Args:
+        session_id: Session's unique identifier
+
+    Returns:
+        JSON response with updated session or error message
+    """
+    data = request.get_json()
+    if not data:
+        return jsonify({"error": "Request body is required"}), 400
+
+    wisdom_quote = data.get('wisdom_quote', '').strip()
+    wisdom_player_id = data.get('wisdom_player_id')
+
+    # Validate session_id
+    if not session_id or not isinstance(session_id, str):
+        return jsonify({"error": "Invalid session ID"}), 400
+
+    db_service = DatabaseService()
+
+    # Check if session exists
+    session = db_service.get_session_by_id(session_id)
+    if not session:
+        return jsonify({"error": "Session not found"}), 404
+
+    # If player_id is provided, validate it exists
+    if wisdom_player_id:
+        player = db_service.get_player_by_id(wisdom_player_id)
+        if not player:
+            return jsonify({"error": "Player not found"}), 404
+
+    try:
+        # Update session with wisdom quote
+        from ..database.models import db
+        session.wisdom_quote = wisdom_quote if wisdom_quote else None
+        session.wisdom_player_id = wisdom_player_id if wisdom_quote else None
+        db.session.commit()
+
+        return jsonify(session.to_dict())
+    except Exception as e:
+        logger.error(f"Error setting wisdom quote for session {session_id}: {str(e)}")
         return jsonify({"error": "Internal server error"}), 500

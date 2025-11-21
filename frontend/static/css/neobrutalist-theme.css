@@ -472,6 +472,14 @@ textarea,
     gap: 1.5rem;
 }
 
+/* Mobile: Position settings buttons lower for better reachability */
+@media (max-width: 768px) {
+    .neo-settings-body {
+        justify-content: flex-end;
+        padding-bottom: 10vh;
+    }
+}
+
 .neo-settings-close {
     background: var(--casino-red);
     color: var(--text-white);
@@ -674,13 +682,15 @@ textarea,
     color: var(--text-white) !important;
 }
 
-[data-theme="dark"] .neo-btn-red {
+[data-theme="dark"] .neo-btn-red,
+[data-theme="dark"] button.neo-btn-red {
     background: var(--casino-red-light) !important;
     border-color: var(--casino-red-dark) !important;
     color: var(--casino-red-dark) !important;
 }
 
-[data-theme="dark"] .neo-btn-red:hover {
+[data-theme="dark"] .neo-btn-red:hover,
+[data-theme="dark"] button.neo-btn-red:hover {
     background: var(--casino-red-dark) !important;
     color: var(--text-white) !important;
 }
@@ -724,10 +734,6 @@ a.neo-btn,
 .neo-btn.secondary-btn,
 .neo-btn.btn {
     background-image: none !important;
-    background: var(--casino-red-light) !important;
-    border: var(--neo-border) !important;
-    border-color: var(--casino-red-dark) !important;
-    box-shadow: var(--neo-shadow-sm) !important;
 }
 
 /* Specific override for create session button */
@@ -1457,5 +1463,82 @@ body {
     
     .neo-gamble-king-title {
         font-size: 1rem !important;
+    }
+}
+
+/* ============================================
+   Pie Chart Styles
+   ============================================ */
+
+.neo-pie-chart-container {
+    padding: 1rem;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.neo-pie-slice {
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.neo-pie-slice:hover {
+    filter: brightness(1.2);
+    transform: scale(1.05);
+    transform-origin: center;
+    stroke-width: 4;
+}
+
+.neo-pie-slice:active {
+    transform: scale(0.98);
+}
+
+.neo-pie-legend-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.neo-pie-legend-item {
+    transition: all var(--transition-neo);
+}
+
+.neo-pie-legend-item:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: var(--neo-shadow-md);
+}
+
+/* Make "Everyone Else" and expanded list span full width */
+#everyone-else-item,
+#everyone-else-expanded {
+    grid-column: 1 / -1;
+}
+
+@media (max-width: 480px) {
+    .neo-pie-legend-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 481px) and (max-width: 768px) {
+    .neo-pie-legend-grid {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    }
+
+    .neo-pie-chart-container > div {
+        flex-direction: column !important;
+    }
+
+    .neo-pie-chart-container svg {
+        max-width: 300px;
+        width: 100%;
+        height: auto;
     }
 }
