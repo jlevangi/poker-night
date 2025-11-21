@@ -161,9 +161,12 @@ export default class StatsPage {
         return `
             <div class="neo-card neo-card-purple" style="margin-bottom: 2rem;">
                 <div class="neo-chart-header">
-                    <h2>🎰 Total Money Gambled by Player</h2>
+                    <h2>🎰 Money Gambled by Player</h2>
                     <div class="neo-chart-subtitle">
-                        Who's contributing to the pot? • Total: $${totalGambled.toLocaleString()}
+                        Who's contributing to the pot?
+                    </div>
+                    <div class="neo-chart-subtitle">
+                        • Total: $${totalGambled.toLocaleString()}
                     </div>
                 </div>
                 <div id="pie-chart-container" class="neo-pie-chart-container">
@@ -829,7 +832,7 @@ export default class StatsPage {
                     <div style="font-weight: 800; font-size: 0.75rem; color: var(--text-primary); text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Everyone Else (${otherPlayers.length})</div>
                     <div style="font-weight: 600; font-size: 0.7rem; color: var(--text-secondary);">$${otherPlayers.reduce((sum, p) => sum + p.total_buy_ins_value, 0).toLocaleString()} • ${((otherPlayers.reduce((sum, p) => sum + p.total_buy_ins_value, 0) / totalGambled) * 100).toFixed(1)}%</div>
                 </div>
-                <div style="font-weight: 800; color: var(--casino-purple);">▼</div>
+                <div class="everyone-else-arrow" style="font-weight: 800; color: var(--casino-purple); font-size: 1rem;">▼</div>
             </div>
         ` : '';
 
@@ -874,8 +877,10 @@ export default class StatsPage {
                 everyoneElseItem.addEventListener('click', () => {
                     const isExpanded = everyoneElseExpanded.style.display !== 'none';
                     everyoneElseExpanded.style.display = isExpanded ? 'none' : 'block';
-                    const arrow = everyoneElseItem.querySelector('div:last-child');
-                    arrow.textContent = isExpanded ? '▼' : '▲';
+                    const arrow = everyoneElseItem.querySelector('.everyone-else-arrow');
+                    if (arrow) {
+                        arrow.textContent = isExpanded ? '▼' : '▲';
+                    }
                 });
             }
         }
@@ -887,6 +892,9 @@ export default class StatsPage {
     // Add click interactions to pie slices
     addPieSliceInteractions() {
         const pieSlices = document.querySelectorAll('.neo-pie-slice');
+        const pieChartSvg = document.querySelector('#pie-chart-container svg');
+
+        if (!pieChartSvg) return;
 
         pieSlices.forEach(slice => {
             slice.addEventListener('click', (e) => {
@@ -894,70 +902,64 @@ export default class StatsPage {
                 const playerValue = e.target.getAttribute('data-player-value');
                 const playerPercentage = e.target.getAttribute('data-player-percentage');
 
-                // Create a tooltip/popup showing player details
-                const existingTooltip = document.querySelector('.neo-pie-tooltip');
+                // Remove any existing tooltip
+                const existingTooltip = document.querySelector('.neo-pie-click-tooltip');
                 if (existingTooltip) {
                     existingTooltip.remove();
                 }
 
+                // Get click position
+                const clickX = e.clientX;
+                const clickY = e.clientY;
+
+                // Create tooltip at click position
                 const tooltip = document.createElement('div');
-                tooltip.className = 'neo-pie-tooltip';
+                tooltip.className = 'neo-pie-click-tooltip';
                 tooltip.innerHTML = `
-                    <div style="
-                        position: fixed;
-                        top: 50%;
-                        left: 50%;
-                        transform: translate(-50%, -50%);
-                        background: var(--bg-card);
-                        padding: 1.5rem;
-                        border: var(--neo-border-thick);
-                        box-shadow: var(--neo-shadow-lg);
-                        z-index: 10002;
-                        max-width: 90%;
-                        text-align: center;
-                    ">
-                        <h3 style="
-                            font-size: 1.5rem;
-                            font-weight: 900;
-                            text-transform: uppercase;
-                            letter-spacing: 0.05em;
-                            margin-bottom: 1rem;
-                            color: var(--text-primary);
-                        ">${playerName}</h3>
-                        <div style="font-size: 1.25rem; font-weight: 700; color: var(--casino-gold); margin-bottom: 0.5rem;">
-                            $${playerValue}
-                        </div>
-                        <div style="font-size: 1rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 1.5rem;">
-                            ${playerPercentage}% of total
-                        </div>
-                        <button class="neo-btn neo-btn-primary" id="close-pie-tooltip">
-                            Close
-                        </button>
+                    <div style="font-weight: 900; font-size: 1.25rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-primary); margin-bottom: 0.5rem;">
+                        ${playerName}
                     </div>
-                    <div style="
-                        position: fixed;
-                        top: 0;
-                        left: 0;
-                        width: 100%;
-                        height: 100%;
-                        background: rgba(0,0,0,0.5);
-                        z-index: 10001;
-                    " id="pie-tooltip-overlay"></div>
+                    <div style="font-size: 1.125rem; font-weight: 700; color: var(--casino-gold); margin-bottom: 0.25rem;">
+                        $${playerValue}
+                    </div>
+                    <div style="font-size: 0.875rem; font-weight: 600; color: var(--text-secondary);">
+                        ${playerPercentage}% of total
+                    </div>
+                `;
+
+                tooltip.style.cssText = `
+                    position: fixed;
+                    left: ${clickX}px;
+                    top: ${clickY}px;
+                    transform: translate(-50%, calc(-100% - 10px));
+                    background: var(--bg-card);
+                    padding: 1rem 1.5rem;
+                    border: var(--neo-border-thick);
+                    box-shadow: var(--neo-shadow-lg);
+                    z-index: 1000;
+                    text-align: center;
+                    pointer-events: none;
                 `;
 
                 document.body.appendChild(tooltip);
 
-                // Close handlers
-                const closeBtn = document.getElementById('close-pie-tooltip');
-                const overlay = document.getElementById('pie-tooltip-overlay');
-
-                const closeTooltip = () => {
-                    tooltip.remove();
-                };
-
-                closeBtn.addEventListener('click', closeTooltip);
-                overlay.addEventListener('click', closeTooltip);
+                // Remove tooltip after 3 seconds or on next click
+                setTimeout(() => {
+                    if (tooltip.parentElement) {
+                        tooltip.remove();
+                    }
+                }, 3000);
             });
+        });
+
+        // Click anywhere to dismiss tooltip
+        document.addEventListener('click', (e) => {
+            if (!e.target.classList.contains('neo-pie-slice')) {
+                const tooltip = document.querySelector('.neo-pie-click-tooltip');
+                if (tooltip) {
+                    tooltip.remove();
+                }
+            }
         });
     }
 
