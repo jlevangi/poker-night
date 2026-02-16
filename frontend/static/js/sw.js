@@ -16,10 +16,25 @@ const URLS_TO_CACHE = [
     '/static/css/styles/main.css',
     '/static/js/app.js',
     '/static/js/config.js',
+    '/static/js/modules/api-service.js',
+    '/static/js/modules/calendar-page.js',
+    '/static/js/modules/dark-mode-manager.js',
+    '/static/js/modules/dashboard-page.js',
+    '/static/js/modules/logger.js',
+    '/static/js/modules/modal-manager.js',
+    '/static/js/modules/more-menu-manager.js',
+    '/static/js/modules/notification-manager.js',
+    '/static/js/modules/player-detail-page.js',
+    '/static/js/modules/players-page.js',
+    '/static/js/modules/router.js',
+    '/static/js/modules/service-worker-manager.js',
+    '/static/js/modules/session-detail-page.js',
+    '/static/js/modules/sessions-page.js',
+    '/static/js/modules/settings-manager.js',
+    '/static/js/modules/stats-page.js',
     '/static/images/icon-192x192.png',
     '/static/images/icon-512x512.png',
     '/manifest.json',
-    // Add other important static assets if any
 ];
 
 // Install event: Cache core assets
