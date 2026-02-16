@@ -133,7 +133,7 @@ export default class CalendarPage {
                     <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
                         <select class="neo-input rsvp-player-select" data-event-id="${event.event_id}" style="min-width: 150px; padding: 0.5rem;">
                             <option value="">Select player...</option>
-                            ${this.players.map(p => `<option value="${p.player_id}">${this.escapeHtml(p.name)}</option>`).join('')}
+                            ${[...this.players].sort((a, b) => a.name.localeCompare(b.name)).map(p => `<option value="${p.player_id}">${this.escapeHtml(p.name)}</option>`).join('')}
                         </select>
                         <button class="neo-btn neo-rsvp-btn-yes rsvp-btn" data-event-id="${event.event_id}" data-status="YES">I'm In</button>
                         <button class="neo-btn neo-rsvp-btn-maybe rsvp-btn" data-event-id="${event.event_id}" data-status="MAYBE">Maybe</button>
