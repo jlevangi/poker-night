@@ -160,7 +160,11 @@ export default class CalendarPage {
                 ` : ''}
 
                 ${!isCancelled ? `
-                <div style="margin-top: 1rem; padding-top: 0.75rem; border-top: 2px solid var(--border-color); text-align: center;">
+                <div style="margin-top: 1rem; padding-top: 0.75rem; border-top: 2px solid var(--border-color); display: flex; justify-content: center; gap: 0.75rem; flex-wrap: wrap;">
+                    ${event.session_id
+                        ? `<a href="#session/${event.session_id}" class="neo-btn neo-btn-green neo-btn-sm">Go to Session &rarr;</a>`
+                        : `<button class="neo-btn neo-btn-green neo-btn-sm start-session-btn" data-event-id="${event.event_id}">Start Session &#127922;</button>`
+                    }
                     <button class="neo-btn neo-btn-red neo-btn-sm cancel-event-btn" data-event-id="${event.event_id}">Cancel Event</button>
                 </div>
                 ` : ''}
@@ -233,6 +237,16 @@ export default class CalendarPage {
             });
         });
 
+        // Start session buttons
+        document.querySelectorAll('.start-session-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const eventId = e.target.dataset.eventId;
+                this.handleStartSession(eventId);
+            });
+        });
+
+        // Auto-start sessions for events near their scheduled time
+        this.autoStartSessions();
     }
 
     async handleCreateEvent() {
@@ -281,6 +295,43 @@ export default class CalendarPage {
             await this.load();
         } catch (error) {
             alert(`Error cancelling event: ${error.message}`);
+        }
+    }
+
+    async handleStartSession(eventId) {
+        try {
+            const result = await this.api.startSessionFromEvent(eventId);
+            if (result && result.session) {
+                window.location.hash = `#session/${result.session.session_id}`;
+            }
+        } catch (error) {
+            alert(`Error starting session: ${error.message}`);
+        }
+    }
+
+    async autoStartSessions() {
+        const now = new Date();
+        let anyStarted = false;
+
+        for (const event of this.events) {
+            if (event.is_cancelled || event.session_id || !event.time) continue;
+
+            const eventDateTime = new Date(event.date + 'T' + event.time);
+            const diffMs = eventDateTime - now;
+
+            // Auto-start if within 1 hour before to 4 hours after scheduled time
+            if (diffMs <= 60 * 60 * 1000 && diffMs >= -4 * 60 * 60 * 1000) {
+                try {
+                    await this.api.startSessionFromEvent(event.event_id);
+                    anyStarted = true;
+                } catch (error) {
+                    console.warn(`Auto-start failed for event ${event.event_id}:`, error.message);
+                }
+            }
+        }
+
+        if (anyStarted) {
+            await this.load();
         }
     }
 

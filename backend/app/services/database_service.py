@@ -948,7 +948,7 @@ class DatabaseService:
                 return None
 
             allowed_fields = ['title', 'date', 'time', 'location', 'description',
-                              'default_buy_in_value', 'max_players']
+                              'default_buy_in_value', 'max_players', 'session_id']
             for field in allowed_fields:
                 if field in kwargs:
                     value = kwargs[field]
@@ -1051,3 +1051,46 @@ class DatabaseService:
 
     def get_event_rsvps(self, event_id: str) -> List[EventRSVP]:
         return EventRSVP.query.filter_by(event_id=event_id).all()
+
+    def add_player_to_session(self, session_id: str, player_id: str) -> Optional[Entry]:
+        """Add a player to a session with 0 buy-ins (just seated, no money)."""
+        try:
+            # Skip if player already in session
+            existing = Entry.query.filter_by(session_id=session_id, player_id=player_id).first()
+            if existing:
+                return existing
+
+            # Generate entry_id
+            existing_entry_ids = db.session.query(Entry.entry_id).all()
+            existing_numbers = []
+            for (entry_id,) in existing_entry_ids:
+                if entry_id.startswith('eid_'):
+                    try:
+                        num = int(entry_id.split('_')[1])
+                        existing_numbers.append(num)
+                    except (ValueError, IndexError):
+                        pass
+            max_num = max(existing_numbers) if existing_numbers else 0
+            entry_id = f"eid_{max_num + 1:04d}"
+
+            new_entry = Entry(
+                entry_id=entry_id,
+                session_id=session_id,
+                player_id=player_id,
+                buy_in_count=0,
+                total_buy_in_amount=0.0,
+                payout=0.0,
+                profit=0.0,
+                session_seven_two_wins=0
+            )
+            db.session.add(new_entry)
+            db.session.commit()
+
+            player = self.get_player_by_id(player_id)
+            self.logger.info(f"{player.name if player else player_id} seated in session {session_id} (0 buy-ins)")
+            return new_entry
+
+        except Exception as e:
+            db.session.rollback()
+            self.logger.error(f"Failed to add player {player_id} to session {session_id}: {str(e)}")
+            return None

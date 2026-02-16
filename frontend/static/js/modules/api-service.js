@@ -173,6 +173,10 @@ export default class ApiService {
         return this.post(`events/${eventId}/rsvp`, data);
     }
 
+    async startSessionFromEvent(eventId) {
+        return this.post(`events/${eventId}/start-session`);
+    }
+
     async deleteRSVP(eventId, playerId) {
         const response = await fetch(`${this.baseUrl}/events/${eventId}/rsvp/${playerId}`, { method: 'DELETE' });
         return this.handleResponse(response);

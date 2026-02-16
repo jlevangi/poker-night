@@ -10,6 +10,15 @@ from flask import Blueprint, jsonify, request
 
 from ..services.database_service import DatabaseService
 
+try:
+    from scripts.chip_calculator import calculate_chip_distribution
+except ImportError:
+    try:
+        from chip_calculator import calculate_chip_distribution
+    except ImportError:
+        def calculate_chip_distribution(buy_in):
+            return {}
+
 logger = logging.getLogger(__name__)
 
 calendar_bp = Blueprint('calendar', __name__)
@@ -133,6 +142,53 @@ def delete_event_api(event_id):
     if db_service.delete_event(event_id):
         return jsonify({"message": "Event deleted successfully"})
     return jsonify({"error": "Event not found or delete failed"}), 404
+
+
+@calendar_bp.route('/events/<string:event_id>/start-session', methods=['POST'])
+def start_session_from_event(event_id):
+    """Create a poker session from a calendar event, seating all YES RSVPs."""
+    db_service = DatabaseService()
+    event = db_service.get_event_by_id(event_id)
+
+    if not event:
+        return jsonify({"error": "Event not found"}), 404
+    if event.is_cancelled:
+        return jsonify({"error": "Cannot start session for a cancelled event"}), 400
+    if event.session_id:
+        return jsonify({"error": "Event already has a linked session", "session_id": event.session_id}), 409
+
+    # Create the session
+    session = db_service.create_session(
+        date_str=event.date,
+        default_buy_in_value=event.default_buy_in_value
+    )
+    if not session:
+        return jsonify({"error": "Failed to create session"}), 500
+
+    # Calculate and store chip distribution
+    chip_distribution = calculate_chip_distribution(session.default_buy_in_value)
+    if chip_distribution:
+        session.chip_distribution = chip_distribution
+        session.total_chips = sum(chip_distribution.values())
+        db_service.update_session(session.session_id, session)
+
+    # Link event to session
+    event = db_service.update_event(event_id, session_id=session.session_id)
+
+    # Add YES RSVP players to the session
+    rsvps = db_service.get_event_rsvps(event_id)
+    added_players = []
+    for rsvp in rsvps:
+        if rsvp.status == 'YES':
+            entry = db_service.add_player_to_session(session.session_id, rsvp.player_id)
+            if entry:
+                added_players.append(rsvp.player_id)
+
+    return jsonify({
+        "session": session.to_dict(),
+        "event": event.to_dict(),
+        "added_players": added_players
+    }), 201
 
 
 @calendar_bp.route('/events/<string:event_id>/rsvp', methods=['POST'])
