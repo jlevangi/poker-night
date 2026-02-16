@@ -182,12 +182,15 @@ export default class SessionDetailPage {
                 <!-- Header with navigation and notification controls -->
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
                     <a href="#sessions" class="neo-btn neo-btn-purple">← Back to Sessions</a>
-                    ${isActive ? 
-                        `<button id="notification-btn" class="neo-btn neo-btn-gold" data-state="loading">
-                            <span class="btn-text">🔔 Loading...</span>
-                        </button>` : 
-                        ''
-                    }
+                    <div style="display: flex; gap: 0.75rem;">
+                        <button id="share-btn" class="neo-btn neo-btn-gold neo-btn-sm">📋 Share</button>
+                        ${isActive ?
+                            `<button id="notification-btn" class="neo-btn neo-btn-gold" data-state="loading">
+                                <span class="btn-text">🔔 Loading...</span>
+                            </button>` :
+                            ''
+                        }
+                    </div>
                 </div>
                 
                 <!-- Session Info Card -->
@@ -518,9 +521,43 @@ export default class SessionDetailPage {
         this.setupEventListeners(sessionData, sessionId, isActive);
     }
     
+    async handleShare() {
+        const url = window.location.href;
+        if (navigator.share) {
+            try {
+                await navigator.share({ url });
+                return;
+            } catch (e) { /* user cancelled or error, fall through to clipboard */ }
+        }
+        try {
+            await navigator.clipboard.writeText(url);
+        } catch (e) {
+            const ta = document.createElement('textarea');
+            ta.value = url;
+            ta.style.position = 'fixed';
+            ta.style.opacity = '0';
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand('copy');
+            document.body.removeChild(ta);
+        }
+        const btn = document.getElementById('share-btn');
+        if (btn) {
+            const original = btn.innerHTML;
+            btn.innerHTML = '✅ Copied!';
+            setTimeout(() => btn.innerHTML = original, 2000);
+        }
+    }
+
     // Setup event listeners for the page
     setupEventListeners(session, sessionId, isActive) {
         console.log("Setting up event listeners, isActive:", isActive);
+
+        // Share button
+        const shareBtn = document.getElementById('share-btn');
+        if (shareBtn) {
+            shareBtn.addEventListener('click', () => this.handleShare());
+        }
         
         const reactivateBtn = document.getElementById('reactivate-session-btn');
         const endBtn = document.getElementById('end-session-btn');

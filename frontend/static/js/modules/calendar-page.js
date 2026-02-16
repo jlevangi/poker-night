@@ -165,6 +165,7 @@ export default class CalendarPage {
                         ? `<a href="#session/${event.session_id}" class="neo-btn neo-btn-green neo-btn-sm">Go to Session &rarr;</a>`
                         : `<button class="neo-btn neo-btn-green neo-btn-sm start-session-btn" data-event-id="${event.event_id}">Start Session &#127922;</button>`
                     }
+                    <button class="neo-btn neo-btn-gold neo-btn-sm share-event-btn" data-event-id="${event.event_id}">📋 Share</button>
                     <button class="neo-btn neo-btn-red neo-btn-sm cancel-event-btn" data-event-id="${event.event_id}">Cancel Event</button>
                 </div>
                 ` : ''}
@@ -186,6 +187,33 @@ export default class CalendarPage {
         const div = document.createElement('div');
         div.textContent = str;
         return div.innerHTML;
+    }
+
+    async handleShareEvent(btn) {
+        const url = window.location.href;
+        if (navigator.share) {
+            try {
+                await navigator.share({ url });
+                return;
+            } catch (e) { /* user cancelled or error, fall through to clipboard */ }
+        }
+        try {
+            await navigator.clipboard.writeText(url);
+        } catch (e) {
+            const ta = document.createElement('textarea');
+            ta.value = url;
+            ta.style.position = 'fixed';
+            ta.style.opacity = '0';
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand('copy');
+            document.body.removeChild(ta);
+        }
+        if (btn) {
+            const original = btn.innerHTML;
+            btn.innerHTML = '✅ Copied!';
+            setTimeout(() => btn.innerHTML = original, 2000);
+        }
     }
 
     setupEventListeners() {
@@ -224,6 +252,14 @@ export default class CalendarPage {
                     return;
                 }
                 this.handleRSVP(eventId, playerId, status);
+            });
+        });
+
+        // Share event buttons
+        document.querySelectorAll('.share-event-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const target = e.target.closest('.share-event-btn');
+                this.handleShareEvent(target);
             });
         });
 
