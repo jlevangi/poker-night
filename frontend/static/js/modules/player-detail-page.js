@@ -102,7 +102,7 @@ export default class PlayerDetailPage {    constructor(appContent, apiService) {
                 <!-- Header with navigation -->
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
                     <a href="#players" class="neo-btn neo-btn-purple">← Back to Players</a>
-                    <button id="share-btn" class="neo-btn neo-btn-gold neo-btn-sm">📋 Share</button>
+                    <button id="share-btn" class="neo-btn neo-btn-gold">&#128203; Share</button>
                 </div>
                 
                 <!-- Player Header Card -->

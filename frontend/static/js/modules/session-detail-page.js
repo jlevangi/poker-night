@@ -179,19 +179,19 @@ export default class SessionDetailPage {
         
         let html = `
             <div style="padding: 1.5rem; max-width: 1200px; margin: 0 auto;">
-                <!-- Header with navigation and notification controls -->
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
+                <!-- Header with navigation -->
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
                     <a href="#sessions" class="neo-btn neo-btn-purple">← Back to Sessions</a>
-                    <div style="display: flex; gap: 0.75rem;">
-                        <button id="share-btn" class="neo-btn neo-btn-gold neo-btn-sm">📋 Share</button>
-                        ${isActive ?
-                            `<button id="notification-btn" class="neo-btn neo-btn-gold" data-state="loading">
-                                <span class="btn-text">🔔 Loading...</span>
-                            </button>` :
-                            ''
-                        }
-                    </div>
+                    <button id="share-btn" class="neo-btn neo-btn-gold">&#128203; Share</button>
                 </div>
+                ${isActive ?
+                    `<div style="margin-bottom: 2rem;">
+                        <button id="notification-btn" class="neo-btn neo-btn-gold" data-state="loading" style="width: 100%;">
+                            <span class="btn-text">🔔 Loading...</span>
+                        </button>
+                    </div>` :
+                    '<div style="margin-bottom: 1rem;"></div>'
+                }
                 
                 <!-- Session Info Card -->
                 <div class="neo-card ${isActive ? 'neo-card-gold' : 'neo-card-primary'}">

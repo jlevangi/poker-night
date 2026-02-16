@@ -46,7 +46,7 @@ export default class EventDetailPage {
                 <!-- Header with navigation -->
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
                     <a href="#calendar" class="neo-btn neo-btn-purple">&larr; Back to Calendar</a>
-                    <button id="share-event-btn" class="neo-btn neo-btn-gold neo-btn-sm">&#128203; Share</button>
+                    <button id="share-event-btn" class="neo-btn neo-btn-gold">&#128203; Share</button>
                 </div>
 
                 <div class="neo-card ${isCancelled ? 'neo-event-cancelled' : ''}" style="${isCancelled ? 'opacity: 0.6;' : ''}">
@@ -98,9 +98,9 @@ export default class EventDetailPage {
                 <div class="neo-card" style="margin-top: 1rem; display: flex; justify-content: center; gap: 0.75rem; flex-wrap: wrap;">
                     ${event.session_id
                         ? `<a href="#session/${event.session_id}" class="neo-btn neo-btn-green">Go to Session &rarr;</a>`
-                        : `<button id="start-session-btn" class="neo-btn neo-btn-green">Start Session &#127922;</button>`
+                        : `<button id="start-session-btn" class="neo-btn neo-btn-green">Start Session</button>`
                     }
-                    <button id="edit-event-btn" class="neo-btn neo-btn-purple">&#9998; Edit Session</button>
+                    <button id="edit-event-btn" class="neo-btn neo-btn-purple">Edit Session</button>
                     <button id="add-to-cal-btn" class="neo-btn neo-btn-gold">&#128197; Add to Cal</button>
                     <button id="cancel-event-btn" class="neo-btn neo-btn-red">Cancel Session</button>
                 </div>
@@ -131,7 +131,7 @@ export default class EventDetailPage {
             </div>
             ${event.location ? `<div style="font-weight: 600; color: var(--text-secondary); margin-bottom: 0.5rem;">&#128205; ${this.escapeHtml(event.location)}</div>` : ''}
             ${event.description ? `<div style="color: var(--text-secondary); margin-bottom: 0.5rem;">${this.escapeHtml(event.description)}</div>` : ''}
-            <div style="font-weight: 600; color: var(--text-secondary);">Buy-in: $${(event.default_buy_in_value || 20).toFixed(2)}${event.max_players ? ' | Max: ' + event.max_players + ' players' : ''}</div>
+            <div style="font-weight: 600; color: var(--text-secondary);">&#128176; Buy-in: $${(event.default_buy_in_value || 20).toFixed(2)}${event.max_players ? ' | Max: ' + event.max_players + ' players' : ''}</div>
         `;
     }
 
@@ -316,6 +316,21 @@ export default class EventDetailPage {
 
     async handleStartSession(eventId) {
         try {
+            const event = this.event;
+            const rawTime = event.time || '19:00';
+            const eventDateTime = new Date(`${event.date}T${rawTime}:00`);
+            const msUntilEvent = eventDateTime - new Date();
+            const hoursUntil = msUntilEvent / (1000 * 60 * 60);
+
+            if (hoursUntil >= 4) {
+                const h = Math.floor(hoursUntil);
+                const m = Math.round((hoursUntil - h) * 60);
+                const timeStr = h > 0 && m > 0 ? `${h}h ${m}m` : h > 0 ? `${h}h` : `${m}m`;
+                if (!confirm(`This session is scheduled to start in ${timeStr}. Are you sure you want to start it now?`)) {
+                    return;
+                }
+            }
+
             const result = await this.api.startSessionFromEvent(eventId);
             if (result && result.session) {
                 window.location.hash = `#session/${result.session.session_id}`;
