@@ -100,8 +100,9 @@ export default class PlayerDetailPage {    constructor(appContent, apiService) {
         let html = `
             <div style="padding: 1.5rem; max-width: 1200px; margin: 0 auto;">
                 <!-- Header with navigation -->
-                <div style="margin-bottom: 2rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
                     <a href="#players" class="neo-btn neo-btn-purple">← Back to Players</a>
+                    <button id="share-btn" class="neo-btn neo-btn-gold neo-btn-sm">📋 Share</button>
                 </div>
                 
                 <!-- Player Header Card -->
@@ -201,10 +202,41 @@ export default class PlayerDetailPage {    constructor(appContent, apiService) {
         this.setupEventListeners(player);
     }
     
+    async handleShare() {
+        const url = window.location.href;
+        if (navigator.share) {
+            try {
+                await navigator.share({ url });
+                return;
+            } catch (e) { /* user cancelled or error, fall through to clipboard */ }
+        }
+        try {
+            await navigator.clipboard.writeText(url);
+        } catch (e) {
+            const ta = document.createElement('textarea');
+            ta.value = url;
+            ta.style.position = 'fixed';
+            ta.style.opacity = '0';
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand('copy');
+            document.body.removeChild(ta);
+        }
+        const btn = document.getElementById('share-btn');
+        if (btn) {
+            const original = btn.innerHTML;
+            btn.innerHTML = '✅ Copied!';
+            setTimeout(() => btn.innerHTML = original, 2000);
+        }
+    }
+
     // Setup event listeners for the page
     setupEventListeners(player) {
-        // No event listeners needed for player detail page
-        // 7-2 win buttons are only available during active sessions
+        // Share button
+        const shareBtn = document.getElementById('share-btn');
+        if (shareBtn) {
+            shareBtn.addEventListener('click', () => this.handleShare());
+        }
     }
 
     // Initialize profit/loss chart
