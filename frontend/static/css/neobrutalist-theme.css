@@ -659,6 +659,228 @@ textarea,
     color: var(--text-white);
 }
 
+/* ============================================================================ */
+/* MORE MENU BOTTOM SHEET STYLES */
+/* ============================================================================ */
+
+/* More Menu Overlay */
+.neo-more-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: calc(var(--z-nav) + 1);
+    opacity: 0;
+    visibility: hidden;
+    transition: all var(--transition-neo);
+}
+
+.neo-more-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* More Menu Bottom Sheet */
+.neo-more-menu {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--casino-cream);
+    border-top: var(--neo-border-thick);
+    border-top-color: var(--casino-green-dark);
+    border-radius: 20px 20px 0 0;
+    box-shadow: 0 -8px 0px #000000;
+    z-index: calc(var(--z-nav) + 2);
+    transform: translateY(100%);
+    transition: transform 0.25s ease-out;
+    padding-bottom: env(safe-area-inset-bottom, 0);
+}
+
+.neo-more-menu.open {
+    transform: translateY(0);
+}
+
+.neo-more-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.25rem;
+    border-bottom: var(--neo-border-thin);
+    border-bottom-color: #000000;
+}
+
+.neo-more-title {
+    font-size: 1.1rem;
+    font-weight: var(--font-weight-black);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-primary);
+}
+
+.neo-more-close {
+    background: var(--casino-red);
+    color: var(--text-white);
+    border: var(--neo-border-thin);
+    border-color: var(--casino-red-dark);
+    box-shadow: var(--neo-shadow-sm);
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    font-weight: var(--font-weight-bold);
+    cursor: pointer;
+    transition: all var(--transition-neo);
+    border-radius: 0;
+}
+
+.neo-more-close:hover {
+    background: var(--casino-red-dark);
+    transform: translate(-1px, -1px);
+    box-shadow: var(--neo-shadow-md);
+}
+
+.neo-more-body {
+    padding: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+/* More Menu Items */
+.neo-more-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.875rem 1rem;
+    background: var(--bg-card);
+    border: var(--neo-border-thin);
+    box-shadow: var(--neo-shadow-sm);
+    cursor: pointer;
+    transition: all var(--transition-neo);
+    text-decoration: none;
+    color: var(--text-primary);
+    font-size: 1rem;
+    font-weight: var(--font-weight-bold);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-radius: 0;
+    width: 100%;
+    text-align: left;
+    -webkit-tap-highlight-color: transparent !important;
+    outline: none !important;
+    touch-action: manipulation;
+}
+
+.neo-more-item:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: var(--neo-shadow-md);
+    background: var(--casino-green-light);
+}
+
+.neo-more-item:active {
+    transform: translate(0, 0);
+    box-shadow: 2px 2px 0px #000000;
+}
+
+.neo-more-item:focus {
+    outline: none !important;
+}
+
+.neo-more-item.active {
+    background: var(--casino-green);
+    color: var(--text-white);
+    border-color: var(--casino-green-dark);
+}
+
+.neo-more-icon {
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    width: 1.5rem;
+    text-align: center;
+}
+
+.neo-more-label {
+    flex: 1;
+}
+
+.neo-more-external {
+    font-size: 0.875rem;
+    opacity: 0.6;
+}
+
+/* More Menu Divider */
+.neo-more-divider {
+    height: 2px;
+    background: #000000;
+    margin: 0.25rem 0;
+}
+
+/* More trigger active state */
+#more-trigger.active {
+    background: var(--casino-green-dark);
+    border-color: var(--text-white);
+}
+
+/* Hide More menu on desktop */
+@media (min-width: 769px) {
+    .neo-more-menu,
+    .neo-more-overlay {
+        display: none !important;
+    }
+}
+
+/* Dark mode More menu overrides */
+[data-theme="dark"] .neo-more-menu {
+    background: var(--bg-content);
+    border-top-color: var(--casino-green-dark);
+    box-shadow: 0 -8px 0px #000000;
+}
+
+[data-theme="dark"] .neo-more-header {
+    border-bottom-color: var(--casino-green-dark);
+}
+
+[data-theme="dark"] .neo-more-title {
+    color: var(--casino-green-dark);
+}
+
+[data-theme="dark"] .neo-more-close {
+    background: var(--casino-red-light);
+    border-color: var(--casino-red-dark);
+    color: var(--casino-red-dark);
+}
+
+[data-theme="dark"] .neo-more-close:hover {
+    background: var(--casino-red-dark);
+    color: var(--text-white);
+}
+
+[data-theme="dark"] .neo-more-item {
+    background: var(--bg-card);
+    color: var(--text-primary);
+    border-color: #000000;
+}
+
+[data-theme="dark"] .neo-more-item:hover {
+    background: var(--casino-green-light);
+    color: var(--casino-green-dark);
+}
+
+[data-theme="dark"] .neo-more-item.active {
+    background: var(--casino-green-dark);
+    color: var(--text-white);
+    border-color: var(--casino-green-dark);
+}
+
+[data-theme="dark"] .neo-more-divider {
+    background: var(--casino-green-dark);
+}
+
 /* Dark mode button overrides */
 [data-theme="dark"] .neo-btn-purple {
     background: var(--casino-purple-light) !important;

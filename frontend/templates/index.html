@@ -104,25 +104,48 @@
 
     <!-- Bottom Navigation for Mobile -->
     <nav class="neo-bottom-nav">
-        <button class="neo-nav-mobile-btn" id="settings-trigger">
-            <span class="nav-icon">&#9881;&#65039;</span>
+        <button class="neo-nav-mobile-btn" data-hash="#dashboard">
+            <span class="nav-icon">&#127968;</span>
         </button>
         <button class="neo-nav-mobile-btn" data-hash="#sessions">
             <span class="nav-icon">&#127183;</span>
         </button>
-        <button class="neo-nav-mobile-btn" data-hash="#dashboard">
-            <span class="nav-icon">&#127968;</span>
-        </button>
         <button class="neo-nav-mobile-btn" data-hash="#players">
             <span class="nav-icon">&#127917;</span>
         </button>
-        <button class="neo-nav-mobile-btn" data-hash="#calendar">
-            <span class="nav-icon">&#128197;</span>
-        </button>
-        <button class="neo-nav-mobile-btn" data-hash="#stats">
-            <span class="nav-icon">&#128202;</span>
+        <button class="neo-nav-mobile-btn" id="more-trigger">
+            <span class="nav-icon">&#8943;</span>
         </button>
     </nav>
+
+    <!-- More Menu Bottom Sheet -->
+    <div id="more-overlay" class="neo-more-overlay"></div>
+    <div id="more-menu" class="neo-more-menu">
+        <div class="neo-more-header">
+            <span class="neo-more-title">&#8943; More</span>
+            <button id="more-close" class="neo-more-close">&times;</button>
+        </div>
+        <div class="neo-more-body">
+            <button class="neo-more-item" data-hash="#calendar">
+                <span class="neo-more-icon">&#128197;</span>
+                <span class="neo-more-label">Calendar</span>
+            </button>
+            <button class="neo-more-item" data-hash="#stats">
+                <span class="neo-more-icon">&#128202;</span>
+                <span class="neo-more-label">Stats</span>
+            </button>
+            <a href="/admin/" target="_blank" class="neo-more-item">
+                <span class="neo-more-icon">&#128295;</span>
+                <span class="neo-more-label">Admin Panel</span>
+                <span class="neo-more-external">&#8599;</span>
+            </a>
+            <div class="neo-more-divider"></div>
+            <button class="neo-more-item" id="more-theme-toggle">
+                <span class="neo-more-icon theme-icon">&#127769;</span>
+                <span class="neo-more-label theme-text">Dark Mode</span>
+            </button>
+        </div>
+    </div>
     <script>
         // Register service worker
         if ('serviceWorker' in navigator) {

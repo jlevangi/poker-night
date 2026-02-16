@@ -12,6 +12,7 @@ import CalendarPage from './modules/calendar-page.js';
 import ServiceWorkerManager from './modules/service-worker-manager.js';
 import DarkModeManager from './modules/dark-mode-manager.js';
 import SettingsManager from './modules/settings-manager.js';
+import MoreMenuManager from './modules/more-menu-manager.js';
 import appConfig from './config.js';
 
 // Service worker update handling
@@ -210,6 +211,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     // Initialize settings manager
     const settingsManager = new SettingsManager(darkModeManager);
+
+    // Initialize more menu manager (mobile)
+    const moreMenuManager = new MoreMenuManager(darkModeManager);
     
     // Initialize modules
     const dashboardPage = new DashboardPage(appContent, apiService);
@@ -306,14 +310,17 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         });
         
-        // Update mobile navigation (both old and new classes)
-        document.querySelectorAll('.bottom-nav .nav-btn, .neo-bottom-nav .neo-nav-mobile-btn').forEach(btn => {
+        // Update mobile navigation (both old and new classes, excluding more trigger)
+        document.querySelectorAll('.bottom-nav .nav-btn, .neo-bottom-nav .neo-nav-mobile-btn:not(#more-trigger)').forEach(btn => {
             btn.classList.remove('active');
             const hash = btn.getAttribute('data-hash');
             if (hash === `#${currentPage}`) {
                 btn.classList.add('active');
             }
         });
+
+        // Update More menu active states
+        moreMenuManager.updateActiveItems();
     }
     
     // Setup navigation event listeners
@@ -330,8 +337,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
         });
         
-        // Mobile navigation (both old and new classes, excluding settings button)
-        document.querySelectorAll('.bottom-nav .nav-btn, .neo-bottom-nav .neo-nav-mobile-btn:not(#settings-trigger)').forEach(btn => {
+        // Mobile navigation (both old and new classes, excluding more trigger)
+        document.querySelectorAll('.bottom-nav .nav-btn, .neo-bottom-nav .neo-nav-mobile-btn:not(#more-trigger)').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 e.preventDefault();
                 const hash = btn.getAttribute('data-hash');
@@ -346,15 +353,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         const settingsBtn = document.getElementById('settings-btn');
         if (settingsBtn) {
             settingsBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                showSettings();
-            });
-        }
-        
-        // Settings button functionality (mobile)
-        const settingsTrigger = document.getElementById('settings-trigger');
-        if (settingsTrigger) {
-            settingsTrigger.addEventListener('click', (e) => {
                 e.preventDefault();
                 showSettings();
             });
@@ -400,14 +398,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (settingsOverlay) {
             settingsOverlay.classList.remove('active');
         }
-        
-        // Update navigation on hash change
-        window.addEventListener('hashchange', updateActiveNavigation);
-        
-        // Initial navigation state
-        updateActiveNavigation();
     }
-    
+
+    // Update navigation on hash change
+    window.addEventListener('hashchange', updateActiveNavigation);
+
     // Setup router with all routes
     router
         .register('dashboard', () => {
