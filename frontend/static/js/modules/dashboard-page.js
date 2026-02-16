@@ -111,17 +111,17 @@ export default class DashboardPage {
                 <!-- Quick Action Card (Top Left) -->
                 ${activeSession ? `
                     <a href="#session/${activeSession.session_id}" class="neo-stat-card neo-card-primary" style="text-decoration: none; color: inherit; cursor: pointer;">
-                        <div class="neo-stat-value" style="font-size: 2rem;">🎯</div>
+                        <div class="neo-stat-value">🎯</div>
                         <div class="neo-stat-label">View Active Session</div>
                     </a>
                 ` : `
                     <button id="quick-start-session-btn" class="neo-stat-card neo-card-primary" style="background: var(--bg-card); border: var(--neo-border); cursor: pointer; color: inherit; padding: var(--spacing-neo); box-shadow: var(--neo-shadow-md); transition: all var(--transition-neo); text-align: center; position: relative; width: 100%; font-family: inherit;" onmouseover="this.style.transform='translate(-2px, -2px)'; this.style.boxShadow='var(--neo-shadow-lg)'" onmouseout="this.style.transform='translate(0, 0)'; this.style.boxShadow='var(--neo-shadow-md)'">
-                        <div class="neo-stat-value" style="font-size: 2rem;">🃏</div>
+                        <div class="neo-stat-value">🃏</div>
                         <div class="neo-stat-label">Start New Session</div>
                     </button>
                 `}
                 <a href="#calendar" class="neo-stat-card neo-card-purple" style="text-decoration: none; cursor: pointer;">
-                    <div class="neo-stat-value" style="font-size: 1.5rem;">📅</div>
+                    <div class="neo-stat-value">📅</div>
                     <div class="neo-stat-label">Schedule Session</div>
                 </a>
 
