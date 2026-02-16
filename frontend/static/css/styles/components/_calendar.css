@@ -1,0 +1,140 @@
+/* Calendar / Events styles */
+
+.neo-event-card {
+    transition: all var(--transition-neo, 0.2s ease);
+}
+
+.neo-event-card:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: var(--neo-shadow-lg);
+}
+
+.neo-event-cancelled {
+    opacity: 0.6;
+}
+
+.neo-rsvp-badges {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.neo-rsvp-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.35rem 0.75rem;
+    border-radius: 4px;
+    font-weight: 800;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border: 2px solid var(--border-color, #222);
+}
+
+.neo-rsvp-badge-yes {
+    background: var(--casino-green, #2ecc71);
+    color: #fff;
+}
+
+.neo-rsvp-badge-maybe {
+    background: var(--casino-gold, #f1c40f);
+    color: #222;
+}
+
+.neo-rsvp-badge-no {
+    background: var(--casino-red, #e74c3c);
+    color: #fff;
+}
+
+.neo-rsvp-btn-yes {
+    background: var(--casino-green, #2ecc71) !important;
+    color: #fff !important;
+    font-weight: 700 !important;
+    border: 2px solid var(--border-color, #222) !important;
+}
+
+.neo-rsvp-btn-yes:hover {
+    transform: translate(-1px, -1px);
+    box-shadow: var(--neo-shadow-md);
+}
+
+.neo-rsvp-btn-maybe {
+    background: var(--casino-gold, #f1c40f) !important;
+    color: #222 !important;
+    font-weight: 700 !important;
+    border: 2px solid var(--border-color, #222) !important;
+}
+
+.neo-rsvp-btn-maybe:hover {
+    transform: translate(-1px, -1px);
+    box-shadow: var(--neo-shadow-md);
+}
+
+.neo-rsvp-btn-no {
+    background: var(--casino-red, #e74c3c) !important;
+    color: #fff !important;
+    font-weight: 700 !important;
+    border: 2px solid var(--border-color, #222) !important;
+}
+
+.neo-rsvp-btn-no:hover {
+    transform: translate(-1px, -1px);
+    box-shadow: var(--neo-shadow-md);
+}
+
+.neo-create-event-form .neo-input {
+    border: 2px solid var(--border-color, #222);
+    padding: 0.5rem 0.75rem;
+    font-weight: 600;
+    font-size: 0.9375rem;
+    background: var(--bg-card, #fff);
+    color: var(--text-primary, #222);
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.neo-create-event-form .neo-input:focus {
+    outline: none;
+    box-shadow: var(--neo-shadow-md);
+    transform: translate(-1px, -1px);
+}
+
+.rsvp-player-select {
+    border: 2px solid var(--border-color, #222) !important;
+    font-weight: 600 !important;
+    font-size: 0.9375rem !important;
+    background: var(--bg-card, #fff) !important;
+    color: var(--text-primary, #222) !important;
+    border-radius: 4px !important;
+}
+
+/* Next Event dashboard card */
+.neo-next-event-card {
+    cursor: pointer;
+    transition: all var(--transition-neo, 0.2s ease);
+}
+
+.neo-next-event-card:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: var(--neo-shadow-lg);
+}
+
+/* Mobile responsive */
+@media (max-width: 600px) {
+    .neo-create-event-form .neo-card > div:first-of-type {
+        grid-template-columns: 1fr !important;
+    }
+
+    .neo-rsvp-form > div {
+        flex-direction: column !important;
+        align-items: stretch !important;
+    }
+
+    .neo-rsvp-form .rsvp-player-select {
+        width: 100% !important;
+    }
+
+    .neo-rsvp-badges {
+        justify-content: flex-start;
+    }
+}

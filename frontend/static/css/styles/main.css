@@ -24,6 +24,7 @@
 @import 'components/_modals.css';
 @import 'components/_navigation.css';
 @import 'components/_tables.css';
+@import 'components/_calendar.css';
 
 /* 5. Utility styles */
 @import 'utils/_animations.css';

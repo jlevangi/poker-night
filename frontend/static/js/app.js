@@ -8,6 +8,7 @@ import SessionsPage from './modules/sessions-page.js';
 import SessionDetailPage from './modules/session-detail-page.js';
 import PlayerDetailPage from './modules/player-detail-page.js';
 import StatsPage from './modules/stats-page.js';
+import CalendarPage from './modules/calendar-page.js';
 import ServiceWorkerManager from './modules/service-worker-manager.js';
 import DarkModeManager from './modules/dark-mode-manager.js';
 import SettingsManager from './modules/settings-manager.js';
@@ -217,6 +218,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const sessionDetailPage = new SessionDetailPage(appContent, apiService);
     const playerDetailPage = new PlayerDetailPage(appContent, apiService);
     const statsPage = new StatsPage(appContent, apiService);
+    const calendarPage = new CalendarPage(appContent, apiService);
     
     // Setup new session modal
     setupNewSessionModal();
@@ -418,6 +420,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         })
         .register('sessions', () => {
             sessionsPage.load();
+            updateActiveNavigation();
+        })
+        .register('calendar', () => {
+            calendarPage.load();
             updateActiveNavigation();
         })
         .register('stats', () => {

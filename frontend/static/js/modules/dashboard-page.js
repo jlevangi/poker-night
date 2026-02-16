@@ -10,10 +10,11 @@ export default class DashboardPage {
         try {
             // Use the dedicated dashboard API endpoint for better performance
             // This gets all the dashboard data in a single optimized call
-            const [dashboardData, players, activeSessions] = await Promise.all([
+            const [dashboardData, players, activeSessions, upcomingEvents] = await Promise.all([
                 this.api.get('dashboard'),
                 this.api.get('players'),
-                this.api.get('sessions/active')
+                this.api.get('sessions/active'),
+                this.api.get('events?upcoming=true').catch(() => [])
             ]);
             
             // Prepare dashboard data using the optimized dashboard API
@@ -25,7 +26,8 @@ export default class DashboardPage {
                 gambleKing: players && players.length > 0 ? players[0] : null,
                 totalGambled: dashboardData?.total_buy_ins || 0,
                 totalPlayers: dashboardData?.total_players || 0,
-                totalSessions: dashboardData?.total_sessions || 0
+                totalSessions: dashboardData?.total_sessions || 0,
+                nextEvent: upcomingEvents && upcomingEvents.length > 0 ? upcomingEvents[0] : null
             };
             
             // Render the dashboard
@@ -44,6 +46,9 @@ export default class DashboardPage {
                 <!-- Gamble King Section -->
                 ${data.gambleKing ? this.renderGambleKingSection(data.gambleKing) : ''}
                 
+                <!-- Next Event Card -->
+                ${data.nextEvent ? this.renderNextEventCard(data.nextEvent) : ''}
+
                 <!-- Quick Actions and Stats Grid -->
                 ${this.renderQuickActionsAndStatsGrid(data)}
                 
@@ -61,6 +66,42 @@ export default class DashboardPage {
         this.setupEventListeners(data.activeSession);
     }
     
+    // Render next upcoming event card
+    renderNextEventCard(event) {
+        const dateObj = new Date(event.date + 'T00:00:00');
+        const dateFormatted = dateObj.toLocaleDateString(undefined, {
+            weekday: 'short', month: 'short', day: 'numeric'
+        });
+        let timeFormatted = '';
+        if (event.time) {
+            const [hours, minutes] = event.time.split(':');
+            const h = parseInt(hours);
+            const ampm = h >= 12 ? 'PM' : 'AM';
+            const h12 = h % 12 || 12;
+            timeFormatted = ` at ${h12}:${minutes} ${ampm}`;
+        }
+        const counts = event.rsvp_counts || { yes: 0, maybe: 0, no: 0 };
+
+        return `
+            <a href="#calendar" class="neo-card neo-next-event-card neo-card-primary" style="text-decoration: none; color: inherit; display: block; margin-bottom: 1rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+                    <div>
+                        <div style="font-weight: 800; font-size: 1.125rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-primary);">
+                            Next Poker Night
+                        </div>
+                        <div style="font-weight: 700; color: var(--text-secondary); margin-top: 0.25rem;">
+                            ${dateFormatted}${timeFormatted}${event.location ? ' - ' + event.location : ''}
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <span style="background: var(--casino-green); color: #fff; padding: 0.25rem 0.5rem; border-radius: 4px; font-weight: 800; font-size: 0.8rem; border: 2px solid var(--border-color);">${counts.yes} In</span>
+                        <span style="background: var(--casino-gold); color: #222; padding: 0.25rem 0.5rem; border-radius: 4px; font-weight: 800; font-size: 0.8rem; border: 2px solid var(--border-color);">${counts.maybe} Maybe</span>
+                    </div>
+                </div>
+            </a>
+        `;
+    }
+
     // Render quick actions and stats in a 2x2 grid
     renderQuickActionsAndStatsGrid(data) {
         const { totalGambled, totalPlayers, totalSessions, activeSession } = data;
