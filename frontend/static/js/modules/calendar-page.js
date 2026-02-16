@@ -166,6 +166,7 @@ export default class CalendarPage {
                         : `<button class="neo-btn neo-btn-green neo-btn-sm start-session-btn" data-event-id="${event.event_id}">Start Session &#127922;</button>`
                     }
                     <button class="neo-btn neo-btn-gold neo-btn-sm share-event-btn" data-event-id="${event.event_id}">📋 Share</button>
+                    <button class="neo-btn neo-btn-gold neo-btn-sm add-to-cal-btn" data-event-id="${event.event_id}">📅 Add to Cal</button>
                     <button class="neo-btn neo-btn-red neo-btn-sm cancel-event-btn" data-event-id="${event.event_id}">Cancel Event</button>
                 </div>
                 ` : ''}
@@ -263,6 +264,16 @@ export default class CalendarPage {
             });
         });
 
+        // Add to calendar buttons
+        document.querySelectorAll('.add-to-cal-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const target = e.target.closest('.add-to-cal-btn');
+                const eventId = target.dataset.eventId;
+                const event = this.events.find(ev => String(ev.event_id) === String(eventId));
+                if (event) this.handleAddToCalendar(event, target);
+            });
+        });
+
         // Cancel event buttons
         document.querySelectorAll('.cancel-event-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
@@ -343,6 +354,121 @@ export default class CalendarPage {
         } catch (error) {
             alert(`Error starting session: ${error.message}`);
         }
+    }
+
+    handleAddToCalendar(event, btn) {
+        // Remove any existing popover
+        const existing = document.querySelector('.cal-popover');
+        if (existing) existing.remove();
+        const existingBackdrop = document.querySelector('.cal-popover-backdrop');
+        if (existingBackdrop) existingBackdrop.remove();
+
+        // Backdrop overlay
+        const backdrop = document.createElement('div');
+        backdrop.className = 'cal-popover-backdrop';
+        backdrop.style.cssText = 'position: fixed; inset: 0; z-index: 999; background: rgba(0,0,0,0.3);';
+
+        const popover = document.createElement('div');
+        popover.className = 'cal-popover';
+        popover.style.cssText = 'position: fixed; z-index: 1000; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--card-bg); border: 3px solid var(--border-color); box-shadow: 6px 6px 0px var(--border-color); padding: 1.25rem; display: flex; flex-direction: column; gap: 0.75rem; min-width: 220px; max-width: 90vw;';
+
+        popover.innerHTML = `
+            <div style="font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-primary); text-align: center; font-size: 0.875rem;">Add to Calendar</div>
+            <button class="neo-btn neo-btn-green neo-btn-sm cal-popover-google" style="width: 100%; text-align: center;">Google Calendar</button>
+            <button class="neo-btn neo-btn-gold neo-btn-sm cal-popover-ics" style="width: 100%; text-align: center;">Download .ics</button>
+        `;
+
+        document.body.appendChild(backdrop);
+        document.body.appendChild(popover);
+
+        const closePopover = () => {
+            popover.remove();
+            backdrop.remove();
+        };
+
+        backdrop.addEventListener('click', closePopover);
+
+        popover.querySelector('.cal-popover-google').addEventListener('click', (e) => {
+            e.stopPropagation();
+            window.open(this.generateGoogleCalendarUrl(event), '_blank');
+            closePopover();
+        });
+
+        popover.querySelector('.cal-popover-ics').addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.generateICSFile(event);
+            closePopover();
+        });
+
+    }
+
+    generateGoogleCalendarUrl(event) {
+        const title = event.title || 'Poker Night';
+        const date = event.date.replace(/-/g, '');
+        const time = event.time ? event.time.replace(/:/g, '') : '190000';
+        const startDT = `${date}T${time}`;
+
+        // Add 3 hours for end time
+        const startDate = new Date(`${event.date}T${event.time || '19:00:00'}`);
+        const endDate = new Date(startDate.getTime() + 3 * 60 * 60 * 1000);
+        const endDT = `${endDate.getFullYear()}${String(endDate.getMonth() + 1).padStart(2, '0')}${String(endDate.getDate()).padStart(2, '0')}T${String(endDate.getHours()).padStart(2, '0')}${String(endDate.getMinutes()).padStart(2, '0')}${String(endDate.getSeconds()).padStart(2, '0')}`;
+
+        const details = `Buy-in: $${(event.default_buy_in_value || 20).toFixed(2)}${event.description ? '\n' + event.description : ''}`;
+
+        const params = new URLSearchParams({
+            action: 'TEMPLATE',
+            text: title,
+            dates: `${startDT}/${endDT}`,
+            details: details
+        });
+        if (event.location) params.set('location', event.location);
+
+        return `https://calendar.google.com/calendar/render?${params.toString()}`;
+    }
+
+    generateICSFile(event) {
+        const title = event.title || 'Poker Night';
+        const startDate = new Date(`${event.date}T${event.time || '19:00:00'}`);
+        const endDate = new Date(startDate.getTime() + 3 * 60 * 60 * 1000);
+        const now = new Date();
+
+        const fmt = (d) => {
+            return `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}T${String(d.getHours()).padStart(2, '0')}${String(d.getMinutes()).padStart(2, '0')}${String(d.getSeconds()).padStart(2, '0')}`;
+        };
+
+        const fmtUTC = (d) => {
+            return `${d.getUTCFullYear()}${String(d.getUTCMonth() + 1).padStart(2, '0')}${String(d.getUTCDate()).padStart(2, '0')}T${String(d.getUTCHours()).padStart(2, '0')}${String(d.getUTCMinutes()).padStart(2, '0')}${String(d.getUTCSeconds()).padStart(2, '0')}Z`;
+        };
+
+        const escICS = (str) => (str || '').replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\n/g, '\\n');
+
+        const description = `Buy-in: $${(event.default_buy_in_value || 20).toFixed(2)}${event.description ? '\\n' + escICS(event.description) : ''}`;
+
+        const ics = [
+            'BEGIN:VCALENDAR',
+            'VERSION:2.0',
+            'PRODID:-//PokerNight//EN',
+            'BEGIN:VEVENT',
+            `DTSTAMP:${fmtUTC(now)}`,
+            `DTSTART:${fmt(startDate)}`,
+            `DTEND:${fmt(endDate)}`,
+            `SUMMARY:${escICS(title)}`,
+            `DESCRIPTION:${description}`,
+            event.location ? `LOCATION:${escICS(event.location)}` : '',
+            `UID:poker-night-${event.event_id}@poker-night`,
+            'END:VEVENT',
+            'END:VCALENDAR'
+        ].filter(Boolean).join('\r\n');
+
+        const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${title.replace(/[^a-zA-Z0-9]/g, '_')}.ics`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
     }
 
     async autoStartSessions() {
