@@ -12,7 +12,7 @@ from flask import Blueprint, request, jsonify, session, current_app, render_temp
 from werkzeug.security import check_password_hash
 
 from ..services.database_service import DatabaseService
-from ..database.models import db, Player, Session, Entry, round_to_cents
+from ..database.models import db, Player, Session, Entry, CalendarEvent, round_to_cents
 from ..database.backup import DatabaseBackup
 from ..database.migration import DataMigration
 
@@ -429,7 +429,10 @@ def admin_delete_session(session_id: str) -> Dict[str, Any]:
             else:
                 # Delete all associated entries first
                 Entry.query.filter_by(session_id=session_id).delete()
-        
+
+        # Clear session_id on any linked calendar events
+        CalendarEvent.query.filter_by(session_id=session_id).update({"session_id": None})
+
         db.session.delete(session)
         db.session.commit()
         
