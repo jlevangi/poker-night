@@ -25,10 +25,9 @@ export default class CalendarPage {
     render() {
         let html = `
             <div class="fade-in" style="padding: 1.5rem; max-width: 1200px; margin: 0 auto;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-                    <h2 style="font-size: 1.5rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; margin: 0; color: var(--text-primary);">
-                        Upcoming Poker Nights
-                    </h2>
+                <h2 style="font-size: 2.5rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 2rem; color: var(--text-primary); text-shadow: 3px 3px 0px var(--casino-green); text-align: center;">&#128197; Upcoming Poker Nights</h2>
+
+                <div class="neo-card neo-card-green" style="margin-bottom: 2rem; text-align: center;">
                     <button id="schedule-event-btn" class="neo-btn neo-btn-green neo-btn-lg">+ Schedule Event</button>
                 </div>
 
@@ -161,15 +160,10 @@ export default class CalendarPage {
                 ` : ''}
 
                 ${!isCancelled ? `
-                <div style="display: flex; gap: 0.5rem; margin-top: 1rem; padding-top: 0.75rem; border-top: 2px solid var(--border-color);">
+                <div style="margin-top: 1rem; padding-top: 0.75rem; border-top: 2px solid var(--border-color); text-align: center;">
                     <button class="neo-btn neo-btn-red neo-btn-sm cancel-event-btn" data-event-id="${event.event_id}">Cancel Event</button>
-                    <button class="neo-btn neo-btn-sm delete-event-btn" data-event-id="${event.event_id}" style="background: var(--bg-card); color: var(--text-secondary);">Delete</button>
                 </div>
-                ` : `
-                <div style="margin-top: 1rem; padding-top: 0.75rem; border-top: 2px solid var(--border-color);">
-                    <button class="neo-btn neo-btn-sm delete-event-btn" data-event-id="${event.event_id}" style="background: var(--bg-card); color: var(--text-secondary);">Delete</button>
-                </div>
-                `}
+                ` : ''}
             </div>
         `;
     }
@@ -239,15 +233,6 @@ export default class CalendarPage {
             });
         });
 
-        // Delete event buttons
-        document.querySelectorAll('.delete-event-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const eventId = e.target.dataset.eventId;
-                if (confirm('Are you sure you want to permanently delete this event?')) {
-                    this.handleDeleteEvent(eventId);
-                }
-            });
-        });
     }
 
     async handleCreateEvent() {
@@ -299,12 +284,4 @@ export default class CalendarPage {
         }
     }
 
-    async handleDeleteEvent(eventId) {
-        try {
-            await this.api.deleteEvent(eventId);
-            await this.load();
-        } catch (error) {
-            alert(`Error deleting event: ${error.message}`);
-        }
-    }
 }
