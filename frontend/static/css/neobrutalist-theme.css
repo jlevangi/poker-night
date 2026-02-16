@@ -958,56 +958,9 @@ a.neo-btn,
     background-image: none !important;
 }
 
-/* Specific override for create session button */
-#create-session-btn {
-    background: var(--casino-green-light) !important;
-    background-image: none !important;
-    border: var(--neo-border) !important;
-    border-color: var(--casino-green-dark) !important;
-    color: var(--casino-green-dark) !important;
-}
-
-#create-session-btn:hover {
-    background: var(--casino-green) !important;
-    background-image: none !important;
-    color: var(--text-white) !important;
-}
-
-/* Modal create session button override */
-#modal-create-session-btn {
-    background: var(--casino-green-light) !important;
-    background-image: none !important;
-    border: var(--neo-border) !important;
-    border-color: var(--casino-green-dark) !important;
-    color: var(--casino-green-dark) !important;
-}
-
-#modal-create-session-btn:hover {
-    background: var(--casino-green) !important;
-    background-image: none !important;
-    color: var(--text-white) !important;
-}
-
-/* Dark mode overrides for specific buttons */
-[data-theme="dark"] #create-session-btn,
-[data-theme="dark"] #modal-create-session-btn {
-    background: var(--casino-green-light) !important;
-    background-image: none !important;
-    border-color: var(--casino-green-dark) !important;
-    color: var(--casino-green-dark) !important;
-}
-
-[data-theme="dark"] #create-session-btn:hover,
-[data-theme="dark"] #modal-create-session-btn:hover {
-    background: var(--casino-green-dark) !important;
-    background-image: none !important;
-    color: var(--text-white) !important;
-}
-
-/* Ultra-specific override for create session button with multiple classes */
+/* Green large button styling (create session, schedule event, etc.) */
 .neo-btn.neo-btn-green.neo-btn-lg,
-button.neo-btn.neo-btn-green.neo-btn-lg,
-#create-session-btn.neo-btn.neo-btn-green.neo-btn-lg {
+button.neo-btn.neo-btn-green.neo-btn-lg {
     background: var(--casino-green-light) !important;
     background-image: none !important;
     background-color: var(--casino-green-light) !important;
@@ -1018,8 +971,7 @@ button.neo-btn.neo-btn-green.neo-btn-lg,
 }
 
 .neo-btn.neo-btn-green.neo-btn-lg:hover,
-button.neo-btn.neo-btn-green.neo-btn-lg:hover,
-#create-session-btn.neo-btn.neo-btn-green.neo-btn-lg:hover {
+button.neo-btn.neo-btn-green.neo-btn-lg:hover {
     background: var(--casino-green) !important;
     background-image: none !important;
     background-color: var(--casino-green) !important;
