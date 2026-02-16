@@ -8,7 +8,7 @@ from datetime import datetime
 from typing import Dict, Any, List, Optional
 from decimal import Decimal, ROUND_HALF_UP
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import Column, Integer, String, Float, Boolean, DateTime, ForeignKey, Text
+from sqlalchemy import Column, Integer, String, Float, Boolean, DateTime, ForeignKey, Text, UniqueConstraint
 from sqlalchemy.orm import relationship
 
 db = SQLAlchemy()
@@ -376,4 +376,91 @@ class PushSubscription(db.Model):
             'p256dh': self.p256dh,
             'created_at': self.created_at.isoformat() if self.created_at else None,
             'is_active': self.is_active
+        }
+
+
+class CalendarEvent(db.Model):
+    """Model representing a scheduled poker night event."""
+
+    __tablename__ = 'calendar_events'
+
+    id = Column(Integer, primary_key=True)
+    event_id = Column(String(30), unique=True, nullable=False, index=True)
+    title = Column(String(200), default='Poker Night', nullable=False)
+    date = Column(String(10), nullable=False)  # YYYY-MM-DD
+    time = Column(String(5), nullable=True)  # HH:MM
+    location = Column(String(200), nullable=True)
+    description = Column(Text, nullable=True)
+    default_buy_in_value = Column(Float, default=20.00, nullable=False)
+    max_players = Column(Integer, nullable=True)
+    session_id = Column(String(30), ForeignKey('sessions.session_id'), nullable=True)
+    is_cancelled = Column(Boolean, default=False, nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
+
+    # Relationships
+    rsvps = relationship("EventRSVP", back_populates="event", cascade="all, delete-orphan")
+    session = relationship("Session")
+
+    def __repr__(self) -> str:
+        return f'<CalendarEvent {self.event_id}: {self.date}>'
+
+    def to_dict(self) -> Dict[str, Any]:
+        rsvp_counts = {'yes': 0, 'no': 0, 'maybe': 0}
+        rsvp_list = []
+        if self.rsvps:
+            for rsvp in self.rsvps:
+                status_lower = rsvp.status.lower()
+                if status_lower in rsvp_counts:
+                    rsvp_counts[status_lower] += 1
+                rsvp_list.append(rsvp.to_dict())
+
+        return {
+            'event_id': self.event_id,
+            'title': self.title,
+            'date': self.date,
+            'time': self.time,
+            'location': self.location,
+            'description': self.description,
+            'default_buy_in_value': round_to_cents(self.default_buy_in_value),
+            'max_players': self.max_players,
+            'session_id': self.session_id,
+            'is_cancelled': self.is_cancelled,
+            'rsvp_counts': rsvp_counts,
+            'rsvps': rsvp_list,
+            'created_at': self.created_at.isoformat() if self.created_at else None,
+            'updated_at': self.updated_at.isoformat() if self.updated_at else None
+        }
+
+
+class EventRSVP(db.Model):
+    """Model representing a player's RSVP to a calendar event."""
+
+    __tablename__ = 'event_rsvps'
+    __table_args__ = (
+        UniqueConstraint('event_id', 'player_id', name='uq_event_player_rsvp'),
+    )
+
+    id = Column(Integer, primary_key=True)
+    event_id = Column(String(30), ForeignKey('calendar_events.event_id'), nullable=False, index=True)
+    player_id = Column(String(20), ForeignKey('players.player_id'), nullable=False, index=True)
+    status = Column(String(10), nullable=False)  # YES, NO, MAYBE
+    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
+
+    # Relationships
+    event = relationship("CalendarEvent", back_populates="rsvps")
+    player = relationship("Player")
+
+    def __repr__(self) -> str:
+        return f'<EventRSVP {self.event_id}: {self.player_id} -> {self.status}>'
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            'event_id': self.event_id,
+            'player_id': self.player_id,
+            'player_name': self.player.name if self.player else 'Unknown',
+            'status': self.status,
+            'created_at': self.created_at.isoformat() if self.created_at else None,
+            'updated_at': self.updated_at.isoformat() if self.updated_at else None
         }

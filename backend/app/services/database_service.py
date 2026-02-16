@@ -9,7 +9,7 @@ from typing import List, Dict, Any, Optional
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy import desc
 
-from ..database.models import db, Player, Session, Entry, round_to_cents
+from ..database.models import db, Player, Session, Entry, CalendarEvent, EventRSVP, round_to_cents
 from ..models import PlayerStats, PlayerSessionHistory
 
 logger = logging.getLogger(__name__)
@@ -886,3 +886,211 @@ class DatabaseService:
         # Sort by net profit, highest first
         summary.sort(key=lambda x: x.net_profit, reverse=True)
         return summary
+
+    # Calendar Event operations
+    def create_calendar_event(self, date_str: str, title: str = 'Poker Night',
+                              time: str = None, location: str = None,
+                              description: str = None, default_buy_in_value: float = 20.00,
+                              max_players: int = None) -> Optional[CalendarEvent]:
+        try:
+            from datetime import datetime
+            datetime.strptime(date_str, "%Y-%m-%d")
+
+            # Generate event_id
+            date_compact = date_str.replace('-', '')
+            existing_count = CalendarEvent.query.filter(
+                CalendarEvent.event_id.like(f'evt_{date_compact}_%')
+            ).count()
+            event_id = f"evt_{date_compact}_{existing_count + 1}"
+
+            event = CalendarEvent(
+                event_id=event_id,
+                title=title.strip() if title else 'Poker Night',
+                date=date_str,
+                time=time,
+                location=location.strip() if location else None,
+                description=description.strip() if description else None,
+                default_buy_in_value=round_to_cents(float(default_buy_in_value)),
+                max_players=max_players
+            )
+
+            db.session.add(event)
+            db.session.commit()
+            self.logger.info(f"Calendar event created: {event_id} on {date_str}")
+            return event
+
+        except ValueError:
+            self.logger.error("Invalid date format for calendar event.")
+            return None
+        except Exception as e:
+            db.session.rollback()
+            self.logger.error(f"Failed to create calendar event: {str(e)}")
+            return None
+
+    def get_all_events(self) -> List[CalendarEvent]:
+        return CalendarEvent.query.order_by(desc(CalendarEvent.date)).all()
+
+    def get_upcoming_events(self, limit: int = 10) -> List[CalendarEvent]:
+        from datetime import datetime
+        today = datetime.utcnow().strftime('%Y-%m-%d')
+        return CalendarEvent.query.filter(
+            CalendarEvent.date >= today,
+            CalendarEvent.is_cancelled == False
+        ).order_by(CalendarEvent.date.asc()).limit(limit).all()
+
+    def get_event_by_id(self, event_id: str) -> Optional[CalendarEvent]:
+        return CalendarEvent.query.filter_by(event_id=event_id).first()
+
+    def update_event(self, event_id: str, **kwargs) -> Optional[CalendarEvent]:
+        try:
+            event = self.get_event_by_id(event_id)
+            if not event:
+                return None
+
+            allowed_fields = ['title', 'date', 'time', 'location', 'description',
+                              'default_buy_in_value', 'max_players', 'session_id']
+            for field in allowed_fields:
+                if field in kwargs:
+                    value = kwargs[field]
+                    if field == 'default_buy_in_value' and value is not None:
+                        value = round_to_cents(float(value))
+                    if field in ('title', 'location', 'description') and value:
+                        value = value.strip()
+                    setattr(event, field, value)
+
+            db.session.commit()
+            self.logger.info(f"Calendar event {event_id} updated")
+            return event
+        except Exception as e:
+            db.session.rollback()
+            self.logger.error(f"Failed to update calendar event {event_id}: {str(e)}")
+            return None
+
+    def cancel_event(self, event_id: str) -> bool:
+        try:
+            event = self.get_event_by_id(event_id)
+            if not event:
+                return False
+            event.is_cancelled = True
+            db.session.commit()
+            self.logger.info(f"Calendar event {event_id} cancelled")
+            return True
+        except Exception as e:
+            db.session.rollback()
+            self.logger.error(f"Failed to cancel event {event_id}: {str(e)}")
+            return False
+
+    def delete_event(self, event_id: str) -> bool:
+        try:
+            event = self.get_event_by_id(event_id)
+            if not event:
+                return False
+            db.session.delete(event)
+            db.session.commit()
+            self.logger.info(f"Calendar event {event_id} deleted")
+            return True
+        except Exception as e:
+            db.session.rollback()
+            self.logger.error(f"Failed to delete event {event_id}: {str(e)}")
+            return False
+
+    def create_or_update_rsvp(self, event_id: str, player_id: str, status: str) -> Optional[EventRSVP]:
+        try:
+            event = self.get_event_by_id(event_id)
+            if not event:
+                self.logger.error(f"Event {event_id} not found for RSVP")
+                return None
+
+            player = self.get_player_by_id(player_id)
+            if not player:
+                self.logger.error(f"Player {player_id} not found for RSVP")
+                return None
+
+            status = status.upper()
+            if status not in ('YES', 'NO', 'MAYBE'):
+                self.logger.error(f"Invalid RSVP status: {status}")
+                return None
+
+            rsvp = EventRSVP.query.filter_by(
+                event_id=event_id, player_id=player_id
+            ).first()
+
+            if rsvp:
+                rsvp.status = status
+            else:
+                rsvp = EventRSVP(
+                    event_id=event_id,
+                    player_id=player_id,
+                    status=status
+                )
+                db.session.add(rsvp)
+
+            db.session.commit()
+            self.logger.info(f"RSVP for {player_id} to {event_id}: {status}")
+            return rsvp
+        except Exception as e:
+            db.session.rollback()
+            self.logger.error(f"Failed to create/update RSVP: {str(e)}")
+            return None
+
+    def delete_rsvp(self, event_id: str, player_id: str) -> bool:
+        try:
+            rsvp = EventRSVP.query.filter_by(
+                event_id=event_id, player_id=player_id
+            ).first()
+            if not rsvp:
+                return False
+            db.session.delete(rsvp)
+            db.session.commit()
+            self.logger.info(f"RSVP deleted for {player_id} from {event_id}")
+            return True
+        except Exception as e:
+            db.session.rollback()
+            self.logger.error(f"Failed to delete RSVP: {str(e)}")
+            return False
+
+    def get_event_rsvps(self, event_id: str) -> List[EventRSVP]:
+        return EventRSVP.query.filter_by(event_id=event_id).all()
+
+    def add_player_to_session(self, session_id: str, player_id: str) -> Optional[Entry]:
+        """Add a player to a session with 0 buy-ins (just seated, no money)."""
+        try:
+            # Skip if player already in session
+            existing = Entry.query.filter_by(session_id=session_id, player_id=player_id).first()
+            if existing:
+                return existing
+
+            # Generate entry_id
+            existing_entry_ids = db.session.query(Entry.entry_id).all()
+            existing_numbers = []
+            for (entry_id,) in existing_entry_ids:
+                if entry_id.startswith('eid_'):
+                    try:
+                        num = int(entry_id.split('_')[1])
+                        existing_numbers.append(num)
+                    except (ValueError, IndexError):
+                        pass
+            max_num = max(existing_numbers) if existing_numbers else 0
+            entry_id = f"eid_{max_num + 1:04d}"
+
+            new_entry = Entry(
+                entry_id=entry_id,
+                session_id=session_id,
+                player_id=player_id,
+                buy_in_count=0,
+                total_buy_in_amount=0.0,
+                payout=0.0,
+                profit=0.0,
+                session_seven_two_wins=0
+            )
+            db.session.add(new_entry)
+            db.session.commit()
+
+            player = self.get_player_by_id(player_id)
+            self.logger.info(f"{player.name if player else player_id} seated in session {session_id} (0 buy-ins)")
+            return new_entry
+
+        except Exception as e:
+            db.session.rollback()
+            self.logger.error(f"Failed to add player {player_id} to session {session_id}: {str(e)}")
+            return None

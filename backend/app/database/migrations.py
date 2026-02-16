@@ -136,6 +136,71 @@ class AutoMigration:
             return False
     
     @staticmethod
+    def create_calendar_tables(db_path: str) -> bool:
+        """
+        Create calendar_events and event_rsvps tables if they don't exist.
+
+        Args:
+            db_path: Path to SQLite database
+
+        Returns:
+            True if migration was needed and successful, False if tables already exist
+        """
+        try:
+            conn = sqlite3.connect(db_path)
+            cursor = conn.cursor()
+
+            # Check if table already exists
+            cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='calendar_events'")
+            if cursor.fetchone():
+                logger.info("Table 'calendar_events' already exists")
+                conn.close()
+                return False
+
+            logger.info("Creating calendar_events and event_rsvps tables...")
+
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS calendar_events (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    event_id VARCHAR(30) UNIQUE NOT NULL,
+                    title VARCHAR(200) NOT NULL DEFAULT 'Poker Night',
+                    date VARCHAR(10) NOT NULL,
+                    time VARCHAR(5),
+                    location VARCHAR(200),
+                    description TEXT,
+                    default_buy_in_value FLOAT NOT NULL DEFAULT 20.00,
+                    max_players INTEGER,
+                    session_id VARCHAR(30) REFERENCES sessions(session_id),
+                    is_cancelled BOOLEAN NOT NULL DEFAULT 0,
+                    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+                )
+            """)
+
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS event_rsvps (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    event_id VARCHAR(30) NOT NULL REFERENCES calendar_events(event_id),
+                    player_id VARCHAR(20) NOT NULL REFERENCES players(player_id),
+                    status VARCHAR(10) NOT NULL,
+                    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    UNIQUE(event_id, player_id)
+                )
+            """)
+
+            conn.commit()
+            logger.info("Successfully created calendar_events and event_rsvps tables.")
+            conn.close()
+            return True
+
+        except sqlite3.Error as e:
+            logger.error(f"Error creating calendar tables: {e}")
+            if conn:
+                conn.close()
+            return False
+
+    @staticmethod
     def run_auto_migrations(app: Flask) -> None:
         """
         Run all necessary auto-migrations during app startup.
@@ -162,7 +227,10 @@ class AutoMigration:
         
         if AutoMigration.add_session_strikes_column(db_path):
             migrations_applied.append("session_strikes column")
-        
+
+        if AutoMigration.create_calendar_tables(db_path):
+            migrations_applied.append("calendar tables")
+
         if migrations_applied:
             logger.info(f"Auto-migrations completed: {', '.join(migrations_applied)}")
         else:

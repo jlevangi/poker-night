@@ -34,7 +34,7 @@ export default class SessionsPage {    constructor(appContent, apiService) {
                 <h2 style="font-size: 2.5rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 2rem; color: var(--text-primary); text-shadow: 3px 3px 0px var(--casino-green);">🃏 Sessions</h2>
                 
                 <div class="neo-card neo-card-green" style="margin-bottom: 2rem; text-align: center;">
-                    <button id="create-session-btn" class="neo-btn neo-btn-green neo-btn-lg">Create New Session</button>
+                    <button id="create-session-btn" class="neo-btn neo-btn-green neo-btn-lg">+ Create Session</button>
                 </div>
                 
                 <h3 style="font-size: 1.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1.5rem; color: var(--text-primary);">📋 All Sessions</h3>

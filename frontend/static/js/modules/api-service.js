@@ -142,4 +142,43 @@ export default class ApiService {
     async updatePlayerInSession(sessionId, playerId, data) {
         return this.put(`sessions/${sessionId}/entries/${playerId}`, data);
     }
+
+    // --- Calendar/Events API ---
+    async getEvents(upcoming = false) {
+        return this.get(`events${upcoming ? '?upcoming=true' : ''}`);
+    }
+
+    async getEvent(id) {
+        return this.get(`events/${id}`);
+    }
+
+    async createEvent(data) {
+        return this.post('events', data);
+    }
+
+    async updateEvent(id, data) {
+        return this.put(`events/${id}`, data);
+    }
+
+    async cancelEvent(id) {
+        return this.put(`events/${id}/cancel`);
+    }
+
+    async deleteEvent(id) {
+        const response = await fetch(`${this.baseUrl}/events/${id}`, { method: 'DELETE' });
+        return this.handleResponse(response);
+    }
+
+    async submitRSVP(eventId, data) {
+        return this.post(`events/${eventId}/rsvp`, data);
+    }
+
+    async startSessionFromEvent(eventId) {
+        return this.post(`events/${eventId}/start-session`);
+    }
+
+    async deleteRSVP(eventId, playerId) {
+        const response = await fetch(`${this.baseUrl}/events/${eventId}/rsvp/${playerId}`, { method: 'DELETE' });
+        return this.handleResponse(response);
+    }
 }

@@ -247,42 +247,6 @@ button:hover,
 
 /* Add Player Button - now uses neo-btn-purple class, legacy styles removed */
 
-/* Create Session Button Styling - Always Blue */
-#create-session-btn {
-    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-hover) 100%) !important;
-    border: none !important;
-    border-radius: var(--radius-md) !important;
-    padding: 0.75rem 1.5rem !important;
-    font-weight: 600 !important;
-    font-size: 1rem !important;
-    color: var(--text-white) !important;
-    cursor: pointer !important;
-    transition: all var(--transition-fast) !important;
-    box-shadow: 0 4px 12px rgba(51, 103, 214, 0.2) !important;
-    text-transform: none !important;
-    letter-spacing: 0.5px !important;
-}
-
-#create-session-btn:hover {
-    transform: translateY(-2px) !important;
-    box-shadow: 0 6px 20px rgba(51, 103, 214, 0.3) !important;
-    background: linear-gradient(135deg, var(--primary-hover) 0%, #1a3a7a 100%) !important;
-}
-
-#create-session-btn:active {
-    transform: translateY(0) !important;
-    box-shadow: 0 2px 8px rgba(51, 103, 214, 0.2) !important;
-}
-
-/* Dark mode styling for create session button */
-[data-theme="dark"] #create-session-btn {
-    box-shadow: 0 4px 12px rgba(96, 165, 250, 0.2) !important;
-}
-
-[data-theme="dark"] #create-session-btn:hover {
-    box-shadow: 0 6px 20px rgba(96, 165, 250, 0.3) !important;
-}
-
 /* End Session Button - Uses neobrutalist styling from neobrutalist-theme.css */
 
 /* Mobile Button Adjustments */
