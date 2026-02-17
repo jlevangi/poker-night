@@ -230,7 +230,7 @@ export default class StatsPage {
         };
         
         return `
-            <h2 style="font-size: 2rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1.5rem; color: var(--text-primary); text-shadow: 3px 3px 0px var(--casino-red); text-align: center;">🏆 Leaderboards</h2>
+            <h2 style="font-size: 2rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1.5rem; color: var(--text-primary); text-shadow: 3px 3px 0px var(--casino-red); text-align: center;">🏅 Leaderboards</h2>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
 
                 <div class="neo-leaderboard-stat green">
