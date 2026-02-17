@@ -135,6 +135,16 @@ def cancel_event_api(event_id):
     return jsonify({"error": "Event not found or cancel failed"}), 404
 
 
+@calendar_bp.route('/events/<string:event_id>/uncancel', methods=['PUT'])
+def uncancel_event_api(event_id):
+    """Restore a cancelled calendar event."""
+    db_service = DatabaseService()
+    if db_service.uncancel_event(event_id):
+        event = db_service.get_event_by_id(event_id)
+        return jsonify(event.to_dict())
+    return jsonify({"error": "Event not found or uncancel failed"}), 404
+
+
 @calendar_bp.route('/events/<string:event_id>', methods=['DELETE'])
 def delete_event_api(event_id):
     """Delete a calendar event."""

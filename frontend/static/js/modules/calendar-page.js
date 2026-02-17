@@ -99,17 +99,21 @@ export default class CalendarPage {
 
         const timeFormatted = event.time ? this.formatTime(event.time) : '';
         const counts = event.rsvp_counts || { yes: 0, maybe: 0, no: 0 };
-        const totalPlayers = counts.yes + counts.maybe;
+        const totalPlayers = counts.yes + counts.maybe + counts.no;
         const isCancelled = event.is_cancelled;
+
+        const statusBadge = isCancelled
+            ? '<span style="display: inline-block; background: var(--casino-red); color: #fff; font-size: 0.7rem; font-weight: 800; padding: 0.15rem 0.5rem; text-transform: uppercase; letter-spacing: 0.05em; border: 2px solid var(--border-color); box-shadow: 2px 2px 0px var(--border-color);">Cancelled</span>'
+            : '<span style="display: inline-block; background: var(--casino-green); color: #fff; font-size: 0.7rem; font-weight: 800; padding: 0.15rem 0.5rem; text-transform: uppercase; letter-spacing: 0.05em; border: 2px solid var(--border-color); box-shadow: 2px 2px 0px var(--border-color);">Upcoming</span>';
 
         return `
             <a href="#event/${event.event_id}" class="neo-event-card-link" style="text-decoration: none; color: inherit; display: block; margin-bottom: 1rem;">
                 <div class="neo-event-card neo-card ${isCancelled ? 'neo-event-cancelled' : ''}" style="${isCancelled ? 'opacity: 0.6;' : ''} cursor: pointer; transition: transform 0.1s, box-shadow 0.1s;">
                     <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 0.5rem;">
                         <div>
-                            <div style="font-weight: 800; font-size: 1.25rem; color: var(--text-primary); text-transform: uppercase; letter-spacing: 0.05em;">
+                            <div style="font-weight: 800; font-size: 1.25rem; color: var(--text-primary); text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
                                 ${this.escapeHtml(event.title || 'Poker Night')}
-                                ${isCancelled ? '<span style="color: var(--casino-red); font-size: 0.875rem; margin-left: 0.5rem;">CANCELLED</span>' : ''}
+                                ${statusBadge}
                             </div>
                             <div style="font-weight: 700; color: var(--text-secondary); margin-top: 0.25rem;">
                                 ${dateFormatted}${timeFormatted ? ' at ' + timeFormatted : ''}

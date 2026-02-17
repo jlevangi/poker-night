@@ -956,6 +956,10 @@
                         <button onclick="openEditEventModal('${escapeHtml(evt.event_id)}')">Edit</button>
                         <button class="danger" style="background:#f39c12;" onclick="cancelEvent('${escapeHtml(evt.event_id)}')">Cancel</button>
                         <button class="danger" onclick="deleteEvent('${escapeHtml(evt.event_id)}')">Delete</button>`;
+                } else if (isCancelled) {
+                    actions = `
+                        <button onclick="uncancelEvent('${escapeHtml(evt.event_id)}')">Restore</button>
+                        <button class="danger" onclick="deleteEvent('${escapeHtml(evt.event_id)}')">Delete</button>`;
                 } else {
                     actions = `<button class="danger" onclick="deleteEvent('${escapeHtml(evt.event_id)}')">Delete</button>`;
                 }
@@ -1282,6 +1286,16 @@
                 if (r.ok) { showMessage('Event cancelled', 'success'); loadEvents(); loadDashboard(); }
                 else { showMessage('Failed to cancel event: ' + result.error, 'error'); }
             } catch (e) { showMessage('Error cancelling event: ' + e.message, 'error'); }
+        }
+
+        async function uncancelEvent(eventId) {
+            if (!confirm('Restore this event? It will become active again.')) return;
+            try {
+                const r = await fetch(`/api/events/${eventId}/uncancel`, { method: 'PUT' });
+                const result = await r.json();
+                if (r.ok) { showMessage('Event restored', 'success'); loadEvents(); loadDashboard(); }
+                else { showMessage('Failed to restore event: ' + result.error, 'error'); }
+            } catch (e) { showMessage('Error restoring event: ' + e.message, 'error'); }
         }
 
         async function deleteEvent(eventId) {

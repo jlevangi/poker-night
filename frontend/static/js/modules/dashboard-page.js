@@ -27,7 +27,7 @@ export default class DashboardPage {
                 totalGambled: dashboardData?.total_buy_ins || 0,
                 totalPlayers: dashboardData?.total_players || 0,
                 totalSessions: dashboardData?.total_sessions || 0,
-                nextEvent: upcomingEvents && upcomingEvents.length > 0 ? upcomingEvents[0] : null
+                nextEvent: upcomingEvents ? upcomingEvents.find(e => !e.is_cancelled) || null : null
             };
             
             // Render the dashboard
@@ -96,6 +96,7 @@ export default class DashboardPage {
                     <div style="display: flex; gap: 0.5rem;">
                         <span style="background: var(--casino-green); color: #fff; padding: 0.25rem 0.5rem; border-radius: 4px; font-weight: 800; font-size: 0.8rem; border: 2px solid var(--border-color);">${counts.yes} In</span>
                         <span style="background: var(--casino-gold); color: #222; padding: 0.25rem 0.5rem; border-radius: 4px; font-weight: 800; font-size: 0.8rem; border: 2px solid var(--border-color);">${counts.maybe} Maybe</span>
+                        <span style="background: var(--casino-red); color: #fff; padding: 0.25rem 0.5rem; border-radius: 4px; font-weight: 800; font-size: 0.8rem; border: 2px solid var(--border-color);">${counts.no} Out</span>
                     </div>
                 </div>
             </a>

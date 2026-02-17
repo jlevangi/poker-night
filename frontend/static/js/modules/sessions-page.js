@@ -62,7 +62,7 @@ export default class SessionsPage {    constructor(appContent, apiService) {
             `;
 
             upcomingEvents.forEach(evt => {
-                const playerCount = evt.rsvp_counts.yes + evt.rsvp_counts.maybe;
+                const playerCount = evt.rsvp_counts.yes + evt.rsvp_counts.maybe + evt.rsvp_counts.no;
                 html += `
                     <a href="#event/${evt.event_id}" class="neo-card neo-card-purple" style="text-decoration: none; color: inherit; padding: 1rem; margin: 0; transition: all var(--transition-neo);" onmouseover="this.style.transform='translate(-2px, -2px)'; this.style.boxShadow='var(--neo-shadow-lg)'" onmouseout="this.style.transform='translate(0, 0)'; this.style.boxShadow='var(--neo-shadow-md)'">
                         <div style="display: flex; justify-content: space-between; align-items: center;">

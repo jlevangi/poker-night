@@ -934,8 +934,7 @@ class DatabaseService:
         from datetime import datetime
         today = datetime.utcnow().strftime('%Y-%m-%d')
         return CalendarEvent.query.filter(
-            CalendarEvent.date >= today,
-            CalendarEvent.is_cancelled == False
+            CalendarEvent.date >= today
         ).order_by(CalendarEvent.date.asc()).limit(limit).all()
 
     def get_event_by_id(self, event_id: str) -> Optional[CalendarEvent]:
@@ -978,6 +977,20 @@ class DatabaseService:
         except Exception as e:
             db.session.rollback()
             self.logger.error(f"Failed to cancel event {event_id}: {str(e)}")
+            return False
+
+    def uncancel_event(self, event_id: str) -> bool:
+        try:
+            event = self.get_event_by_id(event_id)
+            if not event:
+                return False
+            event.is_cancelled = False
+            db.session.commit()
+            self.logger.info(f"Calendar event {event_id} uncancelled")
+            return True
+        except Exception as e:
+            db.session.rollback()
+            self.logger.error(f"Failed to uncancel event {event_id}: {str(e)}")
             return False
 
     def delete_event(self, event_id: str) -> bool:

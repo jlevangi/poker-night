@@ -94,15 +94,28 @@ export default class EventDetailPage {
                 </div>
                 ` : ''}
 
+                ${isCancelled && !this.editing ? `
+                <div class="neo-card" style="margin-top: 1rem; display: flex; justify-content: center; gap: 0.75rem; flex-wrap: wrap;">
+                    <button id="uncancel-event-btn" class="neo-btn neo-btn-green">Restore Event</button>
+                </div>
+                ` : ''}
+
                 ${!isCancelled && !this.editing ? `
                 <div class="neo-card" style="margin-top: 1rem; display: flex; justify-content: center; gap: 0.75rem; flex-wrap: wrap;">
                     ${event.session_id
                         ? `<a href="#session/${event.session_id}" class="neo-btn neo-btn-green">Go to Session &rarr;</a>`
-                        : `<button id="start-session-btn" class="neo-btn neo-btn-green">Start Session</button>`
+                        : (() => {
+                            const now = new Date();
+                            const today = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0');
+                            const isToday = event.date === today;
+                            return isToday
+                                ? '<button id="start-session-btn" class="neo-btn neo-btn-green">Start Session</button>'
+                                : '';
+                        })()
                     }
-                    <button id="edit-event-btn" class="neo-btn neo-btn-purple">Edit Session</button>
+                    <button id="edit-event-btn" class="neo-btn neo-btn-purple">Edit Event</button>
                     <button id="add-to-cal-btn" class="neo-btn neo-btn-gold">&#128197; Add to Cal</button>
-                    <button id="cancel-event-btn" class="neo-btn neo-btn-red">Cancel Session</button>
+                    <button id="cancel-event-btn" class="neo-btn neo-btn-red">Cancel Event</button>
                 </div>
                 ` : ''}
             </div>
@@ -239,8 +252,18 @@ export default class EventDetailPage {
         const cancelBtn = document.getElementById('cancel-event-btn');
         if (cancelBtn) {
             cancelBtn.addEventListener('click', () => {
-                if (confirm('Are you sure you want to cancel this session?')) {
+                if (confirm('Are you sure you want to cancel this event?')) {
                     this.handleCancelEvent(event.event_id);
+                }
+            });
+        }
+
+        // Uncancel event
+        const uncancelBtn = document.getElementById('uncancel-event-btn');
+        if (uncancelBtn) {
+            uncancelBtn.addEventListener('click', () => {
+                if (confirm('Restore this event? It will become active again.')) {
+                    this.handleUncancelEvent(event.event_id);
                 }
             });
         }
@@ -311,6 +334,15 @@ export default class EventDetailPage {
             await this.load(eventId);
         } catch (error) {
             alert(`Error cancelling event: ${error.message}`);
+        }
+    }
+
+    async handleUncancelEvent(eventId) {
+        try {
+            await this.api.put(`events/${eventId}/uncancel`);
+            await this.load(eventId);
+        } catch (error) {
+            alert(`Error restoring event: ${error.message}`);
         }
     }
 
