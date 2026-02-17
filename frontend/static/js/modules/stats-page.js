@@ -57,7 +57,7 @@ export default class StatsPage {
     render() {
         const html = `
             <div class="fade-in stats-page" style="padding: 1.5rem; max-width: 1200px; margin: 0 auto;">
-                <h2 style="font-size: 2.5rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 2rem; color: var(--text-primary); text-shadow: 3px 3px 0px var(--casino-gold);">📊 Stats</h2>
+                <h2 style="font-size: clamp(1.5rem, 7vw, 2.5rem); font-weight: 900; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 2rem; color: var(--text-primary); text-shadow: 3px 3px 0px var(--casino-gold); white-space: nowrap;">🏆 Stats & Awards</h2>
                 
                 <!-- Summary Stats Grid -->
                 ${this.renderSummaryStats()}
