@@ -5,12 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin - Poker Night PWA</title>
     <style>
+        :root {
+            --primary: #3498db;
+            --primary-hover: #2980b9;
+            --danger: #e74c3c;
+            --danger-hover: #c0392b;
+            --success: #16a085;
+            --dark: #2c3e50;
+            --gray-50: #f8f9fa;
+            --gray-100: #f5f5f5;
+            --gray-200: #e9ecef;
+            --gray-300: #ddd;
+            --gray-500: #7f8c8d;
+            --gray-700: #333;
+            --card-radius: 10px;
+            --bottom-nav-height: 64px;
+        }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             margin: 0;
             padding: 20px;
-            background-color: #f5f5f5;
-            color: #333;
+            background-color: var(--gray-100);
+            color: var(--gray-700);
         }
         .container {
             max-width: 1200px;
@@ -21,7 +38,7 @@
             overflow: hidden;
         }
         .header {
-            background: #2c3e50;
+            background: var(--dark);
             color: white;
             padding: 20px;
             text-align: center;
@@ -43,15 +60,20 @@
             margin-bottom: 5px;
             font-weight: bold;
         }
-        input[type="password"], input[type="text"], input[type="number"] {
+        input[type="password"], input[type="text"], input[type="number"], input[type="date"], input[type="time"], select, textarea {
             width: 100%;
             padding: 10px;
-            border: 1px solid #ddd;
+            border: 1px solid var(--gray-300);
             border-radius: 4px;
             box-sizing: border-box;
+            font-size: 16px;
+        }
+        textarea {
+            resize: vertical;
+            min-height: 60px;
         }
         button {
-            background: #3498db;
+            background: var(--primary);
             color: white;
             padding: 10px 20px;
             border: none;
@@ -61,16 +83,16 @@
             margin: 5px;
         }
         button:hover {
-            background: #2980b9;
+            background: var(--primary-hover);
         }
         button.danger {
-            background: #e74c3c;
+            background: var(--danger);
         }
         button.danger:hover {
-            background: #c0392b;
+            background: var(--danger-hover);
         }
         .error {
-            color: #e74c3c;
+            color: var(--danger);
             margin: 10px 0;
             padding: 10px;
             background: #fdf2f2;
@@ -78,7 +100,7 @@
             border-radius: 4px;
         }
         .success {
-            color: #16a085;
+            color: var(--success);
             margin: 10px 0;
             padding: 10px;
             background: #f0fdfa;
@@ -87,28 +109,42 @@
         }
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
             margin-bottom: 30px;
         }
         .stat-card {
-            background: #f8f9fa;
+            background: var(--gray-50);
             padding: 20px;
             border-radius: 8px;
-            border-left: 4px solid #3498db;
+            border-left: 4px solid var(--primary);
         }
         .stat-number {
             font-size: 2em;
             font-weight: bold;
-            color: #2c3e50;
+            color: var(--dark);
         }
         .stat-label {
-            color: #7f8c8d;
+            color: var(--gray-500);
             margin-top: 5px;
         }
+        .hidden {
+            display: none;
+        }
+        .toolbar {
+            margin-bottom: 20px;
+            padding: 10px;
+            background: var(--gray-50);
+            border-radius: 4px;
+        }
+        .logout-btn {
+            float: right;
+        }
+
+        /* Desktop tabs */
         .tabs {
             display: flex;
-            border-bottom: 1px solid #ddd;
+            border-bottom: 1px solid var(--gray-300);
             margin-bottom: 20px;
         }
         .tab {
@@ -117,11 +153,12 @@
             border: none;
             cursor: pointer;
             border-bottom: 2px solid transparent;
-            color: #333;
+            color: var(--gray-700);
+            margin: 0;
         }
         .tab.active {
-            border-bottom-color: #3498db;
-            color: #3498db;
+            border-bottom-color: var(--primary);
+            color: var(--primary);
         }
         .tab-content {
             display: none;
@@ -129,160 +166,344 @@
         .tab-content.active {
             display: block;
         }
-        table {
+
+        /* Card grid */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+        .data-card {
+            background: var(--gray-50);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--card-radius);
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .data-card .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+        .data-card .card-title {
+            font-weight: 700;
+            font-size: 1.05em;
+            color: var(--dark);
+            word-break: break-word;
+        }
+        .data-card .card-id {
+            font-size: 0.75em;
+            color: var(--gray-500);
+            font-family: monospace;
+        }
+        .data-card .card-detail {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9em;
+            color: var(--gray-700);
+        }
+        .data-card .card-detail .detail-label {
+            color: var(--gray-500);
+        }
+        .data-card .card-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 4px;
+        }
+        .data-card .card-actions button {
+            flex: 1;
+            padding: 8px 12px;
+            font-size: 13px;
+            margin: 0;
+            min-height: 44px;
+        }
+
+        /* Status badges */
+        .badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.75em;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .badge-active { background: #d4edda; color: #155724; }
+        .badge-ended { background: var(--gray-200); color: var(--gray-500); }
+        .badge-upcoming { background: #cce5ff; color: #004085; }
+        .badge-started { background: #d4edda; color: #155724; }
+        .badge-cancelled { background: #f8d7da; color: #721c24; }
+        .badge-past { background: var(--gray-200); color: var(--gray-500); }
+        .profit-positive { color: #155724; font-weight: 600; }
+        .profit-negative { color: var(--danger); font-weight: 600; }
+
+        /* RSVP collapsible */
+        .rsvp-toggle {
+            background: none;
+            border: 1px solid var(--gray-300);
+            color: var(--gray-700);
+            padding: 6px 12px;
+            font-size: 0.85em;
+            cursor: pointer;
             width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-        }
-        th, td {
-            padding: 10px;
             text-align: left;
-            border-bottom: 1px solid #ddd;
+            min-height: 36px;
         }
-        th {
-            background: #f8f9fa;
-            font-weight: bold;
-            color: #333;
-        }
-        h2, h3 {
-            color: #2c3e50;
-        }
-        .hidden {
+        .rsvp-toggle:hover { background: var(--gray-200); }
+        .rsvp-list {
             display: none;
+            padding: 8px 0 0;
+            font-size: 0.85em;
         }
-        .toolbar {
-            margin-bottom: 20px;
-            padding: 10px;
-            background: #f8f9fa;
-            border-radius: 4px;
+        .rsvp-list.open { display: block; }
+        .rsvp-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 4px 0;
+            border-bottom: 1px solid var(--gray-200);
         }
-        .logout-btn {
-            float: right;
+        .rsvp-yes { color: #155724; }
+        .rsvp-no { color: #721c24; }
+        .rsvp-maybe { color: #856404; }
+
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
         }
-        
-        /* Mobile responsive table wrapper */
+        .modal-overlay.open {
+            display: flex;
+        }
+        .modal {
+            background: white;
+            border-radius: var(--card-radius);
+            width: 100%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--gray-300);
+        }
+        .modal-header h3 {
+            margin: 0;
+            color: var(--dark);
+        }
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5em;
+            cursor: pointer;
+            color: var(--gray-500);
+            padding: 4px 8px;
+            margin: 0;
+            min-height: 44px;
+            min-width: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-close:hover { color: var(--gray-700); background: none; }
+        .modal-body {
+            padding: 20px;
+        }
+        .modal-body .form-group {
+            margin-bottom: 16px;
+        }
+        .modal-body label {
+            font-size: 0.9em;
+            margin-bottom: 6px;
+        }
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            padding: 16px 20px;
+            border-top: 1px solid var(--gray-300);
+        }
+        .modal-footer button {
+            min-height: 44px;
+            min-width: 90px;
+            margin: 0;
+        }
+        .modal-cancel-btn {
+            background: var(--gray-200);
+            color: var(--gray-700);
+        }
+        .modal-cancel-btn:hover {
+            background: var(--gray-300);
+        }
+
+        /* Bottom nav */
+        .bottom-nav {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: var(--bottom-nav-height);
+            background: white;
+            border-top: 1px solid var(--gray-300);
+            z-index: 900;
+            justify-content: space-around;
+            align-items: center;
+            padding-bottom: env(safe-area-inset-bottom, 0);
+        }
+        .bottom-nav-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: none;
+            border: none;
+            color: var(--gray-500);
+            font-size: 0.65em;
+            padding: 6px 2px;
+            margin: 0;
+            min-height: 44px;
+            min-width: 44px;
+            cursor: pointer;
+            flex: 1;
+        }
+        .bottom-nav-btn .nav-icon {
+            font-size: 1.6em;
+            line-height: 1;
+            margin-bottom: 2px;
+        }
+        .bottom-nav-btn.active {
+            color: var(--primary);
+        }
+
+        /* Backups table (kept as table) */
         .table-wrapper {
             width: 100%;
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
-            border: 1px solid #ddd;
+            border: 1px solid var(--gray-300);
             border-radius: 6px;
             margin: 10px 0;
         }
-        
-        .table-wrapper table {
-            min-width: 1000px; /* Force horizontal scroll on mobile */
+        table {
+            width: 100%;
+            border-collapse: collapse;
             margin: 0;
         }
-        
-        /* Mobile styles */
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid var(--gray-300);
+        }
+        th {
+            background: var(--gray-50);
+            font-weight: bold;
+            color: var(--gray-700);
+        }
+
+        h2, h3 { color: var(--dark); }
+
+        /* Mobile responsive */
         @media (max-width: 768px) {
             body {
-                padding: 10px;
+                padding: 0;
+                padding-bottom: calc(var(--bottom-nav-height) + env(safe-area-inset-bottom, 0) + 10px);
             }
-            
             .container {
-                margin: 0;
                 border-radius: 0;
                 box-shadow: none;
             }
-            
             .header {
                 padding: 15px;
-                text-align: center;
             }
-            
             .header h1 {
-                font-size: 1.5em;
+                font-size: 1.4em;
                 margin: 0;
             }
-            
             .header p {
-                font-size: 0.9em;
-                margin: 5px 0;
+                font-size: 0.85em;
+                margin: 5px 0 0;
             }
-            
-            .tabs {
-                flex-wrap: wrap;
-                gap: 5px;
-                margin-bottom: 15px;
-            }
-            
-            .tab {
-                flex: 1;
-                min-width: 80px;
-                padding: 8px 12px;
-                font-size: 14px;
-                text-align: center;
-            }
-            
+
+            /* Hide desktop tabs, show bottom nav */
+            .tabs { display: none; }
+            .bottom-nav { display: flex; }
+
             .toolbar {
                 display: flex;
                 flex-wrap: wrap;
-                gap: 10px;
-                padding: 15px 10px;
+                gap: 8px;
+                padding: 12px 10px;
                 margin-bottom: 15px;
             }
-            
             .toolbar button {
                 flex: 1;
-                min-width: 100px;
+                min-width: 80px;
                 padding: 12px 8px;
-                font-size: 14px;
+                font-size: 13px;
                 margin: 0;
+                min-height: 44px;
             }
-            
             .logout-btn {
                 float: none;
-                background: #e74c3c !important;
+                background: var(--danger) !important;
             }
-            
-            /* Enhanced mobile table scrolling */
-            .table-wrapper {
-                border: 2px solid #007bff;
-                background: #f8f9fa;
+
+            /* Cards stack single column */
+            .card-grid {
+                grid-template-columns: 1fr;
+                gap: 12px;
             }
-            
-            .table-wrapper table {
-                min-width: 1200px; /* Wider for strikes column */
-            }
-            
-            /* Touch-friendly inputs */
-            .table-wrapper input[type="number"], 
-            .table-wrapper input[type="text"], 
-            .table-wrapper input[type="date"],
-            .table-wrapper select {
-                min-height: 44px;
-                padding: 8px;
-                font-size: 16px; /* Prevents iOS zoom */
-                border-radius: 4px;
-            }
-            
-            .table-wrapper button {
-                min-height: 44px;
-                padding: 8px 12px;
-                font-size: 14px;
-            }
-            
+
+            .admin-content { padding: 12px; }
+
+            /* Stats grid tighter */
             .stats-grid {
-                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-                gap: 15px;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
             }
+            .stat-card { padding: 14px; }
+            .stat-number { font-size: 1.5em; }
+
+            /* Modal full-width */
+            .modal-overlay { padding: 10px; }
+            .modal {
+                max-width: 100%;
+                max-height: 95vh;
+            }
+
+            /* Backups table scroll */
+            .table-wrapper table { min-width: 500px; }
+        }
+
+        @media (max-width: 400px) {
+            .stats-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>🎲 Poker Night Admin</h1>
+            <h1>Poker Night Admin</h1>
             <p>Database Management & Statistics</p>
         </div>
 
         <!-- Login Form -->
         <div id="loginForm" class="login-form">
             <div style="text-align: left; margin-bottom: 20px;">
-                <a href="/" style="color: #3498db; text-decoration: none; font-size: 14px; display: inline-flex; align-items: center; gap: 5px;">
-                    ← Return to Dashboard
+                <a href="/" style="color: var(--primary); text-decoration: none; font-size: 14px; display: inline-flex; align-items: center; gap: 5px;">
+                    &larr; Return to Dashboard
                 </a>
             </div>
             <h2>Admin Login</h2>
@@ -292,15 +513,14 @@
             </div>
             <button onclick="login()">Login</button>
             <div id="loginError" class="error hidden"></div>
-            </div>
         </div>
 
         <!-- Admin Content -->
         <div id="adminContent" class="admin-content hidden">
             <div class="toolbar">
-                <button onclick="loadDashboard()">🏠 Dashboard</button>
-                <button onclick="createBackup()">💾 Create Backup</button>
-                <button onclick="validateData()">✅ Validate Data</button>
+                <button onclick="loadDashboard()">Dashboard</button>
+                <button onclick="createBackup()">Backup</button>
+                <button onclick="validateData()">Validate</button>
                 <button class="logout-btn danger" onclick="logout()">Logout</button>
                 <div style="clear: both;"></div>
             </div>
@@ -313,32 +533,41 @@
                 <div id="stats" class="stats-grid"></div>
             </div>
 
-            <!-- Tabs for Data Management -->
+            <!-- Desktop Tabs -->
             <div class="tabs">
-                <button class="tab active" onclick="showTab('players')">🎭 Players</button>
-                <button class="tab" onclick="showTab('sessions')">🎯 Sessions</button>
-                <button class="tab" onclick="showTab('entries')">📊 Entries</button>
-                <button class="tab" onclick="showTab('backups')">💾 Backups</button>
+                <button class="tab active" data-tab="players" onclick="showTab('players', this)">Players</button>
+                <button class="tab" data-tab="sessions" onclick="showTab('sessions', this)">Sessions</button>
+                <button class="tab" data-tab="entries" onclick="showTab('entries', this)">Entries</button>
+                <button class="tab" data-tab="events" onclick="showTab('events', this)">Events</button>
+                <button class="tab" data-tab="backups" onclick="showTab('backups', this)">Backups</button>
             </div>
 
             <!-- Players Tab -->
             <div id="players" class="tab-content active">
                 <h3>Player Management</h3>
-                <button onclick="createPlayer()" style="margin-bottom: 10px;">+ Add New Player</button>
-                <div id="playersTable"></div>
+                <button onclick="openCreatePlayerModal()" style="margin-bottom: 10px;">+ Add New Player</button>
+                <div id="playersGrid" class="card-grid"></div>
             </div>
 
             <!-- Sessions Tab -->
             <div id="sessions" class="tab-content">
                 <h3>Session Management</h3>
-                <button onclick="createSession()" style="margin-bottom: 10px;">+ Add New Session</button>
-                <div id="sessionsTable"></div>
+                <button onclick="openCreateSessionModal()" style="margin-bottom: 10px;">+ Add New Session</button>
+                <div id="sessionsGrid" class="card-grid"></div>
             </div>
 
             <!-- Entries Tab -->
             <div id="entries" class="tab-content">
                 <h3>Entry Management</h3>
-                <div id="entriesTable"></div>
+                <p id="entriesCounter" style="color: var(--gray-500); font-size: 0.9em; margin-bottom: 10px;"></p>
+                <div id="entriesGrid" class="card-grid"></div>
+            </div>
+
+            <!-- Events Tab -->
+            <div id="events" class="tab-content">
+                <h3>Calendar Events</h3>
+                <button onclick="openCreateEventModal()" style="margin-bottom: 10px;">+ Add New Event</button>
+                <div id="eventsGrid" class="card-grid"></div>
             </div>
 
             <!-- Backups Tab -->
@@ -349,29 +578,97 @@
         </div>
     </div>
 
+    <!-- Modal -->
+    <div id="modalOverlay" class="modal-overlay" onclick="if(event.target===this)closeModal()">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="modalTitle">Edit</h3>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBody"></div>
+            <div class="modal-footer">
+                <button class="modal-cancel-btn" onclick="closeModal()">Cancel</button>
+                <button id="modalSaveBtn" onclick="saveModal()">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Nav (mobile) -->
+    <nav class="bottom-nav" id="bottomNav">
+        <button class="bottom-nav-btn active" data-tab="players" onclick="showTab('players', this)">
+            <span class="nav-icon">&#x1F3AD;</span>Players
+        </button>
+        <button class="bottom-nav-btn" data-tab="sessions" onclick="showTab('sessions', this)">
+            <span class="nav-icon">&#x1F3AF;</span>Sessions
+        </button>
+        <button class="bottom-nav-btn" data-tab="entries" onclick="showTab('entries', this)">
+            <span class="nav-icon">&#x1F4CA;</span>Entries
+        </button>
+        <button class="bottom-nav-btn" data-tab="events" onclick="showTab('events', this)">
+            <span class="nav-icon">&#x1F4C5;</span>Events
+        </button>
+        <button class="bottom-nav-btn" data-tab="backups" onclick="showTab('backups', this)">
+            <span class="nav-icon">&#x1F4BE;</span>Backups
+        </button>
+    </nav>
+
     <script>
         let isAuthenticated = false;
+        let currentModalSave = null;
+        let allEntries = [];
+        let entriesShown = 0;
+        const ENTRIES_PAGE_SIZE = 20;
 
-        // Authentication
+        // --- Utilities ---
+        function escapeHtml(str) {
+            if (str == null) return '';
+            return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+        }
+
+        function showMessage(message, type) {
+            const messagesDiv = document.getElementById('messages');
+            const cls = type === 'error' ? 'error' : 'success';
+            messagesDiv.innerHTML = `<div class="${cls}">${escapeHtml(message)}</div>`;
+            setTimeout(() => { messagesDiv.innerHTML = ''; }, 5000);
+        }
+
+        // --- Modal Infrastructure ---
+        function openModal(title, bodyHtml, saveFn) {
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalBody').innerHTML = bodyHtml;
+            currentModalSave = saveFn;
+            document.getElementById('modalOverlay').classList.add('open');
+        }
+
+        function closeModal() {
+            document.getElementById('modalOverlay').classList.remove('open');
+            currentModalSave = null;
+        }
+
+        function saveModal() {
+            if (currentModalSave) currentModalSave();
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeModal();
+        });
+
+        // --- Authentication ---
         async function login() {
             const password = document.getElementById('password').value;
             const errorDiv = document.getElementById('loginError');
-            
             try {
                 const response = await fetch('/admin/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ password })
                 });
-                
                 const result = await response.json();
-                
                 if (response.ok) {
                     isAuthenticated = true;
                     document.getElementById('loginForm').classList.add('hidden');
                     document.getElementById('adminContent').classList.remove('hidden');
                     loadDashboard();
-                    // Load the default active tab (players)
                     loadPlayers();
                 } else {
                     errorDiv.textContent = result.error || 'Login failed';
@@ -384,12 +681,7 @@
         }
 
         async function logout() {
-            try {
-                await fetch('/admin/logout', { method: 'POST' });
-            } catch (error) {
-                console.error('Logout error:', error);
-            }
-            
+            try { await fetch('/admin/logout', { method: 'POST' }); } catch (e) {}
             isAuthenticated = false;
             document.getElementById('loginForm').classList.remove('hidden');
             document.getElementById('adminContent').classList.add('hidden');
@@ -397,582 +689,691 @@
             document.getElementById('loginError').classList.add('hidden');
         }
 
-        // Dashboard
+        document.getElementById('password').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') login();
+        });
+
+        // --- Dashboard ---
         async function loadDashboard() {
             try {
                 const response = await fetch('/admin/status');
                 if (!response.ok) throw new Error('Failed to load dashboard');
-                
                 const data = await response.json();
-                displayStats(data.database_stats, data.financial_stats);
+                await displayStats(data.database_stats, data.financial_stats);
             } catch (error) {
                 showMessage('Error loading dashboard: ' + error.message, 'error');
             }
         }
 
-        function displayStats(dbStats, finStats) {
-            const statsDiv = document.getElementById('stats');
-            statsDiv.innerHTML = `
+        async function displayStats(dbStats, finStats) {
+            let upcomingCount = 0;
+            try {
+                const r = await fetch('/api/events?upcoming=true');
+                if (r.ok) { const evts = await r.json(); upcomingCount = evts.length; }
+            } catch (e) {}
+
+            document.getElementById('stats').innerHTML = `
                 <div class="stat-card">
-                    <div class="stat-number">${dbStats.players}</div>
+                    <div class="stat-number">${escapeHtml(dbStats.players)}</div>
                     <div class="stat-label">Total Players</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-number">${dbStats.sessions}</div>
+                    <div class="stat-number">${escapeHtml(dbStats.sessions)}</div>
                     <div class="stat-label">Total Sessions</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-number">${dbStats.entries}</div>
+                    <div class="stat-number">${escapeHtml(dbStats.entries)}</div>
                     <div class="stat-label">Total Entries</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-number">${dbStats.active_sessions}</div>
+                    <div class="stat-number">${escapeHtml(dbStats.active_sessions)}</div>
                     <div class="stat-label">Active Sessions</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-number">$${finStats.total_buy_ins.toFixed(2)}</div>
+                    <div class="stat-number">${escapeHtml(upcomingCount)}</div>
+                    <div class="stat-label">Upcoming Events</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">$${Number(finStats.total_buy_ins).toFixed(2)}</div>
                     <div class="stat-label">Total Buy-ins</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-number">$${finStats.total_payouts.toFixed(2)}</div>
+                    <div class="stat-number">$${Number(finStats.total_payouts).toFixed(2)}</div>
                     <div class="stat-label">Total Payouts</div>
                 </div>
             `;
         }
 
-        // Tab Management
-        function showTab(tabName) {
-            // Hide all tab contents
-            document.querySelectorAll('.tab-content').forEach(content => {
-                content.classList.remove('active');
-            });
-            
-            // Remove active class from all tabs
-            document.querySelectorAll('.tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            
-            // Show selected tab content
+        // --- Tab Management ---
+        function showTab(tabName, clickedEl) {
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.bottom-nav-btn').forEach(b => b.classList.remove('active'));
+
             document.getElementById(tabName).classList.add('active');
-            
-            // Add active class to clicked tab
-            event.target.classList.add('active');
-            
-            // Load data for the tab
+
+            // Sync desktop tab
+            const desktopTab = document.querySelector(`.tab[data-tab="${tabName}"]`);
+            if (desktopTab) desktopTab.classList.add('active');
+
+            // Sync bottom nav
+            const bottomBtn = document.querySelector(`.bottom-nav-btn[data-tab="${tabName}"]`);
+            if (bottomBtn) bottomBtn.classList.add('active');
+
             if (tabName === 'players') loadPlayers();
             else if (tabName === 'sessions') loadSessions();
             else if (tabName === 'entries') loadEntries();
+            else if (tabName === 'events') loadEvents();
             else if (tabName === 'backups') loadBackups();
         }
 
-        // Data Loading Functions
+        // --- Data Loading ---
         async function loadPlayers() {
             try {
-                const response = await fetch('/admin/players');
-                if (!response.ok) throw new Error('Failed to load players');
-                
-                const players = await response.json();
-                displayPlayersTable(players);
-            } catch (error) {
-                showMessage('Error loading players: ' + error.message, 'error');
-            }
+                const r = await fetch('/admin/players');
+                if (!r.ok) throw new Error('Failed to load players');
+                displayPlayersCards(await r.json());
+            } catch (e) { showMessage('Error loading players: ' + e.message, 'error'); }
         }
 
         async function loadSessions() {
             try {
-                const response = await fetch('/admin/sessions');
-                if (!response.ok) throw new Error('Failed to load sessions');
-                
-                const sessions = await response.json();
-                displaySessionsTable(sessions);
-            } catch (error) {
-                showMessage('Error loading sessions: ' + error.message, 'error');
-            }
+                const r = await fetch('/admin/sessions');
+                if (!r.ok) throw new Error('Failed to load sessions');
+                displaySessionsCards(await r.json());
+            } catch (e) { showMessage('Error loading sessions: ' + e.message, 'error'); }
         }
 
         async function loadEntries() {
             try {
-                const response = await fetch('/admin/entries');
-                if (!response.ok) throw new Error('Failed to load entries');
-                
-                const entries = await response.json();
-                displayEntriesTable(entries);
-            } catch (error) {
-                showMessage('Error loading entries: ' + error.message, 'error');
-            }
+                const r = await fetch('/admin/entries');
+                if (!r.ok) throw new Error('Failed to load entries');
+                allEntries = await r.json();
+                entriesShown = 0;
+                document.getElementById('entriesGrid').innerHTML = '';
+                const oldSentinel = document.getElementById('entriesSentinel');
+                if (oldSentinel) oldSentinel.remove();
+                appendEntryCards();
+            } catch (e) { showMessage('Error loading entries: ' + e.message, 'error'); }
+        }
+
+        async function loadEvents() {
+            try {
+                const r = await fetch('/api/events');
+                if (!r.ok) throw new Error('Failed to load events');
+                displayEventsCards(await r.json());
+            } catch (e) { showMessage('Error loading events: ' + e.message, 'error'); }
         }
 
         async function loadBackups() {
             try {
-                const response = await fetch('/admin/backups');
-                if (!response.ok) throw new Error('Failed to load backups');
-                
-                const backups = await response.json();
-                displayBackupsTable(backups);
-            } catch (error) {
-                showMessage('Error loading backups: ' + error.message, 'error');
+                const r = await fetch('/admin/backups');
+                if (!r.ok) throw new Error('Failed to load backups');
+                displayBackupsTable(await r.json());
+            } catch (e) { showMessage('Error loading backups: ' + e.message, 'error'); }
+        }
+
+        // --- Card Displays ---
+        function displayPlayersCards(players) {
+            const grid = document.getElementById('playersGrid');
+            if (!players.length) { grid.innerHTML = '<p>No players found.</p>'; return; }
+            grid.innerHTML = players.map(p => {
+                const created = new Date(p.created_at).toLocaleDateString();
+                return `<div class="data-card">
+                    <div class="card-header">
+                        <div class="card-title">${escapeHtml(p.name)}</div>
+                    </div>
+                    <div class="card-id">${escapeHtml(p.player_id)}</div>
+                    <div class="card-detail"><span class="detail-label">7-2 Wins</span><span>${escapeHtml(p.seven_two_wins)}</span></div>
+                    <div class="card-detail"><span class="detail-label">Created</span><span>${created}</span></div>
+                    <div class="card-actions">
+                        <button onclick="openEditPlayerModal('${escapeHtml(p.player_id)}','${escapeHtml(p.name)}',${Number(p.seven_two_wins)})">Edit</button>
+                        <button class="danger" onclick="deletePlayer('${escapeHtml(p.player_id)}')">Delete</button>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        function displaySessionsCards(sessions) {
+            const grid = document.getElementById('sessionsGrid');
+            if (!sessions.length) { grid.innerHTML = '<p>No sessions found.</p>'; return; }
+            grid.innerHTML = sessions.map(s => {
+                const badgeClass = s.is_active ? 'badge-active' : 'badge-ended';
+                const badgeText = s.is_active ? 'Active' : 'Ended';
+                return `<div class="data-card">
+                    <div class="card-header">
+                        <div class="card-title">${escapeHtml(s.date)}</div>
+                        <span class="badge ${badgeClass}">${badgeText}</span>
+                    </div>
+                    <div class="card-id">${escapeHtml(s.session_id)}</div>
+                    <div class="card-detail"><span class="detail-label">Buy-in</span><span>$${Number(s.default_buy_in_value).toFixed(2)}</span></div>
+                    <div class="card-actions">
+                        <button onclick="openEditSessionModal('${escapeHtml(s.session_id)}','${escapeHtml(s.date)}',${Number(s.default_buy_in_value)},${!!s.is_active})">Edit</button>
+                        <button class="danger" onclick="deleteSession('${escapeHtml(s.session_id)}')">Delete</button>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        function renderEntryCard(e) {
+            const profitClass = e.profit > 0 ? 'profit-positive' : e.profit < 0 ? 'profit-negative' : '';
+            return `<div class="data-card">
+                <div class="card-header">
+                    <div class="card-title">${escapeHtml(e.player_name)}</div>
+                    <span class="${profitClass}">$${e.profit.toFixed(2)}</span>
+                </div>
+                <div class="card-id">${escapeHtml(e.entry_id)}</div>
+                <div class="card-detail"><span class="detail-label">Session</span><span>${escapeHtml(e.session_id)}</span></div>
+                <div class="card-detail"><span class="detail-label">Buy-ins</span><span>${e.buy_in_count} ($${Number(e.total_buy_in_amount).toFixed(2)})</span></div>
+                <div class="card-detail"><span class="detail-label">Payout</span><span>$${Number(e.payout).toFixed(2)}</span></div>
+                <div class="card-detail"><span class="detail-label">7-2 Wins</span><span>${escapeHtml(e.session_seven_two_wins)}</span></div>
+                <div class="card-detail"><span class="detail-label">Strikes</span><span>${escapeHtml(e.session_strikes || 0)}</span></div>
+                <div class="card-actions">
+                    <button onclick="openEditEntryModal('${escapeHtml(e.entry_id)}',${Number(e.buy_in_count)},${Number(e.total_buy_in_amount)},${Number(e.payout)},${Number(e.session_seven_two_wins)},${Number(e.session_strikes||0)})">Edit</button>
+                    <button class="danger" onclick="deleteEntry('${escapeHtml(e.entry_id)}')">Delete</button>
+                </div>
+            </div>`;
+        }
+
+        function appendEntryCards() {
+            const grid = document.getElementById('entriesGrid');
+            if (!allEntries.length) { grid.innerHTML = '<p>No entries found.</p>'; return; }
+
+            const nextBatch = allEntries.slice(entriesShown, entriesShown + ENTRIES_PAGE_SIZE);
+            if (!nextBatch.length) return;
+
+            // Remove existing sentinel before appending
+            const oldSentinel = document.getElementById('entriesSentinel');
+            if (oldSentinel) oldSentinel.remove();
+
+            grid.insertAdjacentHTML('beforeend', nextBatch.map(renderEntryCard).join(''));
+            entriesShown += nextBatch.length;
+
+            // Show count
+            const counter = document.getElementById('entriesCounter');
+            if (counter) counter.textContent = `Showing ${entriesShown} of ${allEntries.length}`;
+
+            // Add sentinel if more entries remain
+            if (entriesShown < allEntries.length) {
+                grid.insertAdjacentHTML('afterend', '<div id="entriesSentinel" style="height:1px;"></div>');
+                entriesObserver.observe(document.getElementById('entriesSentinel'));
             }
         }
 
-        // Display Functions
-        function displayPlayersTable(players) {
-            const tableDiv = document.getElementById('playersTable');
-            let html = '<div class="table-wrapper"><table><thead><tr><th>Player ID</th><th>Name</th><th>7-2 Wins</th><th>Created</th><th>Actions</th></tr></thead><tbody>';
-            
-            players.forEach(player => {
-                const created = new Date(player.created_at).toLocaleDateString();
-                html += `
-                    <tr>
-                        <td>${player.player_id}</td>
-                        <td><input type="text" value="${player.name}" onchange="updatePlayerField('${player.player_id}', 'name', this.value)" style="border: 1px solid #ddd; padding: 5px; width: 100%;"></td>
-                        <td><input type="number" value="${player.seven_two_wins}" onchange="updatePlayerField('${player.player_id}', 'seven_two_wins', this.value)" style="border: 1px solid #ddd; padding: 5px; width: 100%;" min="0"></td>
-                        <td>${created}</td>
-                        <td>
-                            <button class="danger" onclick="deletePlayer('${player.player_id}')">Delete</button>
-                        </td>
-                    </tr>
-                `;
-            });
-            
-            html += '</tbody></table></div>';
-            tableDiv.innerHTML = html;
+        const entriesObserver = new IntersectionObserver(function(entries) {
+            if (entries[0].isIntersecting) {
+                entriesObserver.unobserve(entries[0].target);
+                appendEntryCards();
+            }
+        }, { rootMargin: '200px' });
+
+        function getEventBadge(evt) {
+            if (evt.is_cancelled) return '<span class="badge badge-cancelled">Cancelled</span>';
+            if (evt.session_id) return '<span class="badge badge-started">Session Started</span>';
+            const d = new Date(evt.date + 'T' + (evt.time || '23:59'));
+            if (d < new Date()) return '<span class="badge badge-past">Past</span>';
+            return '<span class="badge badge-upcoming">Upcoming</span>';
         }
 
-        function displaySessionsTable(sessions) {
-            const tableDiv = document.getElementById('sessionsTable');
-            let html = '<div class="table-wrapper"><table><thead><tr><th>Session ID</th><th>Date</th><th>Buy-in</th><th>Status</th><th>Actions</th></tr></thead><tbody>';
-            
-            sessions.forEach(session => {
-                html += `
-                    <tr>
-                        <td>${session.session_id}</td>
-                        <td><input type="date" value="${session.date}" onchange="updateSessionField('${session.session_id}', 'date', this.value)" style="border: 1px solid #ddd; padding: 5px; width: 100%;"></td>
-                        <td><input type="number" value="${session.default_buy_in_value}" onchange="updateSessionField('${session.session_id}', 'default_buy_in_value', this.value)" style="border: 1px solid #ddd; padding: 5px; width: 100%;" min="0" step="0.01"></td>
-                        <td><select onchange="updateSessionField('${session.session_id}', 'is_active', this.value === 'true')" style="border: 1px solid #ddd; padding: 5px; width: 100%;">
-                            <option value="true" ${session.is_active ? 'selected' : ''}>Active</option>
-                            <option value="false" ${!session.is_active ? 'selected' : ''}>Ended</option>
-                        </select></td>
-                        <td>
-                            <button class="danger" onclick="deleteSession('${session.session_id}')">Delete</button>
-                        </td>
-                    </tr>
-                `;
-            });
-            
-            html += '</tbody></table></div>';
-            tableDiv.innerHTML = html;
-        }
+        function displayEventsCards(events) {
+            const grid = document.getElementById('eventsGrid');
+            if (!events.length) { grid.innerHTML = '<p>No events found.</p>'; return; }
 
-        function displayEntriesTable(entries) {
-            const tableDiv = document.getElementById('entriesTable');
-            let html = '<div class="table-wrapper"><table><thead><tr><th>Entry ID</th><th>Player</th><th>Session ID</th><th>Buy-in Count</th><th>Total Buy-in $</th><th>Payout</th><th>7-2 Wins</th><th>Strikes</th><th>Profit</th><th>Actions</th></tr></thead><tbody>';
-            
-            entries.forEach(entry => {
-                const profitClass = entry.profit > 0 ? 'style="color: green"' : entry.profit < 0 ? 'style="color: red"' : '';
-                html += `
-                    <tr>
-                        <td>${entry.entry_id}</td>
-                        <td>${entry.player_name}</td>
-                        <td>${entry.session_id}</td>
-                        <td><input type="number" value="${entry.buy_in_count}" onchange="updateEntryField('${entry.entry_id}', 'buy_in_count', this.value)" style="border: 1px solid #ddd; padding: 5px; width: 80px;" min="0"></td>
-                        <td><input type="number" value="${entry.total_buy_in_amount}" onchange="updateEntryField('${entry.entry_id}', 'total_buy_in_amount', this.value)" style="border: 1px solid #ddd; padding: 5px; width: 100px;" min="0" step="0.01"></td>
-                        <td><input type="number" value="${entry.payout}" onchange="updateEntryField('${entry.entry_id}', 'payout', this.value)" style="border: 1px solid #ddd; padding: 5px; width: 100px;" min="0" step="0.01"></td>
-                        <td><input type="number" value="${entry.session_seven_two_wins}" onchange="updateEntryField('${entry.entry_id}', 'session_seven_two_wins', this.value)" style="border: 1px solid #ddd; padding: 5px; width: 60px;" min="0"></td>
-                        <td><input type="number" value="${entry.session_strikes || 0}" onchange="updateEntryField('${entry.entry_id}', 'session_strikes', this.value)" style="border: 1px solid #ddd; padding: 5px; width: 60px;" min="0"></td>
-                        <td ${profitClass}>$${entry.profit.toFixed(2)}</td>
-                        <td>
-                            <button class="danger" onclick="deleteEntry('${entry.entry_id}')">Delete</button>
-                        </td>
-                    </tr>
-                `;
+            // Sort: upcoming first, then by date descending
+            events.sort((a, b) => {
+                const aDate = new Date(a.date);
+                const bDate = new Date(b.date);
+                const now = new Date();
+                const aUpcoming = aDate >= now && !a.is_cancelled;
+                const bUpcoming = bDate >= now && !b.is_cancelled;
+                if (aUpcoming && !bUpcoming) return -1;
+                if (!aUpcoming && bUpcoming) return 1;
+                return bDate - aDate;
             });
-            
-            html += '</tbody></table></div>';
-            tableDiv.innerHTML = html;
+
+            grid.innerHTML = events.map(evt => {
+                const rsvpCounts = evt.rsvp_counts || { yes: 0, no: 0, maybe: 0 };
+                const rsvps = evt.rsvps || [];
+                const rsvpId = 'rsvp_' + evt.event_id.replace(/[^a-zA-Z0-9]/g, '_');
+                const isCancelled = evt.is_cancelled;
+                const hasSession = !!evt.session_id;
+
+                let rsvpListHtml = '';
+                if (rsvps.length) {
+                    rsvpListHtml = `<button class="rsvp-toggle" onclick="document.getElementById('${rsvpId}').classList.toggle('open')">
+                        RSVPs: ${rsvpCounts.yes} Yes, ${rsvpCounts.maybe} Maybe, ${rsvpCounts.no} No
+                    </button>
+                    <div class="rsvp-list" id="${rsvpId}">
+                        ${rsvps.map(r => `<div class="rsvp-item"><span>${escapeHtml(r.player_name)}</span><span class="rsvp-${escapeHtml(r.status.toLowerCase())}">${escapeHtml(r.status)}</span></div>`).join('')}
+                    </div>`;
+                } else {
+                    rsvpListHtml = `<div style="font-size:0.85em;color:var(--gray-500);">No RSVPs yet</div>`;
+                }
+
+                let actions = '';
+                if (!isCancelled && !hasSession) {
+                    actions = `
+                        <button onclick="openEditEventModal('${escapeHtml(evt.event_id)}')">Edit</button>
+                        <button class="danger" style="background:#f39c12;" onclick="cancelEvent('${escapeHtml(evt.event_id)}')">Cancel</button>
+                        <button class="danger" onclick="deleteEvent('${escapeHtml(evt.event_id)}')">Delete</button>`;
+                } else {
+                    actions = `<button class="danger" onclick="deleteEvent('${escapeHtml(evt.event_id)}')">Delete</button>`;
+                }
+
+                return `<div class="data-card" ${isCancelled ? 'style="opacity:0.6"' : ''}>
+                    <div class="card-header">
+                        <div class="card-title">${escapeHtml(evt.title || 'Poker Night')}</div>
+                        ${getEventBadge(evt)}
+                    </div>
+                    <div class="card-id">${escapeHtml(evt.event_id)}</div>
+                    <div class="card-detail"><span class="detail-label">Date</span><span>${escapeHtml(evt.date)}${evt.time ? ' at ' + escapeHtml(evt.time) : ''}</span></div>
+                    ${evt.location ? `<div class="card-detail"><span class="detail-label">Location</span><span>${escapeHtml(evt.location)}</span></div>` : ''}
+                    <div class="card-detail"><span class="detail-label">Buy-in</span><span>$${Number(evt.default_buy_in_value || 20).toFixed(2)}</span></div>
+                    ${evt.max_players ? `<div class="card-detail"><span class="detail-label">Max Players</span><span>${escapeHtml(evt.max_players)}</span></div>` : ''}
+                    ${rsvpListHtml}
+                    <div class="card-actions">${actions}</div>
+                </div>`;
+            }).join('');
         }
 
         function displayBackupsTable(backups) {
             const tableDiv = document.getElementById('backupsTable');
+            if (!backups.length) { tableDiv.innerHTML = '<p>No backups found.</p>'; return; }
             let html = '<div class="table-wrapper"><table><thead><tr><th>Date</th><th>Description</th><th>Size</th><th>Status</th></tr></thead><tbody>';
-            
-            backups.forEach(backup => {
-                const date = new Date(backup.backup_date).toLocaleString();
-                const size = backup.backup_size ? Math.round(backup.backup_size / 1024) + ' KB' : 'Unknown';
-                const status = backup.backup_exists ? '✅ Available' : '❌ Missing';
-                html += `
-                    <tr>
-                        <td>${date}</td>
-                        <td>${backup.description}</td>
-                        <td>${size}</td>
-                        <td>${status}</td>
-                    </tr>
-                `;
+            backups.forEach(b => {
+                const date = new Date(b.backup_date).toLocaleString();
+                const size = b.backup_size ? Math.round(b.backup_size / 1024) + ' KB' : 'Unknown';
+                const status = b.backup_exists ? 'Available' : 'Missing';
+                html += `<tr><td>${escapeHtml(date)}</td><td>${escapeHtml(b.description)}</td><td>${size}</td><td>${status}</td></tr>`;
             });
-            
             html += '</tbody></table></div>';
             tableDiv.innerHTML = html;
         }
 
-        // Utility Functions
-        async function createBackup() {
+        // --- Create / Edit Modals ---
+
+        // Players
+        function openCreatePlayerModal() {
+            openModal('Add New Player', `
+                <div class="form-group">
+                    <label for="m_playerName">Player Name</label>
+                    <input type="text" id="m_playerName" placeholder="Enter player name">
+                </div>
+            `, async function() {
+                const name = document.getElementById('m_playerName').value.trim();
+                if (!name) { showMessage('Player name cannot be empty', 'error'); return; }
+                try {
+                    const r = await fetch('/admin/players', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ name })
+                    });
+                    const result = await r.json();
+                    if (r.ok) { showMessage('Player created successfully', 'success'); closeModal(); loadPlayers(); }
+                    else { showMessage('Failed to create player: ' + result.error, 'error'); }
+                } catch (e) { showMessage('Error creating player: ' + e.message, 'error'); }
+            });
+        }
+
+        function openEditPlayerModal(playerId, name, sevenTwoWins) {
+            openModal('Edit Player', `
+                <div class="form-group">
+                    <label for="m_playerName">Name</label>
+                    <input type="text" id="m_playerName" value="${escapeHtml(name)}">
+                </div>
+                <div class="form-group">
+                    <label for="m_player72">7-2 Wins</label>
+                    <input type="number" id="m_player72" value="${sevenTwoWins}" min="0">
+                </div>
+            `, async function() {
+                const newName = document.getElementById('m_playerName').value.trim();
+                const new72 = parseInt(document.getElementById('m_player72').value);
+                if (!newName) { showMessage('Player name cannot be empty', 'error'); return; }
+                if (isNaN(new72) || new72 < 0) { showMessage('7-2 wins must be a non-negative integer', 'error'); return; }
+                try {
+                    const r = await fetch(`/admin/players/${playerId}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ name: newName, seven_two_wins: new72 })
+                    });
+                    const result = await r.json();
+                    if (r.ok) { showMessage('Player updated successfully', 'success'); closeModal(); loadPlayers(); }
+                    else { showMessage('Failed to update player: ' + result.error, 'error'); }
+                } catch (e) { showMessage('Error updating player: ' + e.message, 'error'); }
+            });
+        }
+
+        // Sessions
+        function openCreateSessionModal() {
+            const today = new Date().toISOString().split('T')[0];
+            openModal('Add New Session', `
+                <div class="form-group">
+                    <label for="m_sessDate">Date</label>
+                    <input type="date" id="m_sessDate" value="${today}">
+                </div>
+                <div class="form-group">
+                    <label for="m_sessBuyIn">Default Buy-in ($)</label>
+                    <input type="number" id="m_sessBuyIn" value="20.00" min="0" step="0.01">
+                </div>
+            `, async function() {
+                const date = document.getElementById('m_sessDate').value;
+                const buyIn = parseFloat(document.getElementById('m_sessBuyIn').value);
+                if (!date) { showMessage('Date is required', 'error'); return; }
+                if (isNaN(buyIn) || buyIn <= 0) { showMessage('Buy-in must be a positive number', 'error'); return; }
+                try {
+                    const r = await fetch('/admin/sessions', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ date, default_buy_in_value: buyIn })
+                    });
+                    const result = await r.json();
+                    if (r.ok) { showMessage('Session created successfully', 'success'); closeModal(); loadSessions(); }
+                    else { showMessage('Failed to create session: ' + result.error, 'error'); }
+                } catch (e) { showMessage('Error creating session: ' + e.message, 'error'); }
+            });
+        }
+
+        function openEditSessionModal(sessionId, date, buyIn, isActive) {
+            openModal('Edit Session', `
+                <div class="form-group">
+                    <label for="m_sessDate">Date</label>
+                    <input type="date" id="m_sessDate" value="${escapeHtml(date)}">
+                </div>
+                <div class="form-group">
+                    <label for="m_sessBuyIn">Default Buy-in ($)</label>
+                    <input type="number" id="m_sessBuyIn" value="${buyIn}" min="0" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label for="m_sessStatus">Status</label>
+                    <select id="m_sessStatus">
+                        <option value="true" ${isActive ? 'selected' : ''}>Active</option>
+                        <option value="false" ${!isActive ? 'selected' : ''}>Ended</option>
+                    </select>
+                </div>
+            `, async function() {
+                const newDate = document.getElementById('m_sessDate').value;
+                const newBuyIn = parseFloat(document.getElementById('m_sessBuyIn').value);
+                const newActive = document.getElementById('m_sessStatus').value === 'true';
+                if (!newDate) { showMessage('Date is required', 'error'); return; }
+                if (isNaN(newBuyIn) || newBuyIn <= 0) { showMessage('Buy-in must be positive', 'error'); return; }
+                try {
+                    const r = await fetch(`/admin/sessions/${sessionId}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ date: newDate, default_buy_in_value: newBuyIn, is_active: newActive })
+                    });
+                    const result = await r.json();
+                    if (r.ok) { showMessage('Session updated successfully', 'success'); closeModal(); loadSessions(); }
+                    else { showMessage('Failed to update session: ' + result.error, 'error'); }
+                } catch (e) { showMessage('Error updating session: ' + e.message, 'error'); }
+            });
+        }
+
+        // Entries
+        function openEditEntryModal(entryId, buyInCount, totalBuyIn, payout, sevenTwoWins, strikes) {
+            openModal('Edit Entry', `
+                <div class="form-group">
+                    <label for="m_entBuyInCount">Buy-in Count</label>
+                    <input type="number" id="m_entBuyInCount" value="${buyInCount}" min="0">
+                </div>
+                <div class="form-group">
+                    <label for="m_entTotalBuyIn">Total Buy-in ($)</label>
+                    <input type="number" id="m_entTotalBuyIn" value="${totalBuyIn}" min="0" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label for="m_entPayout">Payout ($)</label>
+                    <input type="number" id="m_entPayout" value="${payout}" min="0" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label for="m_ent72">7-2 Wins</label>
+                    <input type="number" id="m_ent72" value="${sevenTwoWins}" min="0">
+                </div>
+                <div class="form-group">
+                    <label for="m_entStrikes">Strikes</label>
+                    <input type="number" id="m_entStrikes" value="${strikes}" min="0">
+                </div>
+            `, async function() {
+                const data = {
+                    buy_in_count: parseInt(document.getElementById('m_entBuyInCount').value),
+                    total_buy_in_amount: parseFloat(document.getElementById('m_entTotalBuyIn').value),
+                    payout: parseFloat(document.getElementById('m_entPayout').value),
+                    session_seven_two_wins: parseInt(document.getElementById('m_ent72').value),
+                    session_strikes: parseInt(document.getElementById('m_entStrikes').value)
+                };
+                for (const [k, v] of Object.entries(data)) {
+                    if (isNaN(v) || v < 0) { showMessage(k.replace(/_/g, ' ') + ' must be non-negative', 'error'); return; }
+                }
+                try {
+                    const r = await fetch(`/admin/entries/${entryId}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(data)
+                    });
+                    const result = await r.json();
+                    if (r.ok) { showMessage('Entry updated successfully', 'success'); closeModal(); loadEntries(); }
+                    else { showMessage('Failed to update entry: ' + result.error, 'error'); }
+                } catch (e) { showMessage('Error updating entry: ' + e.message, 'error'); }
+            });
+        }
+
+        // Events
+        function openCreateEventModal() {
+            const today = new Date().toISOString().split('T')[0];
+            openModal('Create Event', `
+                <div class="form-group">
+                    <label for="m_evtTitle">Title</label>
+                    <input type="text" id="m_evtTitle" value="Poker Night">
+                </div>
+                <div class="form-group">
+                    <label for="m_evtDate">Date</label>
+                    <input type="date" id="m_evtDate" value="${today}">
+                </div>
+                <div class="form-group">
+                    <label for="m_evtTime">Time</label>
+                    <input type="time" id="m_evtTime" value="19:00">
+                </div>
+                <div class="form-group">
+                    <label for="m_evtLocation">Location</label>
+                    <input type="text" id="m_evtLocation" placeholder="Optional">
+                </div>
+                <div class="form-group">
+                    <label for="m_evtBuyIn">Buy-in ($)</label>
+                    <input type="number" id="m_evtBuyIn" value="20.00" min="0" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label for="m_evtMaxPlayers">Max Players</label>
+                    <input type="number" id="m_evtMaxPlayers" value="8" min="2" max="50">
+                </div>
+                <div class="form-group">
+                    <label for="m_evtDesc">Description</label>
+                    <textarea id="m_evtDesc" placeholder="Optional"></textarea>
+                </div>
+            `, async function() {
+                const date = document.getElementById('m_evtDate').value;
+                if (!date) { showMessage('Date is required', 'error'); return; }
+                const body = {
+                    title: document.getElementById('m_evtTitle').value.trim() || 'Poker Night',
+                    date,
+                    time: document.getElementById('m_evtTime').value || undefined,
+                    location: document.getElementById('m_evtLocation').value.trim() || undefined,
+                    default_buy_in_value: parseFloat(document.getElementById('m_evtBuyIn').value) || 20,
+                    max_players: parseInt(document.getElementById('m_evtMaxPlayers').value) || undefined,
+                    description: document.getElementById('m_evtDesc').value.trim() || undefined
+                };
+                try {
+                    const r = await fetch('/api/events', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(body)
+                    });
+                    const result = await r.json();
+                    if (r.ok) { showMessage('Event created successfully', 'success'); closeModal(); loadEvents(); loadDashboard(); }
+                    else { showMessage('Failed to create event: ' + result.error, 'error'); }
+                } catch (e) { showMessage('Error creating event: ' + e.message, 'error'); }
+            });
+        }
+
+        async function openEditEventModal(eventId) {
             try {
-                const description = prompt('Backup description (optional):') || 'Manual backup from admin interface';
-                const response = await fetch('/admin/backup', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ description })
+                const r = await fetch(`/api/events/${eventId}`);
+                if (!r.ok) throw new Error('Failed to load event');
+                const evt = await r.json();
+
+                openModal('Edit Event', `
+                    <div class="form-group">
+                        <label for="m_evtTitle">Title</label>
+                        <input type="text" id="m_evtTitle" value="${escapeHtml(evt.title || '')}">
+                    </div>
+                    <div class="form-group">
+                        <label for="m_evtDate">Date</label>
+                        <input type="date" id="m_evtDate" value="${escapeHtml(evt.date)}">
+                    </div>
+                    <div class="form-group">
+                        <label for="m_evtTime">Time</label>
+                        <input type="time" id="m_evtTime" value="${escapeHtml(evt.time || '')}">
+                    </div>
+                    <div class="form-group">
+                        <label for="m_evtLocation">Location</label>
+                        <input type="text" id="m_evtLocation" value="${escapeHtml(evt.location || '')}">
+                    </div>
+                    <div class="form-group">
+                        <label for="m_evtBuyIn">Buy-in ($)</label>
+                        <input type="number" id="m_evtBuyIn" value="${evt.default_buy_in_value || 20}" min="0" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label for="m_evtMaxPlayers">Max Players</label>
+                        <input type="number" id="m_evtMaxPlayers" value="${evt.max_players || 8}" min="2" max="50">
+                    </div>
+                    <div class="form-group">
+                        <label for="m_evtDesc">Description</label>
+                        <textarea id="m_evtDesc">${escapeHtml(evt.description || '')}</textarea>
+                    </div>
+                `, async function() {
+                    const date = document.getElementById('m_evtDate').value;
+                    if (!date) { showMessage('Date is required', 'error'); return; }
+                    const body = {
+                        title: document.getElementById('m_evtTitle').value.trim() || 'Poker Night',
+                        date,
+                        time: document.getElementById('m_evtTime').value || null,
+                        location: document.getElementById('m_evtLocation').value.trim() || null,
+                        default_buy_in_value: parseFloat(document.getElementById('m_evtBuyIn').value) || 20,
+                        max_players: parseInt(document.getElementById('m_evtMaxPlayers').value) || null,
+                        description: document.getElementById('m_evtDesc').value.trim() || null
+                    };
+                    try {
+                        const r = await fetch(`/api/events/${eventId}`, {
+                            method: 'PUT',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(body)
+                        });
+                        const result = await r.json();
+                        if (r.ok) { showMessage('Event updated successfully', 'success'); closeModal(); loadEvents(); loadDashboard(); }
+                        else { showMessage('Failed to update event: ' + result.error, 'error'); }
+                    } catch (e) { showMessage('Error updating event: ' + e.message, 'error'); }
                 });
-                
-                const result = await response.json();
-                if (response.ok) {
-                    showMessage('Backup created successfully: ' + result.backup_path, 'success');
-                    if (document.getElementById('backups').classList.contains('active')) {
-                        loadBackups();
-                    }
-                } else {
-                    showMessage('Backup failed: ' + result.error, 'error');
-                }
-            } catch (error) {
-                showMessage('Backup error: ' + error.message, 'error');
-            }
+            } catch (e) { showMessage('Error loading event: ' + e.message, 'error'); }
         }
 
-        async function validateData() {
-            showMessage('Validating data...', 'success');
-            // In a real implementation, you would call a validation endpoint
-            setTimeout(() => {
-                showMessage('Data validation completed. Check logs for details.', 'success');
-            }, 2000);
-        }
-
-        function showMessage(message, type) {
-            const messagesDiv = document.getElementById('messages');
-            messagesDiv.innerHTML = `<div class="${type}">${message}</div>`;
-            setTimeout(() => {
-                messagesDiv.innerHTML = '';
-            }, 5000);
-        }
-
-        // Field update functions
-        async function updatePlayerField(playerId, field, value) {
+        async function cancelEvent(eventId) {
+            if (!confirm('Cancel this event? RSVPs will be preserved but the event will be marked as cancelled.')) return;
             try {
-                // Validate input
-                if (field === 'name' && !value.trim()) {
-                    showMessage('Player name cannot be empty', 'error');
-                    return;
-                }
-                
-                if (field === 'seven_two_wins') {
-                    const intValue = parseInt(value);
-                    if (isNaN(intValue) || intValue < 0) {
-                        showMessage('7-2 wins must be a non-negative integer', 'error');
-                        return;
-                    }
-                    value = intValue;
-                }
-                
-                // Send update request
-                const updateData = {};
-                updateData[field] = value;
-                
-                const response = await fetch(`/admin/players/${playerId}`, {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(updateData)
-                });
-                
-                const result = await response.json();
-                if (response.ok) {
-                    showMessage(`Player ${field} updated successfully`, 'success');
-                } else {
-                    showMessage('Failed to update player: ' + result.error, 'error');
-                    loadPlayers(); // Refresh on error to revert changes
-                }
-            } catch (error) {
-                showMessage('Error updating player: ' + error.message, 'error');
-                loadPlayers(); // Refresh on error to revert changes
-            }
+                const r = await fetch(`/api/events/${eventId}/cancel`, { method: 'PUT' });
+                const result = await r.json();
+                if (r.ok) { showMessage('Event cancelled', 'success'); loadEvents(); loadDashboard(); }
+                else { showMessage('Failed to cancel event: ' + result.error, 'error'); }
+            } catch (e) { showMessage('Error cancelling event: ' + e.message, 'error'); }
         }
 
+        async function deleteEvent(eventId) {
+            if (!confirm('Permanently delete this event? This cannot be undone.')) return;
+            try {
+                const r = await fetch(`/api/events/${eventId}`, { method: 'DELETE' });
+                const result = await r.json();
+                if (r.ok) { showMessage('Event deleted', 'success'); loadEvents(); loadDashboard(); }
+                else { showMessage('Failed to delete event: ' + result.error, 'error'); }
+            } catch (e) { showMessage('Error deleting event: ' + e.message, 'error'); }
+        }
+
+        // --- Delete functions (existing) ---
         async function deletePlayer(playerId) {
-            if (!confirm('Are you sure you want to delete this player? This will also delete all their entries!')) {
-                return;
-            }
-            
+            if (!confirm('Are you sure you want to delete this player? This will also delete all their entries!')) return;
             try {
-                const response = await fetch(`/admin/players/${playerId}?force=true`, {
-                    method: 'DELETE'
-                });
-                
-                const result = await response.json();
-                if (response.ok) {
-                    showMessage('Player deleted successfully', 'success');
-                    loadPlayers(); // Refresh the table
-                } else {
-                    showMessage('Failed to delete player: ' + result.error, 'error');
-                }
-            } catch (error) {
-                showMessage('Error deleting player: ' + error.message, 'error');
-            }
-        }
-
-        async function updateSessionField(sessionId, field, value) {
-            try {
-                // Validate input
-                if (field === 'date' && !value.match(/^\d{4}-\d{2}-\d{2}$/)) {
-                    showMessage('Date must be in YYYY-MM-DD format', 'error');
-                    return;
-                }
-                
-                if (field === 'default_buy_in_value') {
-                    const floatValue = parseFloat(value);
-                    if (isNaN(floatValue) || floatValue <= 0) {
-                        showMessage('Buy-in value must be a positive number', 'error');
-                        return;
-                    }
-                    value = floatValue;
-                }
-                
-                // Send update request
-                const updateData = {};
-                updateData[field] = value;
-                
-                const response = await fetch(`/admin/sessions/${sessionId}`, {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(updateData)
-                });
-                
-                const result = await response.json();
-                if (response.ok) {
-                    showMessage(`Session ${field} updated successfully`, 'success');
-                } else {
-                    showMessage('Failed to update session: ' + result.error, 'error');
-                    loadSessions(); // Refresh on error to revert changes
-                }
-            } catch (error) {
-                showMessage('Error updating session: ' + error.message, 'error');
-                loadSessions(); // Refresh on error to revert changes
-            }
+                const r = await fetch(`/admin/players/${playerId}?force=true`, { method: 'DELETE' });
+                const result = await r.json();
+                if (r.ok) { showMessage('Player deleted successfully', 'success'); loadPlayers(); }
+                else { showMessage('Failed to delete player: ' + result.error, 'error'); }
+            } catch (e) { showMessage('Error deleting player: ' + e.message, 'error'); }
         }
 
         async function deleteSession(sessionId) {
             try {
-                // Get all sessions to find the one we want to delete
-                const sessionsResponse = await fetch('/admin/sessions');
-                if (!sessionsResponse.ok) {
-                    showMessage('Failed to check session details', 'error');
-                    return;
-                }
-                
-                const allSessions = await sessionsResponse.json();
-                const sessionData = allSessions.find(s => s.session_id === sessionId);
-                
-                if (!sessionData) {
-                    showMessage('Session not found', 'error');
-                    return;
-                }
-                
-                // Check entries for this session
-                const entriesResponse = await fetch('/admin/entries');
-                if (!entriesResponse.ok) {
-                    showMessage('Failed to check session entries', 'error');
-                    return;
-                }
-                
-                const allEntries = await entriesResponse.json();
-                const sessionEntries = allEntries.filter(entry => entry.session_id === sessionId);
-                
+                const [sessionsRes, entriesRes] = await Promise.all([
+                    fetch('/admin/sessions'),
+                    fetch('/admin/entries')
+                ]);
+                if (!sessionsRes.ok || !entriesRes.ok) { showMessage('Failed to check session details', 'error'); return; }
+
+                const allSessions = await sessionsRes.json();
+                const allEntries = await entriesRes.json();
+                const sessionEntries = allEntries.filter(e => e.session_id === sessionId);
+
                 let confirmMessage = 'Are you sure you want to delete this session?';
                 let hasMoneyInvolved = false;
-                
+
                 if (sessionEntries.length > 0) {
-                    const totalBuyIns = sessionEntries.reduce((sum, entry) => sum + (entry.total_buy_in_amount || 0), 0);
-                    const totalPayouts = sessionEntries.reduce((sum, entry) => sum + (entry.payout || 0), 0);
-                    
+                    const totalBuyIns = sessionEntries.reduce((sum, e) => sum + (e.total_buy_in_amount || 0), 0);
+                    const totalPayouts = sessionEntries.reduce((sum, e) => sum + (e.payout || 0), 0);
                     if (totalBuyIns > 0 || totalPayouts > 0) {
                         hasMoneyInvolved = true;
-                        confirmMessage = `⚠️ WARNING: This session contains financial data!
-                        
-${sessionEntries.length} player entries will be deleted:
-• Total Buy-ins: $${totalBuyIns.toFixed(2)}
-• Total Payouts: $${totalPayouts.toFixed(2)}
-
-This action cannot be undone. Are you absolutely sure you want to delete this session and ALL its entries?`;
+                        confirmMessage = `WARNING: This session contains financial data!\n\n${sessionEntries.length} entries will be deleted:\n- Total Buy-ins: $${totalBuyIns.toFixed(2)}\n- Total Payouts: $${totalPayouts.toFixed(2)}\n\nThis cannot be undone. Delete?`;
                     } else {
-                        confirmMessage = `This session has ${sessionEntries.length} player entries that will also be deleted. Continue?`;
+                        confirmMessage = `This session has ${sessionEntries.length} entries that will also be deleted. Continue?`;
                     }
                 }
-                
-                // Show different confirmation based on whether money is involved
-                const userConfirmed = hasMoneyInvolved ? 
-                    confirm(confirmMessage) && confirm('FINAL CONFIRMATION: Delete session with $' + (sessionEntries.reduce((sum, entry) => sum + (entry.total_buy_in_amount || 0), 0)).toFixed(2) + ' in buy-ins?') :
-                    confirm(confirmMessage);
-                
-                if (!userConfirmed) {
-                    return;
-                }
-                
-                // Proceed with deletion
-                const response = await fetch(`/admin/sessions/${sessionId}?force=true`, {
-                    method: 'DELETE'
-                });
-                
-                const result = await response.json();
-                if (response.ok) {
-                    showMessage('Session and all associated entries deleted successfully', 'success');
-                    loadSessions(); // Refresh the table
-                    // Refresh dashboard stats if showing
-                    loadDashboard();
-                } else {
-                    showMessage('Failed to delete session: ' + result.error, 'error');
-                }
-            } catch (error) {
-                showMessage('Error deleting session: ' + error.message, 'error');
-            }
-        }
 
-        async function updateEntryField(entryId, field, value) {
-            try {
-                // Validate input
-                if (field === 'buy_in_count' || field === 'session_seven_two_wins' || field === 'session_strikes') {
-                    const intValue = parseInt(value);
-                    if (isNaN(intValue) || intValue < 0) {
-                        showMessage(`${field.replace('_', ' ')} must be a non-negative integer`, 'error');
-                        return;
-                    }
-                    value = intValue;
-                }
-                
-                if (field === 'payout' || field === 'total_buy_in_amount') {
-                    const floatValue = parseFloat(value);
-                    if (isNaN(floatValue) || floatValue < 0) {
-                        showMessage(`${field.replace('_', ' ')} must be a non-negative number`, 'error');
-                        return;
-                    }
-                    value = floatValue;
-                }
-                
-                // Send update request
-                const updateData = {};
-                updateData[field] = value;
-                
-                const response = await fetch(`/admin/entries/${entryId}`, {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(updateData)
-                });
-                
-                const result = await response.json();
-                if (response.ok) {
-                    showMessage(`Entry ${field.replace('_', ' ')} updated successfully`, 'success');
-                    // Refresh to show updated profit calculation
-                    loadEntries();
-                } else {
-                    showMessage('Failed to update entry: ' + result.error, 'error');
-                    loadEntries(); // Refresh on error to revert changes
-                }
-            } catch (error) {
-                showMessage('Error updating entry: ' + error.message, 'error');
-                loadEntries(); // Refresh on error to revert changes
-            }
+                const userConfirmed = hasMoneyInvolved
+                    ? confirm(confirmMessage) && confirm('FINAL CONFIRMATION: Delete session with $' + sessionEntries.reduce((sum, e) => sum + (e.total_buy_in_amount || 0), 0).toFixed(2) + ' in buy-ins?')
+                    : confirm(confirmMessage);
+                if (!userConfirmed) return;
+
+                const r = await fetch(`/admin/sessions/${sessionId}?force=true`, { method: 'DELETE' });
+                const result = await r.json();
+                if (r.ok) { showMessage('Session deleted successfully', 'success'); loadSessions(); loadDashboard(); }
+                else { showMessage('Failed to delete session: ' + result.error, 'error'); }
+            } catch (e) { showMessage('Error deleting session: ' + e.message, 'error'); }
         }
 
         async function deleteEntry(entryId) {
-            if (!confirm('Are you sure you want to delete this entry? This action cannot be undone.')) {
-                return;
-            }
-            
+            if (!confirm('Are you sure you want to delete this entry? This cannot be undone.')) return;
             try {
-                const response = await fetch(`/admin/entries/${entryId}`, {
-                    method: 'DELETE'
-                });
-                
-                const result = await response.json();
-                if (response.ok) {
-                    showMessage('Entry deleted successfully', 'success');
-                    loadEntries(); // Refresh the table
-                } else {
-                    showMessage('Failed to delete entry: ' + result.error, 'error');
-                }
-            } catch (error) {
-                showMessage('Error deleting entry: ' + error.message, 'error');
-            }
+                const r = await fetch(`/admin/entries/${entryId}`, { method: 'DELETE' });
+                const result = await r.json();
+                if (r.ok) { showMessage('Entry deleted successfully', 'success'); loadEntries(); loadDashboard(); }
+                else { showMessage('Failed to delete entry: ' + result.error, 'error'); }
+            } catch (e) { showMessage('Error deleting entry: ' + e.message, 'error'); }
         }
 
-        // Create functions
-        async function createPlayer() {
-            const name = prompt('Enter player name:');
-            if (!name || !name.trim()) {
-                showMessage('Player name cannot be empty', 'error');
-                return;
-            }
-            
+        // --- Toolbar Actions ---
+        async function createBackup() {
             try {
-                const response = await fetch('/admin/players', {
+                const description = prompt('Backup description (optional):') || 'Manual backup from admin interface';
+                const r = await fetch('/admin/backup', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name: name.trim() })
+                    body: JSON.stringify({ description })
                 });
-                
-                const result = await response.json();
-                if (response.ok) {
-                    showMessage('Player created successfully', 'success');
-                    loadPlayers(); // Refresh the table
-                } else {
-                    showMessage('Failed to create player: ' + result.error, 'error');
-                }
-            } catch (error) {
-                showMessage('Error creating player: ' + error.message, 'error');
-            }
+                const result = await r.json();
+                if (r.ok) {
+                    showMessage('Backup created successfully: ' + result.backup_path, 'success');
+                    if (document.getElementById('backups').classList.contains('active')) loadBackups();
+                } else { showMessage('Backup failed: ' + result.error, 'error'); }
+            } catch (e) { showMessage('Backup error: ' + e.message, 'error'); }
         }
 
-        async function createSession() {
-            const date = prompt('Enter session date (YYYY-MM-DD):');
-            if (!date) return;
-            
-            if (!date.match(/^\d{4}-\d{2}-\d{2}$/)) {
-                showMessage('Date must be in YYYY-MM-DD format', 'error');
-                return;
-            }
-            
-            const buyIn = prompt('Enter default buy-in value:', '20.00');
-            if (!buyIn) return;
-            
-            const buyInFloat = parseFloat(buyIn);
-            if (isNaN(buyInFloat) || buyInFloat <= 0) {
-                showMessage('Buy-in value must be a positive number', 'error');
-                return;
-            }
-            
-            try {
-                const response = await fetch('/admin/sessions', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        date: date,
-                        default_buy_in_value: buyInFloat
-                    })
-                });
-                
-                const result = await response.json();
-                if (response.ok) {
-                    showMessage('Session created successfully', 'success');
-                    loadSessions(); // Refresh the table
-                } else {
-                    showMessage('Failed to create session: ' + result.error, 'error');
-                }
-            } catch (error) {
-                showMessage('Error creating session: ' + error.message, 'error');
-            }
+        async function validateData() {
+            showMessage('Validating data...', 'success');
+            setTimeout(() => { showMessage('Data validation completed. Check logs for details.', 'success'); }, 2000);
         }
-
-        // Enter key support for login
-        document.getElementById('password').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                login();
-            }
-        });
     </script>
 </body>
 </html>

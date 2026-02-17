@@ -457,7 +457,9 @@ def admin_get_entries() -> Dict[str, Any]:
     """
     try:
         # Get entries with player and session information
-        entries = Entry.query.join(Player).join(Session).order_by(Session.date.desc()).all()
+        # Explicit join conditions needed: Session also has wisdom_player_id FK to Player,
+        # so implicit join(Session) after join(Player) resolves to the wrong relationship.
+        entries = Entry.query.join(Player, Entry.player_id == Player.player_id).join(Session, Entry.session_id == Session.session_id).order_by(Session.date.desc()).all()
         return jsonify([entry.to_dict() for entry in entries])
     except Exception as e:
         logger.error(f"Error getting entries: {str(e)}")
