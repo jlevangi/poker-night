@@ -348,7 +348,7 @@ textarea,
     background: var(--casino-green);
     border: var(--neo-border-thick);
     border-color: var(--casino-green-dark);
-    box-shadow: var(--neo-shadow-xl);
+    box-shadow: none;
     z-index: var(--z-nav);
     flex-direction: row;
     justify-content: center;
