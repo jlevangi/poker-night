@@ -48,7 +48,8 @@ textarea,
     --neo-shadow-md: 6px 6px 0px #000000;
     --neo-shadow-lg: 8px 8px 0px #000000;
     --neo-shadow-xl: 12px 12px 0px #000000;
-    
+    --neo-shadow-static: 4px 4px 0px rgba(0, 0, 0, 0.15);
+
     /* Neobrutalist Borders - Always pure black for consistency */
     --neo-border: 3px solid #000000;
     --neo-border-thin: 2px solid #000000;
@@ -119,7 +120,8 @@ textarea,
     --neo-shadow-md: 6px 6px 0px #000000;
     --neo-shadow-lg: 8px 8px 0px #000000;
     --neo-shadow-xl: 12px 12px 0px #000000;
-    
+    --neo-shadow-static: 4px 4px 0px rgba(0, 0, 0, 0.4);
+
     /* Keep vibrant colors in dark mode but adjust borders */
     --neo-border: 3px solid #000000;
     --neo-border-thin: 2px solid #000000;
@@ -1091,7 +1093,7 @@ body {
 .neo-card {
     background: var(--bg-card);
     border: var(--neo-border);
-    box-shadow: var(--neo-shadow-md);
+    box-shadow: var(--neo-shadow-static);
     border-radius: 0;
     padding: var(--spacing-neo);
     margin-bottom: var(--spacing-neo);
@@ -1099,9 +1101,36 @@ body {
     transition: all var(--transition-neo);
 }
 
-.neo-card:hover {
+/* Clickable cards — navigation links, not action buttons */
+a.neo-card,
+a .neo-card,
+.neo-card-clickable,
+.neo-card[onclick],
+a.neo-stat-card,
+button.neo-stat-card {
+    box-shadow: var(--neo-shadow-sm);
+    cursor: pointer;
+}
+
+a.neo-card:hover,
+a .neo-card:hover,
+.neo-card-clickable:hover,
+.neo-card[onclick]:hover,
+a.neo-stat-card:hover,
+button.neo-stat-card:hover {
     transform: translate(-2px, -2px);
-    box-shadow: var(--neo-shadow-lg);
+    box-shadow: var(--neo-shadow-md);
+    border-color: var(--casino-gold-dark);
+}
+
+a.neo-card:active,
+a .neo-card:active,
+.neo-card-clickable:active,
+.neo-card[onclick]:active,
+a.neo-stat-card:active,
+button.neo-stat-card:active {
+    transform: translate(0, 0);
+    box-shadow: 2px 2px 0px #000000;
 }
 
 .neo-card-primary {
@@ -1242,16 +1271,11 @@ body {
 .neo-stat-card {
     background: var(--bg-card);
     border: var(--neo-border);
-    box-shadow: var(--neo-shadow-md);
+    box-shadow: var(--neo-shadow-static);
     padding: var(--spacing-neo);
     text-align: center;
     position: relative;
     transition: all var(--transition-neo);
-}
-
-.neo-stat-card:hover {
-    transform: translate(-2px, -2px);
-    box-shadow: var(--neo-shadow-lg);
 }
 
 .neo-stat-value {
@@ -1454,15 +1478,10 @@ body {
 .neo-list-item {
     background: var(--bg-card);
     border: var(--neo-border-thin);
-    box-shadow: var(--neo-shadow-sm);
+    box-shadow: var(--neo-shadow-static);
     padding: 1rem;
     margin-bottom: 0.75rem;
     transition: all var(--transition-neo);
-}
-
-.neo-list-item:hover {
-    transform: translate(-2px, -2px);
-    box-shadow: var(--neo-shadow-md);
 }
 
 /* Neobrutalist Form Elements */
@@ -1714,5 +1733,15 @@ body {
         max-width: 300px;
         width: 100%;
         height: auto;
+    }
+}
+
+/* Touch devices — prevent stuck hover states on clickable cards */
+@media (hover: none) {
+    a.neo-card:hover, a .neo-card:hover,
+    .neo-card-clickable:hover, .neo-card[onclick]:hover,
+    a.neo-stat-card:hover, button.neo-stat-card:hover {
+        transform: none;
+        box-shadow: var(--neo-shadow-sm);
     }
 }

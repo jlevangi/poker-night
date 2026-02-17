@@ -295,7 +295,7 @@ export default class SessionDetailPage {
                 const profitColor = profit >= 0 ? 'neo-card-green' : 'neo-card-primary';
                 
                 html += `
-                    <div class="neo-card ${profitColor} clickable-player-details" data-player-id="${player.id}" style="cursor: pointer; transition: all var(--transition-neo);" onmouseover="this.style.transform='translate(-2px, -2px)'; this.style.boxShadow='var(--neo-shadow-lg)'" onmouseout="this.style.transform='translate(0, 0)'; this.style.boxShadow='var(--neo-shadow-md)'">
+                    <div class="neo-card neo-card-clickable ${profitColor} clickable-player-details" data-player-id="${player.id}" style="cursor: pointer;">
                         <!-- Player Header -->
                         <div style="margin-bottom: 1.5rem;">
                             <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; flex-wrap: wrap; gap: 1rem;">
@@ -495,12 +495,6 @@ export default class SessionDetailPage {
             /* Clickable player details styling */
             .clickable-player-details {
                 cursor: pointer !important;
-                transition: background-color 0.2s ease;
-            }
-            
-            .clickable-player-details:hover {
-                background-color: rgba(0, 123, 255, 0.1);
-                border-radius: 4px;
             }
         `;
         document.head.appendChild(styleElement);

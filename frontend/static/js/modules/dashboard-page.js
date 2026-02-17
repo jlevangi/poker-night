@@ -116,7 +116,7 @@ export default class DashboardPage {
                         <div class="neo-stat-label">View Active Session</div>
                     </a>
                 ` : `
-                    <button id="quick-start-session-btn" class="neo-stat-card neo-card-primary" style="background: var(--bg-card); border: var(--neo-border); cursor: pointer; color: inherit; padding: var(--spacing-neo); box-shadow: var(--neo-shadow-md); transition: all var(--transition-neo); text-align: center; position: relative; width: 100%; font-family: inherit;" onmouseover="this.style.transform='translate(-2px, -2px)'; this.style.boxShadow='var(--neo-shadow-lg)'" onmouseout="this.style.transform='translate(0, 0)'; this.style.boxShadow='var(--neo-shadow-md)'">
+                    <button id="quick-start-session-btn" class="neo-stat-card neo-card-primary" style="background: var(--bg-card); border: var(--neo-border); cursor: pointer; color: inherit; padding: var(--spacing-neo); text-align: center; position: relative; width: 100%; font-family: inherit;">
                         <div class="neo-stat-value">🃏</div>
                         <div class="neo-stat-label">Start New Session</div>
                     </button>
@@ -272,7 +272,7 @@ export default class DashboardPage {
             const cardColor = session.is_active ? 'neo-card-gold' : '';
             
             html += `
-                <a href="#session/${session.session_id}" class="neo-card ${cardColor}" style="text-decoration: none; color: inherit; padding: 1rem; margin: 0; transition: all var(--transition-neo);" onmouseover="this.style.transform='translate(-2px, -2px)'; this.style.boxShadow='var(--neo-shadow-lg)'" onmouseout="this.style.transform='translate(0, 0)'; this.style.boxShadow='var(--neo-shadow-md)'">
+                <a href="#session/${session.session_id}" class="neo-card ${cardColor}" style="text-decoration: none; color: inherit; padding: 1rem; margin: 0;">
                     <div style="display: flex; justify-content: space-between; align-items: center;">
                         <div>
                             <div style="font-weight: 800; color: inherit; margin-bottom: 0.25rem; font-size: 1.125rem; text-transform: uppercase; letter-spacing: 0.05em;">

@@ -64,7 +64,7 @@ export default class SessionsPage {    constructor(appContent, apiService) {
             upcomingEvents.forEach(evt => {
                 const playerCount = evt.rsvp_counts.yes + evt.rsvp_counts.maybe + evt.rsvp_counts.no;
                 html += `
-                    <a href="#event/${evt.event_id}" class="neo-card neo-card-purple" style="text-decoration: none; color: inherit; padding: 1rem; margin: 0; transition: all var(--transition-neo);" onmouseover="this.style.transform='translate(-2px, -2px)'; this.style.boxShadow='var(--neo-shadow-lg)'" onmouseout="this.style.transform='translate(0, 0)'; this.style.boxShadow='var(--neo-shadow-md)'">
+                    <a href="#event/${evt.event_id}" class="neo-card neo-card-purple" style="text-decoration: none; color: inherit; padding: 1rem; margin: 0;">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <div>
                                 <div style="font-weight: 800; color: inherit; margin-bottom: 0.25rem; font-size: 1.125rem; text-transform: uppercase; letter-spacing: 0.05em;">
@@ -103,7 +103,7 @@ export default class SessionsPage {    constructor(appContent, apiService) {
                 const statusIcon = isActive ? '🟡' : '⚪';
 
                 html += `
-                    <a href="#session/${session.session_id}" class="neo-card ${cardColor}" style="text-decoration: none; color: inherit; padding: 1rem; margin: 0; transition: all var(--transition-neo);" onmouseover="this.style.transform='translate(-2px, -2px)'; this.style.boxShadow='var(--neo-shadow-lg)'" onmouseout="this.style.transform='translate(0, 0)'; this.style.boxShadow='var(--neo-shadow-md)'">
+                    <a href="#session/${session.session_id}" class="neo-card ${cardColor}" style="text-decoration: none; color: inherit; padding: 1rem; margin: 0;">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <div>
                                 <div style="font-weight: 800; color: inherit; margin-bottom: 0.25rem; font-size: 1.125rem; text-transform: uppercase; letter-spacing: 0.05em;">

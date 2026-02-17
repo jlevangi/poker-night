@@ -139,7 +139,7 @@ export default class PlayersPage {
                                  player.net_profit < 0 ? 'neo-card-primary' : '';
 
                 html += `
-                    <div class="neo-card ${cardColor} clickable-player-stats" data-player-id="${player.player_id}" style="cursor: pointer; transition: all var(--transition-neo);" onmouseover="this.style.transform='translate(-3px, -3px)'; this.style.boxShadow='var(--neo-shadow-lg)'" onmouseout="this.style.transform='translate(0, 0)'; this.style.boxShadow='var(--neo-shadow-md)'">
+                    <div class="neo-card neo-card-clickable ${cardColor} clickable-player-stats" data-player-id="${player.player_id}" style="cursor: pointer;">
                         <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
                             <div>
                                 <h4 style="font-size: 1.5rem; font-weight: 800; margin: 0 0 0.5rem 0; display: flex; align-items: center; gap: 0.5rem;">
