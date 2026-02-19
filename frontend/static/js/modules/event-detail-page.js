@@ -16,6 +16,8 @@ export default class EventDetailPage {
             ]);
             this.event = event;
             this.players = players || [];
+            const titleDate = new Date(event.date + 'T00:00:00').toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+            document.title = `${event.title || 'Poker Night'} - ${titleDate} - Gamble King`;
             this.editing = false;
             this.render();
         } catch (error) {
@@ -376,7 +378,7 @@ export default class EventDetailPage {
         const url = window.location.origin + window.location.pathname + `#event/${this.event.event_id}`;
         if (navigator.share) {
             try {
-                await navigator.share({ url });
+                await navigator.share({ title: document.title, url });
                 return;
             } catch (e) { /* user cancelled or error, fall through to clipboard */ }
         }

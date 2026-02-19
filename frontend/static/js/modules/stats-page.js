@@ -12,6 +12,7 @@ export default class StatsPage {
     // Load the stats page
     async load() {
         try {
+            document.title = 'Stats & Awards - Gamble King';
             // Show loading state
             this.appContent.innerHTML = `
                 <div class="fade-in" style="padding: 1.5rem; max-width: 1200px; margin: 0 auto;">

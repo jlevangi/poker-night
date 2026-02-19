@@ -9,6 +9,7 @@ export default class CalendarPage {
 
     async load() {
         try {
+            document.title = 'Calendar - Gamble King';
             const [events, players] = await Promise.all([
                 this.api.get('events?upcoming=true').catch(() => []),
                 this.api.get('players').catch(() => [])

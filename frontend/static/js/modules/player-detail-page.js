@@ -20,6 +20,7 @@ export default class PlayerDetailPage {    constructor(appContent, apiService) {
             player.totalProfit = player.net_profit;
             player.sessionsPlayed = player.games_played;
             player.winRate = player.win_percentage / 100; // Convert percentage to decimal
+            document.title = `${player.name} - Gamble King`;
 
             // Render player details
             this.render(player);
@@ -206,7 +207,7 @@ export default class PlayerDetailPage {    constructor(appContent, apiService) {
         const url = window.location.href;
         if (navigator.share) {
             try {
-                await navigator.share({ url });
+                await navigator.share({ title: document.title, url });
                 return;
             } catch (e) { /* user cancelled or error, fall through to clipboard */ }
         }
