@@ -8,6 +8,7 @@ export default class DashboardPage {
     // Load the dashboard page
     async load() {
         try {
+            document.title = 'Gamble King';
             // Use the dedicated dashboard API endpoint for better performance
             // This gets all the dashboard data in a single optimized call
             const [dashboardData, players, activeSessions, upcomingEvents] = await Promise.all([

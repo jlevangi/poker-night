@@ -62,6 +62,9 @@ export default class SessionDetailPage {
                 session.buyin = 20.00; // Default value
             }
             
+            const dateForTitle = (session.session_info || session).date;
+            document.title = `Session - ${this.formatDate(dateForTitle)} - Gamble King`;
+
             // Render session details
             this.render(session, sessionId);
         } catch (error) {
@@ -519,7 +522,7 @@ export default class SessionDetailPage {
         const url = window.location.href;
         if (navigator.share) {
             try {
-                await navigator.share({ url });
+                await navigator.share({ title: document.title, url });
                 return;
             } catch (e) { /* user cancelled or error, fall through to clipboard */ }
         }

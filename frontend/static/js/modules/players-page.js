@@ -12,6 +12,7 @@ export default class PlayersPage {
     // Load the players page
     async load() {
         try {
+            document.title = 'Players - Gamble King';
             // Fetch players data using API service
             const data = await this.api.get('players');
             this.players = data || [];

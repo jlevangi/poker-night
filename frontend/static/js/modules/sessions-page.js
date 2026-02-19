@@ -7,6 +7,7 @@ export default class SessionsPage {    constructor(appContent, apiService) {
     // Load the sessions page
     async load() {
         try {
+            document.title = 'Sessions - Gamble King';
             // Fetch sessions and upcoming events in parallel
             const [data, events] = await Promise.all([
                 this.api.get('sessions'),
