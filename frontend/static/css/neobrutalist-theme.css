@@ -1747,3 +1747,352 @@ button.neo-stat-card:active {
         box-shadow: var(--neo-shadow-sm);
     }
 }
+
+/* ── Session Header Card ──────────────────────────────── */
+
+.session-header-card {
+    border: var(--neo-border);
+    box-shadow: var(--neo-shadow-sm);
+    padding: 1rem 1.25rem;
+    margin-bottom: 0;
+    background: var(--bg-card);
+}
+
+.session-header-card.session-active {
+    border-left: 5px solid var(--casino-gold);
+}
+
+.session-header-card.session-ended {
+    border-left: 5px solid var(--casino-green);
+}
+
+.session-header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+}
+
+.session-date {
+    font-size: 1.35rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.session-status-badge {
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 0.35rem 1rem;
+    border: var(--neo-border);
+    box-shadow: var(--neo-shadow-sm);
+    flex-shrink: 0;
+}
+
+.session-status-badge.status-active {
+    color: #000;
+    background: var(--casino-gold);
+}
+
+.session-status-badge.status-ended {
+    color: #fff;
+    background: var(--casino-green);
+}
+
+.session-stats-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    gap: 0;
+}
+
+.session-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    padding: 0.25rem 0;
+}
+
+.session-stat-value {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    line-height: 1.2;
+}
+
+.session-stat-label {
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    opacity: 0.7;
+    margin-top: 0.1rem;
+}
+
+.session-stat-divider {
+    width: 1px;
+    height: 2rem;
+    background: var(--text-primary);
+    opacity: 0.15;
+    flex-shrink: 0;
+}
+
+/* ── Compact Player Cards ─────────────────────────────── */
+
+.player-compact-card {
+    padding: 0.6rem 0.85rem;
+    margin-bottom: 0.5rem;
+    cursor: pointer;
+    border-left: 5px solid var(--casino-green);
+}
+
+.player-compact-card.player-loss {
+    border-left-color: var(--casino-red);
+}
+
+.player-compact-card.player-cashed-out {
+    opacity: 0.7;
+}
+
+.player-compact-card .player-row {
+    display: grid;
+    grid-template-columns: 1fr auto auto auto auto;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.player-compact-card .player-info {
+    min-width: 0;
+}
+
+.player-compact-card .player-name {
+    font-size: 1rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.player-compact-card .player-stat {
+    text-align: center;
+    min-width: 50px;
+}
+
+.player-compact-card .player-stat-label {
+    font-size: 0.55rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    opacity: 0.7;
+    display: block;
+    margin-bottom: 0.1rem;
+}
+
+.player-compact-card .player-stat-value {
+    font-size: 0.9rem;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.player-compact-card .player-badges {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.25rem;
+    flex-wrap: wrap;
+}
+
+.player-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.2rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.15rem 0.5rem;
+    border: 2px solid currentColor;
+    background: transparent;
+}
+
+.player-badge-gold { color: var(--casino-gold-dark); }
+.player-badge-red { color: var(--casino-red); }
+.player-badge-green { color: var(--casino-green-dark); }
+
+.player-compact-card .card-chevron {
+    font-size: 1.2rem;
+    font-weight: 800;
+    opacity: 0.5;
+    flex-shrink: 0;
+}
+
+/* ── Modal Counter Pattern ────────────────────────────── */
+
+.modal-counter {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin: 0.5rem 0;
+}
+
+.modal-counter-btn {
+    min-width: 44px;
+    min-height: 44px;
+    padding: 0;
+    font-size: 1.25rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: var(--neo-border);
+    border-radius: 0;
+    box-shadow: var(--neo-shadow-sm);
+    cursor: pointer;
+    transition: all var(--transition-neo);
+    color: var(--text-white);
+}
+
+.modal-counter-btn:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: var(--neo-shadow-md);
+}
+
+.modal-counter-btn:active {
+    transform: translate(0, 0);
+    box-shadow: none;
+}
+
+.modal-counter-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: var(--neo-shadow-sm);
+}
+
+.modal-counter-btn.btn-increment { background: var(--casino-gold); }
+.modal-counter-btn.btn-decrement { background: var(--casino-red); }
+
+.modal-counter-value {
+    font-size: 1.5rem;
+    font-weight: 800;
+    min-width: 3rem;
+    text-align: center;
+}
+
+.modal-section-label {
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    opacity: 0.7;
+    margin-top: 1rem;
+    margin-bottom: 0.25rem;
+}
+
+/* ── Player Action Modal ──────────────────────────────── */
+
+.player-modal-stats {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: var(--neo-border-thin);
+}
+
+.player-modal-stats .player-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    flex: 1;
+    min-width: 70px;
+}
+
+.player-modal-stats .player-stat-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    opacity: 0.7;
+    display: block;
+    margin-bottom: 0.15rem;
+}
+
+.player-modal-stats .player-stat-value {
+    font-size: 1.25rem;
+    font-weight: 800;
+}
+
+.player-modal-link {
+    display: block;
+    text-align: center;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: var(--neo-border-thin);
+    font-size: 0.875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--casino-purple-dark);
+    text-decoration: none;
+}
+
+.player-modal-link:hover {
+    color: var(--casino-purple);
+}
+
+/* ── Collapsible Sections ─────────────────────────────── */
+
+.section-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.section-toggle .toggle-chevron {
+    transition: transform 0.2s ease;
+    font-size: 1rem;
+}
+
+.section-toggle.expanded .toggle-chevron {
+    transform: rotate(90deg);
+}
+
+.section-collapsible-content {
+    display: none;
+    margin-top: 1rem;
+}
+
+.section-collapsible-content.expanded {
+    display: block;
+}
+
+/* ── Clickable Player Details ─────────────────────────── */
+
+.clickable-player-details {
+    cursor: pointer !important;
+}
+
+/* ── Cash-out input in modal ──────────────────────────── */
+
+.modal-cashout-input {
+    width: 100%;
+    padding: 0.875rem 1rem;
+    border: var(--neo-border);
+    font-size: 1.25rem;
+    font-weight: 700;
+    text-align: center;
+    background: var(--bg-card);
+    margin: 0.75rem 0;
+}

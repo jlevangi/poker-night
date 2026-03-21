@@ -513,6 +513,60 @@ class DatabaseService:
             self.logger.error(f"Failed to remove buy-in: {str(e)}")
             return None
     
+    def set_buy_in_count(self, session_id: str, player_id: str, buy_in_count: int) -> Optional[Entry]:
+        """
+        Set the buy-in count for a player in a session to an exact value.
+
+        Args:
+            session_id: Session's unique identifier
+            player_id: Player's unique identifier
+            buy_in_count: New buy-in count (must be >= 1)
+
+        Returns:
+            Updated Entry instance if successful, None otherwise
+        """
+        try:
+            session = self.get_session_by_id(session_id)
+            player = self.get_player_by_id(player_id)
+
+            if not session:
+                self.logger.error(f"Session {session_id} not found.")
+                return None
+            if not player:
+                self.logger.error(f"Player {player_id} not found.")
+                return None
+
+            if not session.is_active:
+                self.logger.error(f"Cannot modify entry for session {session_id} because it has ended.")
+                return None
+
+            entry = Entry.query.filter_by(
+                session_id=session_id,
+                player_id=player_id
+            ).first()
+
+            if not entry:
+                self.logger.warning(f"Player {player.name} not found in session {session_id}.")
+                return None
+
+            cost_per_buy_in = session.default_buy_in_value
+            entry.buy_in_count = buy_in_count
+            entry.total_buy_in_amount = round_to_cents(buy_in_count * cost_per_buy_in)
+            entry.calculate_profit()
+
+            db.session.commit()
+
+            self.logger.info(
+                f"Set buy-in count for {player.name} in session {session_id} to {buy_in_count}. "
+                f"New total: ${entry.total_buy_in_amount:.2f}"
+            )
+            return entry
+
+        except Exception as e:
+            db.session.rollback()
+            self.logger.error(f"Failed to set buy-in count: {str(e)}")
+            return None
+
     def record_payout(self, session_id: str, player_id: str, payout_amount: float) -> bool:
         """
         Record the final payout for a player and calculate profit.
