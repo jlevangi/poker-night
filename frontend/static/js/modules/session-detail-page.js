@@ -117,33 +117,38 @@ export default class SessionDetailPage {
         if (player.strikes > 0) {
             badges += `<span class="player-badge player-badge-red">X: ${player.strikes}</span>`;
         }
-        if (player.isCashedOut) {
-            badges += `<span class="player-badge player-badge-green">✓ Out</span>`;
-        }
         if (player.id === sessionData.wisdom_player_id) {
             badges += `<span class="player-badge player-badge-gold">🗣️</span>`;
         }
 
+        const rightIndicator = player.isCashedOut
+            ? `<span class="player-badge player-badge-green">✓ OUT</span>`
+            : `<span class="card-chevron">▸</span>`;
+
         return `
             <div class="neo-card neo-card-clickable player-compact-card clickable-player-details ${profitClass} ${cashedOutClass}" data-player-id="${player.id}">
-                <div class="player-row">
+                <div class="player-row-top">
                     <div class="player-info">
-                        <div class="player-name">${player.name}</div>
-                        ${badges ? `<div class="player-badges">${badges}</div>` : ''}
+                        <span class="player-name">${player.name}</span>
+                        ${badges ? `<span class="player-badges">${badges}</span>` : ''}
                     </div>
+                    ${rightIndicator}
+                </div>
+                <div class="player-row-stats">
                     <div class="player-stat">
                         <span class="player-stat-label">Buy-in</span>
                         <span class="player-stat-value" style="color: var(--casino-red);">$${buyIn.toFixed(2)}</span>
                     </div>
+                    <div class="player-stat-divider"></div>
                     <div class="player-stat">
                         <span class="player-stat-label">Cash-out</span>
                         <span class="player-stat-value" style="color: var(--casino-gold);">$${cashOut.toFixed(2)}</span>
                     </div>
+                    <div class="player-stat-divider"></div>
                     <div class="player-stat">
                         <span class="player-stat-label">Profit</span>
                         <span class="player-stat-value ${profit >= 0 ? 'profit-positive' : 'profit-negative'}">$${profit.toFixed(2)}</span>
                     </div>
-                    <span class="card-chevron">▸</span>
                 </div>
             </div>
         `;

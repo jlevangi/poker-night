@@ -1859,14 +1859,17 @@ button.neo-stat-card:active {
     opacity: 0.7;
 }
 
-.player-compact-card .player-row {
-    display: grid;
-    grid-template-columns: 1fr auto auto auto auto;
+.player-compact-card .player-row-top {
+    display: flex;
     align-items: center;
-    gap: 0.5rem;
+    justify-content: space-between;
+    margin-bottom: 0.4rem;
 }
 
 .player-compact-card .player-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
     min-width: 0;
 }
 
@@ -1880,9 +1883,17 @@ button.neo-stat-card:active {
     text-overflow: ellipsis;
 }
 
+.player-compact-card .player-row-stats {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
 .player-compact-card .player-stat {
-    text-align: center;
-    min-width: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
 }
 
 .player-compact-card .player-stat-label {
@@ -1901,11 +1912,17 @@ button.neo-stat-card:active {
     white-space: nowrap;
 }
 
+.player-compact-card .player-stat-divider {
+    width: 1px;
+    height: 1.5rem;
+    background: var(--text-primary);
+    opacity: 0.15;
+    flex-shrink: 0;
+}
+
 .player-compact-card .player-badges {
-    display: flex;
-    gap: 0.5rem;
-    margin-top: 0.25rem;
-    flex-wrap: wrap;
+    display: inline-flex;
+    gap: 0.35rem;
 }
 
 .player-badge {
@@ -1926,7 +1943,7 @@ button.neo-stat-card:active {
 .player-badge-green { color: var(--casino-green-dark); }
 
 .player-compact-card .card-chevron {
-    font-size: 1.2rem;
+    font-size: 1rem;
     font-weight: 800;
     opacity: 0.5;
     flex-shrink: 0;
