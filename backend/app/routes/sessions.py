@@ -289,6 +289,51 @@ def remove_buyin_api(session_id: str, player_id: str) -> Dict[str, Any]:
     return jsonify({"error": "Failed to remove buy-in. Player may not have any buy-ins in this session."}), 400
 
 
+@sessions_bp.route('/sessions/<string:session_id>/entries/<string:player_id>/set-buyins', methods=['PUT'])
+def set_buyins_api(session_id: str, player_id: str) -> Dict[str, Any]:
+    """
+    Set the buy-in count for a player in a session to an exact value.
+
+    Args:
+        session_id: Session's unique identifier
+        player_id: Player's unique identifier
+
+    Returns:
+        JSON response with updated session entries or error message
+    """
+    data = request.get_json()
+    if not data:
+        return jsonify({"error": "Request body is required"}), 400
+
+    buy_in_count = data.get('buy_in_count')
+    if buy_in_count is None:
+        return jsonify({"error": "buy_in_count is required"}), 400
+
+    try:
+        buy_in_count = int(buy_in_count)
+        if buy_in_count < 1 or buy_in_count > 100:
+            return jsonify({"error": "buy_in_count must be between 1 and 100"}), 400
+    except (ValueError, TypeError):
+        return jsonify({"error": "buy_in_count must be an integer"}), 400
+
+    db_service = DatabaseService()
+    result = db_service.set_buy_in_count(session_id, player_id, buy_in_count)
+    if result is not None:
+        all_entries = db_service.get_entries_for_session(session_id)
+        return jsonify([entry.to_dict() for entry in all_entries])
+
+    session_check = db_service.get_session_by_id(session_id)
+    if not session_check:
+        return jsonify({"error": f"Session {session_id} not found."}), 404
+    if not session_check.is_active:
+        return jsonify({"error": f"Session {session_id} is not active."}), 400
+    player_check = db_service.get_player_by_id(player_id)
+    if not player_check:
+        return jsonify({"error": f"Player {player_id} not found."}), 404
+
+    return jsonify({"error": "Failed to set buy-in count."}), 400
+
+
 @sessions_bp.route('/sessions/<string:session_id>/entries/<string:player_id>/payout', methods=['PUT'])
 def record_payout_api(session_id: str, player_id: str) -> Dict[str, Any]:
     """
