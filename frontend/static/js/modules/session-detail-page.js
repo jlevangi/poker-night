@@ -419,6 +419,7 @@ export default class SessionDetailPage {
                                     }
                                 </div>
                             ` : ''}
+                        </div>
                     </div>
                 `;
             });
