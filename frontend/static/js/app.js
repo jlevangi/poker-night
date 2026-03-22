@@ -405,6 +405,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Update navigation on hash change
     window.addEventListener('hashchange', updateActiveNavigation);
 
+    // Register skeletons for each route
+    router
+        .registerSkeleton('dashboard', DashboardPage.skeleton)
+        .registerSkeleton('sessions', SessionsPage.skeleton)
+        .registerSkeleton('players', PlayersPage.skeleton)
+        .registerSkeleton('calendar', CalendarPage.skeleton)
+        .registerSkeleton('stats', StatsPage.skeleton)
+        .registerSkeleton('session/:id', SessionDetailPage.skeleton)
+        .registerSkeleton('player/:id', PlayerDetailPage.skeleton)
+        .registerSkeleton('event/:id', EventDetailPage.skeleton);
+
     // Setup router with all routes
     router
         .register('dashboard', () => {

@@ -3,8 +3,8 @@
 /* 1. Theme variables and CSS custom properties */
 @import 'themes/_theme.css';
 
-/* Neobrutalist Casino Theme */
-@import '../neobrutalist-theme.css';
+/* Modern Theme */
+@import 'themes/_modern-theme.css';
 
 /* 2. Base styles - resets, typography, global styles */
 @import 'base/_reset.css';
@@ -29,3 +29,5 @@
 /* 5. Utility styles */
 @import 'utils/_animations.css';
 @import 'utils/_utilities.css';
+@import 'utils/_skeletons.css';
+@import 'utils/_transitions.css';

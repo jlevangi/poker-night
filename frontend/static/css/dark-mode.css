@@ -1,975 +1,259 @@
-/* Dark Mode Theme Variables */
+/* Dark Mode Overrides */
+/* Most dark mode styling is handled in _modern-theme.css via [data-theme="dark"] */
+/* This file handles remaining global overrides and legacy class support */
+
 :root {
-  /* Light mode colors (default) */
-  --bg-primary: #ffffff;
-  --bg-secondary: #f8f9fa;
-  --bg-tertiary: #e9ecef;
-  --text-primary: #212529;
-  --text-secondary: #6c757d;
-  --text-tertiary: #adb5bd;
-  --border-color: #dee2e6;
-  --border-light: #e9ecef;
-  --card-bg: #ffffff;
-  --header-bg: #ffffff;
-  --nav-bg: linear-gradient(90deg, #3367D6 60%, #2851A7 100%);
-  --nav-text: rgba(255, 255, 255, 0.92);
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    --bg-primary: #FFFFFF;
+    --bg-secondary: #F8FAFC;
+    --bg-tertiary: #F1F5F9;
+    --card-bg: #FFFFFF;
+    --header-bg: #0F172A;
+    --nav-bg: #0F172A;
+    --nav-text: rgba(255, 255, 255, 0.9);
 }
 
-/* Dark mode colors */
 [data-theme="dark"] {
-  --bg-primary: #1a1a1a;
-  --bg-secondary: #2d2d2d;
-  --bg-tertiary: #404040;
-  --text-primary: #ffffff;
-  --text-secondary: #ffffff;
-  --text-tertiary: #888888;
-  --border-color: #000000;
-  --border-light: #000000;
-  --card-bg: #2d2d2d;
-  --header-bg: #1a1a1a;
-  --nav-bg: linear-gradient(90deg, #2851A7 60%, #1a3a7a 100%);
-  --nav-text: rgba(255, 255, 255, 0.95);
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
-  
-  /* Override neutral colors for dark mode */
-  --neutral-50: #374151;
-  --neutral-100: #4b5563;
-  --neutral-200: #6b7280;
-  --neutral-300: #9ca3af;
-  --neutral-400: #d1d5db;
-  --neutral-500: #e5e7eb;
-  --neutral-600: #f3f4f6;
-  --neutral-700: #f9fafb;
-  --neutral-800: #ffffff;
-  --neutral-900: #ffffff;
+    --bg-primary: #0F172A;
+    --bg-secondary: #1E293B;
+    --bg-tertiary: #334155;
+    --card-bg: #1E293B;
+    --header-bg: #0F172A;
+    --nav-bg: #0F172A;
+    --nav-text: rgba(255, 255, 255, 0.9);
+    --border-color: #334155;
+    --border-light: #334155;
+
+    --neutral-50: #334155;
+    --neutral-100: #475569;
+    --neutral-200: #64748B;
+    --neutral-300: #94A3B8;
+    --neutral-400: #CBD5E1;
+    --neutral-500: #E2E8F0;
+    --neutral-600: #F1F5F9;
+    --neutral-700: #F8FAFC;
+    --neutral-800: #FFFFFF;
+    --neutral-900: #FFFFFF;
 }
 
-/* Apply theme colors to base elements */
+/* Base elements */
 html {
-  background-color: var(--bg-primary) !important;
-}
-
-body {
-  background-color: var(--bg-primary) !important;
-  color: var(--text-primary);
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-/* Ensure root element background changes in dark mode */
-html {
-  background-color: #f4f7f6 !important;
-  transition: background-color 0.3s ease;
+    background-color: var(--bg-body, #F8FAFC);
+    transition: background-color 0.3s ease;
 }
 
 html[data-theme="dark"] {
-  background-color: #1a1a1a !important;
+    background-color: #0F172A;
+}
+
+body {
+    background-color: var(--bg-body);
+    color: var(--text-primary);
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 [data-theme="dark"] body {
-  background-color: #1a1a1a !important;
+    background-color: #0F172A;
 }
 
-/* Force background on document root */
-[data-theme="dark"] {
-  background-color: #1a1a1a !important;
-}
-
-/* Ensure viewport fills with correct background */
 html, body {
-  min-height: 100vh !important;
-  background-color: inherit !important;
+    min-height: 100vh;
 }
 
-/* Header styling */
-header {
-  background-color: var(--header-bg);
-  border-bottom: 1px solid var(--border-light);
-}
-
-.royal-header h1 {
-  color: var(--text-primary);
-}
-
-/* Card components */
-.ui-card {
-  background-color: var(--card-bg);
-  border-color: var(--border-color);
-  box-shadow: var(--shadow-md);
-}
-
-.ui-card-header {
-  border-bottom-color: var(--border-light);
-}
-
-.ui-card-title {
-  color: var(--text-primary);
-}
-
-/* Navigation */
-.bottom-nav {
-  background: var(--nav-bg);
-}
-
-.bottom-nav .nav-btn {
-  color: var(--nav-text);
-}
-
-.desktop-nav a {
-  color: var(--text-secondary);
-}
-
-.desktop-nav a:hover,
-.desktop-nav a.active {
-  color: var(--text-primary);
-}
-
-/* Tables */
-.modern-table {
-  background-color: var(--card-bg);
-  border-color: var(--border-color);
-}
-
-.modern-table th {
-  background-color: var(--bg-secondary);
-  color: var(--text-primary);
-  border-bottom-color: var(--border-color);
-}
-
-.modern-table td {
-  color: var(--text-secondary);
-  border-bottom-color: var(--border-light);
-}
-
-.modern-table tbody tr:hover {
-  background-color: var(--bg-tertiary);
-}
-
-/* Forms and inputs */
+/* Forms */
 input, textarea, select {
-  background-color: var(--card-bg);
-  color: var(--text-primary);
-  border-color: var(--border-color);
+    background-color: var(--bg-card);
+    color: var(--text-primary);
+    border-color: var(--border-color);
 }
 
-/* Ensure form inputs have proper styling in both themes */
-input[type="text"], 
-input[type="number"], 
-input[type="email"], 
-input[type="password"],
-select {
-  background-color: var(--card-bg) !important;
-  color: var(--text-primary) !important;
-  border-color: var(--border-color) !important;
-}
-
-/* Specifically ensure dark mode inputs have proper contrast */
 [data-theme="dark"] input[type="text"],
-[data-theme="dark"] input[type="number"], 
-[data-theme="dark"] input[type="email"], 
+[data-theme="dark"] input[type="number"],
+[data-theme="dark"] input[type="email"],
 [data-theme="dark"] input[type="password"],
-[data-theme="dark"] select {
-  background-color: #1a1a1a !important;
-  color: #ffffff !important;
-  border-color: #444 !important;
+[data-theme="dark"] select,
+[data-theme="dark"] textarea {
+    background-color: var(--bg-content);
+    color: var(--text-primary);
+    border-color: #475569;
 }
 
-[data-theme="dark"] input[type="text"]::placeholder,
-[data-theme="dark"] input[type="number"]::placeholder,
-[data-theme="dark"] input[type="email"]::placeholder,
-[data-theme="dark"] input[type="password"]::placeholder {
-  color: #aaa !important;
-}
-
-/* Ensure all form inputs in dark mode have consistent dark backgrounds */
-[data-theme="dark"] .add-player-form input,
-[data-theme="dark"] .add-player-form select,
-[data-theme="dark"] .form-row input,
-[data-theme="dark"] .form-row select,
-[data-theme="dark"] .modal-form-group input,
-[data-theme="dark"] .modal-form-group select {
-  background-color: #1a1a1a !important;
-  color: #ffffff !important;
-  border-color: #444 !important;
-}
-
-/* More specific selector to override forms.css styles */
-[data-theme="dark"] .add-player-form .form-row input[type="text"],
-[data-theme="dark"] .add-player-form .form-row input[type="number"],
-[data-theme="dark"] .add-player-form .form-row select {
-  background-color: #1a1a1a !important;
-  color: #ffffff !important;
-  border-color: #444 !important;
-}
-
-[data-theme="dark"] .add-player-form input:focus,
-[data-theme="dark"] .add-player-form select:focus,
-[data-theme="dark"] .form-row input:focus,
-[data-theme="dark"] .form-row select:focus,
-[data-theme="dark"] .modal-form-group input:focus,
-[data-theme="dark"] .modal-form-group select:focus {
-  background-color: #1a1a1a !important;
-  color: #ffffff !important;
-  border-color: #4285F4 !important;
-  box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.2) !important;
-}
-
-/* More specific focus selectors to override forms.css styles */
-[data-theme="dark"] .add-player-form .form-row input[type="text"]:focus,
-[data-theme="dark"] .add-player-form .form-row input[type="number"]:focus,
-[data-theme="dark"] .add-player-form .form-row select:focus {
-  background-color: #1a1a1a !important;
-  color: #ffffff !important;
-  border-color: #4285F4 !important;
-  box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.2) !important;
-}
-
-/* Specific styling for player-buyin input by ID */
-[data-theme="dark"] #player-buyin {
-  background-color: #1a1a1a !important;
-  color: #ffffff !important;
-  border-color: #444 !important;
-}
-
-[data-theme="dark"] #player-buyin:focus {
-  background-color: #1a1a1a !important;
-  color: #ffffff !important;
-  border-color: #4285F4 !important;
-  box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.2) !important;
-}
-
-input[type="text"]:focus,
-input[type="number"]:focus,
-input[type="email"]:focus,
-input[type="password"]:focus,
-select:focus {
-  border-color: var(--primary-color, #3367D6) !important;
-  background-color: var(--card-bg) !important;
-  color: var(--text-primary) !important;
-}
-
-/* Dark mode focus states */
-[data-theme="dark"] input[type="text"]:focus,
-[data-theme="dark"] input[type="number"]:focus,
-[data-theme="dark"] input[type="email"]:focus,
-[data-theme="dark"] input[type="password"]:focus,
-[data-theme="dark"] select:focus {
-  border-color: #4285F4 !important;
-  background-color: #1a1a1a !important;
-  color: #ffffff !important;
-  box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.2) !important;
+[data-theme="dark"] input::placeholder,
+[data-theme="dark"] textarea::placeholder {
+    color: var(--text-muted);
 }
 
 input:focus, textarea:focus, select:focus {
-  background-color: var(--card-bg);
-  border-color: #3367D6;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
 }
 
-/* Buttons maintain their original colors for now */
-.btn {
-  transition: all 0.2s ease;
+[data-theme="dark"] input:focus,
+[data-theme="dark"] textarea:focus,
+[data-theme="dark"] select:focus {
+    border-color: var(--primary-color);
+    background-color: var(--bg-content);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25);
 }
 
-/* Stats cards */
-.stat-card {
-  background-color: var(--card-bg);
-  border-color: var(--border-color);
+/* Links */
+a {
+    color: var(--primary-color);
 }
 
-/* Player list */
-.players-list.enhanced li {
-  background-color: var(--card-bg);
-  border-color: var(--border-light);
+[data-theme="dark"] a {
+    color: #93C5FD;
 }
 
-.player-row:hover {
-  background-color: var(--bg-tertiary);
+a:hover {
+    color: var(--primary-hover);
 }
 
-.player-name-link {
-  color: #3367D6;
+[data-theme="dark"] a:hover {
+    color: #BFDBFE;
 }
 
-.player-name-link:hover {
-  background-color: var(--bg-tertiary);
+/* Headings in dark mode */
+[data-theme="dark"] h2 {
+    color: var(--text-primary);
 }
 
-/* Sessions list */
-.sessions-list .session-item {
-  background-color: var(--card-bg);
-  border-color: var(--border-light);
-}
-
-.sessions-list .session-item:hover {
-  background-color: var(--bg-tertiary);
-}
-
-/* Modals */
-.modal-overlay {
-  background-color: rgba(0, 0, 0, 0.7);
-}
-
-.modal-content {
-  background-color: var(--card-bg);
-  color: var(--text-primary);
-  border-color: var(--border-color);
-}
-
-/* Header Controls Container */
-.header-controls {
-  position: fixed;
-  top: 20px;
-  left: 0;
-  right: 0;
-  z-index: 1000;
-  display: flex;
-  justify-content: space-between;
-  padding: 0 20px;
-  pointer-events: none; /* Allow clicking through the container */
-}
-
-/* Shared header button styling */
-.header-btn {
-  pointer-events: all; /* Re-enable clicks on buttons */
-  background: var(--card-bg);
-  color: var(--text-primary);
-  border: 2px solid var(--border-color);
-  border-radius: 50%;
-  width: 50px;
-  height: 50px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.2rem;
-  transition: all 0.3s ease;
-  box-shadow: var(--shadow-md);
-  cursor: pointer;
-  text-decoration: none;
-}
-
-.header-btn:hover {
-  transform: scale(1.05);
-  box-shadow: var(--shadow-lg);
-  color: var(--text-primary);
-}
-
-/* Mobile positioning for header controls */
-@media (max-width: 700px) {
-  .header-controls {
-    top: 15px;
-    padding: 0 15px;
-  }
-  
-  .header-btn {
-    width: 45px;
-    height: 45px;
-    font-size: 1.1rem;
-  }
-}
-
-/* Stats cards */
-.stat-card {
-  background-color: var(--card-bg) !important;
-  border-color: var(--border-color) !important;
-  color: var(--text-primary) !important;
-}
-
-.stat-value {
-  color: var(--text-primary) !important;
-}
-
-.stat-label {
-  color: var(--text-secondary) !important;
-}
-
-/* Stats grid */
-.stats-grid .stat-card {
-  background: var(--card-bg) !important;
-  border: 1px solid var(--border-color) !important;
-}
-
-/* Gamble King card - keep the gold theme! */
-[data-theme="dark"] .gamble-king-card {
-  background: #3d3322 100% !important;
-  border-color: #f59e0b !important;
-}
-
-/* Keep the gold colors for Gamble King section */
-.gamble-king-title {
-  color: #d97706 !important;
-}
-
-[data-theme="dark"] .gamble-king-stats > div {
-  background: var(--card-bg) !important;
-  border-color: #fb9a03 !important;
-}
-
-[data-theme="dark"] .gamble-king-stats .stat-value {
-  color: #fb9a03 !important;
-}
-
-[data-theme="dark"] .gamble-king-stats .stat-label {
-  color: #fb9a03 !important;
-}
-
-/* App content area */
+/* App content */
 #app-content {
-  background-color: var(--bg-primary) !important;
-  color: var(--text-primary) !important;
-  border: none !important;
-  box-shadow: none !important;
+    background-color: transparent;
 }
 
-[data-theme="dark"] #app-content {
-  background-color: var(--bg-primary) !important;
-  box-shadow: none !important;
+.fade-in {
+    background-color: transparent !important;
 }
 
-/* Forms styling */
+/* Legacy UI card support */
+.ui-card {
+    background-color: var(--bg-card);
+    border-color: var(--border-color);
+}
+
+.ui-card-header {
+    border-bottom-color: var(--border-light);
+}
+
+/* Legacy table support */
+.modern-table {
+    background-color: var(--bg-card);
+    border-color: var(--border-color);
+}
+
+.modern-table th {
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+}
+
+.modern-table td {
+    color: var(--text-primary);
+    border-bottom-color: var(--border-light);
+}
+
+/* Session value summary */
+.session-value-summary {
+    background-color: var(--bg-card);
+    border-left-color: var(--primary-color);
+}
+
+[data-theme="dark"] .session-value-summary {
+    background-color: var(--bg-secondary);
+}
+
+/* Seven-two value */
+[data-theme="dark"] .seven-two-value {
+    background-color: var(--bg-tertiary);
+    border-color: #475569;
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .strikes-value {
+    background-color: var(--bg-tertiary);
+    border-color: #475569;
+    color: var(--text-primary);
+}
+
+/* Chip distribution */
+.chip-distribution {
+    background-color: var(--bg-card);
+}
+
+[data-theme="dark"] .chip-distribution {
+    background-color: var(--bg-secondary);
+}
+
+/* Add player form */
 .add-player-form {
-  background-color: var(--card-bg) !important;
-  border: 1px solid var(--border-color) !important;
-  border-radius: 8px;
-  padding: 1rem;
-  margin-bottom: 1.5rem;
-}
-
-.add-player-form h3 {
-  color: var(--text-primary) !important;
-  margin-top: 0;
-}
-
-/* All headings */
-h1, h2, h3, h4, h5, h6 {
-  color: var(--text-primary) !important;
-}
-
-/* Lists */
-.modern-list-item {
-  background-color: var(--card-bg) !important;
-  border-color: var(--border-light) !important;
-}
-
-.modern-list-item:hover {
-  background-color: var(--bg-tertiary) !important;
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
 }
 
 /* Footer */
 footer {
-  background-color: var(--header-bg);
-  color: var(--text-secondary);
-  border-top: 1px solid var(--border-light);
+    background-color: var(--bg-body);
+    color: var(--text-muted);
+    border-top: 1px solid var(--border-light);
 }
 
-/* Quick actions */
-.quick-actions .btn {
-  background-color: var(--card-bg);
-  color: var(--text-primary);
-  border-color: var(--border-color);
+/* Ensure header text stays white */
+header h1,
+header nav a {
+    color: #FFFFFF !important;
 }
 
-/* Keep primary buttons with their original blue styling */
-.quick-actions .btn-primary {
-  background-color: var(--primary-color) !important;
-  color: white !important;
-  border-color: var(--primary-color) !important;
+/* Session status always white text */
+.session-status.status-active,
+.session-status.status-ended {
+    color: white !important;
 }
 
-/* Ensure profit colors remain visible in dark mode */
+/* Profit colors in dark mode (handled by _modern-theme.css but kept for legacy) */
 [data-theme="dark"] .profit-positive {
-  color: #22c55e !important;
+    color: #6EE7B7 !important;
 }
 
 [data-theme="dark"] .profit-negative {
-  color: #ef4444 !important;
+    color: #FCA5A5 !important;
 }
 
-/* Session status indicators - ensure text is always white regardless of theme */
-.session-status {
-  color: white !important;
+/* Action buttons */
+.action-btn {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
 }
 
-/* Player quick stats */
-.player-quick-stats {
-  color: var(--text-secondary);
+[data-theme="dark"] .action-btn {
+    background-color: var(--primary-color);
+    color: white;
 }
 
-.player-quick-stats .stat {
-  color: var(--text-secondary);
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
 }
 
-/* Seven two counter */
-.seven-two-counter {
-  color: var(--text-secondary);
+[data-theme="dark"] .btn-primary {
+    background-color: var(--primary-color);
+    color: white;
 }
 
-.seven-two-label {
-  color: var(--text-secondary);
+/* Gamble King dark mode */
+[data-theme="dark"] .gamble-king-card {
+    background: rgba(245, 158, 11, 0.1);
+    border-color: rgba(245, 158, 11, 0.3);
 }
 
-.seven-two-value {
-  color: var(--text-primary) !important;
-  background-color: var(--bg-secondary) !important;
-  border-color: var(--border-color) !important;
+[data-theme="dark"] .gamble-king-stats > div {
+    background: var(--bg-card);
+    border-color: rgba(245, 158, 11, 0.2);
 }
 
-/* Dark mode styling for compact seven-two value */
-[data-theme="dark"] .seven-two-value {
-  background-color: #404040 !important;
-  border-color: #555 !important;
-  color: #ffffff !important;
-}
-
-/* Strikes counter dark mode styling */
-.strikes-label {
-  color: var(--text-secondary);
-}
-
-.strikes-value {
-  color: var(--text-primary) !important;
-  background-color: var(--bg-secondary) !important;
-  border-color: var(--border-color) !important;
-}
-
-/* Dark mode styling for compact strikes value */
-[data-theme="dark"] .strikes-value {
-  background-color: #404040 !important;
-  border-color: #555 !important;
-  color: #ffffff !important;
-}
-
-/* Ensure all text elements are properly themed */
-p, span, div {
-  color: inherit;
-}
-
-/* Loading text */
-#app-content p {
-  color: var(--text-primary);
-}
-
-/* Override inline styles that conflict with dark mode */
+/* White background overrides */
 [data-theme="dark"] [style*="background: white"],
 [data-theme="dark"] [style*="background:white"] {
-  background: var(--card-bg) !important;
-}
-
-[data-theme="dark"] [style*="color: var(--neutral-800)"],
-[data-theme="dark"] [style*="color:var(--neutral-800)"] {
-  color: var(--text-primary) !important;
-}
-
-[data-theme="dark"] [style*="color: var(--neutral-600)"],
-[data-theme="dark"] [style*="color:var(--neutral-600)"] {
-  color: var(--text-secondary) !important;
-}
-
-[data-theme="dark"] [style*="color: var(--neutral-700)"],
-[data-theme="dark"] [style*="color:var(--neutral-700)"] {
-  color: var(--text-primary) !important;
-}
-
-/* Action buttons - only apply dark mode styles in dark theme */
-[data-theme="dark"] .action-btn {
-  background-color: #2851A7 !important; /* Darker blue for dark mode */
-  color: white !important;
-  border-color: #2851A7 !important;
-}
-
-[data-theme="dark"] .action-btn:hover {
-  background-color: #1a3a7a !important;
-  border-color: #1a3a7a !important;
-}
-
-/* Ensure light mode action buttons keep their original blue background with white text */
-[data-theme="light"] .action-btn,
-body:not([data-theme]) .action-btn {
-  background-color: #3367D6 !important;
-  color: white !important;
-  border-color: #3367D6 !important;
-}
-
-[data-theme="light"] .action-btn:hover,
-body:not([data-theme]) .action-btn:hover {
-  background-color: #4285F4 !important;
-  border-color: #4285F4 !important;
-}
-
-/* Primary buttons should maintain their blue color but adjust for dark mode */
-[data-theme="dark"] .btn-primary {
-  background: #2851A7 !important;
-  border-color: #2851A7 !important;
-  color: white !important;
-}
-
-[data-theme="dark"] .btn-primary:hover {
-  background: #1a3a7a !important;
-  border-color: #1a3a7a !important;
-}
-
-/* Secondary buttons */
-[data-theme="dark"] .btn-secondary {
-  background: var(--bg-tertiary) !important;
-  border-color: var(--border-color) !important;
-  color: var(--text-primary) !important;
-}
-
-[data-theme="dark"] .btn-secondary:hover {
-  background: var(--border-color) !important;
-}
-
-/* Fix fade-in container background */
-.fade-in {
-  background-color: transparent !important;
-}
-
-/* Fix header text - make Gamble King header text adapt to theme */
-.royal-header h1 {
-  color: var(--text-primary) !important;
-}
-
-/* Session page specific fixes */
-.session-link {
-  color: var(--text-primary) !important;
-}
-
-.session-date {
-  color: var(--text-primary) !important;
-}
-
-.session-buyin {
-  color: var(--text-secondary) !important;
-}
-
-.session-info {
-  color: var(--text-secondary) !important;
-}
-
-.sessions-list .session-item {
-  background-color: var(--card-bg) !important;
-  border-color: var(--border-light) !important;
-}
-
-.sessions-list .session-item:hover {
-  background-color: var(--bg-tertiary) !important;
-}
-
-/* Session detail page fixes */
-.session-details h2,
-.session-details h3 {
-  color: var(--text-primary) !important;
-}
-
-.session-details p {
-  color: var(--text-secondary) !important;
-}
-
-.session-info-card {
-  background-color: var(--card-bg) !important;
-  border-color: var(--border-color) !important;
-}
-
-.session-players-list {
-  background-color: var(--card-bg) !important;
-}
-
-.session-players-list li {
-  background-color: var(--card-bg) !important;
-  border-color: var(--border-light) !important;
-}
-
-.session-players-list li:hover {
-  background-color: var(--bg-tertiary) !important;
-}
-
-/* Player detail page fixes */
-.player-details h2,
-.player-details h3 {
-  color: var(--text-primary) !important;
-}
-
-.player-details p {
-  color: var(--text-secondary) !important;
-}
-
-.player-stats-card {
-  background-color: var(--card-bg) !important;
-  border-color: var(--border-color) !important;
-}
-
-.player-sessions-list {
-  background-color: var(--card-bg) !important;
-}
-
-.player-sessions-list li {
-  background-color: var(--card-bg) !important;
-  border-color: var(--border-light) !important;
-}
-
-.player-sessions-list li:hover {
-  background-color: var(--bg-tertiary) !important;
-}
-
-/* General link colors */
-a {
-  color: #3367D6;
-}
-
-[data-theme="dark"] a {
-  color: #60a5fa;
-}
-
-a:hover {
-  color: #2851A7;
-}
-
-[data-theme="dark"] a:hover {
-  color: #93c5fd;
-}
-
-/* Ensure blue text elements are visible in dark mode */
-[data-theme="dark"] h2 {
-  color: #60a5fa !important;
-}
-
-[data-theme="dark"] .player-name-link,
-[data-theme="dark"] .players-stats-table td a,
-[data-theme="dark"] .players-dashboard-table td a,
-[data-theme="dark"] .session-total-value,
-[data-theme="dark"] .gamble-king-container h2 {
-  color: #60a5fa !important;
-}
-
-/* Make sure all text in lists is properly colored */
-.sessions-list li,
-.players-list li {
-  color: var(--text-primary) !important;
-}
-
-.sessions-list li span,
-.players-list li span {
-  color: inherit !important;
-}
-
-/* Any remaining white backgrounds */
-[data-theme="dark"] .white-bg,
-[data-theme="dark"] .bg-white {
-  background-color: var(--card-bg) !important;
-}
-
-/* Session status styling - ensure text is always white */
-.session-status.status-active,
-.session-status.status-ended {
-  color: white !important;
-}
-
-
-/* Make sure session and player names are visible */
-.session-item a,
-.player-name a {
-  color: var(--text-primary) !important;
-  text-decoration: none;
-}
-
-.session-item a:hover,
-.player-name a:hover {
-  color: #3367D6 !important;
-}
-
-[data-theme="dark"] .session-item a:hover,
-[data-theme="dark"] .player-name a:hover {
-  color: #60a5fa !important;
-}
-
-/* Fix session-value-summary dark mode styling */
-.session-value-summary {
-  background-color: var(--card-bg) !important;
-  border-left-color: #3367D6 !important;
-}
-
-[data-theme="dark"] .session-value-summary {
-  background-color: var(--bg-secondary) !important;
-  border-left-color: #60a5fa !important;
-}
-
-.session-total-value {
-  color: var(--text-primary) !important;
-}
-
-.session-unpaid-value {
-  color: var(--text-secondary) !important;
-}
-
-/* Fix chip-distribution dark mode styling */
-.chip-distribution {
-  background-color: var(--card-bg) !important;
-  border-color: var(--border-color) !important;
-}
-
-[data-theme="dark"] .chip-distribution {
-  background-color: var(--bg-secondary) !important;
-  border-color: var(--border-color) !important;
-}
-
-.chip-distribution h3,
-.chip-distribution h4 {
-  color: var(--text-primary) !important;
-}
-
-[data-theme="dark"] .chip-distribution p,
-[data-theme="dark"] .chip-distribution span {
-  color: var(--text-secondary) !important;
-}
-
-/* Fix table-responsive dark mode styling */
-.table-responsive {
-  background-color: var(--card-bg) !important;
-}
-
-[data-theme="dark"] .table-responsive {
-  background-color: var(--bg-primary) !important;
-}
-
-/* Fix players-stats-table dark mode styling */
-.players-stats-table {
-  background-color: var(--card-bg) !important;
-  border-color: var(--border-color) !important;
-}
-
-.players-stats-table th {
-  background-color: var(--bg-secondary) !important;
-  color: var(--text-primary) !important;
-  border-bottom-color: var(--border-color) !important;
-}
-
-.players-stats-table td {
-  color: var(--text-secondary) !important;
-  border-bottom-color: var(--border-light) !important;
-}
-
-.players-stats-table tr:hover {
-  background-color: var(--bg-tertiary) !important;
-}
-
-.players-stats-table td a {
-  color: #3367D6 !important;
-}
-
-[data-theme="dark"] .players-stats-table td a {
-  color: #60a5fa !important;
-}
-
-.players-stats-table td a:hover {
-  color: #2851A7 !important;
-}
-
-[data-theme="dark"] .players-stats-table td a:hover {
-  color: #93c5fd !important;
-}
-
-/* Fix seven-two-stats-detail dark mode styling */
-.seven-two-stats-detail {
-  background-color: var(--card-bg) !important;
-  border-left-color: #28a745 !important;
-}
-
-[data-theme="dark"] .seven-two-stats-detail {
-  background-color: var(--bg-secondary) !important;
-  border-left-color: #22c55e !important;
-}
-
-.seven-two-stats-detail .seven-two-label {
-  color: var(--text-primary) !important;
-}
-
-.seven-two-stats-detail .seven-two-value {
-  color: var(--text-primary) !important;
-}
-
-/* Fix fade-in and edge screen elements */
-.fade-in {
-  background-color: transparent !important;
-}
-
-[data-theme="dark"] .fade-in {
-  background-color: transparent !important;
-}
-
-/* Fix body and main container edges */
-body {
-  background-color: var(--bg-primary) !important;
-}
-
-#app-content {
-  background-color: var(--bg-primary) !important;
-}
-
-/* Fix footer dark mode */
-footer {
-  background-color: var(--bg-primary) !important;
-  color: var(--text-secondary) !important;
-  border-top-color: var(--border-light) !important;
-}
-
-/* Fix header text - make Gamble King header text invert for dark mode */
-[data-theme="dark"] .royal-header h1 {
-  color: var(--text-primary) !important;
-  text-shadow: none !important;
-}
-
-/* Light mode header text should be dark */
-.royal-header h1 {
-  color: var(--text-primary) !important;
-}
-
-/* Ensure header text is always white against blue background for both modes */
-header .royal-header h1,
-header h1,
-header nav a {
-  color: #ffffff !important;
-}
-
-/* Dark mode header should still be white against blue */
-[data-theme="dark"] header .royal-header h1,
-[data-theme="dark"] header h1,
-[data-theme="dark"] header nav a {
-  color: #ffffff !important;
-}
-
-/* Additional edge cases and container fixes */
-[data-theme="dark"] .container,
-[data-theme="dark"] .main-container,
-[data-theme="dark"] .content-wrapper {
-  background-color: var(--bg-primary) !important;
-}
-
-/* Fix any remaining white/light backgrounds */
-[data-theme="dark"] .bg-light,
-[data-theme="dark"] .background-light,
-[data-theme="dark"] .light-bg {
-  background-color: var(--bg-secondary) !important;
-}
-
-/* Ensure proper text color inheritance */
-[data-theme="dark"] * {
-  border-color: var(--border-color);
-}
-
-/* Remove borders from nav buttons in dark mode to match light mode */
-[data-theme="dark"] .neo-nav-btn,
-[data-theme="dark"] .neo-header-btn,
-[data-theme="dark"] .neo-nav-mobile-btn,
-[data-theme="dark"] .bottom-nav .nav-btn,
-[data-theme="dark"] header nav a {
-  border: none !important;
-}
-
-[data-theme="dark"] p,
-[data-theme="dark"] span,
-[data-theme="dark"] div:not(.btn):not(.button) {
-  color: inherit;
+    background: var(--bg-card) !important;
 }

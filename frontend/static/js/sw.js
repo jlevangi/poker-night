@@ -27,6 +27,7 @@ const URLS_TO_CACHE = [
     '/static/js/modules/player-detail-page.js',
     '/static/js/modules/players-page.js',
     '/static/js/modules/router.js',
+    '/static/js/modules/animations.js',
     '/static/js/modules/service-worker-manager.js',
     '/static/js/modules/session-detail-page.js',
     '/static/js/modules/sessions-page.js',

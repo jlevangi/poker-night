@@ -1,8 +1,40 @@
 // Session detail page module
 import ApiService from './api-service.js';
 import { NotificationManager } from './notification-manager.js';
+import { staggerChildren } from './animations.js';
 
 export default class SessionDetailPage {
+    static skeleton() {
+        return `
+            <div style="padding: 1.5rem; max-width: 1200px; margin: 0 auto;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <div class="skeleton skeleton-btn" style="width: 160px; height: 40px;"></div>
+                    <div class="skeleton skeleton-btn" style="width: 100px; height: 40px;"></div>
+                </div>
+                <div class="neo-card">
+                    <div class="skeleton skeleton-text" style="width: 60%; height: 1.75rem; margin-bottom: 1.5rem;"></div>
+                    <div class="neo-stats-grid" style="margin-bottom: 1.5rem;">
+                        <div class="neo-stat-card"><div class="skeleton skeleton-text" style="width: 80%; height: 1.5rem; margin: 0 auto;"></div></div>
+                        <div class="neo-stat-card"><div class="skeleton skeleton-text" style="width: 80%; height: 1.5rem; margin: 0 auto;"></div></div>
+                        <div class="neo-stat-card"><div class="skeleton skeleton-text" style="width: 80%; height: 1.5rem; margin: 0 auto;"></div></div>
+                        <div class="neo-stat-card"><div class="skeleton skeleton-text" style="width: 80%; height: 1.5rem; margin: 0 auto;"></div></div>
+                    </div>
+                </div>
+                <div class="skeleton skeleton-text" style="width: 30%; height: 1.5rem; margin: 2rem 0 1.5rem 0;"></div>
+                ${Array(5).fill(`
+                    <div class="neo-card" style="margin-bottom: 1rem;">
+                        <div class="skeleton skeleton-text" style="width: 40%; height: 1.25rem; margin-bottom: 1rem;"></div>
+                        <div style="display: flex; gap: 2rem;">
+                            <div class="skeleton skeleton-text" style="width: 80px; height: 1rem;"></div>
+                            <div class="skeleton skeleton-text" style="width: 80px; height: 1rem;"></div>
+                            <div class="skeleton skeleton-text" style="width: 80px; height: 1rem;"></div>
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+    }
+
     constructor(appContent, apiService) {
         this.appContent = appContent;
         this.api = apiService;
@@ -79,7 +111,7 @@ export default class SessionDetailPage {
         // Check if session and chip_distribution exist
         if (!session || !session.session_info || !session.session_info.chip_distribution) {
             return `<div class="neo-card" style="margin-bottom: 2rem;">
-                <h3 style="font-size: 1.25rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1rem; color: var(--text-primary);">🎰 Chip Distribution</h3>
+                <h3 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem; color: var(--text-primary);">🎰 Chip Distribution</h3>
                 <p style="font-weight: 600; color: var(--text-secondary);">No chip distribution data available.</p>
             </div>`;
         }
@@ -107,10 +139,10 @@ export default class SessionDetailPage {
         
         let html = `
             <div class="neo-card neo-card-purple" style="margin-bottom: 2rem;">
-                <h3 style="font-size: 1.25rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1rem; color: var(--casino-purple-dark);">🎰 Chip Distribution</h3>
+                <h3 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem; color: var(--casino-purple-dark);">🎰 Chip Distribution</h3>
                 <p style="font-weight: 600; color: var(--casino-purple-dark); margin-bottom: 1.5rem;">
-                    For a buy-in of <span style="color: var(--casino-green); font-weight: 800;">$${buyInValue.toFixed(2)}</span>, 
-                    use the following chip distribution (<span style="color: var(--casino-gold); font-weight: 800;">${totalChips} total chips</span>):
+                    For a buy-in of <span style="color: var(--casino-green); font-weight: 600;">$${buyInValue.toFixed(2)}</span>, 
+                    use the following chip distribution (<span style="color: var(--casino-gold); font-weight: 600;">${totalChips} total chips</span>):
                 </p>
                 <div style="display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;">`;
         
@@ -132,14 +164,14 @@ export default class SessionDetailPage {
                         flex-direction: column; 
                         align-items: center; 
                         justify-content: center;
-                        font-weight: 800;
+                        font-weight: 600;
                         text-align: center;
                         box-shadow: var(--neo-shadow-md);
                         position: relative;
                         overflow: hidden;
                     ">
                         <div style="font-size: 1rem; line-height: 1;">${chipDistribution[chipColor]}</div>
-                        <div style="font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 2px;">${chipColor}</div>
+                        <div style="font-size: 0.65rem; margin-top: 2px;">${chipColor}</div>
                         
                         <!-- Chip texture lines -->
                         <div style="
@@ -198,7 +230,7 @@ export default class SessionDetailPage {
                 
                 <!-- Session Info Card -->
                 <div class="neo-card ${isActive ? 'neo-card-gold' : 'neo-card-primary'}">
-                    <h2 style="font-size: 2rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1.5rem; color: var(--text-primary);">
+                    <h2 style="font-size: 2rem; font-weight: 600; margin-bottom: 1.5rem; color: var(--text-primary);">
                         🎯 ${this.formatDate(sessionData.date)}
                     </h2>
                     
@@ -234,7 +266,7 @@ export default class SessionDetailPage {
                 <!-- Words of Wisdom Section -->
                 ${sessionData.wisdom_quote ? `
                 <div class="neo-card neo-card-gold" style="margin-top: 2rem; text-align: center;">
-                    <h3 style="font-size: 1.25rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1rem; color: var(--casino-gold-dark);">💬 Words of Wisdom</h3>
+                    <h3 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem; color: var(--casino-gold-dark);">💬 Words of Wisdom</h3>
                     <p style="font-size: 1.25rem; font-style: italic; color: var(--text-primary); margin-bottom: 0.5rem;">
                         "${sessionData.wisdom_quote}"
                     </p>
@@ -247,7 +279,7 @@ export default class SessionDetailPage {
                 ${isActive ? `
                 <!-- Words of Wisdom Input -->
                 <div class="neo-card" style="margin-top: 2rem;">
-                    <h4 style="font-size: 1.25rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1rem; color: var(--text-primary);">💬 ${sessionData.wisdom_quote ? 'Edit' : 'Add'} Words of Wisdom</h4>
+                    <h4 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem; color: var(--text-primary);">💬 ${sessionData.wisdom_quote ? 'Edit' : 'Add'} Words of Wisdom</h4>
                     <div style="display: flex; flex-direction: column; gap: 1rem;">
                         <textarea id="wisdom-quote-input" placeholder="Enter the quote..." style="padding: 0.875rem 1rem; border: var(--neo-border); font-size: 1rem; font-weight: 600; background: var(--bg-card); min-height: 80px; resize: vertical;">${sessionData.wisdom_quote || ''}</textarea>
                         <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
@@ -263,7 +295,7 @@ export default class SessionDetailPage {
                 </div>
                 ` : ''}
 
-                <h3 style="font-size: 1.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; margin: 2rem 0 1.5rem 0; color: var(--text-primary);">🎭 Players</h3>
+                <h3 style="font-size: 1.75rem; font-weight: 600; margin: 2rem 0 1.5rem 0; color: var(--text-primary);">🎭 Players</h3>
         `;
         
         if (isActive) {
@@ -272,7 +304,7 @@ export default class SessionDetailPage {
             
             html += `
                 <div class="neo-card neo-card-green" style="margin-bottom: 2rem;">
-                    <h4 style="font-size: 1.25rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1.5rem; color: var(--casino-green-dark);">➕ Add Player to Session</h4>
+                    <h4 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 1.5rem; color: var(--casino-green-dark);">➕ Add Player to Session</h4>
                     <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
                         <select id="add-player-select" style="flex: 1; min-width: 200px; padding: 0.875rem 1rem; border: var(--neo-border); font-size: 1rem; font-weight: 600; background: var(--bg-card);">
                             <option value="">-- Select Player --</option>
@@ -302,7 +334,7 @@ export default class SessionDetailPage {
                         <!-- Player Header -->
                         <div style="margin-bottom: 1.5rem;">
                             <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; flex-wrap: wrap; gap: 1rem;">
-                                <h4 style="font-size: 1.5rem; font-weight: 800; margin: 0; text-transform: uppercase; letter-spacing: 0.05em;">
+                                <h4 style="font-size: 1.5rem; font-weight: 600; margin: 0;">
                                     <a href="#player/${player.id}" style="color: inherit; text-decoration: none;">${player.name}</a>
                                     ${player.id === sessionData.wisdom_player_id ? ' 🗣️' : ''}
                                 </h4>
@@ -311,16 +343,16 @@ export default class SessionDetailPage {
                             <!-- Buy-in, Cash-out, Profit Stats -->
                             <div style="display: flex; gap: 2rem; flex-wrap: wrap; margin-bottom: 1rem;">
                                 <div>
-                                    <span style="font-size: 0.875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.8; display: block;">Buy-in</span>
-                                    <span style="font-size: 1.25rem; font-weight: 800; color: var(--casino-red);">$${buyIn.toFixed(2)}</span>
+                                    <span style="font-size: 0.875rem; font-weight: 600; opacity: 0.8; display: block;">Buy-in</span>
+                                    <span style="font-size: 1.25rem; font-weight: 600; color: var(--casino-red);">$${buyIn.toFixed(2)}</span>
                                 </div>
                                 <div>
-                                    <span style="font-size: 0.875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.8; display: block;">Cash-out</span>
-                                    <span style="font-size: 1.25rem; font-weight: 800; color: var(--casino-gold);">$${cashOut.toFixed(2)}</span>
+                                    <span style="font-size: 0.875rem; font-weight: 600; opacity: 0.8; display: block;">Cash-out</span>
+                                    <span style="font-size: 1.25rem; font-weight: 600; color: var(--casino-gold);">$${cashOut.toFixed(2)}</span>
                                 </div>
                                 <div>
-                                    <span style="font-size: 0.875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.8; display: block;">Profit</span>
-                                    <span class="${profit >= 0 ? 'profit-positive' : 'profit-negative'}" style="font-size: 1.25rem; font-weight: 800;">$${profit.toFixed(2)}</span>
+                                    <span style="font-size: 0.875rem; font-weight: 600; opacity: 0.8; display: block;">Profit</span>
+                                    <span class="${profit >= 0 ? 'profit-positive' : 'profit-negative'}" style="font-size: 1.25rem; font-weight: 600;">$${profit.toFixed(2)}</span>
                                 </div>
                             </div>
                             
@@ -339,14 +371,14 @@ export default class SessionDetailPage {
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; align-items: center;">
                             <!-- 7-2 Wins -->
                             <div class="neo-stat-card" style="border-color: var(--casino-gold); margin: 0;">
-                                <div style="font-size: 1.25rem; font-weight: 800; color: var(--casino-gold-dark); margin-bottom: 0.25rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                                <div style="font-size: 1.25rem; font-weight: 600; color: var(--casino-gold-dark); margin-bottom: 0.25rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
                                     ${isActive ? `
                                         <button class="neo-btn neo-btn-sm seven-two-decrement-btn" data-player-id="${player.id}" style="
-                                            width: 28px; 
-                                            height: 28px; 
-                                            padding: 0; 
-                                            font-size: 16px; 
-                                            font-weight: 800;
+                                            width: 28px;
+                                            height: 28px;
+                                            padding: 0;
+                                            font-size: 16px;
+                                            font-weight: 600;
                                             display: flex; 
                                             align-items: center; 
                                             justify-content: center;
@@ -360,11 +392,11 @@ export default class SessionDetailPage {
                                     <span style="min-width: 2rem; text-align: center;">${player.sevenTwoWins || 0}</span>
                                     ${isActive ? `
                                         <button class="neo-btn neo-btn-sm seven-two-increment-btn" data-player-id="${player.id}" style="
-                                            width: 28px; 
-                                            height: 28px; 
-                                            padding: 0; 
-                                            font-size: 16px; 
-                                            font-weight: 800;
+                                            width: 28px;
+                                            height: 28px;
+                                            padding: 0;
+                                            font-size: 16px;
+                                            font-weight: 600;
                                             display: flex; 
                                             align-items: center; 
                                             justify-content: center;
@@ -376,21 +408,21 @@ export default class SessionDetailPage {
                                         ">+</button>
                                     ` : ''}
                                 </div>
-                                <div style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--casino-gold-dark);">
+                                <div style="font-size: 0.75rem; font-weight: 600; color: var(--casino-gold-dark);">
                                     7-2 Wins
                                 </div>
                             </div>
                             
                             <!-- Strikes -->
                             <div class="neo-stat-card" style="border-color: var(--casino-red); margin: 0;">
-                                <div style="font-size: 1.25rem; font-weight: 800; color: var(--casino-red); margin-bottom: 0.25rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                                <div style="font-size: 1.25rem; font-weight: 600; color: var(--casino-red); margin-bottom: 0.25rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
                                     ${isActive ? `
                                         <button class="neo-btn neo-btn-sm strikes-decrement-btn" data-player-id="${player.id}" style="
-                                            width: 28px; 
-                                            height: 28px; 
-                                            padding: 0; 
-                                            font-size: 16px; 
-                                            font-weight: 800;
+                                            width: 28px;
+                                            height: 28px;
+                                            padding: 0;
+                                            font-size: 16px;
+                                            font-weight: 600;
                                             display: flex; 
                                             align-items: center; 
                                             justify-content: center;
@@ -404,11 +436,11 @@ export default class SessionDetailPage {
                                     <span style="min-width: 2rem; text-align: center;">${player.strikes || 0}</span>
                                     ${isActive ? `
                                         <button class="neo-btn neo-btn-sm strikes-increment-btn" data-player-id="${player.id}" style="
-                                            width: 28px; 
-                                            height: 28px; 
-                                            padding: 0; 
-                                            font-size: 16px; 
-                                            font-weight: 800;
+                                            width: 28px;
+                                            height: 28px;
+                                            padding: 0;
+                                            font-size: 16px;
+                                            font-weight: 600;
                                             display: flex; 
                                             align-items: center; 
                                             justify-content: center;
@@ -420,7 +452,7 @@ export default class SessionDetailPage {
                                         ">+</button>
                                     ` : ''}
                                 </div>
-                                <div style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--casino-red);">
+                                <div style="font-size: 0.75rem; font-weight: 600; color: var(--casino-red);">
                                     Strikes
                                 </div>
                             </div>
@@ -466,9 +498,12 @@ export default class SessionDetailPage {
         
         // Log the HTML about to be rendered
         console.log("Full HTML being set:", html);
-        
+
         this.appContent.innerHTML = html;
-        
+
+        // Stagger animate player cards
+        staggerChildren(this.appContent, '.neo-card');
+
         // Add styling for the session bottom controls
         const styleElement = document.createElement('style');
         styleElement.textContent = `
@@ -1172,9 +1207,7 @@ export default class SessionDetailPage {
                 ">
                     <h2 style="
                         font-size: 1.5rem;
-                        font-weight: 900;
-                        text-transform: uppercase;
-                        letter-spacing: 0.05em;
+                        font-weight: 600;
                         margin-bottom: 1.5rem;
                         color: ${discrepancyColor};
                         display: flex;
@@ -1200,7 +1233,7 @@ export default class SessionDetailPage {
                         </p>
                         <p style="
                             font-size: 1.75rem;
-                            font-weight: 900;
+                            font-weight: 600;
                             color: ${discrepancyColor};
                             margin: 0;
                         ">

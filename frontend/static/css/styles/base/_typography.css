@@ -2,40 +2,46 @@
 
 h1, h2, h3, h4, h5, h6 {
     margin-top: 0;
+    font-weight: 600;
+    letter-spacing: -0.025em;
 }
 
 h2 {
-    color: var(--primary-color);
-    border-bottom: 2px solid var(--border-lighter);
+    color: var(--text-primary);
+    border-bottom: 1px solid var(--border-lighter);
     padding-bottom: var(--spacing-sm);
     margin-top: 0;
+    font-size: 1.25rem;
 }
 
 h3 {
-    color: var(--text-secondary);
+    color: var(--text-primary);
     margin-top: var(--spacing-lg);
     margin-bottom: 0.75rem;
+    font-size: 1.125rem;
 }
 
 /* Links */
 a {
-    color: #007bff;
+    color: var(--primary-color);
     text-decoration: none;
+    transition: color 0.15s ease;
 }
 
 a:hover {
+    color: var(--primary-hover);
     text-decoration: underline;
 }
 
 /* Profit/Loss text styling */
 .profit-positive {
     color: var(--profit-positive);
-    font-weight: bold;
+    font-weight: 600;
 }
 
 .profit-negative {
     color: var(--profit-negative);
-    font-weight: bold;
+    font-weight: 600;
 }
 
 /* Gamble King name styling with gradient */
@@ -44,7 +50,5 @@ a:hover {
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
-    font-weight: bold;
-    text-shadow: 0px 0px 1px rgba(0,0,0,0.1);
-    animation: shine 10s infinite linear;
+    font-weight: 700;
 }

@@ -4,8 +4,8 @@
     "description": "Track your poker night buy-ins and crown the Gamble King!",
     "start_url": "/",
     "display": "standalone",
-    "background_color": "#ffffff",
-    "theme_color": "#3367D6",
+    "background_color": "#F8FAFC",
+    "theme_color": "#2563EB",
     "orientation": "portrait-primary",
     "icons": [
         {

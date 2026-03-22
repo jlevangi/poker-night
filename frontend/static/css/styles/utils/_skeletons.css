@@ -1,0 +1,130 @@
+/* Loading Skeleton Styles */
+
+:root {
+    --skeleton-base: #E2E8F0;
+    --skeleton-shine: #F1F5F9;
+}
+
+[data-theme="dark"] {
+    --skeleton-base: #334155;
+    --skeleton-shine: #475569;
+}
+
+/* Base skeleton element */
+.skeleton {
+    background: linear-gradient(90deg,
+        var(--skeleton-base) 25%,
+        var(--skeleton-shine) 50%,
+        var(--skeleton-base) 75%
+    );
+    background-size: 200% 100%;
+    animation: skeleton-shimmer 1.5s ease-in-out infinite;
+    border-radius: 8px;
+    color: transparent !important;
+    pointer-events: none;
+    user-select: none;
+}
+
+@keyframes skeleton-shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+/* Skeleton variants */
+.skeleton-text {
+    height: 1em;
+    margin-bottom: 0.625rem;
+    border-radius: 6px;
+}
+
+.skeleton-text-sm {
+    height: 0.75em;
+    margin-bottom: 0.5rem;
+    border-radius: 4px;
+}
+
+.skeleton-title {
+    height: 1.5em;
+    width: 60%;
+    margin-bottom: 1rem;
+    border-radius: 8px;
+}
+
+.skeleton-card {
+    height: 100px;
+    margin-bottom: 0.75rem;
+    border-radius: 16px;
+}
+
+.skeleton-card-lg {
+    height: 160px;
+    margin-bottom: 1rem;
+    border-radius: 20px;
+}
+
+.skeleton-stat {
+    height: 90px;
+    border-radius: 14px;
+}
+
+.skeleton-row {
+    height: 48px;
+    margin-bottom: 2px;
+    border-radius: 0;
+}
+
+.skeleton-row:first-child {
+    border-radius: 12px 12px 0 0;
+}
+
+.skeleton-row:last-child {
+    border-radius: 0 0 12px 12px;
+    margin-bottom: 0;
+}
+
+.skeleton-circle {
+    border-radius: 50%;
+}
+
+.skeleton-badge {
+    height: 1.5em;
+    width: 60px;
+    border-radius: 50px;
+    display: inline-block;
+}
+
+/* Skeleton page wrapper - matches page padding */
+.skeleton-page {
+    padding: 1.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+    .skeleton-page {
+        padding: 1rem 0.75rem;
+    }
+}
+
+/* Skeleton grid - for stat cards */
+.skeleton-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+/* Skeleton list */
+.skeleton-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+/* Skeleton table */
+.skeleton-table {
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 1rem;
+}

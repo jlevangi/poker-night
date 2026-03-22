@@ -4,14 +4,15 @@ button,
 .button,
 .action-btn,
 .quick-action-btn {
-    padding: 0.6rem 1rem;
+    padding: 0.625rem 1.125rem;
     background-color: var(--primary-color);
     color: var(--text-white);
     border: none;
-    border-radius: var(--radius-sm);
+    border-radius: 10px;
     cursor: pointer;
-    font-size: 1rem;
-    transition: background-color var(--transition-fast), box-shadow var(--transition-fast);
+    font-size: 0.9375rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
     text-decoration: none;
     display: inline-block;
     text-align: center;
@@ -22,14 +23,22 @@ button:hover,
 .action-btn:hover,
 .quick-action-btn:hover {
     background-color: var(--primary-hover);
+    transform: translateY(-1px);
     box-shadow: var(--shadow-medium);
+}
+
+button:active,
+.button:active,
+.action-btn:active,
+.quick-action-btn:active {
+    transform: translateY(0);
 }
 
 /* Quick Action Buttons */
 .quick-action-btn {
-    padding: 0.8rem 1.5rem;
-    font-size: 1.1rem;
-    border-radius: var(--radius-md);
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    border-radius: 12px;
     background-color: var(--color-success);
     color: var(--text-white);
 }
@@ -77,9 +86,9 @@ button:hover,
 .sessions-actions .action-btn {
     background-color: var(--primary-color);
     color: var(--text-white);
-    padding: 0.7rem 1.2rem;
-    border-radius: 5px;
-    font-size: 1rem;
+    padding: 0.625rem 1.125rem;
+    border-radius: 10px;
+    font-size: 0.9375rem;
 }
 
 .sessions-actions .action-btn:hover {
@@ -88,19 +97,21 @@ button:hover,
 
 /* Modal Button Styles */
 .modal-form-group button.small-btn {
-    padding: 0.65rem 0.8rem;
-    font-size: 0.9rem;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
     margin-left: var(--spacing-sm);
     vertical-align: baseline;
-    background-color: #6c757d;
+    background-color: #64748B;
+    border-radius: 8px;
 }
 
 .modal-form-group button.small-btn:hover {
-    background-color: #5a6268;
+    background-color: #475569;
 }
 
 .modal-actions .primary-btn {
     background-color: var(--primary-color);
+    border-radius: 10px;
 }
 
 .modal-actions .primary-btn:hover {
@@ -108,31 +119,36 @@ button:hover,
 }
 
 .modal-actions .secondary-btn {
-    background-color: #aaa;
+    background-color: #94A3B8;
+    border-radius: 10px;
 }
 
 .modal-actions .secondary-btn:hover {
-    background-color: #888;
+    background-color: #64748B;
 }
 
 /* Shared Counter Button Styles */
 .counter-btn {
-    width: 30px;
-    height: 30px;
-    border-radius: var(--radius-circle);
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
     border: none;
     color: var(--text-white);
-    font-size: 18px;
-    font-weight: bold;
+    font-size: 16px;
+    font-weight: 600;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     margin: 0 3px;
-    transition: background-color var(--transition-fast);
+    transition: all 0.15s ease;
     padding: 0;
     text-align: center;
     line-height: 1;
+}
+
+.counter-btn:active {
+    transform: scale(0.9);
 }
 
 .counter-btn-increment {
@@ -145,13 +161,12 @@ button:hover,
 
 .counter-btn-decrement {
     background-color: var(--counter-decrement);
-    /* Additional centering for minus sign which can appear off-center */
     position: relative;
-    color: transparent; /* Hide the original text */
+    color: transparent;
 }
 
 .counter-btn-decrement::before {
-    content: "−"; /* Use proper minus sign (U+2212) instead of hyphen */
+    content: "\2212";
     position: absolute;
     top: 50%;
     left: 50%;
@@ -165,16 +180,16 @@ button:hover,
     background-color: var(--counter-decrement-hover);
 }
 
-/* Seven-Two Game Buttons - Legacy support and specific overrides */
+/* Seven-Two Game Buttons */
 .seven-two-btn {
     background-color: var(--seven-two-bg);
     color: var(--text-white);
     border: none;
-    border-radius: var(--radius-circle);
-    width: 24px;
-    height: 24px;
+    border-radius: 8px;
+    width: 26px;
+    height: 26px;
     font-size: 1rem;
-    font-weight: bold;
+    font-weight: 600;
     margin-left: var(--spacing-sm);
     cursor: pointer;
     display: flex;
@@ -188,26 +203,33 @@ button:hover,
 }
 
 /* Apply counter button styles to specific seven-two and strikes buttons */
-.seven-two-increment-btn, 
+.seven-two-increment-btn,
 .seven-two-decrement-btn,
 .strikes-increment-btn,
 .strikes-decrement-btn {
-    width: 30px;
-    height: 30px;
-    border-radius: var(--radius-circle);
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
     border: none;
     color: var(--text-white);
-    font-size: 18px;
-    font-weight: bold;
+    font-size: 16px;
+    font-weight: 600;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     margin: 0 3px;
-    transition: background-color var(--transition-fast);
+    transition: all 0.15s ease;
     padding: 0;
     text-align: center;
     line-height: 1;
+}
+
+.seven-two-increment-btn:active,
+.seven-two-decrement-btn:active,
+.strikes-increment-btn:active,
+.strikes-decrement-btn:active {
+    transform: scale(0.9);
 }
 
 .seven-two-increment-btn,
@@ -223,14 +245,13 @@ button:hover,
 .seven-two-decrement-btn,
 .strikes-decrement-btn {
     background-color: var(--counter-decrement);
-    /* Additional centering for minus sign which can appear off-center */
     position: relative;
-    color: transparent; /* Hide the original text */
+    color: transparent;
 }
 
 .seven-two-decrement-btn::before,
 .strikes-decrement-btn::before {
-    content: "−"; /* Use proper minus sign (U+2212) instead of hyphen */
+    content: "\2212";
     position: absolute;
     top: 50%;
     left: 50%;
@@ -245,17 +266,13 @@ button:hover,
     background-color: var(--counter-decrement-hover);
 }
 
-/* Add Player Button - now uses neo-btn-purple class, legacy styles removed */
-
-/* End Session Button - Uses neobrutalist styling from neobrutalist-theme.css */
-
 /* Mobile Button Adjustments */
 @media (max-width: 400px) {
     input[type="text"],
     input[type="number"],
     input[type="date"],
     select,
-    button:not(.neo-btn),
+    button:not(.neo-btn):not(.counter-btn):not(.neo-counter-btn):not(.seven-two-btn):not(.neo-nav-mobile-btn),
     .action-btn,
     .quick-action-btn {
         width: 100%;
@@ -264,7 +281,7 @@ button:hover,
         margin-left: 0;
     }
 
-    button:not(.neo-btn),
+    button:not(.neo-btn):not(.counter-btn):not(.neo-counter-btn):not(.seven-two-btn):not(.neo-nav-mobile-btn),
     .action-btn,
     .quick-action-btn {
         margin-top: var(--spacing-sm);

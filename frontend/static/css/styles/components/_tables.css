@@ -3,6 +3,7 @@
 .table-responsive {
     overflow-x: auto;
     margin-bottom: var(--spacing-lg);
+    border-radius: 12px;
 }
 
 /* Dashboard Player Standings Table */
@@ -12,25 +13,27 @@
     border-collapse: collapse;
     margin: var(--spacing-md) auto;
     background-color: var(--bg-content);
-    box-shadow: var(--shadow-card);
+    border-radius: 12px;
+    overflow: hidden;
 }
 
 .players-dashboard-table th,
 .players-dashboard-table td {
     padding: 0.75rem var(--spacing-sm);
-    border-bottom: 1px solid #e9ecef;
+    border-bottom: 1px solid var(--border-light);
     text-align: left;
 }
 
 .players-dashboard-table th {
-    background-color: #f8f9fa;
+    background-color: var(--bg-body);
     font-weight: 600;
-    color: #495057;
-    border-bottom: 2px solid var(--border-table);
+    color: var(--text-secondary);
+    font-size: 0.8125rem;
+    border-bottom: 1px solid var(--border-color);
 }
 
 .players-dashboard-table tr:hover {
-    background-color: #f8f9fa;
+    background-color: rgba(0, 0, 0, 0.02);
 }
 
 .players-dashboard-table td a {
@@ -49,57 +52,49 @@
     border-collapse: collapse;
     margin-top: var(--spacing-md);
     background-color: var(--bg-content);
-    box-shadow: var(--shadow-card);
-    table-layout: fixed; /* Enable fixed layout for better width control */
+    border-radius: 12px;
+    overflow: hidden;
+    table-layout: fixed;
 }
 
-/* Define compact column widths to minimize space between columns */
-.players-stats-table th:nth-child(1), 
-.players-stats-table td:nth-child(1) { /* Date column */
-    width: 10%;
-}
+.players-stats-table th:nth-child(1),
+.players-stats-table td:nth-child(1) { width: 10%; }
 
-.players-stats-table th:nth-child(2), 
-.players-stats-table td:nth-child(2) { /* Buy-In column */
-    width: 10%;
-}
+.players-stats-table th:nth-child(2),
+.players-stats-table td:nth-child(2) { width: 10%; }
 
-.players-stats-table th:nth-child(3), 
-.players-stats-table td:nth-child(3) { /* Cash Out column */
-    width: 10%;
-}
+.players-stats-table th:nth-child(3),
+.players-stats-table td:nth-child(3) { width: 10%; }
 
-.players-stats-table th:nth-child(4), 
-.players-stats-table td:nth-child(4) { /* Profit column */
-    width: 20%;
-}
+.players-stats-table th:nth-child(4),
+.players-stats-table td:nth-child(4) { width: 20%; }
 
-/* Align monetary columns to eliminate right-side spacing */
-.players-stats-table th:nth-child(2), 
-.players-stats-table td:nth-child(2), /* Buy-In column */
-.players-stats-table th:nth-child(3), 
-.players-stats-table td:nth-child(3), /* Cash Out column */
-.players-stats-table th:nth-child(4), 
-.players-stats-table td:nth-child(4) { /* Profit column */
+.players-stats-table th:nth-child(2),
+.players-stats-table td:nth-child(2),
+.players-stats-table th:nth-child(3),
+.players-stats-table td:nth-child(3),
+.players-stats-table th:nth-child(4),
+.players-stats-table td:nth-child(4) {
     text-align: left;
 }
 
 .players-stats-table th,
 .players-stats-table td {
-    padding: 0.8rem 0.4rem;
-    border-bottom: 1px solid #e9ecef;
+    padding: 0.75rem 0.5rem;
+    border-bottom: 1px solid var(--border-light);
     text-align: left;
 }
 
 .players-stats-table th {
-    background-color: #f8f9fa;
+    background-color: var(--bg-body);
     font-weight: 600;
-    color: #495057;
-    border-bottom: 2px solid var(--border-table);
+    color: var(--text-secondary);
+    font-size: 0.8125rem;
+    border-bottom: 1px solid var(--border-color);
 }
 
 .players-stats-table tr:hover {
-    background-color: #f8f9fa;
+    background-color: rgba(0, 0, 0, 0.02);
 }
 
 .players-stats-table td a {
@@ -112,19 +107,17 @@
     text-decoration: underline;
 }
 
-/* Mobile responsive adjustments for players-stats-table */
+/* Mobile responsive adjustments */
 @media (max-width: 768px) {
     .players-stats-table {
         table-layout: auto;
         width: 100%;
-        border-collapse: separate;
-        border-spacing: 1px;
     }
 
-    .players-stats-table th, 
+    .players-stats-table th,
     .players-stats-table td {
         width: auto;
-        font-size: 0.9rem;
+        font-size: 0.875rem;
         text-align: left;
         white-space: nowrap;
         max-width: 0;
@@ -133,7 +126,7 @@
     }
 
     .players-stats-table th:first-child,
-    .players-stats-table td:first-child { /* Date column */
+    .players-stats-table td:first-child {
         text-align: left;
         white-space: normal;
         width: 1%;
@@ -141,11 +134,11 @@
     }
 
     .players-stats-table th:nth-child(2),
-    .players-stats-table td:nth-child(2), /* Buy-In column */
+    .players-stats-table td:nth-child(2),
     .players-stats-table th:nth-child(3),
-    .players-stats-table td:nth-child(3), /* Cash Out column */
+    .players-stats-table td:nth-child(3),
     .players-stats-table th:nth-child(4),
-    .players-stats-table td:nth-child(4) { /* Profit column */
+    .players-stats-table td:nth-child(4) {
         width: 1%;
         min-width: max-content;
     }
@@ -153,8 +146,10 @@
 
 /* Modern Table Styles */
 .modern-table {
-    border: 1px solid var(--border-table);
+    border: 1px solid var(--border-color);
     box-shadow: none;
+    border-radius: 12px;
+    overflow: hidden;
 }
 
 .modern-table th,
@@ -163,18 +158,30 @@
     font-size: 0.875rem;
 }
 
+/* Dark mode tables */
+[data-theme="dark"] .players-dashboard-table th,
+[data-theme="dark"] .players-stats-table th {
+    background-color: rgba(0, 0, 0, 0.2);
+    color: var(--text-secondary);
+}
+
+[data-theme="dark"] .players-dashboard-table tr:hover,
+[data-theme="dark"] .players-stats-table tr:hover {
+    background-color: rgba(255, 255, 255, 0.03);
+}
+
 /* Mobile Table Adjustments */
 @media (max-width: 700px) {
     .modern-table {
-        border: 1px solid var(--border-table) !important;
+        border: 1px solid var(--border-color) !important;
         box-shadow: none !important;
     }
-    
+
     .table-responsive {
         margin: 0 !important;
         padding: 0 !important;
     }
-    
+
     .modern-table th,
     .modern-table td {
         padding: var(--spacing-sm) !important;
