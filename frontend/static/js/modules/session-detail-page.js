@@ -234,14 +234,12 @@ export default class SessionDetailPage {
                         🎯 ${this.formatDate(sessionData.date)}
                     </h2>
                     
-                    <div class="neo-stats-grid" style="margin-bottom: 1.5rem;">
-                        <!-- Status Card - First Position -->
-                        <div class="neo-stat-card" style="border-color: ${isActive ? 'var(--casino-gold)' : 'var(--casino-green)'};">
-                            <div class="neo-stat-value ${isActive ? 'profit-negative' : 'profit-positive'}">
-                                ${isActive ? 'ACTIVE' : 'ENDED'}
-                            </div>
-                            <div class="neo-stat-label"></div>
-                        </div>
+                    <div style="text-align: center; margin-bottom: 1.25rem;">
+                        <span style="display: inline-block; padding: 0.375rem 1rem; border-radius: 999px; font-size: 0.875rem; font-weight: 700; letter-spacing: 0.05em; ${isActive ? 'background: rgba(245, 158, 11, 0.15); color: var(--casino-gold-dark);' : 'background: rgba(22, 163, 74, 0.15); color: var(--casino-green-dark);'}">
+                            ${isActive ? '● ACTIVE' : '● ENDED'}
+                        </span>
+                    </div>
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1.5rem;">
                         <div class="neo-stat-card" style="border-color: var(--casino-green);">
                             <div class="neo-stat-value">$${sessionData.default_buy_in_value ? sessionData.default_buy_in_value.toFixed(2) : '0.00'}</div>
                             <div class="neo-stat-label">Default Buy-in</div>
@@ -434,13 +432,15 @@ export default class SessionDetailPage {
             `;
         }
         
-        // Add chip distribution section after players
-        html += `
+        // Add chip distribution section after players (only for active sessions)
+        if (isActive) {
+            html += `
                 <!-- Chip Distribution Section -->
                 <div id="chip-distribution-container">
                 ${this.renderChipDistribution(session)}
                 </div>
-        `;
+            `;
+        }
         
         // Add session control buttons at the bottom
         html += `

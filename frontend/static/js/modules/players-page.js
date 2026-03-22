@@ -167,21 +167,20 @@ export default class PlayersPage {
                                  player.net_profit < 0 ? 'neo-card-primary' : '';
 
                 html += `
-                    <div class="neo-card neo-card-clickable ${cardColor} clickable-player-stats" data-player-id="${player.player_id}" style="cursor: pointer; padding: 1rem; margin: 0;">
+                    <div class="neo-card ${cardColor} clickable-player-stats" data-player-id="${player.player_id}" style="text-decoration: none; color: inherit; cursor: pointer; padding: 1rem; margin: 0;">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <div>
                                 <div style="font-weight: 600; color: inherit; margin-bottom: 0.25rem; font-size: 1.125rem;">
-                                    ${isGambleKing ? '👑 ' : ''}
-                                    <a href="#player/${player.player_id}" style="color: inherit; text-decoration: none;">${player.name}</a>
+                                    ${isGambleKing ? '👑 ' : ''}<a href="#player/${player.player_id}" style="color: inherit; text-decoration: none;">${player.name}</a>
                                 </div>
                                 <div style="font-size: 0.875rem; color: inherit; font-weight: 600; opacity: 0.8;">
-                                    Sessions: ${player.games_played || 0} · Net: $${player.net_profit ? player.net_profit.toFixed(2) : '0.00'} · 7-2: ${player.seven_two_wins || 0} · Strikes: ${player.strikes || 0}
+                                    Sessions: ${player.games_played || 0} · 7-2: ${player.seven_two_wins || 0} · Strikes: ${player.strikes || 0}
                                 </div>
                             </div>
-                            <div style="text-align: right;">
-                                <div class="${player.net_profit >= 0 ? 'profit-positive' : 'profit-negative'}" style="font-size: 1.25rem; font-weight: 700;">
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <span class="${player.net_profit >= 0 ? 'profit-positive' : 'profit-negative'}" style="font-size: 1rem; font-weight: 700;">
                                     $${player.net_profit ? player.net_profit.toFixed(2) : '0.00'}
-                                </div>
+                                </span>
                             </div>
                         </div>
                     </div>
