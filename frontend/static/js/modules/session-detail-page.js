@@ -340,8 +340,8 @@ export default class SessionDetailPage {
                                 </h4>
                             </div>
                             
-                            <!-- Buy-in, Cash-out, Profit Stats -->
-                            <div style="display: flex; gap: 2rem; flex-wrap: wrap; margin-bottom: 1rem;">
+                            <!-- Buy-in, Cash-out, Profit, 7-2 Wins, Strikes Stats -->
+                            <div style="display: flex; gap: 2rem; flex-wrap: wrap; margin-bottom: 1rem; align-items: flex-end;">
                                 <div>
                                     <span style="font-size: 0.875rem; font-weight: 600; opacity: 0.8; display: block;">Buy-in</span>
                                     <span style="font-size: 1.25rem; font-weight: 600; color: var(--casino-red);">$${buyIn.toFixed(2)}</span>
@@ -354,109 +354,71 @@ export default class SessionDetailPage {
                                     <span style="font-size: 0.875rem; font-weight: 600; opacity: 0.8; display: block;">Profit</span>
                                     <span class="${profit >= 0 ? 'profit-positive' : 'profit-negative'}" style="font-size: 1.25rem; font-weight: 600;">$${profit.toFixed(2)}</span>
                                 </div>
+                                <!-- 7-2 Wins inline -->
+                                <div>
+                                    <span style="font-size: 0.875rem; font-weight: 600; opacity: 0.8; display: block;">7-2 Wins</span>
+                                    <div style="display: flex; align-items: center; gap: 0.375rem; margin-top: 2px;">
+                                        ${isActive ? `
+                                            <button class="neo-btn neo-btn-sm seven-two-decrement-btn" data-player-id="${player.id}" style="
+                                                width: 24px; height: 24px; padding: 0; font-size: 14px; font-weight: 700;
+                                                display: flex; align-items: center; justify-content: center;
+                                                border: 1px solid var(--casino-gold); border-radius: 50%;
+                                                background: transparent; color: var(--casino-gold);
+                                                cursor: pointer; transition: all 0.15s ease;
+                                                line-height: 1;
+                                            ">−</button>
+                                        ` : ''}
+                                        <span style="font-size: 1.25rem; font-weight: 600; color: var(--casino-gold); min-width: 1.5rem; text-align: center;">${player.sevenTwoWins || 0}</span>
+                                        ${isActive ? `
+                                            <button class="neo-btn neo-btn-sm seven-two-increment-btn" data-player-id="${player.id}" style="
+                                                width: 24px; height: 24px; padding: 0; font-size: 14px; font-weight: 700;
+                                                display: flex; align-items: center; justify-content: center;
+                                                border: 1px solid var(--casino-gold); border-radius: 50%;
+                                                background: var(--casino-gold); color: var(--text-white);
+                                                cursor: pointer; transition: all 0.15s ease;
+                                                line-height: 1;
+                                            ">+</button>
+                                        ` : ''}
+                                    </div>
+                                </div>
+                                <!-- Strikes inline -->
+                                <div>
+                                    <span style="font-size: 0.875rem; font-weight: 600; opacity: 0.8; display: block;">Strikes</span>
+                                    <div style="display: flex; align-items: center; gap: 0.375rem; margin-top: 2px;">
+                                        ${isActive ? `
+                                            <button class="neo-btn neo-btn-sm strikes-decrement-btn" data-player-id="${player.id}" style="
+                                                width: 24px; height: 24px; padding: 0; font-size: 14px; font-weight: 700;
+                                                display: flex; align-items: center; justify-content: center;
+                                                border: 1px solid var(--casino-red); border-radius: 50%;
+                                                background: transparent; color: var(--casino-red);
+                                                cursor: pointer; transition: all 0.15s ease;
+                                                line-height: 1;
+                                            ">−</button>
+                                        ` : ''}
+                                        <span style="font-size: 1.25rem; font-weight: 600; color: var(--casino-red); min-width: 1.5rem; text-align: center;">${player.strikes || 0}</span>
+                                        ${isActive ? `
+                                            <button class="neo-btn neo-btn-sm strikes-increment-btn" data-player-id="${player.id}" style="
+                                                width: 24px; height: 24px; padding: 0; font-size: 14px; font-weight: 700;
+                                                display: flex; align-items: center; justify-content: center;
+                                                border: 1px solid var(--casino-red); border-radius: 50%;
+                                                background: var(--casino-red); color: var(--text-white);
+                                                cursor: pointer; transition: all 0.15s ease;
+                                                line-height: 1;
+                                            ">+</button>
+                                        ` : ''}
+                                    </div>
+                                </div>
                             </div>
-                            
+
                             <!-- Action Button - Full Width and Responsive -->
                             ${isActive ? `
-                                <div style="margin-bottom: 1rem;">
-                                    ${player.isCashedOut ? 
+                                <div>
+                                    ${player.isCashedOut ?
                                         `<button class="neo-btn neo-btn-green buy-in-player-btn" data-player-id="${player.id}" data-is-cashed-out="${player.isCashedOut}" style="width: 100%; padding: 0.875rem 1rem;">💰 Buy In</button>` :
                                         `<button class="neo-btn neo-btn-gold cash-out-player-btn" data-player-id="${player.id}" data-is-cashed-out="${player.isCashedOut}" style="width: 100%; padding: 0.875rem 1rem;">💸 Cash Out</button>`
                                     }
                                 </div>
                             ` : ''}
-                        </div>
-                        
-                        <!-- Stats and Controls - Equal Width Grid -->
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; align-items: center;">
-                            <!-- 7-2 Wins -->
-                            <div class="neo-stat-card" style="border-color: var(--casino-gold); margin: 0;">
-                                <div style="font-size: 1.25rem; font-weight: 600; color: var(--casino-gold-dark); margin-bottom: 0.25rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
-                                    ${isActive ? `
-                                        <button class="neo-btn neo-btn-sm seven-two-decrement-btn" data-player-id="${player.id}" style="
-                                            width: 28px;
-                                            height: 28px;
-                                            padding: 0;
-                                            font-size: 16px;
-                                            font-weight: 600;
-                                            display: flex; 
-                                            align-items: center; 
-                                            justify-content: center;
-                                            border: var(--neo-border);
-                                            border-radius: 0;
-                                            background: var(--casino-red);
-                                            color: var(--text-white);
-                                            box-shadow: var(--neo-shadow-sm);
-                                        ">−</button>
-                                    ` : ''}
-                                    <span style="min-width: 2rem; text-align: center;">${player.sevenTwoWins || 0}</span>
-                                    ${isActive ? `
-                                        <button class="neo-btn neo-btn-sm seven-two-increment-btn" data-player-id="${player.id}" style="
-                                            width: 28px;
-                                            height: 28px;
-                                            padding: 0;
-                                            font-size: 16px;
-                                            font-weight: 600;
-                                            display: flex; 
-                                            align-items: center; 
-                                            justify-content: center;
-                                            border: var(--neo-border);
-                                            border-radius: 0;
-                                            background: var(--casino-gold);
-                                            color: var(--text-white);
-                                            box-shadow: var(--neo-shadow-sm);
-                                        ">+</button>
-                                    ` : ''}
-                                </div>
-                                <div style="font-size: 0.75rem; font-weight: 600; color: var(--casino-gold-dark);">
-                                    7-2 Wins
-                                </div>
-                            </div>
-                            
-                            <!-- Strikes -->
-                            <div class="neo-stat-card" style="border-color: var(--casino-red); margin: 0;">
-                                <div style="font-size: 1.25rem; font-weight: 600; color: var(--casino-red); margin-bottom: 0.25rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
-                                    ${isActive ? `
-                                        <button class="neo-btn neo-btn-sm strikes-decrement-btn" data-player-id="${player.id}" style="
-                                            width: 28px;
-                                            height: 28px;
-                                            padding: 0;
-                                            font-size: 16px;
-                                            font-weight: 600;
-                                            display: flex; 
-                                            align-items: center; 
-                                            justify-content: center;
-                                            border: var(--neo-border);
-                                            border-radius: 0;
-                                            background: var(--casino-gold);
-                                            color: var(--text-white);
-                                            box-shadow: var(--neo-shadow-sm);
-                                        ">−</button>
-                                    ` : ''}
-                                    <span style="min-width: 2rem; text-align: center;">${player.strikes || 0}</span>
-                                    ${isActive ? `
-                                        <button class="neo-btn neo-btn-sm strikes-increment-btn" data-player-id="${player.id}" style="
-                                            width: 28px;
-                                            height: 28px;
-                                            padding: 0;
-                                            font-size: 16px;
-                                            font-weight: 600;
-                                            display: flex; 
-                                            align-items: center; 
-                                            justify-content: center;
-                                            border: var(--neo-border);
-                                            border-radius: 0;
-                                            background: var(--casino-red);
-                                            color: var(--text-white);
-                                            box-shadow: var(--neo-shadow-sm);
-                                        ">+</button>
-                                    ` : ''}
-                                </div>
-                                <div style="font-size: 0.75rem; font-weight: 600; color: var(--casino-red);">
-                                    Strikes
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 `;
             });

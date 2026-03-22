@@ -167,34 +167,20 @@ export default class PlayersPage {
                                  player.net_profit < 0 ? 'neo-card-primary' : '';
 
                 html += `
-                    <div class="neo-card neo-card-clickable ${cardColor} clickable-player-stats" data-player-id="${player.player_id}" style="cursor: pointer;">
-                        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                    <div class="neo-card neo-card-clickable ${cardColor} clickable-player-stats" data-player-id="${player.player_id}" style="cursor: pointer; padding: 1rem; margin: 0;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
                             <div>
-                                <h4 style="font-size: 1.5rem; font-weight: 600; margin: 0 0 0.5rem 0; display: flex; align-items: center; gap: 0.5rem;">
+                                <div style="font-weight: 600; color: inherit; margin-bottom: 0.25rem; font-size: 1.125rem;">
+                                    ${isGambleKing ? '👑 ' : ''}
                                     <a href="#player/${player.player_id}" style="color: inherit; text-decoration: none;">${player.name}</a>
-                                    ${isGambleKing ? '<span style="font-size: 1.5rem; animation: bounce 2s infinite;">👑</span>' : ''}
-                                </h4>
-                                <div style="display: flex; gap: 1.5rem; flex-wrap: wrap;">
-                                    <div>
-                                        <span style="font-size: 0.875rem; font-weight: 600; opacity: 0.8; display: block;">Net Profit</span>
-                                        <div class="${player.net_profit >= 0 ? 'profit-positive' : 'profit-negative'}" style="font-size: 1.25rem; font-weight: 600;">
-                                            $${player.net_profit ? player.net_profit.toFixed(2) : '0.00'}
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <span style="font-size: 0.875rem; font-weight: 600; opacity: 0.8; display: block;">Sessions</span>
-                                        <div style="font-size: 1.25rem; font-weight: 600; color: inherit;">
-                                            ${player.games_played || 0}
-                                        </div>
-                                    </div>
+                                </div>
+                                <div style="font-size: 0.875rem; color: inherit; font-weight: 600; opacity: 0.8;">
+                                    Sessions: ${player.games_played || 0} · Net: $${player.net_profit ? player.net_profit.toFixed(2) : '0.00'} · 7-2: ${player.seven_two_wins || 0} · Strikes: ${player.strikes || 0}
                                 </div>
                             </div>
-                            <div class="neo-stat-card" style="min-width: 120px; text-align: center; margin: 0; border-color: var(--casino-gold);">
-                                <div style="font-size: 1.5rem; font-weight: 600; color: var(--casino-gold-dark); margin-bottom: 0.25rem;">
-                                    ${player.seven_two_wins || 0}
-                                </div>
-                                <div style="font-size: 0.75rem; font-weight: 600; color: var(--casino-gold-dark);">
-                                    7-2 Wins
+                            <div style="text-align: right;">
+                                <div class="${player.net_profit >= 0 ? 'profit-positive' : 'profit-negative'}" style="font-size: 1.25rem; font-weight: 700;">
+                                    $${player.net_profit ? player.net_profit.toFixed(2) : '0.00'}
                                 </div>
                             </div>
                         </div>

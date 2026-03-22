@@ -433,7 +433,7 @@ export default class StatsPage {
                 </div>
 
                 <!-- Chart area -->
-                <div style="flex: 1; border-left: 3px solid var(--casino-black); border-bottom: 3px solid var(--casino-black); position: relative;">
+                <div style="flex: 1; border-left: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); position: relative;">
                     <svg width="${width + padding * 2}" height="${height + margin.top + 10}" style="display: block; overflow: visible;">
                         <!-- Grid lines -->
                         <g>
@@ -458,8 +458,8 @@ export default class StatsPage {
                                         cy="${cy}"
                                         r="6"
                                         fill="var(--casino-gold)"
-                                        stroke="var(--casino-black)"
-                                        stroke-width="2"
+                                        stroke="var(--casino-green-dark)"
+                                        stroke-width="1.5"
                                         class="neo-data-point"
                                         data-session-id="${point.session_id}"
                                         data-date="${point.date}"
@@ -654,8 +654,8 @@ export default class StatsPage {
                         cy="${y}" 
                         r="6" 
                         fill="var(--casino-gold)" 
-                        stroke="var(--casino-black)" 
-                        stroke-width="2" 
+                        stroke="var(--casino-green-dark)"
+                        stroke-width="1.5"
                         class="neo-data-point"
                         data-session-id="${point.session_id}"
                         data-date="${point.date}"
@@ -1073,8 +1073,8 @@ export default class StatsPage {
 
         return `<path d="${pathData}"
                       fill="${color}"
-                      stroke="var(--casino-black)"
-                      stroke-width="3"
+                      stroke="var(--bg-card)"
+                      stroke-width="2"
                       class="neo-pie-slice"
                       data-player-name="${playerName}"
                       data-player-value="${playerValue}"

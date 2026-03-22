@@ -1,10 +1,10 @@
-/* Neobrutalist Chart Styles */
-/* Inspired by https://www.neobrutalism.dev/charts */
+/* Chart Styles */
 
 /* Chart Container */
 .neo-chart-container {
     background: var(--bg-card);
-    border: var(--neo-border);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
     box-shadow: var(--neo-shadow-md);
     padding: 1rem;
     margin: 1rem 0;
@@ -19,19 +19,15 @@
 
 .neo-chart-header h2 {
     font-size: 1.75rem;
-    font-weight: var(--font-weight-black);
+    font-weight: 600;
     color: var(--text-primary);
     margin: 0 0 0.5rem 0;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
 }
 
 .neo-chart-subtitle {
     font-size: 1rem;
     font-weight: var(--font-weight-bold);
     color: var(--text-secondary);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
 }
 
 /* Chart Wrapper */
@@ -51,8 +47,6 @@
     font-size: 0.75rem;
     font-weight: var(--font-weight-bold);
     color: var(--text-secondary);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
     line-height: 1;
     white-space: nowrap;
 }
@@ -61,8 +55,8 @@
 .neo-chart-area {
     flex: 1;
     position: relative;
-    border-left: var(--neo-border-thin);
-    border-bottom: var(--neo-border-thin);
+    border-left: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
 }
 
 /* Grid Lines */
@@ -91,7 +85,7 @@
     background: transparent;
 }
 
-/* Area Path Styling - Flat colors (no gradients for neobrutalist style) */
+/* Area Path Styling */
 .neo-area-path {
     fill: var(--casino-green);
     stroke: var(--casino-green-dark);
@@ -107,8 +101,8 @@
 /* Data Points */
 .neo-data-point {
     fill: var(--casino-gold);
-    stroke: var(--casino-black);
-    stroke-width: 2;
+    stroke: var(--casino-green-dark);
+    stroke-width: 1.5;
     cursor: pointer;
     transition: all 0.2s ease;
     r: 6;
@@ -123,14 +117,13 @@
 /* Chart Tooltip */
 .neo-chart-tooltip {
     position: absolute;
-    background: var(--casino-black);
-    color: var(--casino-white);
-    border: 3px solid var(--casino-gold);
+    background: var(--bg-card);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
     padding: 0.75rem;
     font-size: 0.8rem;
     font-weight: var(--font-weight-bold);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
     box-shadow: var(--neo-shadow-md);
     z-index: var(--z-modal, 2000);
     transform: translate(-50%, -100%);
@@ -149,7 +142,7 @@
     height: 0;
     border-left: 8px solid transparent;
     border-right: 8px solid transparent;
-    border-top: 8px solid var(--casino-gold);
+    border-top: 8px solid var(--border-color);
 }
 
 /* Insights Section */
@@ -165,7 +158,8 @@
     align-items: center;
     padding: 0.75rem;
     background: var(--bg-secondary);
-    border: 2px solid var(--casino-black);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
     box-shadow: var(--neo-shadow-sm);
 }
 
@@ -173,8 +167,6 @@
     font-size: 0.9rem;
     font-weight: var(--font-weight-bold);
     color: var(--text-secondary);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
 }
 
 .neo-insight-value {
@@ -198,7 +190,7 @@
     gap: var(--spacing-neo) !important;
 }
 
-/* Session Modal Styles - Neobrutalist Design */
+/* Session Modal Styles */
 .neo-session-modal {
     position: fixed;
     top: 0;
@@ -216,8 +208,8 @@
 
 .neo-session-modal-content {
     background: var(--casino-bg);
-    border: 4px solid var(--casino-black);
-    border-radius: 0;
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
     box-shadow: var(--neo-shadow-xl);
     max-width: 500px;
     width: 90%;
@@ -228,7 +220,8 @@
 
 .neo-session-modal-header {
     background: var(--casino-gold);
-    border-bottom: 4px solid var(--casino-black);
+    border-bottom: 1px solid var(--border-color);
+    border-radius: 20px 20px 0 0;
     padding: 1rem 1.5rem;
     display: flex;
     justify-content: space-between;
@@ -246,7 +239,8 @@
 
 .neo-session-modal-close {
     background: var(--casino-red);
-    border: 3px solid var(--casino-black);
+    border: 1px solid var(--border-color);
+    border-radius: 50%;
     color: var(--casino-white);
     font-size: 1.5rem;
     font-weight: bold;
@@ -257,7 +251,6 @@
     justify-content: center;
     align-items: center;
     transition: all 0.1s ease;
-    border-radius: 0;
     box-shadow: var(--neo-shadow-sm);
 }
 
@@ -281,7 +274,8 @@
 
 .neo-session-info-card {
     background: var(--casino-white);
-    border: 3px solid var(--casino-black);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
     padding: 1rem;
     box-shadow: var(--neo-shadow-md);
 }
@@ -364,50 +358,50 @@
     .neo-chart-container {
         min-height: 300px;
     }
-    
+
     .neo-chart-wrapper {
         height: 220px;
     }
-    
+
     .neo-chart-y-axis {
         width: 75px;
     }
-    
+
     .neo-y-label {
         font-size: 0.7rem;
     }
-    
+
     .neo-chart-header h2 {
         font-size: 1.5rem;
     }
-    
+
     .neo-chart-subtitle {
         font-size: 0.9rem;
     }
-    
+
     .stats-page .neo-stats-grid {
         grid-template-columns: repeat(2, 1fr) !important;
         gap: 1rem !important;
     }
-    
+
     .neo-session-modal-content {
         width: 95%;
         margin: 1rem;
     }
-    
+
     .neo-session-info-grid {
         grid-template-columns: 1fr;
         gap: 0.75rem;
     }
-    
+
     .neo-session-modal-header {
         padding: 0.75rem 1rem;
     }
-    
+
     .neo-session-modal-header h3 {
         font-size: 1.1rem;
     }
-    
+
     .neo-session-actions {
         flex-direction: column;
     }
@@ -420,7 +414,7 @@
         r: 6;
         stroke-width: 2;
     }
-    
+
     .neo-session-modal-close:hover {
         transform: none;
         box-shadow: var(--neo-shadow-sm);
@@ -430,13 +424,13 @@
 /* Dark mode compatibility */
 @media (prefers-color-scheme: dark) {
     .neo-chart-tooltip {
-        background: var(--casino-white);
-        color: var(--casino-black);
-        border-color: var(--casino-gold);
+        background: var(--bg-card);
+        color: var(--text-primary);
+        border-color: var(--border-color);
     }
-    
+
     .neo-chart-tooltip::after {
-        border-top-color: var(--casino-gold);
+        border-top-color: var(--border-color);
     }
 }
 
@@ -447,7 +441,8 @@
     flex-direction: column;
     text-align: center;
     padding: var(--spacing-neo);
-    border: var(--neo-border);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
     box-shadow: var(--neo-shadow-md);
     transition: all var(--transition-neo);
     min-height: 130px;
@@ -457,7 +452,7 @@
 }
 
 .neo-leaderboard-stat:hover {
-    transform: translate(-2px, -2px);
+    transform: translateY(-2px);
     box-shadow: var(--neo-shadow-lg);
 }
 
@@ -465,7 +460,7 @@
     font-size: 0.875rem;
     font-weight: var(--font-weight-bold);
     text-transform: uppercase;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.02em;
     margin-bottom: 0.25rem;
     color: inherit;
 }
@@ -497,68 +492,67 @@
 /* Color variants for leaderboard stats - light backgrounds with dark text */
 .neo-leaderboard-stat.green {
     background: var(--casino-green-light);
-    border-color: #000000;
+    border-color: rgba(6, 95, 70, 0.2);
     color: var(--casino-green-dark);
 }
 
 .neo-leaderboard-stat.red {
     background: var(--casino-red-light);
-    border-color: #000000;
+    border-color: rgba(153, 27, 27, 0.2);
     color: var(--casino-red-dark);
 }
 
 .neo-leaderboard-stat.blue {
-    background: #DBEAFE; /* Light blue */
-    border-color: #000000;
-    color: #1E40AF; /* Dark blue */
+    background: #DBEAFE;
+    border-color: rgba(30, 64, 175, 0.2);
+    color: #1E40AF;
 }
 
 .neo-leaderboard-stat.purple {
     background: var(--casino-purple-light);
-    border-color: #000000;
+    border-color: rgba(109, 40, 217, 0.2);
     color: var(--casino-purple-dark);
 }
 
 .neo-leaderboard-stat.gold {
     background: var(--casino-gold-light);
-    border-color: #000000;
+    border-color: rgba(245, 158, 11, 0.2);
     color: var(--casino-gold-dark);
 }
 
 .neo-leaderboard-stat.black {
-    background: #E5E7EB; /* Light gray */
-    border-color: #000000;
-    color: #1F2937; /* Dark gray */
+    background: #E5E7EB;
+    border-color: rgba(31, 41, 55, 0.2);
+    color: #1F2937;
 }
 
-/* Dark mode overrides - keep same light backgrounds for readability */
+/* Dark mode overrides - softer dark-mode backgrounds */
 [data-theme="dark"] .neo-leaderboard-stat.green {
-    background: var(--casino-green-light) !important;
-    color: var(--casino-green-dark) !important;
+    background: rgba(6, 95, 70, 0.1);
+    color: var(--casino-green-dark);
 }
 
 [data-theme="dark"] .neo-leaderboard-stat.red {
-    background: var(--casino-red-light) !important;
-    color: var(--casino-red-dark) !important;
+    background: rgba(153, 27, 27, 0.1);
+    color: var(--casino-red-dark);
 }
 
 [data-theme="dark"] .neo-leaderboard-stat.blue {
-    background: #DBEAFE !important;
-    color: #1E40AF !important;
+    background: rgba(30, 64, 175, 0.1);
+    color: #60A5FA;
 }
 
 [data-theme="dark"] .neo-leaderboard-stat.purple {
-    background: var(--casino-purple-light) !important;
-    color: var(--casino-purple-dark) !important;
+    background: rgba(109, 40, 217, 0.1);
+    color: var(--casino-purple-dark);
 }
 
 [data-theme="dark"] .neo-leaderboard-stat.gold {
-    background: var(--casino-gold-light) !important;
-    color: var(--casino-gold-dark) !important;
+    background: rgba(245, 158, 11, 0.1);
+    color: var(--casino-gold-dark);
 }
 
 [data-theme="dark"] .neo-leaderboard-stat.black {
-    background: #E5E7EB !important;
-    color: #1F2937 !important;
+    background: rgba(31, 41, 55, 0.1);
+    color: #D1D5DB;
 }
-
