@@ -1,5 +1,45 @@
 // Event detail page module
+import { staggerChildren } from './animations.js';
+
 export default class EventDetailPage {
+    static skeleton() {
+        return `
+            <div style="padding: 1.5rem; max-width: 800px; margin: 0 auto;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <div class="skeleton skeleton-btn" style="width: 170px; height: 40px;"></div>
+                    <div class="skeleton skeleton-btn" style="width: 100px; height: 40px;"></div>
+                </div>
+                <div class="neo-card">
+                    <div class="skeleton skeleton-text" style="width: 60%; height: 1.5rem; margin-bottom: 0.75rem;"></div>
+                    <div class="skeleton skeleton-text" style="width: 45%; height: 1rem; margin-bottom: 1rem;"></div>
+                    <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
+                        <div class="skeleton" style="width: 60px; height: 28px; border-radius: 4px;"></div>
+                        <div class="skeleton" style="width: 70px; height: 28px; border-radius: 4px;"></div>
+                        <div class="skeleton" style="width: 55px; height: 28px; border-radius: 4px;"></div>
+                    </div>
+                    <div class="skeleton skeleton-text" style="width: 50%; height: 1rem;"></div>
+                </div>
+                <div class="neo-card" style="margin-top: 1rem;">
+                    <div class="skeleton skeleton-text" style="width: 25%; height: 1.25rem; margin-bottom: 0.75rem;"></div>
+                    <div class="skeleton" style="width: 100%; height: 40px; margin-bottom: 0.5rem;"></div>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <div class="skeleton" style="flex: 1; height: 38px;"></div>
+                        <div class="skeleton" style="flex: 1; height: 38px;"></div>
+                        <div class="skeleton" style="flex: 1; height: 38px;"></div>
+                    </div>
+                </div>
+                <div class="neo-card" style="margin-top: 1rem;">
+                    <div class="skeleton skeleton-text" style="width: 30%; height: 1.25rem; margin-bottom: 0.75rem;"></div>
+                    ${Array(3).fill(`
+                        <div style="padding: 0.5rem 0;">
+                            <div class="skeleton skeleton-text" style="width: 70%; height: 1rem;"></div>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+    }
+
     constructor(appContent, apiService) {
         this.appContent = appContent;
         this.api = apiService;
@@ -57,7 +97,7 @@ export default class EventDetailPage {
 
                 ${!isCancelled && !this.editing ? `
                 <div class="neo-card" style="margin-top: 1rem; padding: 1rem;">
-                    <h3 style="font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-primary); margin: 0 0 0.5rem 0; ">RSVP</h3>
+                    <h3 style="font-weight: 600; color: var(--text-primary); margin: 0 0 0.5rem 0;">RSVP</h3>
                     <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
                         <select id="rsvp-player-select" class="neo-input" style="flex: 1 1 100%; padding: 0.5rem;">
                             <option value="">Select player...</option>
@@ -74,7 +114,7 @@ export default class EventDetailPage {
 
                 ${!this.editing && (yesPlayers.length > 0 || maybePlayers.length > 0 || noPlayers.length > 0) ? `
                 <div class="neo-card" style="margin-top: 1rem; padding: 1rem;">
-                    <h3 style="font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-primary); margin: 0 0 0.5rem 0; ">Responses</h3>
+                    <h3 style="font-weight: 600; color: var(--text-primary); margin: 0 0 0.5rem 0;">Responses</h3>
                     ${yesPlayers.length > 0 ? `
                         <div style="margin-bottom: 0.5rem;">
                             <span style="font-weight: 700; color: var(--casino-green);">Playing:</span>
@@ -123,6 +163,9 @@ export default class EventDetailPage {
             </div>
         `;
 
+        // Stagger animate cards
+        staggerChildren(this.appContent, '.neo-card');
+
         this.setupEventListeners();
     }
 
@@ -130,7 +173,7 @@ export default class EventDetailPage {
         return `
             <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem;">
                 <div>
-                    <h2 style="font-size: 1.75rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-primary); margin: 0;">
+                    <h2 style="font-size: 1.75rem; font-weight: 600; color: var(--text-primary); margin: 0;">
                         ${this.escapeHtml(event.title || 'Poker Night')}
                         ${isCancelled ? '<span style="color: var(--casino-red); font-size: 1rem; margin-left: 0.5rem;">CANCELLED</span>' : ''}
                     </h2>
@@ -152,7 +195,7 @@ export default class EventDetailPage {
 
     renderEditForm(event) {
         return `
-            <h3 style="font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-primary); margin-bottom: 1rem;">Edit Session</h3>
+            <h3 style="font-weight: 600; color: var(--text-primary); margin-bottom: 1rem;">Edit Event</h3>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
                 <div>
                     <label style="font-weight: 700; display: block; margin-bottom: 0.25rem; color: var(--text-primary);">Title</label>
@@ -416,7 +459,7 @@ export default class EventDetailPage {
         popover.style.cssText = 'position: fixed; z-index: 1000; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--card-bg); border: 3px solid var(--border-color); box-shadow: 6px 6px 0px var(--border-color); padding: 1.25rem; display: flex; flex-direction: column; gap: 0.75rem; min-width: 220px; max-width: 90vw;';
 
         popover.innerHTML = `
-            <div style="font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-primary); text-align: center; font-size: 0.875rem;">Add to Calendar</div>
+            <div style="font-weight: 600; color: var(--text-primary); text-align: center; font-size: 0.875rem;">Add to Calendar</div>
             <button class="neo-btn neo-btn-green neo-btn-sm cal-popover-google" style="width: 100%; text-align: center;">Google Calendar</button>
             <button class="neo-btn neo-btn-gold neo-btn-sm cal-popover-ics" style="width: 100%; text-align: center;">Download .ics</button>
         `;

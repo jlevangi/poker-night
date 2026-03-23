@@ -1,0 +1,94 @@
+/* Page Transitions & Micro-interactions */
+
+/* Page exit/enter animations */
+.page-exit {
+    animation: pageExit 150ms ease-in forwards;
+}
+
+.page-enter {
+    animation: pageEnter 250ms ease-out forwards;
+}
+
+@keyframes pageExit {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+}
+
+@keyframes pageEnter {
+    from {
+        opacity: 0;
+        transform: translateY(-6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Stagger animation for list items */
+.stagger-in {
+    opacity: 0;
+    transform: translateY(10px);
+    animation: staggerFadeIn 0.3s ease-out forwards;
+}
+
+@keyframes staggerFadeIn {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Card hover lift */
+.card-hover {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card-hover:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--neo-shadow-md);
+}
+
+/* Button press feedback */
+.btn-press {
+    transition: transform 0.1s ease;
+}
+
+.btn-press:active {
+    transform: scale(0.97);
+}
+
+/* Smooth counter value animation class */
+.value-animating {
+    transition: none;
+}
+
+/* Modal slide-up */
+@keyframes modalSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modal-animate-in {
+    animation: modalSlideUp 0.25s ease-out;
+}
+
+/* Subtle scale on tap for interactive elements */
+@media (hover: none) {
+    .tap-feedback:active {
+        transform: scale(0.97);
+        transition: transform 0.1s ease;
+    }
+}

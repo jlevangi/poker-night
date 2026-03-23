@@ -1,5 +1,42 @@
 // Player detail page module
-export default class PlayerDetailPage {    constructor(appContent, apiService) {
+import { staggerChildren, animateAllValues } from './animations.js';
+
+export default class PlayerDetailPage {
+    static skeleton() {
+        return `
+            <div style="padding: 1.5rem; max-width: 1200px; margin: 0 auto;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                    <div class="skeleton skeleton-btn" style="width: 160px; height: 40px;"></div>
+                    <div class="skeleton skeleton-btn" style="width: 100px; height: 40px;"></div>
+                </div>
+                <div class="neo-card">
+                    <div class="skeleton skeleton-text" style="width: 50%; height: 2rem; margin-bottom: 1.5rem;"></div>
+                    <div class="neo-stats-grid" style="grid-template-columns: repeat(2, 1fr); margin-bottom: 1.5rem;">
+                        <div class="neo-stat-card"><div class="skeleton skeleton-text" style="width: 70%; height: 1.5rem; margin: 0 auto;"></div></div>
+                        <div class="neo-stat-card"><div class="skeleton skeleton-text" style="width: 70%; height: 1.5rem; margin: 0 auto;"></div></div>
+                        <div class="neo-stat-card"><div class="skeleton skeleton-text" style="width: 70%; height: 1.5rem; margin: 0 auto;"></div></div>
+                        <div class="neo-stat-card"><div class="skeleton skeleton-text" style="width: 70%; height: 1.5rem; margin: 0 auto;"></div></div>
+                    </div>
+                </div>
+                <div class="neo-card" style="margin-top: 1rem;">
+                    <div class="skeleton skeleton-text" style="width: 40%; height: 1.5rem; margin-bottom: 1rem;"></div>
+                    <div class="skeleton" style="width: 100%; height: 250px;"></div>
+                </div>
+                <div class="neo-card" style="margin-top: 1rem;">
+                    <div class="skeleton skeleton-text" style="width: 35%; height: 1.5rem; margin-bottom: 1rem;"></div>
+                    ${Array(4).fill(`
+                        <div style="display: flex; gap: 1rem; padding: 0.75rem 0; border-bottom: 1px solid var(--border-color);">
+                            <div class="skeleton skeleton-text" style="width: 25%; height: 1rem;"></div>
+                            <div class="skeleton skeleton-text" style="width: 20%; height: 1rem;"></div>
+                            <div class="skeleton skeleton-text" style="width: 20%; height: 1rem;"></div>
+                            <div class="skeleton skeleton-text" style="width: 20%; height: 1rem;"></div>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+    }
+    constructor(appContent, apiService) {
         this.appContent = appContent;
         this.api = apiService;
         this.chartData = null;
@@ -108,7 +145,7 @@ export default class PlayerDetailPage {    constructor(appContent, apiService) {
                 
                 <!-- Player Header Card -->
                 <div class="neo-card ${isTopPerformer ? 'neo-card-gold' : 'neo-card-primary'}">
-                    <h2 style="font-size: 2.5rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1.5rem; color: inherit; display: flex; align-items: center; gap: 1rem;">
+                    <h2 style="font-size: 2.5rem; font-weight: 600; margin-bottom: 1.5rem; color: inherit; display: flex; align-items: center; gap: 1rem;">
                         ${player.name}
                     </h2>
                     
@@ -136,7 +173,7 @@ export default class PlayerDetailPage {    constructor(appContent, apiService) {
                 <!-- Profit/Loss Over Time Chart -->
                 <div class="neo-card">
                     <div class="neo-chart-header">
-                        <h3 style="font-size: 1.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; margin: 0;">📈 Profit/Loss Over Time</h3>
+                        <h3 style="font-size: 1.75rem; font-weight: 600; margin: 0;">📈 Profit/Loss Over Time</h3>
                         <div class="neo-chart-subtitle" id="profit-chart-subtitle"></div>
                     </div>
                     <div id="profit-chart" style="margin-top: 1.5rem;"></div>
@@ -148,7 +185,7 @@ export default class PlayerDetailPage {    constructor(appContent, apiService) {
             html += `
                 <!-- Sessions History -->
                 <div class="neo-card">
-                    <h3 style="font-size: 1.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1.5rem;">📊 Session History</h3>
+                    <h3 style="font-size: 1.75rem; font-weight: 600; margin-bottom: 1.5rem;">📊 Session History</h3>
                     <div class="table-responsive">
                         <table class="neo-table">
                             <thead>
@@ -198,7 +235,12 @@ export default class PlayerDetailPage {    constructor(appContent, apiService) {
         
         
         this.appContent.innerHTML = html;
-        
+
+        // Animate stat cards and table rows
+        staggerChildren(this.appContent, '.neo-stat-card');
+        staggerChildren(this.appContent, '.neo-table tbody tr');
+        animateAllValues(this.appContent);
+
         // Add event listeners
         this.setupEventListeners(player);
     }
@@ -318,7 +360,7 @@ export default class PlayerDetailPage {    constructor(appContent, apiService) {
                 </div>
 
                 <!-- Chart area -->
-                <div style="flex: 1; border-left: 3px solid var(--casino-black); border-bottom: 3px solid var(--casino-black); position: relative;">
+                <div style="flex: 1; border-left: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); position: relative;">
                     <svg width="${width + padding * 2}" height="${height + margin.top + 10}" style="display: block; overflow: visible;">
                         <!-- Grid lines -->
                         <g>
@@ -347,8 +389,8 @@ export default class PlayerDetailPage {    constructor(appContent, apiService) {
                                         cy="${cy}"
                                         r="6"
                                         fill="${pointColor}"
-                                        stroke="var(--casino-black)"
-                                        stroke-width="2"
+                                        stroke="var(--casino-green-dark)"
+                                        stroke-width="1.5"
                                         class="neo-data-point"
                                         data-session-id="${point.session_id}"
                                         data-date="${point.date}"

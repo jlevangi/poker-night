@@ -1,5 +1,28 @@
 // Sessions page module
-export default class SessionsPage {    constructor(appContent, apiService) {
+import { staggerChildren } from './animations.js';
+
+export default class SessionsPage {
+    static skeleton() {
+        return `
+            <div style="padding: 1.5rem; max-width: 1200px; margin: 0 auto;">
+                <!-- Title Skeleton -->
+                <div class="skeleton" style="height: 2.5rem; width: 40%; margin-bottom: 2rem; border-radius: 4px;"></div>
+                <!-- Create Button Skeleton -->
+                <div class="neo-card skeleton" style="height: 4rem; margin-bottom: 2rem;"></div>
+                <!-- Session Card Skeletons -->
+                <div class="skeleton" style="height: 1.75rem; width: 30%; margin-bottom: 1.5rem; border-radius: 4px;"></div>
+                <div style="display: grid; gap: 1rem;">
+                    <div class="neo-card skeleton" style="height: 4.5rem;"></div>
+                    <div class="neo-card skeleton" style="height: 4.5rem;"></div>
+                    <div class="neo-card skeleton" style="height: 4.5rem;"></div>
+                    <div class="neo-card skeleton" style="height: 4.5rem;"></div>
+                    <div class="neo-card skeleton" style="height: 4.5rem;"></div>
+                </div>
+            </div>
+        `;
+    }
+
+    constructor(appContent, apiService) {
         this.appContent = appContent;
         this.api = apiService;
     }
@@ -46,22 +69,20 @@ export default class SessionsPage {    constructor(appContent, apiService) {
 
     // Render sessions content
     render(sessions, upcomingEvents = []) {
-        const activeSessions = sessions.filter(s => s.status === 'ACTIVE');
-        const otherSessions = sessions.filter(s => s.status !== 'ACTIVE');
-
         let html = `
             <div class="fade-in" style="padding: 1.5rem; max-width: 1200px; margin: 0 auto;">
-                <h2 style="font-size: 2.5rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 2rem; color: var(--text-primary); text-shadow: 3px 3px 0px var(--casino-green);">🃏 Sessions</h2>
+                <h2 class="section-title" style="font-size: 2rem; margin-bottom: 2rem;">🃏 Sessions</h2>
 
                 <div class="neo-card neo-card-green" style="margin-bottom: 2rem; text-align: center;">
                     <button id="create-session-btn" class="neo-btn neo-btn-green neo-btn-lg">+ Create Session</button>
                 </div>
         `;
 
-        // Active session section
+        // Active sessions section (shown at top)
+        const activeSessions = sessions.filter(s => s.status === 'ACTIVE');
         if (activeSessions.length > 0) {
             html += `
-                <h3 style="font-size: 1.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1.5rem; color: var(--text-primary);">Active Session</h3>
+                <h3 class="section-title" style="font-size: 1.5rem; margin-bottom: 1.5rem;">Active Sessions</h3>
                 <div style="display: grid; gap: 1rem; margin-bottom: 2rem;">
             `;
 
@@ -70,7 +91,7 @@ export default class SessionsPage {    constructor(appContent, apiService) {
                     <a href="#session/${session.session_id}" class="neo-card neo-card-gold" style="text-decoration: none; color: inherit; padding: 1rem; margin: 0;">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <div>
-                                <div style="font-weight: 800; color: inherit; margin-bottom: 0.25rem; font-size: 1.125rem; text-transform: uppercase; letter-spacing: 0.05em;">
+                                <div style="font-weight: 600; color: inherit; margin-bottom: 0.25rem; font-size: 1.125rem;">
                                     📅 ${this.formatDate(session.date)}
                                 </div>
                                 <div style="font-size: 0.875rem; color: inherit; font-weight: 600; opacity: 0.8;">
@@ -79,8 +100,8 @@ export default class SessionsPage {    constructor(appContent, apiService) {
                             </div>
                             <div style="display: flex; align-items: center; gap: 0.5rem;">
                                 <span style="color: var(--casino-gold); font-size: 1.25rem;">🟡</span>
-                                <span style="font-size: 0.875rem; font-weight: 700; color: var(--casino-gold); text-transform: uppercase; letter-spacing: 0.05em;">
-                                    Active
+                                <span style="font-size: 0.875rem; font-weight: 600; color: var(--casino-gold);">
+                                    ACTIVE
                                 </span>
                             </div>
                         </div>
@@ -94,7 +115,7 @@ export default class SessionsPage {    constructor(appContent, apiService) {
         // Upcoming events section
         if (upcomingEvents.length > 0) {
             html += `
-                <h3 style="font-size: 1.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1.5rem; color: var(--text-primary);">Upcoming</h3>
+                <h3 class="section-title" style="font-size: 1.5rem; margin-bottom: 1.5rem;">Upcoming</h3>
                 <div style="display: grid; gap: 1rem; margin-bottom: 2rem;">
             `;
 
@@ -104,7 +125,7 @@ export default class SessionsPage {    constructor(appContent, apiService) {
                     <a href="#event/${evt.event_id}" class="neo-card neo-card-purple" style="text-decoration: none; color: inherit; padding: 1rem; margin: 0;">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <div>
-                                <div style="font-weight: 800; color: inherit; margin-bottom: 0.25rem; font-size: 1.125rem; text-transform: uppercase; letter-spacing: 0.05em;">
+                                <div style="font-weight: 600; color: inherit; margin-bottom: 0.25rem; font-size: 1.125rem;">
                                     ${this.escapeHtml(evt.title)} — ${this.formatDate(evt.date)}
                                 </div>
                                 <div style="font-size: 0.875rem; color: inherit; font-weight: 600; opacity: 0.8;">
@@ -113,7 +134,7 @@ export default class SessionsPage {    constructor(appContent, apiService) {
                             </div>
                             <div style="display: flex; align-items: center; gap: 0.5rem;">
                                 <span style="font-size: 1.25rem;">🟠</span>
-                                <span style="font-size: 0.875rem; font-weight: 700; color: #fff; text-transform: uppercase; letter-spacing: 0.05em;">
+                                <span style="font-size: 0.875rem; font-weight: 600; color: #fff;">
                                     Upcoming
                                 </span>
                             </div>
@@ -125,20 +146,25 @@ export default class SessionsPage {    constructor(appContent, apiService) {
             html += `</div>`;
         }
 
-        // All sessions section (non-active)
+        // Past/active sessions section
         html += `
-                <h3 style="font-size: 1.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1.5rem; color: var(--text-primary);">All Sessions</h3>
+                <h3 class="section-title" style="font-size: 1.5rem; margin-bottom: 1.5rem;">All Sessions</h3>
         `;
 
-        if (otherSessions.length > 0) {
+        if (sessions && sessions.length > 0) {
             html += `<div style="display: grid; gap: 1rem;">`;
 
-            otherSessions.forEach(session => {
+            sessions.forEach(session => {
+                const isActive = session.status === 'ACTIVE';
+                const cardColor = isActive ? 'neo-card-gold' : '';
+                const statusColor = isActive ? 'var(--casino-gold)' : 'var(--text-secondary)';
+                const statusIcon = isActive ? '🟡' : '⚪';
+
                 html += `
-                    <a href="#session/${session.session_id}" class="neo-card" style="text-decoration: none; color: inherit; padding: 1rem; margin: 0;">
+                    <a href="#session/${session.session_id}" class="neo-card ${cardColor}" style="text-decoration: none; color: inherit; padding: 1rem; margin: 0;">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <div>
-                                <div style="font-weight: 800; color: inherit; margin-bottom: 0.25rem; font-size: 1.125rem; text-transform: uppercase; letter-spacing: 0.05em;">
+                                <div style="font-weight: 600; color: inherit; margin-bottom: 0.25rem; font-size: 1.125rem;">
                                     📅 ${this.formatDate(session.date)}
                                 </div>
                                 <div style="font-size: 0.875rem; color: inherit; font-weight: 600; opacity: 0.8;">
@@ -146,9 +172,9 @@ export default class SessionsPage {    constructor(appContent, apiService) {
                                 </div>
                             </div>
                             <div style="display: flex; align-items: center; gap: 0.5rem;">
-                                <span style="color: var(--text-secondary); font-size: 1.25rem;">⚪</span>
-                                <span style="font-size: 0.875rem; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em;">
-                                    ${session.status || 'Ended'}
+                                <span style="color: ${statusColor}; font-size: 1.25rem;">${statusIcon}</span>
+                                <span style="font-size: 0.875rem; font-weight: 600; color: ${statusColor};">
+                                    ${session.status || 'Unknown'}
                                 </span>
                             </div>
                         </div>
@@ -157,11 +183,11 @@ export default class SessionsPage {    constructor(appContent, apiService) {
             });
 
             html += `</div>`;
-        } else if (activeSessions.length === 0) {
+        } else {
             html += `
                 <div class="neo-card" style="text-align: center; padding: 3rem;">
                     <div style="font-size: 4rem; margin-bottom: 1rem;">🎯</div>
-                    <p style="font-size: 1.25rem; font-weight: 700; color: var(--text-secondary); margin: 0;">No sessions found. Create your first session above!</p>
+                    <p style="font-size: 1.25rem; font-weight: 600; color: var(--text-secondary); margin: 0;">No sessions found. Create your first session above!</p>
                 </div>
             `;
         }
@@ -201,5 +227,8 @@ export default class SessionsPage {    constructor(appContent, apiService) {
                 document.dispatchEvent(new CustomEvent('showNewSessionModal'));
             });
         }
+
+        // Animate cards
+        staggerChildren(this.appContent, '.neo-card', 50);
     }
 }

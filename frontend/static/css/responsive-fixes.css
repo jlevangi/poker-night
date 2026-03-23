@@ -20,71 +20,56 @@
         -webkit-overflow-scrolling: touch;
     }
 
-    /* Make dashboard player standings table fully responsive at all sizes */
     .dashboard-content .players-stats-table {
         min-width: 100%;
         width: 100%;
     }
-    
-    /* Keep other tables scrollable if needed */
+
     .players-stats-table,
     .players-dashboard-table {
-        min-width: 500px; /* Ensure tables are wide enough to display properly */
+        min-width: 500px;
     }
-    
-    /* Add horizontal padding to fix table content getting cut off at edges */
+
     #app-content {
         padding-left: 0.5rem;
         padding-right: 0.5rem;
     }
-    
-    /* Improve spacing in tables on mobile - removed general padding rule */
-    
-    /* Further reduce table column spacing on mobile */
+
     .players-stats-table td:not(:first-child),
     .players-dashboard-table td:not(:first-child) {
         padding-left: 0.15rem;
         padding-right: 0.15rem;
     }
-    
-    /* Special styling for dashboard table - more compact layout */
+
     .dashboard-content .players-stats-table th,
     .dashboard-content .players-stats-table td {
         padding: 0.4rem 0.2rem;
     }
-    
-    /* Adjust column widths for dashboard table */
+
     .dashboard-content .players-stats-table td:first-child {
-        width: 60%; /* Give more space to player names */
+        width: 60%;
     }
-    
+
     .dashboard-content .players-stats-table td:nth-child(2),
     .dashboard-content .players-stats-table td:nth-child(3) {
-        width: 20%; /* Split remaining space between other columns */
+        width: 20%;
         text-align: center;
     }
 }
 
-/* Media Queries for responsive design */
-/* Enhanced royal header styling */
+/* Royal header layout */
 .royal-header {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: radial-gradient(ellipse at center, rgba(255,215,0,0.07) 0%, rgba(255,215,0,0) 70%);
     padding: 0.25rem 0;
     margin-bottom: 0.5rem;
 }
 
 .royal-crown {
-    color: gold;
-    text-shadow: 0 0 5px rgba(255,215,0,0.5);
-    animation: crown-glow 3s infinite alternate;
-    flex-shrink: 0; /* Prevent crowns from shrinking */
-    min-width: 1.5rem; /* Ensure minimum width for crowns */
+    flex-shrink: 0;
+    min-width: 1.25rem;
     text-align: center;
-    position: relative;
-    z-index: 1;
 }
 
 .royal-crown.left {
@@ -95,133 +80,62 @@
     transform: rotate(10deg);
 }
 
-@keyframes crown-glow {
-    0% { text-shadow: 0 0 5px rgba(255,215,0,0.4); }
-    100% { text-shadow: 0 0 12px rgba(255,215,0,0.7); }
-}
-
 @media (max-width: 500px) {
     header h1 {
-        font-size: 1.5rem;
+        font-size: 1.375rem;
         padding: 0;
         margin: 0;
     }
-    
-    /* Make header more compact on small screens */
+
     header {
-        padding: 0.8rem 0.5rem;
+        padding: 0.75rem 0.5rem;
     }
-    
-    .royal-header {
-        padding: 0.15rem 0;
-        background: radial-gradient(ellipse at center, rgba(255,215,0,0.05) 0%, rgba(255,215,0,0) 60%);
-    }
-    
+
     .royal-crown {
-        font-size: 1.25rem;
-        margin: 0 8px;
-        min-width: 1.25rem;
-    }
-    
-    header h1::after {
-        top: -3px;
-        left: -3px;
-        right: -3px;
-        bottom: -3px;
-    }
-    
-    /* Adjust spacing for the desktop nav links */
-    .desktop-nav {
-        display: flex;
-        justify-content: center;
-        margin-top: 0.3rem;
-    }
-    
-    .desktop-nav a {
-        margin: 0 0.5rem;
-        font-size: 0.9rem;
+        font-size: 1.125rem;
+        margin: 0 6px;
     }
 }
 
 @media (max-width: 400px) {
     header h1 {
-        font-size: 1.2rem;
+        font-size: 1.25rem;
     }
-    
-    /* Further reduce spacing in the header */
+
     header {
-        padding: 0.6rem 0.2rem;
+        padding: 0.625rem 0.25rem;
     }
-    
+
     .royal-crown {
-        font-size: 1.1rem;
-        margin: 0 6px;
-        min-width: 1.1rem;
+        font-size: 1rem;
+        margin: 0 4px;
     }
-    
-    header h1::after {
-        top: -2px;
-        left: -2px;
-        right: -2px;
-        bottom: -2px;
-        filter: blur(3px);
-    }
-    
-    .desktop-nav a {
-        font-size: 0.85rem;
-        margin: 0 0.4rem;
-    }
-    
-    /* Make sure bottom nav doesn't interfere with content */
+
     footer {
         margin-bottom: 60px;
         padding-bottom: 1rem;
     }
-    
-    /* Additional padding for app content on very small screens */
+
     #app-content {
         padding: 1rem 0.5rem;
     }
-    
-    /* More compact headers on very small screens */
+
     .dashboard-content .players-stats-table th {
-        font-size: 0.9rem;
+        font-size: 0.875rem;
         padding: 0.35rem 0.2rem;
     }
-    
-    /* Slightly smaller text for table content */
+
     .dashboard-content .players-stats-table td {
-        font-size: 0.95rem;
+        font-size: 0.9375rem;
     }
-    
-    /* Make Gamble King label smaller on tiny screens */
+
     .dashboard-content .gamble-king-label {
         font-size: 0.7rem;
         padding: 0.1rem 0.3rem;
     }
 }
 
-/* Enhanced header text styling with soft glow effect */
-header h1 {
-    text-shadow: 0 0 10px rgba(255, 215, 0, 0.4), 0 0 20px rgba(255, 215, 0, 0.2);
-    position: relative;
-}
-
-/* Additional glow effect using pseudo-element for softer appearance */
-header h1::after {
-    content: "";
-    position: absolute;
-    top: -5px;
-    left: -5px;
-    right: -5px;
-    bottom: -5px;
-    z-index: -1;
-    background: radial-gradient(ellipse at center, rgba(255,215,0,0.15) 0%, rgba(255,215,0,0) 70%);
-    border-radius: 50%;
-    filter: blur(5px);
-}
-
-/* Dashboard content specific styling */
+/* Dashboard content */
 .dashboard-content {
     width: 100%;
 }
@@ -232,7 +146,7 @@ header h1::after {
 
 @media (max-width: 600px) {
     .dashboard-content .table-responsive {
-        margin: 0 -0.5rem; /* Extend table to the edge of the screen */
+        margin: 0 -0.5rem;
         width: calc(100% + 1rem);
     }
 }

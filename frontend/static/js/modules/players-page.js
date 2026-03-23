@@ -1,4 +1,6 @@
 // Players page module
+import { staggerChildren } from './animations.js';
+
 export default class PlayersPage {
     constructor(appContent, apiService) {
         this.appContent = appContent;
@@ -7,6 +9,28 @@ export default class PlayersPage {
         this.filteredPlayers = [];
         this.searchQuery = '';
         this.sortBy = 'rank'; // 'rank', 'name', or 'sessions'
+    }
+
+    static skeleton() {
+        return `
+            <div style="padding: 1.5rem; max-width: 1200px; margin: 0 auto;">
+                <div class="skeleton-text" style="width: 200px; height: 2.5rem; margin-bottom: 2rem;"></div>
+                <div class="neo-card" style="margin-bottom: 2rem;">
+                    <div class="skeleton-text" style="width: 100%; height: 48px; border-radius: 4px;"></div>
+                </div>
+                ${Array.from({length: 6}, () => `
+                    <div class="neo-card" style="margin-bottom: 1rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0;">
+                            <div>
+                                <div class="skeleton-text" style="width: 160px; height: 1.5rem; margin-bottom: 0.5rem;"></div>
+                                <div class="skeleton-text" style="width: 100px; height: 1rem;"></div>
+                            </div>
+                            <div class="skeleton-text" style="width: 80px; height: 2rem;"></div>
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+        `;
     }
     
     // Load the players page
@@ -62,10 +86,10 @@ export default class PlayersPage {
     render() {
         let html = `
             <div class="fade-in" style="padding: 1.5rem; max-width: 1200px; margin: 0 auto;">
-                <h2 style="font-size: 2.5rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 2rem; color: var(--text-primary); text-shadow: 3px 3px 0px var(--casino-purple);">🎭 Players</h2>
+                <h2 style="font-size: 2.5rem; font-weight: 600; margin-bottom: 2rem; color: var(--text-primary);">🎭 Players</h2>
 
                 <div class="neo-card neo-card-purple" style="margin-bottom: 2rem; padding-top: 1rem;">
-                    <h3 style="font-size: 1.25rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1rem; margin-top: 0; color: var(--casino-purple-dark);">➕ Add New Player</h3>
+                    <h3 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem; margin-top: 0; color: var(--casino-purple-dark);">➕ Add New Player</h3>
                     <div style="display: flex; gap: 1rem; align-items: baseline; flex-wrap: wrap;">
                         <input type="text" id="new-player-name" placeholder="Enter player name..." style="flex: 1; min-width: 200px; padding: 0.875rem 1rem; border: var(--neo-border); font-size: 1rem; font-weight: 600; background: var(--bg-card);">
                         <button id="add-player-btn" class="neo-btn neo-btn-purple neo-btn-lg">Add Player</button>
@@ -79,7 +103,7 @@ export default class PlayersPage {
                             <div id="search-suggestions" style="position: absolute; top: 100%; left: 0; right: 0; background: var(--bg-card); border: var(--neo-border); border-top: none; display: none; z-index: 100; max-height: 200px; overflow-y: auto;"></div>
                         </div>
                         <div style="display: flex; gap: 0.5rem; align-items: center;">
-                            <span style="font-weight: 700; text-transform: uppercase; font-size: 0.875rem; letter-spacing: 0.05em;">Sort:</span>
+                            <span style="font-weight: 600; font-size: 0.875rem;">Sort:</span>
                             <button id="sort-rank" class="neo-btn ${this.sortBy === 'rank' ? 'neo-btn-primary' : ''}" style="padding: 0.5rem 1rem;">Rank</button>
                             <button id="sort-name" class="neo-btn ${this.sortBy === 'name' ? 'neo-btn-primary' : ''}" style="padding: 0.5rem 1rem;">Name</button>
                             <button id="sort-sessions" class="neo-btn ${this.sortBy === 'sessions' ? 'neo-btn-primary' : ''}" style="padding: 0.5rem 1rem;">Sessions</button>
@@ -87,7 +111,7 @@ export default class PlayersPage {
                     </div>
                 </div>
 
-                <h3 id="roster-title" style="font-size: 1.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1.5rem; color: var(--text-primary);">🏆 Player Roster</h3>
+                <h3 id="roster-title" style="font-size: 1.75rem; font-weight: 600; margin-bottom: 1.5rem; color: var(--text-primary);">🏆 Player Roster</h3>
 
                 <div id="player-list-container"></div>
             </div>
@@ -100,6 +124,9 @@ export default class PlayersPage {
 
         // Add event listeners
         this.setupEventListeners();
+
+        // Animate list items
+        staggerChildren(this.appContent, '.neo-list-item, .neo-card', 40);
     }
 
     // Render only the player list (preserves search input focus)
@@ -140,35 +167,20 @@ export default class PlayersPage {
                                  player.net_profit < 0 ? 'neo-card-primary' : '';
 
                 html += `
-                    <div class="neo-card neo-card-clickable ${cardColor} clickable-player-stats" data-player-id="${player.player_id}" style="cursor: pointer;">
-                        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                    <div class="neo-card ${cardColor} clickable-player-stats" data-player-id="${player.player_id}" style="text-decoration: none; color: inherit; cursor: pointer; padding: 1rem; margin: 0;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
                             <div>
-                                <h4 style="font-size: 1.5rem; font-weight: 800; margin: 0 0 0.5rem 0; display: flex; align-items: center; gap: 0.5rem;">
-                                    <a href="#player/${player.player_id}" style="color: inherit; text-decoration: none; text-transform: uppercase; letter-spacing: 0.05em;">${player.name}</a>
-                                    ${isGambleKing ? '<span style="font-size: 1.5rem; animation: bounce 2s infinite;">👑</span>' : ''}
-                                </h4>
-                                <div style="display: flex; gap: 1.5rem; flex-wrap: wrap;">
-                                    <div>
-                                        <span style="font-size: 0.875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.8; display: block;">Net Profit</span>
-                                        <div class="${player.net_profit >= 0 ? 'profit-positive' : 'profit-negative'}" style="font-size: 1.25rem; font-weight: 800;">
-                                            $${player.net_profit ? player.net_profit.toFixed(2) : '0.00'}
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <span style="font-size: 0.875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.8; display: block;">Sessions</span>
-                                        <div style="font-size: 1.25rem; font-weight: 800; color: inherit;">
-                                            ${player.games_played || 0}
-                                        </div>
-                                    </div>
+                                <div style="font-weight: 600; color: inherit; margin-bottom: 0.25rem; font-size: 1.125rem;">
+                                    ${isGambleKing ? '👑 ' : ''}<a href="#player/${player.player_id}" style="color: inherit; text-decoration: none;">${player.name}</a>
+                                </div>
+                                <div style="font-size: 0.875rem; color: inherit; font-weight: 600; opacity: 0.8;">
+                                    Sessions: ${player.games_played || 0} · 7-2: ${player.seven_two_wins || 0} · Strikes: ${player.strikes || 0}
                                 </div>
                             </div>
-                            <div class="neo-stat-card" style="min-width: 120px; text-align: center; margin: 0; border-color: var(--casino-gold);">
-                                <div style="font-size: 1.5rem; font-weight: 900; color: var(--casino-gold-dark); margin-bottom: 0.25rem;">
-                                    ${player.seven_two_wins || 0}
-                                </div>
-                                <div style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--casino-gold-dark);">
-                                    7-2 Wins
-                                </div>
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <span class="${player.net_profit >= 0 ? 'profit-positive' : 'profit-negative'}" style="font-size: 1rem; font-weight: 700;">
+                                    $${player.net_profit ? player.net_profit.toFixed(2) : '0.00'}
+                                </span>
                             </div>
                         </div>
                     </div>

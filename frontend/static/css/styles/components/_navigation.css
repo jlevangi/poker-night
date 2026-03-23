@@ -12,7 +12,8 @@ nav a {
 }
 
 nav a:hover {
-    text-decoration: underline;
+    text-decoration: none;
+    color: #FFFFFF;
 }
 
 /* Desktop Navigation */
@@ -20,29 +21,30 @@ nav a:hover {
     display: flex;
     justify-content: center;
     margin-top: 0.5rem;
+    gap: 0.25rem;
 }
 
 .desktop-nav a {
-    color: rgba(255, 255, 255, 0.9);
+    color: rgba(255, 255, 255, 0.7);
     text-decoration: none;
     padding: 0.5rem 1rem;
-    margin: 0 0.25rem;
-    border-radius: 6px;
+    margin: 0;
+    border-radius: 8px;
     transition: all 0.2s ease;
     font-weight: 500;
     position: relative;
 }
 
 .desktop-nav a:hover {
-    background: rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.1);
     color: white;
-    transform: translateY(-1px);
+    transform: none;
 }
 
 .desktop-nav a.active {
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.15);
     color: white;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    box-shadow: none;
 }
 
 /* Quick Actions Navigation */
@@ -78,18 +80,21 @@ nav a:hover {
     position: fixed;
     left: 50%;
     transform: translateX(-50%);
-    bottom: 10px;
-    height: 60px;
-    background: linear-gradient(90deg, var(--primary-color) 60%, var(--primary-hover) 100%);
-    box-shadow: 0 -4px 18px rgba(0, 0, 0, 0.13);
+    bottom: 1rem;
+    height: auto;
+    background: rgba(15, 23, 42, 0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
     z-index: var(--z-nav);
     flex-direction: row;
     justify-content: center;
     align-items: center;
     width: 75vw;
-    max-width: 600px;
-    border-radius: 25px;
-    padding: 0 8px;
+    max-width: 400px;
+    border-radius: 20px;
+    padding: 0.4rem;
     transition: background var(--transition-medium);
 }
 
@@ -168,23 +173,23 @@ nav a:hover {
     align-items: center !important;
     gap: 0.5rem !important;
     padding: 0.75rem 1.25rem !important;
-    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-hover) 100%) !important;
+    background: var(--primary-color) !important;
     color: var(--text-white) !important;
     text-decoration: none !important;
-    border-radius: var(--radius-md) !important;
-    font-weight: 600 !important;
-    transition: all var(--transition-fast) !important;
+    border-radius: 10px !important;
+    font-weight: 500 !important;
+    transition: all 0.2s ease !important;
     margin-bottom: var(--spacing-lg) !important;
-    box-shadow: 0 4px 12px rgba(51, 103, 214, 0.2) !important;
-    font-size: 0.95rem !important;
+    box-shadow: var(--shadow-light) !important;
+    font-size: 0.9375rem !important;
     border: none !important;
-    letter-spacing: 0.3px !important;
+    letter-spacing: 0 !important;
 }
 
 .back-nav-btn:hover {
-    background: linear-gradient(135deg, var(--primary-hover) 0%, #1a3a7a 100%) !important;
-    transform: translateY(-2px) !important;
-    box-shadow: 0 6px 20px rgba(51, 103, 214, 0.3) !important;
+    background: var(--primary-hover) !important;
+    transform: translateY(-1px) !important;
+    box-shadow: var(--shadow-medium) !important;
     text-decoration: none !important;
     color: var(--text-white) !important;
 }

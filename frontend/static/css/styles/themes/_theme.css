@@ -2,106 +2,105 @@
 
 :root {
     /* Primary Colors */
-    --primary-color: #3367D6;
-    --primary-hover: #2851A7;
-    --primary-light: #f0f4ff;
-    
+    --primary-color: #2563EB;
+    --primary-hover: #1D4ED8;
+    --primary-light: #EFF6FF;
+
     /* Background Colors */
-    --bg-body: #f4f7f6;
-    --bg-content: #fff;
-    --bg-card: #f9f9f9;
-    --bg-header: #3367D6;
-    
+    --bg-body: #F8FAFC;
+    --bg-content: #FFFFFF;
+    --bg-card: #FFFFFF;
+    --bg-header: #0F172A;
+
     /* Text Colors */
-    --text-primary: #333;
-    --text-secondary: #4a5568;
-    --text-muted: #666;
-    --text-light: #777;
-    --text-white: white;
-    
+    --text-primary: #0F172A;
+    --text-secondary: #475569;
+    --text-muted: #94A3B8;
+    --text-light: #94A3B8;
+    --text-white: #FFFFFF;
+
     /* Success/Error Colors */
-    --color-success: #28a745;
-    --color-success-hover: #218838;
-    --color-danger: #dc3545;
-    --color-danger-hover: #c82333;
-    --color-warning: #f0ad4e;
-    --color-warning-hover: #ec971f;
-    --color-info: #17a2b8;
-    --color-info-hover: #138496;
-    
+    --color-success: #10B981;
+    --color-success-hover: #059669;
+    --color-danger: #EF4444;
+    --color-danger-hover: #DC2626;
+    --color-warning: #F59E0B;
+    --color-warning-hover: #D97706;
+    --color-info: #6366F1;
+    --color-info-hover: #4F46E5;
+
     /* Profit Colors */
-    --profit-positive: #28a745;
-    --profit-negative: #dc3545;
-    --profit-unpaid: #e67e22;
-    
+    --profit-positive: #10B981;
+    --profit-negative: #EF4444;
+    --profit-unpaid: #F59E0B;
+
     /* Border Colors */
-    --border-color: #ccc;
-    --border-light: #eee;
-    --border-lighter: #e0e0e0;
-    --border-card: #e9ecef;
-    --border-table: #dee2e6;
-    
+    --border-color: #E2E8F0;
+    --border-light: #E2E8F0;
+    --border-lighter: #F1F5F9;
+    --border-card: #E2E8F0;
+    --border-table: #E2E8F0;
+
     /* Shadow */
-    --shadow-light: 0 0 15px rgba(0, 0, 0, 0.05);
-    --shadow-medium: 0 2px 4px rgba(0, 0, 0, 0.1);
-    --shadow-heavy: 0 4px 15px rgba(0, 0, 0, 0.1);
-    --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.1);
-    
+    --shadow-light: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --shadow-medium: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+    --shadow-heavy: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
+    --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+
     /* Gamble King Colors */
-    --gamble-king-bg: rgba(255, 215, 0, 0.1);
-    --gamble-king-bg-hover: rgba(255, 215, 0, 0.2);
-    --gamble-king-label-bg: #ffc107;
-    --gamble-king-label-text: #212529;
-    --gamble-king-gradient: linear-gradient(to right, #BF953F, #FCF6BA, #B38728, #FBF5B7, #AA771C);
-    
+    --gamble-king-bg: rgba(245, 158, 11, 0.08);
+    --gamble-king-bg-hover: rgba(245, 158, 11, 0.12);
+    --gamble-king-label-bg: #F59E0B;
+    --gamble-king-label-text: #FFFFFF;
+    --gamble-king-gradient: linear-gradient(135deg, #F59E0B, #D97706);
+
     /* Seven-Two Game Colors */
-    --seven-two-bg: #4CAF50;
-    --seven-two-bg-hover: #45a049;
-    --seven-two-increment: #28a745;
-    --seven-two-increment-hover: #218838;
-    --seven-two-decrement: #dc3545;
-    --seven-two-decrement-hover: #c82333;
-    --seven-two-border: #28a745;
-    
-    /* Shared Counter Button Colors - Use same colors as seven-two for consistency */
-    --counter-increment: #28a745;
-    --counter-increment-hover: #218838;
-    --counter-decrement: #dc3545;
-    --counter-decrement-hover: #c82333;
-    
+    --seven-two-bg: #10B981;
+    --seven-two-bg-hover: #059669;
+    --seven-two-increment: #10B981;
+    --seven-two-increment-hover: #059669;
+    --seven-two-decrement: #EF4444;
+    --seven-two-decrement-hover: #DC2626;
+    --seven-two-border: #10B981;
+
+    /* Counter Button Colors */
+    --counter-increment: #10B981;
+    --counter-increment-hover: #059669;
+    --counter-decrement: #EF4444;
+    --counter-decrement-hover: #DC2626;
+
     /* Spacing */
     --spacing-xs: 0.25rem;
     --spacing-sm: 0.5rem;
     --spacing-md: 1rem;
     --spacing-lg: 1.5rem;
     --spacing-xl: 2rem;
-    
+
     /* Border Radius */
-    --radius-sm: 4px;
-    --radius-md: 6px;
-    --radius-lg: 8px;
-    --radius-xl: 12px;
-    --radius-pill: 15px;
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 14px;
+    --radius-xl: 18px;
+    --radius-pill: 50px;
     --radius-circle: 50%;
-    
+
     /* Transitions */
-    --transition-fast: 0.2s ease;
-    --transition-medium: 0.3s ease;
-    --transition-slow: 0.5s ease;
-    
+    --transition-fast: 0.15s ease;
+    --transition-medium: 0.25s ease;
+    --transition-slow: 0.4s ease;
+
     /* Typography */
-    --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", system-ui, sans-serif;
     --line-height: 1.6;
-    
+
     /* Z-Index */
-    --z-modal: 1000;
-    --z-nav: 1001;
+    --z-modal: 2000;
+    --z-nav: 1000;
 }
 
 /* Media Query Variables for Mobile */
 @media (max-width: 700px) {
     :root {
-        /* Mobile-specific adjustments */
         --spacing-mobile: 0.75rem;
         --font-size-mobile: 0.875rem;
     }

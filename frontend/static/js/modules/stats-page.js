@@ -1,5 +1,35 @@
 // Stats page module
+import { staggerChildren } from './animations.js';
+
 export default class StatsPage {
+    static skeleton() {
+        return `
+            <div style="padding: 1.5rem; max-width: 1200px; margin: 0 auto;">
+                <div class="skeleton skeleton-text" style="width: 40%; height: 2rem; margin-bottom: 2rem;"></div>
+                <div class="neo-stats-grid" style="margin-bottom: 2rem;">
+                    <div class="neo-stat-card"><div class="skeleton skeleton-text" style="width: 80%; height: 1.5rem; margin: 0 auto;"></div></div>
+                    <div class="neo-stat-card"><div class="skeleton skeleton-text" style="width: 80%; height: 1.5rem; margin: 0 auto;"></div></div>
+                    <div class="neo-stat-card"><div class="skeleton skeleton-text" style="width: 80%; height: 1.5rem; margin: 0 auto;"></div></div>
+                    <div class="neo-stat-card"><div class="skeleton skeleton-text" style="width: 80%; height: 1.5rem; margin: 0 auto;"></div></div>
+                </div>
+                <div class="neo-card" style="margin-bottom: 2rem;">
+                    <div class="skeleton skeleton-text" style="width: 50%; height: 1.5rem; margin-bottom: 1rem;"></div>
+                    <div class="skeleton" style="width: 100%; height: 300px;"></div>
+                </div>
+                <div class="skeleton skeleton-text" style="width: 30%; height: 1.75rem; margin-bottom: 1.5rem;"></div>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+                    ${Array(6).fill(`
+                        <div class="neo-card">
+                            <div class="skeleton skeleton-text" style="width: 60%; height: 1rem; margin-bottom: 0.75rem;"></div>
+                            <div class="skeleton skeleton-text" style="width: 80%; height: 1.25rem; margin-bottom: 0.5rem;"></div>
+                            <div class="skeleton skeleton-text" style="width: 40%; height: 0.875rem;"></div>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+    }
+
     constructor(appContent, apiService) {
         this.appContent = appContent;
         this.api = apiService;
@@ -58,7 +88,7 @@ export default class StatsPage {
     render() {
         const html = `
             <div class="fade-in stats-page" style="padding: 1.5rem; max-width: 1200px; margin: 0 auto;">
-                <h2 style="font-size: clamp(1.5rem, 7vw, 2.5rem); font-weight: 900; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 2rem; color: var(--text-primary); text-shadow: 3px 3px 0px var(--casino-gold); white-space: nowrap;">🏆 Stats & Awards</h2>
+                <h2 style="font-size: clamp(1.5rem, 7vw, 2.5rem); font-weight: 600; margin-bottom: 2rem; color: var(--text-primary); white-space: nowrap;">🏆 Stats & Awards</h2>
                 
                 <!-- Summary Stats Grid -->
                 ${this.renderSummaryStats()}
@@ -76,6 +106,10 @@ export default class StatsPage {
         `;
         
         this.appContent.innerHTML = html;
+
+        // Stagger animate stat cards and leaderboard items
+        staggerChildren(this.appContent, '.neo-stat-card');
+        staggerChildren(this.appContent, '.neo-leaderboard-stat');
 
         // Initialize charts after DOM is rendered
         setTimeout(() => {
@@ -231,7 +265,7 @@ export default class StatsPage {
         };
         
         return `
-            <h2 style="font-size: 2rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1.5rem; color: var(--text-primary); text-shadow: 3px 3px 0px var(--casino-red); text-align: center;">🏅 Leaderboards</h2>
+            <h2 style="font-size: 2rem; font-weight: 600; margin-bottom: 1.5rem; color: var(--text-primary); text-align: center;">🏅 Leaderboards</h2>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
 
                 <div class="neo-leaderboard-stat green">
@@ -399,7 +433,7 @@ export default class StatsPage {
                 </div>
 
                 <!-- Chart area -->
-                <div style="flex: 1; border-left: 3px solid var(--casino-black); border-bottom: 3px solid var(--casino-black); position: relative;">
+                <div style="flex: 1; border-left: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); position: relative;">
                     <svg width="${width + padding * 2}" height="${height + margin.top + 10}" style="display: block; overflow: visible;">
                         <!-- Grid lines -->
                         <g>
@@ -424,8 +458,8 @@ export default class StatsPage {
                                         cy="${cy}"
                                         r="6"
                                         fill="var(--casino-gold)"
-                                        stroke="var(--casino-black)"
-                                        stroke-width="2"
+                                        stroke="var(--casino-green-dark)"
+                                        stroke-width="1.5"
                                         class="neo-data-point"
                                         data-session-id="${point.session_id}"
                                         data-date="${point.date}"
@@ -620,8 +654,8 @@ export default class StatsPage {
                         cy="${y}" 
                         r="6" 
                         fill="var(--casino-gold)" 
-                        stroke="var(--casino-black)" 
-                        stroke-width="2" 
+                        stroke="var(--casino-green-dark)"
+                        stroke-width="1.5"
                         class="neo-data-point"
                         data-session-id="${point.session_id}"
                         data-date="${point.date}"
@@ -868,7 +902,7 @@ export default class StatsPage {
             <div class="neo-pie-legend-item" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem; border: var(--neo-border); background: var(--bg-card);">
                 <div style="width: 20px; height: 20px; background: ${slice.color}; border: var(--neo-border); flex-shrink: 0;"></div>
                 <div style="flex: 1; min-width: 0;">
-                    <div style="font-weight: 800; font-size: 0.75rem; color: var(--text-primary); text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${slice.name}</div>
+                    <div style="font-weight: 600; font-size: 0.75rem; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${slice.name}</div>
                     <div style="font-weight: 600; font-size: 0.7rem; color: var(--text-secondary);">$${slice.value.toLocaleString()} • ${slice.percentage.toFixed(1)}%</div>
                 </div>
             </div>
@@ -879,10 +913,10 @@ export default class StatsPage {
             <div class="neo-pie-legend-item" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem; border: var(--neo-border); background: var(--bg-card); cursor: pointer;" id="everyone-else-item">
                 <div style="width: 20px; height: 20px; background: #6B7280; border: var(--neo-border); flex-shrink: 0;"></div>
                 <div style="flex: 1; min-width: 0;">
-                    <div style="font-weight: 800; font-size: 0.75rem; color: var(--text-primary); text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Everyone Else (${otherPlayers.length})</div>
+                    <div style="font-weight: 600; font-size: 0.75rem; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Everyone Else (${otherPlayers.length})</div>
                     <div style="font-weight: 600; font-size: 0.7rem; color: var(--text-secondary);">$${otherPlayers.reduce((sum, p) => sum + p.total_buy_ins_value, 0).toLocaleString()} • ${((otherPlayers.reduce((sum, p) => sum + p.total_buy_ins_value, 0) / totalGambled) * 100).toFixed(1)}%</div>
                 </div>
-                <div class="everyone-else-arrow" style="font-weight: 800; color: var(--casino-purple); font-size: 1rem;">▼</div>
+                <div class="everyone-else-arrow" style="font-weight: 600; color: var(--casino-purple); font-size: 1rem;">▼</div>
             </div>
         ` : '';
 
@@ -966,7 +1000,7 @@ export default class StatsPage {
                 const tooltip = document.createElement('div');
                 tooltip.className = 'neo-pie-click-tooltip';
                 tooltip.innerHTML = `
-                    <div style="font-weight: 900; font-size: 1.25rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-primary); margin-bottom: 0.5rem;">
+                    <div style="font-weight: 600; font-size: 1.25rem; color: var(--text-primary); margin-bottom: 0.5rem;">
                         ${playerName}
                     </div>
                     <div style="font-size: 1.125rem; font-weight: 700; color: var(--casino-gold); margin-bottom: 0.25rem;">
@@ -984,7 +1018,8 @@ export default class StatsPage {
                     transform: translate(-50%, calc(-100% - 10px));
                     background: var(--bg-card);
                     padding: 1rem 1.5rem;
-                    border: var(--neo-border-thick);
+                    border: 1px solid var(--border-color);
+                    border-radius: 12px;
                     box-shadow: var(--neo-shadow-lg);
                     z-index: 1000;
                     text-align: center;
@@ -1039,8 +1074,8 @@ export default class StatsPage {
 
         return `<path d="${pathData}"
                       fill="${color}"
-                      stroke="var(--casino-black)"
-                      stroke-width="3"
+                      stroke="var(--bg-card)"
+                      stroke-width="2"
                       class="neo-pie-slice"
                       data-player-name="${playerName}"
                       data-player-value="${playerValue}"

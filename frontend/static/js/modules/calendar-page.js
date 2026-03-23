@@ -1,10 +1,39 @@
 // Calendar page module
+import { staggerChildren } from './animations.js';
+
 export default class CalendarPage {
     constructor(appContent, apiService) {
         this.appContent = appContent;
         this.api = apiService;
         this.events = [];
         this.players = [];
+    }
+
+    static skeleton() {
+        return `
+            <div style="padding: 1.5rem; max-width: 1200px; margin: 0 auto;">
+                <div class="skeleton-text" style="width: 300px; height: 2.5rem; margin: 0 auto 2rem auto;"></div>
+                <div class="neo-card" style="margin-bottom: 2rem; text-align: center;">
+                    <div class="skeleton-text" style="width: 180px; height: 48px; margin: 0 auto; border-radius: 4px;"></div>
+                </div>
+                ${Array.from({length: 3}, () => `
+                    <div class="neo-card" style="margin-bottom: 1rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem;">
+                            <div>
+                                <div class="skeleton-text" style="width: 200px; height: 1.25rem; margin-bottom: 0.5rem;"></div>
+                                <div class="skeleton-text" style="width: 250px; height: 1rem; margin-bottom: 0.25rem;"></div>
+                                <div class="skeleton-text" style="width: 120px; height: 1rem;"></div>
+                            </div>
+                            <div style="display: flex; gap: 0.5rem;">
+                                <div class="skeleton-text" style="width: 50px; height: 1.5rem; border-radius: 4px;"></div>
+                                <div class="skeleton-text" style="width: 60px; height: 1.5rem; border-radius: 4px;"></div>
+                                <div class="skeleton-text" style="width: 50px; height: 1.5rem; border-radius: 4px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+        `;
     }
 
     async load() {
@@ -26,7 +55,7 @@ export default class CalendarPage {
     render() {
         let html = `
             <div class="fade-in" style="padding: 1.5rem; max-width: 1200px; margin: 0 auto;">
-                <h2 style="font-size: 2.5rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 2rem; color: var(--text-primary); text-shadow: 3px 3px 0px var(--casino-green); text-align: center;">&#128197; Upcoming Poker Nights</h2>
+                <h2 style="font-size: 2.5rem; font-weight: 600; margin-bottom: 2rem; color: var(--text-primary); text-align: center;">&#128197; Upcoming Poker Nights</h2>
 
                 <div class="neo-card neo-card-green" style="margin-bottom: 2rem; text-align: center;">
                     <button id="schedule-event-btn" class="neo-btn neo-btn-green neo-btn-lg">+ Schedule Event</button>
@@ -47,13 +76,16 @@ export default class CalendarPage {
 
         this.appContent.innerHTML = html;
         this.setupEventListeners();
+
+        // Animate event cards
+        staggerChildren(this.appContent, '.neo-card', 50);
     }
 
     renderCreateForm() {
         const today = new Date().toISOString().split('T')[0];
         return `
             <div class="neo-card" style="margin-bottom: 1.5rem;">
-                <h3 style="font-size: 1.125rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1rem; color: var(--text-primary);">Schedule a Poker Night</h3>
+                <h3 style="font-size: 1.125rem; font-weight: 600; margin-bottom: 1rem; color: var(--text-primary);">Schedule a Poker Night</h3>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
                     <div>
                         <label style="font-weight: 700; display: block; margin-bottom: 0.25rem; color: var(--text-primary);">Date *</label>
@@ -104,15 +136,15 @@ export default class CalendarPage {
         const isCancelled = event.is_cancelled;
 
         const statusBadge = isCancelled
-            ? '<span style="display: inline-block; background: var(--casino-red); color: #fff; font-size: 0.7rem; font-weight: 800; padding: 0.15rem 0.5rem; text-transform: uppercase; letter-spacing: 0.05em; border: 2px solid var(--border-color); box-shadow: 2px 2px 0px var(--border-color);">Cancelled</span>'
-            : '<span style="display: inline-block; background: var(--casino-green); color: #fff; font-size: 0.7rem; font-weight: 800; padding: 0.15rem 0.5rem; text-transform: uppercase; letter-spacing: 0.05em; border: 2px solid var(--border-color); box-shadow: 2px 2px 0px var(--border-color);">Upcoming</span>';
+            ? '<span style="display: inline-block; background: var(--casino-red); color: #fff; font-size: 0.7rem; font-weight: 600; padding: 0.15rem 0.5rem; border: 2px solid var(--border-color);">Cancelled</span>'
+            : '<span style="display: inline-block; background: var(--casino-green); color: #fff; font-size: 0.7rem; font-weight: 600; padding: 0.15rem 0.5rem; border: 2px solid var(--border-color);">Upcoming</span>';
 
         return `
             <a href="#event/${event.event_id}" class="neo-event-card-link" style="text-decoration: none; color: inherit; display: block; margin-bottom: 1rem;">
                 <div class="neo-event-card neo-card ${isCancelled ? 'neo-event-cancelled' : ''}" style="${isCancelled ? 'opacity: 0.6;' : ''} cursor: pointer; transition: transform 0.1s, box-shadow 0.1s;">
                     <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 0.5rem;">
                         <div>
-                            <div style="font-weight: 800; font-size: 1.25rem; color: var(--text-primary); text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+                            <div style="font-weight: 600; font-size: 1.25rem; color: var(--text-primary); display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
                                 ${this.escapeHtml(event.title || 'Poker Night')}
                                 ${statusBadge}
                             </div>

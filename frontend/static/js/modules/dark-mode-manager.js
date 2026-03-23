@@ -86,9 +86,9 @@ export default class DarkModeManager {
         const metaThemeColor = document.querySelector('meta[name="theme-color"]');
         if (metaThemeColor) {
             if (theme === 'dark') {
-                metaThemeColor.setAttribute('content', '#1a1a1a');
+                metaThemeColor.setAttribute('content', '#0F172A');
             } else {
-                metaThemeColor.setAttribute('content', '#3367D6');
+                metaThemeColor.setAttribute('content', '#2563EB');
             }
         }
     }
