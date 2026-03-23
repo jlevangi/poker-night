@@ -1235,24 +1235,24 @@ div .neo-btn.neo-btn-green:hover,
 .neo-gamble-king::before {
     content: "";
     position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
+    top: 0;
+    left: -100%;
+    width: 300%;
+    height: 100%;
     background: repeating-linear-gradient(
         45deg,
         transparent,
         transparent 20px,
-        rgba(245, 158, 11, 0.03) 20px,
-        rgba(245, 158, 11, 0.03) 40px
+        rgba(245, 158, 11, 0.04) 20px,
+        rgba(245, 158, 11, 0.04) 40px
     );
     pointer-events: none;
-    animation: rotateStripes 30s linear infinite;
+    animation: slideStripes 8s linear infinite;
 }
 
-@keyframes rotateStripes {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+@keyframes slideStripes {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(33.333%); }
 }
 
 .neo-gamble-king-title {
@@ -1402,12 +1402,6 @@ div .neo-btn.neo-btn-green:hover,
 
 .neo-bounce {
     transition: transform 0.2s ease;
-    animation: gentleFloat 3s ease-in-out infinite;
-}
-
-@keyframes gentleFloat {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-4px); }
 }
 
 /* ============================================================================ */

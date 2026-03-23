@@ -78,6 +78,40 @@ export default class SessionsPage {
                 </div>
         `;
 
+        // Active sessions section (shown at top)
+        const activeSessions = sessions.filter(s => s.status === 'ACTIVE');
+        if (activeSessions.length > 0) {
+            html += `
+                <h3 class="section-title" style="font-size: 1.5rem; margin-bottom: 1.5rem;">Active Sessions</h3>
+                <div style="display: grid; gap: 1rem; margin-bottom: 2rem;">
+            `;
+
+            activeSessions.forEach(session => {
+                html += `
+                    <a href="#session/${session.session_id}" class="neo-card neo-card-gold" style="text-decoration: none; color: inherit; padding: 1rem; margin: 0;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <div style="font-weight: 600; color: inherit; margin-bottom: 0.25rem; font-size: 1.125rem;">
+                                    📅 ${this.formatDate(session.date)}
+                                </div>
+                                <div style="font-size: 0.875rem; color: inherit; font-weight: 600; opacity: 0.8;">
+                                    Buy-in: $${session.buyin ? session.buyin.toFixed(2) : '0.00'} | Total: $${session.totalValue ? session.totalValue.toFixed(2) : '0.00'}
+                                </div>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <span style="color: var(--casino-gold); font-size: 1.25rem;">🟡</span>
+                                <span style="font-size: 0.875rem; font-weight: 600; color: var(--casino-gold);">
+                                    ACTIVE
+                                </span>
+                            </div>
+                        </div>
+                    </a>
+                `;
+            });
+
+            html += `</div>`;
+        }
+
         // Upcoming events section
         if (upcomingEvents.length > 0) {
             html += `
