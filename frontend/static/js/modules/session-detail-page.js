@@ -289,7 +289,7 @@ export default class SessionDetailPage {
                                     `<option value="${player.id}" ${player.id === sessionData.wisdom_player_id ? 'selected' : ''}>${player.name}</option>`
                                 ).join('')}
                             </select>
-                            <button id="save-wisdom-btn" class="neo-btn neo-btn-gold">Save Quote</button>
+                            <button id="save-wisdom-btn" class="neo-btn neo-btn-gold" style="margin-left: auto;">Save Quote</button>
                         </div>
                     </div>
                 </div>
@@ -304,17 +304,17 @@ export default class SessionDetailPage {
             
             html += `
                 <div class="neo-card neo-card-green" style="margin-bottom: 2rem;">
-                    <h4 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 1.5rem; color: var(--casino-green-dark);">➕ Add Player to Session</h4>
-                    <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
-                        <select id="add-player-select" style="flex: 1; min-width: 200px; padding: 0.875rem 1rem; border: var(--neo-border); font-size: 1rem; font-weight: 600; background: var(--bg-card);">
+                    <h4 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem; color: var(--casino-green-dark);">➕ Add Player to Session</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+                        <select id="add-player-select" style="padding: 0.75rem 1rem; border: var(--neo-border); border-radius: 10px; font-size: 1rem; font-weight: 600; background: var(--bg-card);">
                             <option value="">-- Select Player --</option>
-                            ${(session.availablePlayers || []).map(player => 
+                            ${(session.availablePlayers || []).map(player =>
                                 `<option value="${player.player_id}">${player.name}</option>`
                             ).join('')}
                         </select>
-                        <input type="number" id="player-buyin" placeholder="Buy-in Amount ($)" value="${sessionData.default_buy_in_value ? sessionData.default_buy_in_value.toFixed(2) : '20.00'}" step="0.01" style="flex: 1; min-width: 150px; padding: 0.875rem 1rem; border: var(--neo-border); font-size: 1rem; font-weight: 600; background: var(--bg-card);">
-                        <button id="add-player-to-session-btn" class="neo-btn neo-btn-green">Add Player</button>
+                        <input type="number" id="player-buyin" placeholder="Buy-in ($)" value="${sessionData.default_buy_in_value ? sessionData.default_buy_in_value.toFixed(2) : '20.00'}" step="0.01" style="padding: 0.75rem 1rem; border: var(--neo-border); border-radius: 10px; font-size: 1rem; font-weight: 600; background: var(--bg-card);">
                     </div>
+                    <button id="add-player-to-session-btn" class="neo-btn neo-btn-green" style="width: 100%; margin-top: 0.75rem;">Add Player</button>
                 </div>
             `;
         }
@@ -327,16 +327,24 @@ export default class SessionDetailPage {
                 const buyIn = player.buyIn || 0;
                 const cashOut = player.cashOut || 0;
                 const profit = cashOut - buyIn;
-                const profitColor = profit >= 0 ? 'neo-card-green' : 'neo-card-primary';
-                
+                const isCashedOut = !!player.isCashedOut;
+                const profitColor = isCashedOut ? (profit >= 0 ? 'neo-card-green' : 'neo-card-primary') : '';
+
                 html += `
-                    <div class="neo-card ${profitColor} clickable-player-details" data-player-id="${player.id}" style="cursor: pointer; padding: 1rem;">
+                    <div class="neo-card ${profitColor} clickable-player-details" data-player-id="${player.id}" style="cursor: pointer; padding: 1rem;${isActive && !isCashedOut ? ' border-left: 3px solid var(--casino-gold); opacity: 0.85;' : ''}">
                         <!-- Name + Profit header row -->
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
-                            <h4 style="font-size: 1.125rem; font-weight: 600; margin: 0;">
-                                <a href="#player/${player.id}" style="color: inherit; text-decoration: none;">${player.name}</a>
-                                ${player.id === sessionData.wisdom_player_id ? ' 🗣️' : ''}
-                            </h4>
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <h4 style="font-size: 1.125rem; font-weight: 600; margin: 0;">
+                                    <a href="#player/${player.id}" style="color: inherit; text-decoration: none;">${player.name}</a>
+                                    ${player.id === sessionData.wisdom_player_id ? ' 🗣️' : ''}
+                                </h4>
+                                ${isActive ? `
+                                    <span style="display: inline-block; padding: 0.125rem 0.5rem; border-radius: 999px; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.03em; ${isCashedOut ? 'background: rgba(16, 185, 129, 0.15); color: var(--casino-green-dark);' : 'background: rgba(245, 158, 11, 0.15); color: var(--casino-gold-dark);'}">
+                                        ${isCashedOut ? '✓ Cashed Out' : 'In Play'}
+                                    </span>
+                                ` : ''}
+                            </div>
                             <span class="${profit >= 0 ? 'profit-positive' : 'profit-negative'}" style="font-size: 1.125rem; font-weight: 700;">$${profit.toFixed(2)}</span>
                         </div>
 
@@ -434,13 +442,15 @@ export default class SessionDetailPage {
         }
         
         // Add session control buttons at the bottom
+        const allCashedOut = !session.players || session.players.length === 0 || session.players.every(p => !!p.isCashedOut);
         html += `
                 <!-- Session Controls -->
                 <div style="margin-top: 2rem; text-align: center;">
-                    ${isActive ? 
-                        `<button id="end-session-btn" class="neo-btn neo-btn-red neo-btn-lg">
+                    ${isActive ?
+                        `${!allCashedOut ? `<p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.75rem;">Cash out all players before ending the session</p>` : ''}
+                        <button id="end-session-btn" class="neo-btn neo-btn-red neo-btn-lg" ${!allCashedOut ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : ''}>
                             End Session
-                        </button>` : 
+                        </button>` :
                         `<button id="reactivate-session-btn" class="neo-btn neo-btn-green neo-btn-lg">
                             ▶️ Reactivate Session
                         </button>`
@@ -585,6 +595,16 @@ export default class SessionDetailPage {
             if (endSessionBtn) {
                 console.log("Found end session button");
                 endSessionBtn.addEventListener('click', async () => {
+                    // Check if all players have been cashed out
+                    const players = this.currentSession?.players || [];
+                    const uncashedPlayers = players.filter(p => !p.isCashedOut);
+
+                    if (uncashedPlayers.length > 0) {
+                        const names = uncashedPlayers.map(p => p.name).join(', ');
+                        alert(`Cannot end session — the following players have not been cashed out yet:\n\n${names}\n\nPlease cash out all players before ending the session.`);
+                        return;
+                    }
+
                     // Check for money discrepancy
                     const unpaidValue = this.currentSession?.unpaidValue || 0;
                     const hasDiscrepancy = Math.abs(unpaidValue) > 0.01;
