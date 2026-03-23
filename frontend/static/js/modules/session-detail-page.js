@@ -724,7 +724,7 @@ export default class SessionDetailPage {
                 display: grid;
                 grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
                 gap: 0.75rem;
-                max-height: 260px;
+                max-height: 340px;
                 overflow-y: auto;
                 padding-right: 0.25rem;
             }
@@ -1153,14 +1153,6 @@ export default class SessionDetailPage {
                 }
             };
             document.addEventListener('keydown', this.boundHandleAddPlayersModalEscape);
-
-            setTimeout(() => {
-                const nextSearchInput = document.getElementById('add-player-search');
-                if (nextSearchInput) {
-                    nextSearchInput.focus();
-                    nextSearchInput.setSelectionRange(nextSearchInput.value.length, nextSearchInput.value.length);
-                }
-            }, 0);
         }
     }
 
