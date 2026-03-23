@@ -380,11 +380,19 @@ export default class SessionDetailPage {
         `;
     }
 
-    refreshAddPlayersCard(sessionData, sessionId) {
+    refreshAddPlayersCard(sessionData, sessionId, options = {}) {
         const container = document.getElementById('add-players-card-container');
         if (!container) return;
+
         container.innerHTML = this.renderAddPlayersCard(sessionData);
         this.setupAddPlayerPicker(sessionData, sessionId);
+
+        if (typeof options.listScrollTop === 'number') {
+            const pickerList = document.querySelector('.session-player-picker-list');
+            if (pickerList) {
+                pickerList.scrollTop = options.listScrollTop;
+            }
+        }
     }
 
     // Render the inner HTML for the players list container
@@ -1090,6 +1098,8 @@ export default class SessionDetailPage {
 
         document.querySelectorAll('.session-player-checkbox').forEach(checkbox => {
             checkbox.addEventListener('change', (event) => {
+                const pickerList = event.target.closest('.session-player-picker-list');
+                const listScrollTop = pickerList ? pickerList.scrollTop : 0;
                 const playerId = event.target.value;
                 if (event.target.checked) {
                     this.selectedPlayerIds.add(playerId);
@@ -1097,7 +1107,7 @@ export default class SessionDetailPage {
                     this.selectedPlayerIds.delete(playerId);
                 }
 
-                this.refreshAddPlayersCard(sessionData, sessionId);
+                this.refreshAddPlayersCard(sessionData, sessionId, { listScrollTop });
             });
         });
 
