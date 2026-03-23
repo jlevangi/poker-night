@@ -305,7 +305,7 @@ export default class SessionDetailPage {
             html += `
                 <div class="neo-card neo-card-green" style="margin-bottom: 2rem;">
                     <h4 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem; color: var(--casino-green-dark);">➕ Add Player to Session</h4>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+                    <div style="display: grid; grid-template-columns: 3fr 1fr; gap: 0.75rem;">
                         <select id="add-player-select" style="padding: 0.75rem 1rem; border: var(--neo-border); border-radius: 10px; font-size: 1rem; font-weight: 600; background: var(--bg-card); min-width: 0; box-sizing: border-box;">
                             <option value="">-- Select Player --</option>
                             ${(session.availablePlayers || []).map(player =>
