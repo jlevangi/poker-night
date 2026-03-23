@@ -1754,10 +1754,6 @@ div .neo-btn.neo-btn-green:hover,
 /* ============================================================================ */
 
 @media (max-width: 768px) {
-    .neo-header h1 {
-        font-size: 1.5rem;
-    }
-
     .neo-royal-crown {
         font-size: 1.25rem;
     }
@@ -1817,10 +1813,6 @@ div .neo-btn.neo-btn-green:hover,
 }
 
 @media (max-width: 480px) {
-    .neo-header h1 {
-        font-size: 1.375rem;
-    }
-
     .neo-royal-crown {
         font-size: 1.125rem;
     }
