@@ -101,7 +101,7 @@ export default class EventDetailPage {
                 <div class="neo-card" style="margin-top: 1rem; padding: 1rem;">
                     <h3 style="font-weight: 600; color: var(--text-primary); margin: 0 0 0.5rem 0;">RSVP</h3>
                     <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
-                        <select id="rsvp-player-select" class="neo-select neo-player-select" style="flex: 1 1 100%;">
+                        <select id="rsvp-player-select" class="neo-select rsvp-player-select" style="flex: 1 1 100%;">
                             <option value="">Select player...</option>
                             ${[...this.players].sort((a, b) => a.name.localeCompare(b.name)).map(p => `<option value="${p.player_id}">${this.escapeHtml(p.name)}</option>`).join('')}
                         </select>
