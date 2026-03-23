@@ -58,7 +58,10 @@ export default class Router {
 
     // Load content for the current route with transitions
     async loadContent(path) {
-        if (this._transitioning) return;
+        if (this._transitioning) {
+            this._pendingPath = path;
+            return;
+        }
         this._transitioning = true;
 
         try {
@@ -104,6 +107,11 @@ export default class Router {
             this.appContent.innerHTML = `<div class="skeleton-page"><p>Error loading content: ${error.message}. Check console.</p></div>`;
         } finally {
             this._transitioning = false;
+            if (this._pendingPath) {
+                const next = this._pendingPath;
+                this._pendingPath = null;
+                this.loadContent(next);
+            }
         }
     }
 
