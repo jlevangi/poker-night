@@ -139,6 +139,9 @@ export default class ApiService {
     async addPlayerToSession(sessionId, data) {
         return this.post(`sessions/${sessionId}/entries`, data);
     }
+    async addPlayersToSessionBulk(sessionId, data) {
+        return this.post(`sessions/${sessionId}/entries/bulk`, data);
+    }
     async updatePlayerInSession(sessionId, playerId, data) {
         return this.put(`sessions/${sessionId}/entries/${playerId}`, data);
     }

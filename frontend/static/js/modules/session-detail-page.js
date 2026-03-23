@@ -40,6 +40,10 @@ export default class SessionDetailPage {
         this.appContent = appContent;
         this.api = apiService;
         this.notificationManager = new NotificationManager(apiService);
+        this.addPlayerSearchQuery = '';
+        this.selectedPlayerIds = new Set();
+        this.isAddPlayersModalOpen = false;
+        this.boundHandleAddPlayersModalEscape = null;
     }
     
     // Helper to format date as 'MMM DD, YYYY' or fallback
@@ -50,17 +54,21 @@ export default class SessionDetailPage {
         return date.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
     }
 
+    escapeHtml(str) {
+        if (!str) return '';
+        const div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
+    }
+
     // Load session detail page
     async load(sessionId) {
         try {
             // Fetch session data using API service
             const session = await this.api.get(`sessions/${sessionId}`);
             
-            // Fetch available players for the dropdown
+            // Fetch player directory for the add-players picker
             const availablePlayers = await this.api.get('players/details');
-            
-            // Add available players to the session object
-            session.availablePlayers = availablePlayers || [];
 
             // Calculate total value and unpaid value
             if (session.entries) {
@@ -85,6 +93,11 @@ export default class SessionDetailPage {
                 session.unpaidValue = 0;
                 session.players = [];
             }
+
+            session.allPlayers = availablePlayers || [];
+            this.addPlayerSearchQuery = '';
+            this.selectedPlayerIds.clear();
+            this.isAddPlayersModalOpen = false;
             
             // Ensure the buy-in value is available for the form
             if (session.session_info && session.session_info.default_buy_in_value) {
@@ -291,6 +304,89 @@ export default class SessionDetailPage {
         `;
     }
 
+    getFilteredPlayerPickerPlayers() {
+        const players = [...(this.currentSession?.allPlayers || [])].sort((a, b) => a.name.localeCompare(b.name));
+        const query = this.addPlayerSearchQuery.trim().toLowerCase();
+        const existingPlayerIds = new Set((this.currentSession?.players || []).map(player => player.id));
+
+        const mappedPlayers = players.map(player => ({
+            ...player,
+            isInSession: existingPlayerIds.has(player.player_id)
+        }));
+
+        if (!query) {
+            return mappedPlayers;
+        }
+
+        return mappedPlayers.filter(player => player.name.toLowerCase().includes(query));
+    }
+
+    renderAddPlayersCard(sessionData) {
+        const totalPlayers = this.currentSession?.allPlayers?.length || 0;
+
+        return `
+            <div class="session-player-picker-card">
+                <button id="open-player-picker-btn" class="neo-btn neo-btn-green" type="button" style="padding: 0.8rem 1.1rem;">Select Players</button>
+                ${this.isAddPlayersModalOpen ? this.renderAddPlayersModal(sessionData, totalPlayers) : ''}
+            </div>
+        `;
+    }
+
+    renderAddPlayersModal(sessionData, totalPlayers) {
+        const filteredPlayers = this.getFilteredPlayerPickerPlayers();
+        const selectedCount = this.selectedPlayerIds.size;
+        const defaultBuyin = sessionData?.default_buy_in_value ? sessionData.default_buy_in_value.toFixed(2) : '20.00';
+
+        return `
+            <div id="add-players-modal-overlay" class="session-player-picker-overlay">
+                <div class="session-player-picker-modal">
+                    <div class="session-player-picker-modal-header">
+                        <div>
+                            <h4 style="font-size: 1.2rem; font-weight: 700; margin: 0; color: var(--text-primary);">Select Players</h4>
+                            <p style="margin: 0.35rem 0 0; color: var(--text-secondary); font-weight: 600;">${totalPlayers} total players</p>
+                        </div>
+                        <button id="close-player-picker-btn" class="neo-btn" type="button" style="padding: 0.65rem 0.9rem;">Close</button>
+                    </div>
+                    <div class="session-player-picker-toolbar">
+                        <input type="text" id="add-player-search" class="neo-input" placeholder="Search players..." value="${this.escapeHtml(this.addPlayerSearchQuery)}" style="margin: 0;">
+                    </div>
+                    <div class="session-player-picker-list">
+                        ${filteredPlayers.length > 0 ? filteredPlayers.map(player => `
+                            <label class="session-player-picker-option ${player.isInSession ? 'already-in' : ''} ${this.selectedPlayerIds.has(player.player_id) ? 'selected' : ''}">
+                                <input
+                                    type="checkbox"
+                                    class="session-player-checkbox"
+                                    value="${player.player_id}"
+                                    ${player.isInSession || this.selectedPlayerIds.has(player.player_id) ? 'checked' : ''}
+                                    ${player.isInSession ? 'disabled' : ''}
+                                >
+                                <span class="session-player-picker-name">${this.escapeHtml(player.name)}</span>
+                                ${player.isInSession ? '<span class="session-player-picker-badge">In Session</span>' : ''}
+                            </label>
+                        `).join('') : `
+                            <div class="session-player-picker-empty">No players match your search.</div>
+                        `}
+                    </div>
+                    <div class="session-player-picker-footer">
+                        <div class="session-player-picker-footer-summary">
+                            <strong>${selectedCount}</strong> player${selectedCount === 1 ? '' : 's'} selected · Default buy-in $${defaultBuyin}
+                        </div>
+                        <button id="add-player-to-session-btn" class="neo-btn neo-btn-green" type="button" ${selectedCount === 0 ? 'disabled' : ''}>
+                            ${selectedCount === 0 ? 'Select Players to Add' : `Add ${selectedCount} Player${selectedCount === 1 ? '' : 's'}`}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    refreshAddPlayersCard(sessionData, sessionId) {
+        const container = document.getElementById('add-players-card-container');
+        if (!container) return;
+        container.innerHTML = this.renderAddPlayersCard(sessionData);
+        this.setupAddPlayerPicker(sessionData, sessionId);
+    }
+
     // Render the inner HTML for the players list container
     renderPlayersListHTML(session, isActive) {
         const sessionData = session.session_info || session;
@@ -382,6 +478,10 @@ export default class SessionDetailPage {
             endBtn.disabled = !allCashedOut;
             endBtn.style.opacity = allCashedOut ? '' : '0.5';
             endBtn.style.cursor = allCashedOut ? '' : 'not-allowed';
+        }
+
+        if (isActive) {
+            this.refreshAddPlayersCard(sessionData, sessionId);
         }
 
         // Re-attach player-specific event listeners
@@ -506,28 +606,19 @@ export default class SessionDetailPage {
                 </div>
                 ` : ''}
 
-                <h3 style="font-size: 1.75rem; font-weight: 600; margin: 2rem 0 1.5rem 0; color: var(--text-primary);">🎭 Players</h3>
+                <div class="session-players-header">
+                    <h3 style="font-size: 1.75rem; font-weight: 600; margin: 0; color: var(--text-primary);">🎭 Players</h3>
+                    ${isActive ? `
+                        <div id="add-players-card-container">
+                            ${this.renderAddPlayersCard(sessionData)}
+                        </div>
+                    ` : ''}
+                </div>
         `;
-        
+
         if (isActive) {
             // Log available players to debug
-            console.log("Available players for dropdown:", session.availablePlayers);
-            
-            html += `
-                <div class="neo-card neo-card-green" style="margin-bottom: 2rem;">
-                    <h4 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem; color: var(--casino-green-dark);">➕ Add Player to Session</h4>
-                    <div style="display: grid; grid-template-columns: 3fr 1fr; gap: 0.75rem;">
-                        <select id="add-player-select" style="padding: 0.75rem 1rem; border: var(--neo-border); border-radius: 10px; font-size: 1rem; font-weight: 600; background: var(--bg-card); min-width: 0; box-sizing: border-box;">
-                            <option value="">-- Select Player --</option>
-                            ${(session.availablePlayers || []).map(player =>
-                                `<option value="${player.player_id}">${player.name}</option>`
-                            ).join('')}
-                        </select>
-                        <input type="number" id="player-buyin" placeholder="Buy-in ($)" value="${sessionData.default_buy_in_value ? sessionData.default_buy_in_value.toFixed(2) : '20.00'}" step="0.01" style="padding: 0.75rem 1rem; border: var(--neo-border); border-radius: 10px; font-size: 1rem; font-weight: 600; background: var(--bg-card); min-width: 0; box-sizing: border-box; width: 100%;">
-                    </div>
-                    <button id="add-player-to-session-btn" class="neo-btn neo-btn-green" style="width: 100%; margin-top: 0.75rem;">Add Player</button>
-                </div>
-            `;
+            console.log("Players available for picker:", session.allPlayers);
         }
         
         // Render players list
@@ -610,6 +701,157 @@ export default class SessionDetailPage {
             /* Clickable player details styling */
             .clickable-player-details {
                 cursor: pointer !important;
+            }
+
+            .session-players-header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 1rem;
+                margin: 2rem 0 1.5rem 0;
+            }
+
+            #add-players-card-container {
+                margin-left: auto;
+                flex-shrink: 0;
+            }
+
+            .session-player-picker-card {
+                display: flex;
+            }
+
+            .session-player-picker-list {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+                gap: 0.75rem;
+                max-height: 260px;
+                overflow-y: auto;
+                padding-right: 0.25rem;
+            }
+
+            .session-player-picker-option {
+                display: flex;
+                align-items: center;
+                gap: 0.75rem;
+                padding: 0.85rem 0.95rem;
+                border-radius: 14px;
+                border: 1px solid var(--border-light, #E2E8F0);
+                background: var(--bg-card);
+                box-shadow: var(--neo-shadow-sm);
+                cursor: pointer;
+                transition: all 0.18s ease;
+            }
+
+            .session-player-picker-option:hover {
+                transform: translateY(-1px);
+                box-shadow: var(--neo-shadow-md);
+            }
+
+            .session-player-picker-option.already-in {
+                cursor: default;
+                background: rgba(15, 23, 42, 0.04);
+                border-color: rgba(15, 23, 42, 0.08);
+                box-shadow: none;
+            }
+
+            [data-theme="dark"] .session-player-picker-option.already-in {
+                background: rgba(148, 163, 184, 0.08);
+                border-color: rgba(148, 163, 184, 0.16);
+            }
+
+            .session-player-picker-option.selected {
+                border-color: rgba(16, 185, 129, 0.35);
+                background: rgba(16, 185, 129, 0.08);
+            }
+
+            .session-player-picker-option input {
+                margin: 0;
+                width: 18px;
+                height: 18px;
+                accent-color: var(--casino-green);
+            }
+
+            .session-player-picker-name {
+                font-weight: 700;
+                color: var(--text-primary);
+                flex: 1;
+            }
+
+            .session-player-picker-empty {
+                grid-column: 1 / -1;
+                padding: 1rem;
+                border-radius: 14px;
+                border: 1px dashed var(--border-light, #E2E8F0);
+                color: var(--text-secondary);
+                font-weight: 600;
+                text-align: center;
+            }
+
+            .session-player-picker-overlay {
+                position: fixed;
+                inset: 0;
+                background: rgba(15, 23, 42, 0.48);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 1.5rem;
+                z-index: 10001;
+            }
+
+            .session-player-picker-modal {
+                width: min(860px, 100%);
+                max-height: min(80vh, 760px);
+                overflow: hidden;
+                display: flex;
+                flex-direction: column;
+                padding: 1.25rem;
+                border-radius: 20px;
+                background: var(--bg-content);
+                border: 1px solid var(--border-light, #E2E8F0);
+                box-shadow: var(--neo-shadow-xl, 0 20px 25px -5px rgba(0,0,0,0.08));
+            }
+
+            .session-player-picker-modal-header {
+                display: flex;
+                align-items: flex-start;
+                justify-content: space-between;
+                gap: 1rem;
+                margin-bottom: 1rem;
+            }
+
+            .session-player-picker-toolbar {
+                display: grid;
+                grid-template-columns: minmax(0, 1fr);
+                gap: 0.75rem;
+                margin-bottom: 1rem;
+            }
+
+            .session-player-picker-badge {
+                padding: 0.2rem 0.55rem;
+                border-radius: 999px;
+                font-size: 0.72rem;
+                font-weight: 700;
+                color: var(--text-secondary);
+                background: rgba(148, 163, 184, 0.14);
+            }
+
+            .session-player-picker-footer {
+                display: grid;
+                gap: 0.9rem;
+                margin-top: 1rem;
+                padding-top: 1rem;
+                border-top: 1px solid var(--border-light, #E2E8F0);
+            }
+
+            .session-player-picker-footer-summary {
+                color: var(--text-secondary);
+                font-weight: 600;
+            }
+
+            @media (max-width: 700px) {
+                .session-player-picker-toolbar {
+                    grid-template-columns: 1fr;
+                }
             }
         `;
         document.head.appendChild(styleElement);
@@ -798,67 +1040,7 @@ export default class SessionDetailPage {
             }
 
             // Add player to session button
-            const addPlayerBtn = document.getElementById('add-player-to-session-btn');
-            const playerSelect = document.getElementById('add-player-select');
-            const buyinInput = document.getElementById('player-buyin');
-            
-            if (addPlayerBtn && playerSelect && buyinInput) {
-                addPlayerBtn.addEventListener('click', async () => {
-                    const playerId = playerSelect.value;
-                    const buyin = parseFloat(buyinInput.value);
-                    
-                    if (!playerId) {
-                        alert('Please select a player');
-                        return;
-                    }
-                    
-                    if (isNaN(buyin) || buyin <= 0) {
-                        alert('Please enter a valid buy-in amount');
-                        return;
-                    }
-                    
-                    // Calculate number of buy-ins based on entered amount and session default buy-in
-                    const defaultBuyin = session.default_buy_in_value || 20;
-                    const numBuyIns = Math.round(buyin / defaultBuyin);
-                    
-                    if (numBuyIns <= 0) {
-                        alert('Buy-in amount must result in at least one buy-in');
-                        return;
-                    }
-                    
-                    try {
-                        // Show loading state
-                        addPlayerBtn.disabled = true;
-                        addPlayerBtn.textContent = 'Adding...';
-
-                        // Use the API service to add player to session
-                        const newEntries = await this.api.post(`sessions/${sessionId}/entries`, {
-                            player_id: playerId,
-                            num_buy_ins: numBuyIns
-                        });
-
-                        // Remove added player from the dropdown
-                        const addedOption = playerSelect.querySelector(`option[value="${playerId}"]`);
-                        if (addedOption) addedOption.remove();
-
-                        // Reset form fields and restore button
-                        playerSelect.value = '';
-                        buyinInput.value = defaultBuyin.toFixed(2);
-                        addPlayerBtn.disabled = false;
-                        addPlayerBtn.textContent = 'Add Player';
-
-                        // Refresh just the player list (no full page reload)
-                        this.refreshEntries(newEntries, sessionId);
-                    } catch (error) {
-                        console.error('Error adding player to session:', error);
-                        alert(`Error: ${error.message}`);
-
-                        // Restore button state
-                        addPlayerBtn.disabled = false;
-                        addPlayerBtn.textContent = 'Add Player';
-                    }
-                });
-            }
+            this.setupAddPlayerPicker(session, sessionId);
             
             // Set up notification functionality for active sessions
             this.setupNotificationHandlers(sessionId);
@@ -867,6 +1049,119 @@ export default class SessionDetailPage {
         // Set up player card event listeners (cash-out, buy-in, strikes, 7-2, card click)
         this.setupPlayerEventListeners(session, sessionId);
 
+    }
+
+    setupAddPlayerPicker(sessionData, sessionId) {
+        const searchInput = document.getElementById('add-player-search');
+        const openPickerBtn = document.getElementById('open-player-picker-btn');
+        const closePickerBtn = document.getElementById('close-player-picker-btn');
+        const modalOverlay = document.getElementById('add-players-modal-overlay');
+        const addPlayersBtn = document.getElementById('add-player-to-session-btn');
+
+        if (openPickerBtn) {
+            openPickerBtn.addEventListener('click', () => {
+                this.isAddPlayersModalOpen = true;
+                this.refreshAddPlayersCard(sessionData, sessionId);
+            });
+        }
+
+        if (closePickerBtn) {
+            closePickerBtn.addEventListener('click', () => {
+                this.isAddPlayersModalOpen = false;
+                this.refreshAddPlayersCard(sessionData, sessionId);
+            });
+        }
+
+        if (modalOverlay) {
+            modalOverlay.addEventListener('click', (event) => {
+                if (event.target === modalOverlay) {
+                    this.isAddPlayersModalOpen = false;
+                    this.refreshAddPlayersCard(sessionData, sessionId);
+                }
+            });
+        }
+
+        if (searchInput) {
+            searchInput.addEventListener('input', (event) => {
+                this.addPlayerSearchQuery = event.target.value;
+                this.refreshAddPlayersCard(sessionData, sessionId);
+            });
+        }
+
+        document.querySelectorAll('.session-player-checkbox').forEach(checkbox => {
+            checkbox.addEventListener('change', (event) => {
+                const playerId = event.target.value;
+                if (event.target.checked) {
+                    this.selectedPlayerIds.add(playerId);
+                } else {
+                    this.selectedPlayerIds.delete(playerId);
+                }
+
+                this.refreshAddPlayersCard(sessionData, sessionId);
+            });
+        });
+
+        if (addPlayersBtn) {
+            addPlayersBtn.addEventListener('click', async () => {
+                const existingPlayerIds = new Set((this.currentSession?.players || []).map(player => player.id));
+                const selectedPlayerIds = Array.from(this.selectedPlayerIds).filter(playerId => !existingPlayerIds.has(playerId));
+
+                if (selectedPlayerIds.length === 0) {
+                    alert('Please select at least one player');
+                    return;
+                }
+                const numBuyIns = 1;
+
+                if (numBuyIns <= 0) {
+                    alert('Buy-in amount must result in at least one buy-in');
+                    return;
+                }
+
+                try {
+                    addPlayersBtn.disabled = true;
+                    addPlayersBtn.textContent = `Adding ${selectedPlayerIds.length}...`;
+
+                    const newEntries = await this.api.addPlayersToSessionBulk(sessionId, {
+                        player_ids: selectedPlayerIds,
+                        num_buy_ins: numBuyIns
+                    });
+
+                    this.selectedPlayerIds.clear();
+                    this.addPlayerSearchQuery = '';
+                    this.isAddPlayersModalOpen = false;
+                    this.refreshAddPlayersCard(sessionData, sessionId);
+                    this.refreshEntries(newEntries, sessionId);
+                } catch (error) {
+                    console.error('Error adding players to session:', error);
+                    alert(`Error: ${error.message}`);
+                    addPlayersBtn.disabled = false;
+                    addPlayersBtn.textContent = `Add ${selectedPlayerIds.length} Player${selectedPlayerIds.length === 1 ? '' : 's'}`;
+                }
+            });
+        }
+
+        if (this.boundHandleAddPlayersModalEscape) {
+            document.removeEventListener('keydown', this.boundHandleAddPlayersModalEscape);
+            this.boundHandleAddPlayersModalEscape = null;
+        }
+
+        if (this.isAddPlayersModalOpen) {
+            this.boundHandleAddPlayersModalEscape = (event) => {
+                if (event.key === 'Escape') {
+                    this.isAddPlayersModalOpen = false;
+                    this.refreshAddPlayersCard(sessionData, sessionId);
+                }
+            };
+            document.addEventListener('keydown', this.boundHandleAddPlayersModalEscape);
+
+            setTimeout(() => {
+                const nextSearchInput = document.getElementById('add-player-search');
+                if (nextSearchInput) {
+                    nextSearchInput.focus();
+                    nextSearchInput.setSelectionRange(nextSearchInput.value.length, nextSearchInput.value.length);
+                }
+            }, 0);
+        }
     }
 
     // Set up event listeners for per-player action buttons in the players list.
