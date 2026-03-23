@@ -306,13 +306,13 @@ export default class SessionDetailPage {
                 <div class="neo-card neo-card-green" style="margin-bottom: 2rem;">
                     <h4 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem; color: var(--casino-green-dark);">➕ Add Player to Session</h4>
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
-                        <select id="add-player-select" style="padding: 0.75rem 1rem; border: var(--neo-border); border-radius: 10px; font-size: 1rem; font-weight: 600; background: var(--bg-card);">
+                        <select id="add-player-select" style="padding: 0.75rem 1rem; border: var(--neo-border); border-radius: 10px; font-size: 1rem; font-weight: 600; background: var(--bg-card); min-width: 0; box-sizing: border-box;">
                             <option value="">-- Select Player --</option>
                             ${(session.availablePlayers || []).map(player =>
                                 `<option value="${player.player_id}">${player.name}</option>`
                             ).join('')}
                         </select>
-                        <input type="number" id="player-buyin" placeholder="Buy-in ($)" value="${sessionData.default_buy_in_value ? sessionData.default_buy_in_value.toFixed(2) : '20.00'}" step="0.01" style="padding: 0.75rem 1rem; border: var(--neo-border); border-radius: 10px; font-size: 1rem; font-weight: 600; background: var(--bg-card);">
+                        <input type="number" id="player-buyin" placeholder="Buy-in ($)" value="${sessionData.default_buy_in_value ? sessionData.default_buy_in_value.toFixed(2) : '20.00'}" step="0.01" style="padding: 0.75rem 1rem; border: var(--neo-border); border-radius: 10px; font-size: 1rem; font-weight: 600; background: var(--bg-card); min-width: 0; box-sizing: border-box; width: 100%;">
                     </div>
                     <button id="add-player-to-session-btn" class="neo-btn neo-btn-green" style="width: 100%; margin-top: 0.75rem;">Add Player</button>
                 </div>
