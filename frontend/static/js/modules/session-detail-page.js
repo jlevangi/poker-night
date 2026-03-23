@@ -2,6 +2,7 @@
 import ApiService from './api-service.js';
 import { NotificationManager } from './notification-manager.js';
 import { staggerChildren } from './animations.js';
+import Router from './router.js';
 
 export default class SessionDetailPage {
     static skeleton() {
@@ -296,8 +297,19 @@ export default class SessionDetailPage {
         let html = '';
 
         if (session.players && session.players.length > 0) {
+            // Sort players: complete sessions by profit desc, active by alpha with cashed-out at bottom
+            const sortedPlayers = [...session.players];
+            if (isActive) {
+                sortedPlayers.sort((a, b) => {
+                    if (a.isCashedOut !== b.isCashedOut) return a.isCashedOut ? 1 : -1;
+                    return a.name.localeCompare(b.name);
+                });
+            } else {
+                sortedPlayers.sort((a, b) => ((b.cashOut || 0) - (b.buyIn || 0)) - ((a.cashOut || 0) - (a.buyIn || 0)));
+            }
+
             html += `<div style="display: grid;">`;
-            session.players.forEach(player => {
+            sortedPlayers.forEach(player => {
                 html += this.renderPlayerCard(player, sessionData, isActive);
             });
             html += `</div>`;
@@ -399,6 +411,8 @@ export default class SessionDetailPage {
         // If is_active is explicitly false OR status is explicitly ENDED, then it's not active
         // Default to inactive if is_active is missing
         const isActive = sessionData.is_active === true;
+        const shouldShowWisdomSection = isActive || !!sessionData.wisdom_quote;
+        const wisdomStartsExpanded = !isActive && !!sessionData.wisdom_quote;
         
         console.log("Session active calculation:",
             "is_active =", sessionData.is_active,
@@ -409,13 +423,13 @@ export default class SessionDetailPage {
             <div style="padding: 1.5rem; max-width: 1200px; margin: 0 auto;">
                 <!-- Header with navigation -->
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                    <a href="#sessions" class="neo-btn neo-btn-purple">← Back to Sessions</a>
+                    <button id="session-detail-back-btn" type="button" class="neo-btn neo-btn-purple">← Back</button>
                     <button id="share-btn" class="neo-btn neo-btn-gold">&#128203; Share</button>
                 </div>
                 ${isActive ?
                     `<div style="margin-bottom: 2rem;">
                         <button id="notification-btn" class="neo-btn neo-btn-gold" data-state="loading" style="width: 100%;">
-                            <span class="btn-text">🔔 Loading...</span>
+                            <span class="btn-text">🔔 Notifications</span>
                         </button>
                     </div>` :
                     '<div style="margin-bottom: 1rem;"></div>'
@@ -456,34 +470,38 @@ export default class SessionDetailPage {
                     </div>
                 </div>
 
-                <!-- Words of Wisdom Section -->
-                ${sessionData.wisdom_quote ? `
-                <div class="neo-card neo-card-gold" style="margin-top: 2rem; text-align: center;">
-                    <h3 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem; color: var(--casino-gold-dark);">💬 Words of Wisdom</h3>
-                    <p style="font-size: 1.25rem; font-style: italic; color: var(--text-primary); margin-bottom: 0.5rem;">
-                        "${sessionData.wisdom_quote}"
-                    </p>
-                    <p style="font-size: 1rem; font-weight: 700; color: var(--text-secondary);">
-                        — ${session.players?.find(p => p.id === sessionData.wisdom_player_id)?.name || 'Unknown'}
-                    </p>
-                </div>
-                ` : ''}
-
-                ${isActive ? `
-                <!-- Words of Wisdom Input -->
-                <div class="neo-card" style="margin-top: 2rem;">
-                    <h4 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem; color: var(--text-primary);">💬 ${sessionData.wisdom_quote ? 'Edit' : 'Add'} Words of Wisdom</h4>
-                    <div style="display: flex; flex-direction: column; gap: 1rem;">
-                        <textarea id="wisdom-quote-input" placeholder="Enter the quote..." style="padding: 0.875rem 1rem; border: var(--neo-border); font-size: 1rem; font-weight: 600; background: var(--bg-card); min-height: 80px; resize: vertical;">${sessionData.wisdom_quote || ''}</textarea>
-                        <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
-                            <select id="wisdom-player-select" style="flex: 1; min-width: 200px; padding: 0.875rem 1rem; border: var(--neo-border); font-size: 1rem; font-weight: 600; background: var(--bg-card);">
-                                <option value="">-- Who said it? --</option>
-                                ${(session.players || []).map(player =>
-                                    `<option value="${player.id}" ${player.id === sessionData.wisdom_player_id ? 'selected' : ''}>${player.name}</option>`
-                                ).join('')}
-                            </select>
-                            <button id="save-wisdom-btn" class="neo-btn neo-btn-gold" style="margin-left: auto;">Save Quote</button>
+                ${shouldShowWisdomSection ? `
+                <div class="neo-card ${sessionData.wisdom_quote ? 'neo-card-gold' : ''}" style="margin-top: 2rem;">
+                    <div id="wisdom-toggle-btn" role="button" tabindex="0" aria-expanded="${wisdomStartsExpanded ? 'true' : 'false'}" style="width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 1rem; cursor: pointer; text-align: left;">
+                        <span style="font-size: 1.25rem; font-weight: 600; color: ${sessionData.wisdom_quote ? 'var(--casino-gold-dark)' : 'var(--text-primary)'};">💬 Words of Wisdom</span>
+                        <span id="wisdom-toggle-icon" style="font-size: 1rem; font-weight: 700;">${wisdomStartsExpanded ? '−' : '+'}</span>
+                    </div>
+                    <div id="wisdom-content" style="display: ${wisdomStartsExpanded ? 'block' : 'none'}; margin-top: 1rem;">
+                        ${sessionData.wisdom_quote ? `
+                        <div style="text-align: center; margin-bottom: ${isActive ? '1.5rem' : '0'};">
+                            <p style="font-size: 1.25rem; font-style: italic; color: var(--text-primary); margin-bottom: 0.5rem;">
+                                "${sessionData.wisdom_quote}"
+                            </p>
+                            <p style="font-size: 1rem; font-weight: 700; color: var(--text-secondary); margin: 0;">
+                                — ${session.players?.find(p => p.id === sessionData.wisdom_player_id)?.name || 'Unknown'}
+                            </p>
                         </div>
+                        ` : ''}
+                        ${isActive ? `
+                        <div style="display: flex; flex-direction: column; gap: 1rem;">
+                            <h4 style="font-size: 1.1rem; font-weight: 600; margin: 0; color: var(--text-primary);">${sessionData.wisdom_quote ? 'Edit Quote' : 'Add Quote'}</h4>
+                            <textarea id="wisdom-quote-input" placeholder="Enter the quote..." style="padding: 0.875rem 1rem; border: var(--neo-border); font-size: 1rem; font-weight: 600; background: var(--bg-card); min-height: 80px; resize: vertical;">${sessionData.wisdom_quote || ''}</textarea>
+                            <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+                                <select id="wisdom-player-select" style="flex: 1; min-width: 200px; padding: 0.875rem 1rem; border: var(--neo-border); font-size: 1rem; font-weight: 600; background: var(--bg-card);">
+                                    <option value="">-- Who said it? --</option>
+                                    ${(session.players || []).map(player =>
+                                        `<option value="${player.id}" ${player.id === sessionData.wisdom_player_id ? 'selected' : ''}>${player.name}</option>`
+                                    ).join('')}
+                                </select>
+                                <button id="save-wisdom-btn" class="neo-btn neo-btn-gold" style="margin-left: auto;">Save Quote</button>
+                            </div>
+                        </div>
+                        ` : ''}
                     </div>
                 </div>
                 ` : ''}
@@ -643,6 +661,31 @@ export default class SessionDetailPage {
     // Setup event listeners for the page
     setupEventListeners(session, sessionId, isActive) {
         console.log("Setting up event listeners, isActive:", isActive);
+
+        const backBtn = document.getElementById('session-detail-back-btn');
+        if (backBtn) {
+            backBtn.addEventListener('click', () => Router.navigateBack('sessions'));
+        }
+
+        const wisdomToggleBtn = document.getElementById('wisdom-toggle-btn');
+        const wisdomContent = document.getElementById('wisdom-content');
+        const wisdomToggleIcon = document.getElementById('wisdom-toggle-icon');
+        if (wisdomToggleBtn && wisdomContent && wisdomToggleIcon) {
+            const toggleWisdom = () => {
+                const isExpanded = wisdomContent.style.display !== 'none';
+                wisdomContent.style.display = isExpanded ? 'none' : 'block';
+                wisdomToggleBtn.setAttribute('aria-expanded', isExpanded ? 'false' : 'true');
+                wisdomToggleIcon.textContent = isExpanded ? '+' : '−';
+            };
+
+            wisdomToggleBtn.addEventListener('click', toggleWisdom);
+            wisdomToggleBtn.addEventListener('keydown', (event) => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    toggleWisdom();
+                }
+            });
+        }
 
         // Share button
         const shareBtn = document.getElementById('share-btn');
@@ -1148,7 +1191,7 @@ export default class SessionDetailPage {
 
         newButton.addEventListener('click', async () => {
             try {
-                this.updateNotificationButton(newButton, 'loading', 'Loading...');
+                this.updateNotificationButton(newButton, 'loading', 'Updating...');
 
                 switch (action) {
                     case 'request-permission':

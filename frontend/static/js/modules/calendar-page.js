@@ -136,8 +136,8 @@ export default class CalendarPage {
         const isCancelled = event.is_cancelled;
 
         const statusBadge = isCancelled
-            ? '<span style="display: inline-block; background: var(--casino-red); color: #fff; font-size: 0.7rem; font-weight: 600; padding: 0.15rem 0.5rem; border: 2px solid var(--border-color);">Cancelled</span>'
-            : '<span style="display: inline-block; background: var(--casino-green); color: #fff; font-size: 0.7rem; font-weight: 600; padding: 0.15rem 0.5rem; border: 2px solid var(--border-color);">Upcoming</span>';
+            ? '<span style="display: inline-block; background: var(--casino-red); color: #fff; font-size: 0.7rem; font-weight: 600; padding: 0.15rem 0.5rem; border: 1px solid var(--border-color); border-radius: var(--radius-md);">Cancelled</span>'
+            : '<span style="display: inline-block; background: var(--casino-green); color: #fff; font-size: 0.7rem; font-weight: 600; padding: 0.15rem 0.5rem; border: 1px solid var(--border-color); border-radius: var(--radius-md);">Upcoming</span>';
 
         return `
             <a href="#event/${event.event_id}" class="neo-event-card-link" style="text-decoration: none; color: inherit; display: block; margin-bottom: 1rem;">

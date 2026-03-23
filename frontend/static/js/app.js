@@ -419,36 +419,36 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Setup router with all routes
     router
         .register('dashboard', () => {
-            dashboardPage.load();
             updateActiveNavigation();
+            return dashboardPage.load();
         })
         .register('players', () => {
-            playersPage.load();
             updateActiveNavigation();
+            return playersPage.load();
         })
         .register('sessions', () => {
-            sessionsPage.load();
             updateActiveNavigation();
+            return sessionsPage.load();
         })
         .register('calendar', () => {
-            calendarPage.load();
             updateActiveNavigation();
+            return calendarPage.load();
         })
         .register('stats', () => {
-            statsPage.load();
             updateActiveNavigation();
+            return statsPage.load();
         })
         .register('player/:id', (id) => {
-            playerDetailPage.load(id);
             updateActiveNavigation();
+            return playerDetailPage.load(id);
         })
         .register('session/:id', (id) => {
-            sessionDetailPage.load(id);
             updateActiveNavigation();
+            return sessionDetailPage.load(id);
         })
         .register('event/:id', (id) => {
-            eventDetailPage.load(id);
             updateActiveNavigation();
+            return eventDetailPage.load(id);
         });
     
     // Initialize navigation

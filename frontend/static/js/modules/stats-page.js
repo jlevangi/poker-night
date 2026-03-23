@@ -43,16 +43,6 @@ export default class StatsPage {
     async load() {
         try {
             document.title = 'Stats & Awards - Gamble King';
-            // Show loading state
-            this.appContent.innerHTML = `
-                <div class="fade-in" style="padding: 1.5rem; max-width: 1200px; margin: 0 auto;">
-                    <div class="neo-card" style="text-align: center; padding: 3rem;">
-                        <h2>Loading Statistics...</h2>
-                        <div class="neo-stat-value">📊</div>
-                    </div>
-                </div>
-            `;
-            
             // Fetch stats data
             const [gamblingData, summaryData, leaderboardData, playersData] = await Promise.all([
                 this.api.get('stats/gambling-over-time'),
@@ -210,7 +200,7 @@ export default class StatsPage {
                         } • Total: $${(this.chartData.total_gambled || 0).toLocaleString()}
                     </div>
                 </div>
-                <div id="gambling-chart" class="neo-chart-container">
+                <div id="gambling-chart" class="neo-chart-container" style="border: none; border-radius: 0; box-shadow: none; margin: 0; padding: 0;">
                     <!-- Chart will be rendered here -->
                 </div>
             </div>
