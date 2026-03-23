@@ -1018,7 +1018,8 @@ export default class StatsPage {
                     transform: translate(-50%, calc(-100% - 10px));
                     background: var(--bg-card);
                     padding: 1rem 1.5rem;
-                    border: var(--neo-border-thick);
+                    border: 1px solid var(--border-color);
+                    border-radius: 12px;
                     box-shadow: var(--neo-shadow-lg);
                     z-index: 1000;
                     text-align: center;

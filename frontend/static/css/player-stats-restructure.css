@@ -24,14 +24,13 @@
 /* Clickable player stats styling */
 .clickable-player-stats {
     cursor: pointer !important;
-    transition: background-color 0.2s ease;
-    border-radius: 4px;
-    padding: 0.25rem;
-    margin: -0.25rem;
+    transition: all 0.2s ease;
 }
 
 .clickable-player-stats:hover {
-    background-color: rgba(51, 103, 214, 0.1);
+    transform: translateY(-2px);
+    box-shadow: var(--neo-shadow-md);
+    border-color: var(--primary-color);
 }
 
 /* Update player quick stats for new structure */
