@@ -191,7 +191,7 @@ export default class DashboardPage {
         return `
             <div class="neo-gamble-king neo-bounce">
                 <div class="neo-gamble-king-title">Current Gamble King</div>
-                <div class="neo-gamble-king-name">👑${gambleKing.name}👑</div>
+                <div class="neo-gamble-king-name">${gambleKing.name}</div>
                 <div class="neo-stats-grid" style="grid-template-columns: repeat(4, 1fr);">
                     <div class="neo-stat-card" style="background: var(--bg-card);">
                         <div class="neo-stat-value profit-${gambleKing.net_profit >= 0 ? 'positive' : 'negative'}">$${gambleKing.net_profit ? gambleKing.net_profit.toFixed(2) : '0.00'}</div>
