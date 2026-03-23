@@ -822,18 +822,18 @@ export default class StatsPage {
 
         const totalGambled = playersWithBuyIns.reduce((sum, p) => sum + p.total_buy_ins_value, 0);
 
-        // Color palette for pie slices (neobrutalist colors)
+        // Color palette for pie slices
         const colors = [
-            '#10B981', // green
-            '#3B82F6', // blue
-            '#F59E0B', // gold/orange
-            '#EF4444', // red
-            '#8B5CF6', // purple
-            '#EC4899', // pink
-            '#14B8A6', // teal
-            '#F97316', // orange
-            '#06B6D4', // cyan
-            '#84CC16', // lime
+            '#22C55E',
+            '#3B82F6',
+            '#F59E0B',
+            '#EF4444',
+            '#8B5CF6',
+            '#14B8A6',
+            '#F97316',
+            '#EC4899',
+            '#06B6D4',
+            '#84CC16',
         ];
 
         // Separate top 10 and others
@@ -870,10 +870,11 @@ export default class StatsPage {
         }
 
         // SVG configuration
-        const size = 400;
+        const size = 420;
         const centerX = size / 2;
         const centerY = size / 2;
-        const radius = size / 2 - 20;
+        const radius = size / 2 - 24;
+        const innerRadius = 92;
 
         // Store slices data for access in createPieSlice method
         this._currentPieSlices = slices;
@@ -882,29 +883,29 @@ export default class StatsPage {
         let currentAngle = -90; // Start at top
         const slicePaths = slices.map((slice, index) => {
             const angle = (slice.percentage / 100) * 360;
-            const path = this.createPieSlice(centerX, centerY, radius, currentAngle, currentAngle + angle, slice.color, slice.name, index);
+            const path = this.createPieSlice(centerX, centerY, radius, innerRadius, currentAngle, currentAngle + angle, slice.color, slice.name, index);
             currentAngle += angle;
             return path;
         });
 
         // Create legend items in a responsive grid
         const topLegendItems = slices.filter(s => s.isTopPlayer).map((slice, index) => `
-            <div class="neo-pie-legend-item" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem; border: var(--neo-border); background: var(--bg-card);">
-                <div style="width: 20px; height: 20px; background: ${slice.color}; border: var(--neo-border); flex-shrink: 0;"></div>
+            <div class="neo-pie-legend-item" style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; border: var(--neo-border); background: var(--bg-card);">
+                <div class="neo-pie-legend-swatch" style="background: ${slice.color}; flex-shrink: 0;"></div>
                 <div style="flex: 1; min-width: 0;">
-                    <div style="font-weight: 600; font-size: 0.75rem; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${slice.name}</div>
-                    <div style="font-weight: 600; font-size: 0.7rem; color: var(--text-secondary);">$${slice.value.toLocaleString()} • ${slice.percentage.toFixed(1)}%</div>
+                    <div style="font-weight: 700; font-size: 0.8rem; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${slice.name}</div>
+                    <div class="neo-pie-legend-meta">$${slice.value.toLocaleString()} • ${slice.percentage.toFixed(1)}%</div>
                 </div>
             </div>
         `).join('');
 
         // Create "Everyone Else" section if applicable
         const everyoneElseItem = otherPlayers.length > 0 ? `
-            <div class="neo-pie-legend-item" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem; border: var(--neo-border); background: var(--bg-card); cursor: pointer;" id="everyone-else-item">
-                <div style="width: 20px; height: 20px; background: #6B7280; border: var(--neo-border); flex-shrink: 0;"></div>
+            <div class="neo-pie-legend-item" style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; border: var(--neo-border); background: var(--bg-card); cursor: pointer;" id="everyone-else-item">
+                <div class="neo-pie-legend-swatch" style="background: #6B7280; flex-shrink: 0;"></div>
                 <div style="flex: 1; min-width: 0;">
-                    <div style="font-weight: 600; font-size: 0.75rem; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Everyone Else (${otherPlayers.length})</div>
-                    <div style="font-weight: 600; font-size: 0.7rem; color: var(--text-secondary);">$${otherPlayers.reduce((sum, p) => sum + p.total_buy_ins_value, 0).toLocaleString()} • ${((otherPlayers.reduce((sum, p) => sum + p.total_buy_ins_value, 0) / totalGambled) * 100).toFixed(1)}%</div>
+                    <div style="font-weight: 700; font-size: 0.8rem; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Everyone Else (${otherPlayers.length})</div>
+                    <div class="neo-pie-legend-meta">$${otherPlayers.reduce((sum, p) => sum + p.total_buy_ins_value, 0).toLocaleString()} • ${((otherPlayers.reduce((sum, p) => sum + p.total_buy_ins_value, 0) / totalGambled) * 100).toFixed(1)}%</div>
                 </div>
                 <div class="everyone-else-arrow" style="font-weight: 600; color: var(--casino-purple); font-size: 1rem;">▼</div>
             </div>
@@ -912,23 +913,33 @@ export default class StatsPage {
 
         const everyoneElseExpanded = otherPlayers.length > 0 ? `
             <!-- Expandable list of everyone else -->
-            <div id="everyone-else-expanded" style="display: none; margin-top: 0.5rem; padding: 0.5rem; border: var(--neo-border); background: var(--bg-content); grid-column: 1 / -1;">
+            <div id="everyone-else-expanded" style="display: none; margin-top: 0.5rem; padding: 0.75rem; border: var(--neo-border); background: var(--bg-content); border-radius: var(--radius-lg); grid-column: 1 / -1;">
                 ${otherPlayers.map((player, idx) => `
-                    <div style="display: flex; justify-content: space-between; padding: 0.5rem; border-bottom: ${idx < otherPlayers.length - 1 ? '1px solid var(--text-muted)' : 'none'};">
-                        <span style="font-weight: 700; font-size: 0.75rem; color: var(--text-primary);">${player.name}</span>
-                        <span style="font-weight: 600; font-size: 0.75rem; color: var(--text-secondary);">$${player.total_buy_ins_value.toLocaleString()} • ${((player.total_buy_ins_value / totalGambled) * 100).toFixed(1)}%</span>
+                    <div class="neo-pie-expanded-row" style="display: flex; justify-content: space-between; gap: 1rem; padding: 0.625rem 0.5rem; border-bottom: ${idx < otherPlayers.length - 1 ? '1px solid var(--border-light)' : 'none'};">
+                        <span style="font-weight: 700; font-size: 0.8rem; color: var(--text-primary);">${player.name}</span>
+                        <span class="neo-pie-legend-meta">$${player.total_buy_ins_value.toLocaleString()} • ${((player.total_buy_ins_value / totalGambled) * 100).toFixed(1)}%</span>
                     </div>
                 `).join('')}
             </div>
         ` : '';
 
         pieContainer.innerHTML = `
-            <div style="display: flex; align-items: flex-start; justify-content: center; flex-wrap: wrap;">
+            <div class="neo-pie-chart-layout">
                 <!-- Pie Chart SVG -->
-                <div style="position: relative; flex-shrink: 0;">
+                <div class="neo-pie-chart-canvas">
                     <svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" style="display: block;">
+                        <defs>
+                            <filter id="pieSliceShadow" x="-20%" y="-20%" width="140%" height="140%">
+                                <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="rgba(15,23,42,0.12)"/>
+                            </filter>
+                        </defs>
                         ${slicePaths.join('')}
                     </svg>
+                    <div class="neo-pie-chart-center" data-default-label="Total Gambled" data-default-value="$${totalGambled.toLocaleString()}" data-default-subtitle="${playersWithBuyIns.length} players">
+                        <div id="pie-chart-center-label" class="neo-pie-chart-center-label">Total Gambled</div>
+                        <div id="pie-chart-center-value" class="neo-pie-chart-center-value">$${totalGambled.toLocaleString()}</div>
+                        <div id="pie-chart-center-subtitle" class="neo-pie-chart-center-subtitle">${playersWithBuyIns.length} players</div>
+                    </div>
                 </div>
 
                 <!-- Legend Grid -->
@@ -967,79 +978,62 @@ export default class StatsPage {
     addPieSliceInteractions() {
         const pieSlices = document.querySelectorAll('.neo-pie-slice');
         const pieChartSvg = document.querySelector('#pie-chart-container svg');
+        const center = document.getElementById('pie-chart-center-label')?.parentElement;
 
-        if (!pieChartSvg) return;
+        if (!pieChartSvg || !center) return;
+
+        const resetCenter = () => {
+            const defaultLabel = center.getAttribute('data-default-label') || '';
+            const defaultValue = center.getAttribute('data-default-value') || '';
+            const defaultSubtitle = center.getAttribute('data-default-subtitle') || '';
+
+            const labelEl = document.getElementById('pie-chart-center-label');
+            const valueEl = document.getElementById('pie-chart-center-value');
+            const subtitleEl = document.getElementById('pie-chart-center-subtitle');
+
+            if (labelEl) labelEl.textContent = defaultLabel;
+            if (valueEl) valueEl.textContent = defaultValue;
+            if (subtitleEl) subtitleEl.textContent = defaultSubtitle;
+
+            pieSlices.forEach(slice => slice.classList.remove('active'));
+        };
 
         pieSlices.forEach(slice => {
             slice.addEventListener('click', (e) => {
+                e.stopPropagation();
+
                 const playerName = e.target.getAttribute('data-player-name');
                 const playerValue = e.target.getAttribute('data-player-value');
                 const playerPercentage = e.target.getAttribute('data-player-percentage');
 
-                // Remove any existing tooltip
-                const existingTooltip = document.querySelector('.neo-pie-click-tooltip');
-                if (existingTooltip) {
-                    existingTooltip.remove();
-                }
+                const labelEl = document.getElementById('pie-chart-center-label');
+                const valueEl = document.getElementById('pie-chart-center-value');
+                const subtitleEl = document.getElementById('pie-chart-center-subtitle');
 
-                // Get click position
-                const clickX = e.clientX;
-                const clickY = e.clientY;
+                if (labelEl) labelEl.textContent = playerName;
+                if (valueEl) valueEl.textContent = `$${playerValue}`;
+                if (subtitleEl) subtitleEl.textContent = `${playerPercentage}% of total`;
 
-                // Create tooltip at click position
-                const tooltip = document.createElement('div');
-                tooltip.className = 'neo-pie-click-tooltip';
-                tooltip.innerHTML = `
-                    <div style="font-weight: 600; font-size: 1.25rem; color: var(--text-primary); margin-bottom: 0.5rem;">
-                        ${playerName}
-                    </div>
-                    <div style="font-size: 1.125rem; font-weight: 700; color: var(--casino-gold); margin-bottom: 0.25rem;">
-                        $${playerValue}
-                    </div>
-                    <div style="font-size: 0.875rem; font-weight: 600; color: var(--text-secondary);">
-                        ${playerPercentage}% of total
-                    </div>
-                `;
-
-                tooltip.style.cssText = `
-                    position: fixed;
-                    left: ${clickX}px;
-                    top: ${clickY}px;
-                    transform: translate(-50%, calc(-100% - 10px));
-                    background: var(--bg-card);
-                    padding: 1rem 1.5rem;
-                    border: 1px solid var(--border-color);
-                    border-radius: 12px;
-                    box-shadow: var(--neo-shadow-lg);
-                    z-index: 1000;
-                    text-align: center;
-                    pointer-events: none;
-                `;
-
-                document.body.appendChild(tooltip);
-
-                // Remove tooltip after 3 seconds or on next click
-                setTimeout(() => {
-                    if (tooltip.parentElement) {
-                        tooltip.remove();
-                    }
-                }, 3000);
+                pieSlices.forEach(otherSlice => otherSlice.classList.remove('active'));
+                e.target.classList.add('active');
             });
         });
 
-        // Click anywhere to dismiss tooltip
-        document.addEventListener('click', (e) => {
-            if (!e.target.classList.contains('neo-pie-slice')) {
-                const tooltip = document.querySelector('.neo-pie-click-tooltip');
-                if (tooltip) {
-                    tooltip.remove();
-                }
+        if (this.boundPieChartResetHandler) {
+            document.removeEventListener('click', this.boundPieChartResetHandler);
+        }
+
+        this.boundPieChartResetHandler = (e) => {
+            if (!e.target.closest('.neo-pie-slice')) {
+                resetCenter();
             }
-        });
+        };
+
+        document.addEventListener('click', this.boundPieChartResetHandler);
     }
 
     // Create SVG path for pie slice
-    createPieSlice(cx, cy, radius, startAngle, endAngle, color, playerName = '', sliceIndex = 0) {
+    createPieSlice(cx, cy, radius, innerRadius, startAngle, endAngle, color, playerName = '', sliceIndex = 0) {
         const startRad = (startAngle * Math.PI) / 180;
         const endRad = (endAngle * Math.PI) / 180;
 
@@ -1047,13 +1041,18 @@ export default class StatsPage {
         const y1 = cy + radius * Math.sin(startRad);
         const x2 = cx + radius * Math.cos(endRad);
         const y2 = cy + radius * Math.sin(endRad);
+        const x3 = cx + innerRadius * Math.cos(endRad);
+        const y3 = cy + innerRadius * Math.sin(endRad);
+        const x4 = cx + innerRadius * Math.cos(startRad);
+        const y4 = cy + innerRadius * Math.sin(startRad);
 
         const largeArc = endAngle - startAngle > 180 ? 1 : 0;
 
         const pathData = [
-            `M ${cx} ${cy}`,
-            `L ${x1} ${y1}`,
+            `M ${x1} ${y1}`,
             `A ${radius} ${radius} 0 ${largeArc} 1 ${x2} ${y2}`,
+            `L ${x3} ${y3}`,
+            `A ${innerRadius} ${innerRadius} 0 ${largeArc} 0 ${x4} ${y4}`,
             'Z'
         ].join(' ');
 
@@ -1065,7 +1064,8 @@ export default class StatsPage {
         return `<path d="${pathData}"
                       fill="${color}"
                       stroke="var(--bg-card)"
-                      stroke-width="2"
+                      stroke-width="3"
+                      filter="url(#pieSliceShadow)"
                       class="neo-pie-slice"
                       data-player-name="${playerName}"
                       data-player-value="${playerValue}"
