@@ -5,6 +5,9 @@ export default class Router {
         this.routes = {};
         this.skeletons = {};
         this._transitioning = false;
+        this.historyStack = [];
+        this._isNavigatingBack = false;
+        Router.instance = this;
 
         // Setup event listeners
         window.addEventListener('hashchange', () => this.route());
@@ -25,9 +28,32 @@ export default class Router {
     // Route to the current hash
     route() {
         const path = window.location.hash.slice(1) || 'dashboard';
+        this._recordNavigation(path);
         this.loadContent(path);
         this.updateActiveNavButton();
         return this;
+    }
+
+    static getBackPath(fallbackPath = 'dashboard') {
+        const router = Router.instance;
+        if (router && router.historyStack.length > 1) {
+            return router.historyStack[router.historyStack.length - 2];
+        }
+        return fallbackPath;
+    }
+
+    static navigateBack(fallbackPath = 'dashboard') {
+        const router = Router.instance;
+
+        if (router && router.historyStack.length > 1) {
+            router.historyStack.pop();
+            const previousPath = router.historyStack[router.historyStack.length - 1];
+            router._isNavigatingBack = true;
+            window.location.hash = `#${previousPath}`;
+            return;
+        }
+
+        window.location.hash = `#${fallbackPath}`;
     }
 
     // Get skeleton HTML for a given path
@@ -148,5 +174,27 @@ export default class Router {
                 link.classList.remove('active');
             }
         });
+    }
+
+    _recordNavigation(path) {
+        if (this._isNavigatingBack) {
+            this._isNavigatingBack = false;
+            return;
+        }
+
+        const currentPath = this.historyStack[this.historyStack.length - 1];
+        const previousPath = this.historyStack[this.historyStack.length - 2];
+
+        if (path === currentPath) {
+            return;
+        }
+
+        // Keep the in-app stack aligned when the user uses browser back/forward.
+        if (path === previousPath) {
+            this.historyStack.pop();
+            return;
+        }
+
+        this.historyStack.push(path);
     }
 }

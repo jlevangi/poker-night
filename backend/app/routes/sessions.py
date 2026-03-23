@@ -257,6 +257,68 @@ def add_player_to_session_api(session_id: str) -> Dict[str, Any]:
     return jsonify({"error": "Failed to add player entry for an unknown reason"}), 500
 
 
+@sessions_bp.route('/sessions/<string:session_id>/entries/bulk', methods=['POST'])
+def add_players_to_session_bulk_api(session_id: str) -> Dict[str, Any]:
+    """
+    Add multiple new players to a session in a single request.
+
+    Args:
+        session_id: Session's unique identifier
+
+    Returns:
+        JSON response with all session entries or error message
+    """
+    data = request.get_json()
+    if not data:
+        return jsonify({"error": "Request body is required"}), 400
+
+    player_ids = data.get('player_ids')
+    num_buy_ins_str = data.get('num_buy_ins', "1")
+
+    if not isinstance(player_ids, list) or len(player_ids) == 0:
+        return jsonify({"error": "player_ids must be a non-empty array"}), 400
+
+    if any(not isinstance(player_id, str) or not player_id for player_id in player_ids):
+        return jsonify({"error": "Each player ID must be a non-empty string"}), 400
+
+    if len(set(player_ids)) != len(player_ids):
+        return jsonify({"error": "Duplicate players cannot be added in the same request"}), 400
+
+    if not session_id or not isinstance(session_id, str):
+        return jsonify({"error": "Invalid session ID"}), 400
+
+    try:
+        num_buy_ins = int(num_buy_ins_str)
+        if num_buy_ins <= 0 or num_buy_ins > 100:
+            return jsonify({"error": "Number of buy-ins must be between 1 and 100"}), 400
+    except (ValueError, TypeError):
+        return jsonify({"error": "Invalid number of buy-ins"}), 400
+
+    db_service = DatabaseService()
+    session = db_service.get_session_by_id(session_id)
+    if not session:
+        return jsonify({"error": f"Session {session_id} not found."}), 404
+    if not session.is_active:
+        return jsonify({"error": "Cannot add players to a session that has ended."}), 400
+
+    missing_player_ids = [player_id for player_id in player_ids if not db_service.get_player_by_id(player_id)]
+    if missing_player_ids:
+        return jsonify({"error": f"Players not found: {', '.join(missing_player_ids)}"}), 404
+
+    existing_entries = db_service.get_entries_for_session(session_id)
+    existing_player_ids = {entry.player_id for entry in existing_entries}
+    already_in_session = [player_id for player_id in player_ids if player_id in existing_player_ids]
+    if already_in_session:
+        return jsonify({"error": "Some selected players are already in this session."}), 400
+
+    created_entries = db_service.add_players_to_session_bulk(session_id, player_ids, num_buy_ins)
+    if created_entries is not None:
+        all_entries = db_service.get_entries_for_session(session_id)
+        return jsonify([entry.to_dict() for entry in all_entries]), 201
+
+    return jsonify({"error": "Failed to add players to the session."}), 500
+
+
 @sessions_bp.route('/sessions/<string:session_id>/entries/<string:player_id>/remove-buyin', methods=['PUT'])
 def remove_buyin_api(session_id: str, player_id: str) -> Dict[str, Any]:
     """

@@ -443,6 +443,90 @@ class DatabaseService:
             db.session.rollback()
             self.logger.error(f"Failed to record player entry: {str(e)}")
             return None
+
+    def add_players_to_session_bulk(self, session_id: str, player_ids: List[str], num_buy_ins: int = 1) -> Optional[List[Entry]]:
+        """
+        Add multiple new players to a session with the same initial buy-in count.
+
+        Args:
+            session_id: Session's unique identifier
+            player_ids: Player IDs to add
+            num_buy_ins: Number of buy-ins to record for each player
+
+        Returns:
+            List of created Entry instances if successful, None otherwise
+        """
+        try:
+            session = self.get_session_by_id(session_id)
+            if not session:
+                self.logger.error(f"Session {session_id} not found.")
+                return None
+
+            if not session.is_active:
+                self.logger.error(f"Cannot add players to session {session_id} because it has ended.")
+                return None
+
+            unique_player_ids = list(dict.fromkeys(player_ids))
+            players = Player.query.filter(Player.player_id.in_(unique_player_ids)).all()
+            if len(players) != len(unique_player_ids):
+                self.logger.error(f"One or more players were not found for bulk add into session {session_id}.")
+                return None
+
+            existing_entries = Entry.query.filter(
+                Entry.session_id == session_id,
+                Entry.player_id.in_(unique_player_ids)
+            ).all()
+            if existing_entries:
+                self.logger.error(f"One or more players already exist in session {session_id}.")
+                return None
+
+            cost_per_buy_in = session.default_buy_in_value
+            total_buy_in_for_this_action = round_to_cents(num_buy_ins * cost_per_buy_in)
+
+            existing_entry_ids = db.session.query(Entry.entry_id).all()
+            existing_numbers = []
+            for (entry_id,) in existing_entry_ids:
+                if entry_id.startswith('eid_'):
+                    try:
+                        num = int(entry_id.split('_')[1])
+                        existing_numbers.append(num)
+                    except (ValueError, IndexError):
+                        pass
+
+            next_num = (max(existing_numbers) if existing_numbers else 0) + 1
+            created_entries = []
+            player_lookup = {player.player_id: player for player in players}
+
+            for player_id in unique_player_ids:
+                entry_id = f"eid_{next_num:04d}"
+                next_num += 1
+
+                new_entry = Entry(
+                    entry_id=entry_id,
+                    session_id=session_id,
+                    player_id=player_id,
+                    buy_in_count=num_buy_ins,
+                    total_buy_in_amount=total_buy_in_for_this_action,
+                    payout=round_to_cents(0.00),
+                    profit=round_to_cents(-total_buy_in_for_this_action),
+                    session_seven_two_wins=0
+                )
+
+                db.session.add(new_entry)
+                created_entries.append(new_entry)
+
+            db.session.commit()
+
+            created_names = ', '.join(player_lookup[player_id].name for player_id in unique_player_ids)
+            self.logger.info(
+                f"Added {len(created_entries)} players to session {session_id}: {created_names}"
+            )
+            return created_entries
+
+        except Exception as e:
+            db.session.rollback()
+            self.logger.error(f"Failed to bulk add players to session: {str(e)}")
+            return None
     
     def remove_buy_in(self, session_id: str, player_id: str) -> Optional[Entry]:
         """

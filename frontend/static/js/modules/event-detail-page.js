@@ -1,4 +1,5 @@
 // Event detail page module
+import Router from './router.js';
 import { staggerChildren } from './animations.js';
 
 export default class EventDetailPage {
@@ -65,8 +66,9 @@ export default class EventDetailPage {
             this.appContent.innerHTML = `
                 <div class="fade-in" style="padding: 1.5rem; max-width: 800px; margin: 0 auto; text-align: center;">
                     <p style="color: var(--text-secondary); font-weight: 600;">Error loading event: ${this.escapeHtml(error.message)}</p>
-                    <a href="#calendar" class="neo-btn neo-btn-green" style="margin-top: 1rem; display: inline-block;">Back to Calendar</a>
+                    <button id="event-detail-back-btn" type="button" class="neo-btn neo-btn-green" style="margin-top: 1rem; display: inline-block;">Back</button>
                 </div>`;
+            this.setupBackButton();
         }
     }
 
@@ -87,7 +89,7 @@ export default class EventDetailPage {
             <div class="fade-in" style="padding: 1.5rem; max-width: 800px; margin: 0 auto;">
                 <!-- Header with navigation -->
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-                    <a href="#calendar" class="neo-btn neo-btn-purple">&larr; Back to Calendar</a>
+                    <button id="event-detail-back-btn" type="button" class="neo-btn neo-btn-purple">&larr; Back</button>
                     <button id="share-event-btn" class="neo-btn neo-btn-gold">&#128203; Share</button>
                 </div>
 
@@ -99,7 +101,7 @@ export default class EventDetailPage {
                 <div class="neo-card" style="margin-top: 1rem; padding: 1rem;">
                     <h3 style="font-weight: 600; color: var(--text-primary); margin: 0 0 0.5rem 0;">RSVP</h3>
                     <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
-                        <select id="rsvp-player-select" class="neo-input" style="flex: 1 1 100%; padding: 0.5rem;">
+                        <select id="rsvp-player-select" class="neo-select neo-player-select" style="flex: 1 1 100%;">
                             <option value="">Select player...</option>
                             ${[...this.players].sort((a, b) => a.name.localeCompare(b.name)).map(p => `<option value="${p.player_id}">${this.escapeHtml(p.name)}</option>`).join('')}
                         </select>
@@ -250,6 +252,8 @@ export default class EventDetailPage {
     }
 
     setupEventListeners() {
+        this.setupBackButton();
+
         const event = this.event;
 
         // Share button (always visible in header)
@@ -326,6 +330,13 @@ export default class EventDetailPage {
                 this.editing = true;
                 this.render();
             });
+        }
+    }
+
+    setupBackButton() {
+        const backBtn = document.getElementById('event-detail-back-btn');
+        if (backBtn) {
+            backBtn.addEventListener('click', () => Router.navigateBack('calendar'));
         }
     }
 

@@ -1,4 +1,5 @@
 // Player detail page module
+import Router from './router.js';
 import { staggerChildren, animateAllValues } from './animations.js';
 
 export default class PlayerDetailPage {
@@ -139,7 +140,7 @@ export default class PlayerDetailPage {
             <div style="padding: 1.5rem; max-width: 1200px; margin: 0 auto;">
                 <!-- Header with navigation -->
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-                    <a href="#players" class="neo-btn neo-btn-purple">← Back to Players</a>
+                    <button id="player-detail-back-btn" type="button" class="neo-btn neo-btn-purple">← Back</button>
                     <button id="share-btn" class="neo-btn neo-btn-gold">&#128203; Share</button>
                 </div>
                 
@@ -275,6 +276,11 @@ export default class PlayerDetailPage {
 
     // Setup event listeners for the page
     setupEventListeners(player) {
+        const backBtn = document.getElementById('player-detail-back-btn');
+        if (backBtn) {
+            backBtn.addEventListener('click', () => Router.navigateBack('players'));
+        }
+
         // Share button
         const shareBtn = document.getElementById('share-btn');
         if (shareBtn) {
