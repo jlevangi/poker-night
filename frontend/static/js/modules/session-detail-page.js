@@ -86,7 +86,8 @@ export default class SessionDetailPage {
                     cashOut: entry.payout,
                     isCashedOut: entry.is_cashed_out || false,
                     sevenTwoWins: entry.session_seven_two_wins || 0,
-                    strikes: entry.session_strikes || 0
+                    strikes: entry.session_strikes || 0,
+                    buyInCount: entry.buy_in_count || 1
                 }));
             } else {
                 session.totalValue = 0;
@@ -296,7 +297,10 @@ export default class SessionDetailPage {
                     <div style="margin-top: 0.75rem;">
                         ${player.isCashedOut ?
                             `<button class="neo-btn neo-btn-green buy-in-player-btn" data-player-id="${player.id}" data-is-cashed-out="${player.isCashedOut}" style="width: 100%; padding: 0.75rem 1rem;">💰 Buy In</button>` :
-                            `<button class="neo-btn neo-btn-gold cash-out-player-btn" data-player-id="${player.id}" data-is-cashed-out="${player.isCashedOut}" style="width: 100%; padding: 0.75rem 1rem;">💸 Cash Out</button>`
+                            `<div style="display: flex; gap: 0.5rem;">
+                                <button class="neo-btn neo-btn-green rebuy-player-btn" data-player-id="${player.id}" style="flex: 1; padding: 0.75rem 1rem;">🔄 Re-buy</button>
+                                <button class="neo-btn neo-btn-gold cash-out-player-btn" data-player-id="${player.id}" data-is-cashed-out="${player.isCashedOut}" style="flex: 1; padding: 0.75rem 1rem;">💸 Cash Out</button>
+                            </div>`
                         }
                     </div>
                 ` : ''}
@@ -443,7 +447,8 @@ export default class SessionDetailPage {
             cashOut: entry.payout,
             isCashedOut: entry.is_cashed_out || false,
             sevenTwoWins: entry.session_seven_two_wins || 0,
-            strikes: entry.session_strikes || 0
+            strikes: entry.session_strikes || 0,
+            buyInCount: entry.buy_in_count || 1
         }));
 
         // Recalculate totals
@@ -1166,19 +1171,175 @@ export default class SessionDetailPage {
         }
     }
 
-    // Set up event listeners for per-player action buttons in the players list.
-    // Called on initial render and again after each refreshEntries() call.
+    // Show an inline edit popup for a player in an active session
+    showPlayerEditModal(player, sessionData, sessionId) {
+        const defaultBuyin = sessionData.default_buy_in_value || 20;
+        const modalElement = document.createElement('div');
+        modalElement.id = 'player-edit-modal-wrapper';
+
+        const renderModal = () => {
+            const p = this.currentSession.players.find(pp => pp.id === player.id) || player;
+            const buyInCount = p.buyInCount || 1;
+            const totalBuyIn = p.buyIn || 0;
+            const cashOut = p.cashOut || 0;
+
+            modalElement.innerHTML = `
+                <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; display: flex; align-items: flex-start; justify-content: center; padding: 1rem; overflow-y: auto;">
+                    <div style="background: var(--bg-card, white); padding: 1.5rem; border-radius: 12px; max-width: 400px; width: 100%; margin-top: 2rem; margin-bottom: 2rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+                            <h3 style="margin: 0; font-size: 1.25rem; font-weight: 700;">${this.escapeHtml(p.name)}</h3>
+                            <button id="edit-modal-close" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; padding: 0.25rem; color: var(--text-secondary);">×</button>
+                        </div>
+
+                        <!-- Buy-ins -->
+                        <div style="margin-bottom: 1.25rem;">
+                            <div style="font-size: 0.75rem; font-weight: 600; opacity: 0.7; margin-bottom: 0.5rem;">Buy-ins</div>
+                            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                                <button id="edit-buyin-minus" class="neo-btn" style="width: 36px; height: 36px; padding: 0; font-size: 1.25rem; font-weight: 700; display: flex; align-items: center; justify-content: center; border-radius: 50%;${buyInCount <= 1 ? ' opacity: 0.4;' : ''}" ${buyInCount <= 1 ? 'disabled' : ''}>−</button>
+                                <span style="font-size: 1.25rem; font-weight: 700; min-width: 2rem; text-align: center;">${buyInCount}</span>
+                                <button id="edit-buyin-plus" class="neo-btn" style="width: 36px; height: 36px; padding: 0; font-size: 1.25rem; font-weight: 700; display: flex; align-items: center; justify-content: center; border-radius: 50%;">+</button>
+                                <span style="font-size: 0.85rem; color: var(--text-secondary); margin-left: 0.25rem;">($${totalBuyIn.toFixed(2)} total)</span>
+                            </div>
+                        </div>
+
+                        <!-- Cash-out amount -->
+                        <div style="margin-bottom: 1.25rem;">
+                            <div style="font-size: 0.75rem; font-weight: 600; opacity: 0.7; margin-bottom: 0.5rem;">Cash-out Amount</div>
+                            <input type="text" id="edit-cashout-input" inputmode="decimal" pattern="[0-9]*\\.?[0-9]*" value="${cashOut > 0 ? cashOut.toFixed(2) : ''}" placeholder="0.00" style="width: 100%; padding: 0.6rem 0.75rem; font-size: 1rem; border: 2px solid var(--border-light, #ddd); border-radius: 6px; box-sizing: border-box;">
+                        </div>
+
+                        <!-- 7-2 Wins -->
+                        <div style="margin-bottom: 1.25rem;">
+                            <div style="font-size: 0.75rem; font-weight: 600; opacity: 0.7; margin-bottom: 0.5rem;">7-2 Wins</div>
+                            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                                <button id="edit-72-minus" class="neo-btn" style="width: 36px; height: 36px; padding: 0; font-size: 1.25rem; font-weight: 700; display: flex; align-items: center; justify-content: center; border-radius: 50%; border-color: var(--casino-gold); color: var(--casino-gold);${(p.sevenTwoWins || 0) <= 0 ? ' opacity: 0.4;' : ''}" ${(p.sevenTwoWins || 0) <= 0 ? 'disabled' : ''}>−</button>
+                                <span style="font-size: 1.25rem; font-weight: 700; min-width: 2rem; text-align: center; color: var(--casino-gold);">${p.sevenTwoWins || 0}</span>
+                                <button id="edit-72-plus" class="neo-btn" style="width: 36px; height: 36px; padding: 0; font-size: 1.25rem; font-weight: 700; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: var(--casino-gold); color: var(--text-white);">+</button>
+                            </div>
+                        </div>
+
+                        <!-- Strikes -->
+                        <div style="margin-bottom: 1.25rem;">
+                            <div style="font-size: 0.75rem; font-weight: 600; opacity: 0.7; margin-bottom: 0.5rem;">Strikes</div>
+                            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                                <button id="edit-strikes-minus" class="neo-btn" style="width: 36px; height: 36px; padding: 0; font-size: 1.25rem; font-weight: 700; display: flex; align-items: center; justify-content: center; border-radius: 50%; border-color: var(--casino-red); color: var(--casino-red);${(p.strikes || 0) <= 0 ? ' opacity: 0.4;' : ''}" ${(p.strikes || 0) <= 0 ? 'disabled' : ''}>−</button>
+                                <span style="font-size: 1.25rem; font-weight: 700; min-width: 2rem; text-align: center; color: var(--casino-red);">${p.strikes || 0}</span>
+                                <button id="edit-strikes-plus" class="neo-btn" style="width: 36px; height: 36px; padding: 0; font-size: 1.25rem; font-weight: 700; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: var(--casino-red); color: var(--text-white);">+</button>
+                            </div>
+                        </div>
+
+                        <!-- Footer -->
+                        <div style="border-top: 1px solid var(--border-light, #eee); padding-top: 1rem; text-align: center;">
+                            <a href="#player/${p.id}" id="edit-modal-profile-link" style="font-size: 0.9rem; font-weight: 600; color: var(--casino-gold);">View Player Profile →</a>
+                        </div>
+                    </div>
+                </div>
+            `;
+        };
+
+        renderModal();
+        document.body.appendChild(modalElement);
+
+        const closeModal = () => {
+            if (modalElement.parentNode) document.body.removeChild(modalElement);
+        };
+
+        const apiAction = async (fn) => {
+            try {
+                const newEntries = await fn();
+                this.refreshEntries(newEntries, sessionId);
+                renderModal();
+                attachListeners();
+            } catch (error) {
+                console.error('Error in player edit modal:', error);
+                alert(`Error: ${error.message}`);
+            }
+        };
+
+        const attachListeners = () => {
+            modalElement.querySelector('#edit-modal-close')?.addEventListener('click', closeModal);
+            modalElement.querySelector('#edit-modal-profile-link')?.addEventListener('click', closeModal);
+            // Close on overlay click
+            modalElement.querySelector(':scope > div')?.addEventListener('click', (e) => {
+                if (e.target === e.currentTarget) closeModal();
+            });
+
+            // Buy-in controls
+            modalElement.querySelector('#edit-buyin-minus')?.addEventListener('click', () => {
+                const p = this.currentSession.players.find(pp => pp.id === player.id);
+                if (p && (p.buyInCount || 1) > 1) {
+                    apiAction(() => this.api.put(`sessions/${sessionId}/entries/${player.id}/remove-buyin`));
+                }
+            });
+            modalElement.querySelector('#edit-buyin-plus')?.addEventListener('click', () => {
+                apiAction(() => this.api.post(`sessions/${sessionId}/entries/${player.id}/buy-in`, { num_buy_ins: 1 }));
+            });
+
+            // Cash-out input
+            const cashoutInput = modalElement.querySelector('#edit-cashout-input');
+            if (cashoutInput) {
+                let cashoutDebounce = null;
+                const saveCashout = async () => {
+                    const val = parseFloat(cashoutInput.value);
+                    if (isNaN(val) || val < 0) return;
+                    await apiAction(() => this.api.put(`sessions/${sessionId}/entries/${player.id}/payout`, { payout_amount: val }));
+                };
+                cashoutInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') { e.preventDefault(); saveCashout(); }
+                });
+                cashoutInput.addEventListener('blur', () => {
+                    clearTimeout(cashoutDebounce);
+                    cashoutDebounce = setTimeout(saveCashout, 100);
+                });
+                cashoutInput.addEventListener('input', (e) => {
+                    let value = e.target.value.replace(/[^0-9.]/g, '');
+                    const parts = value.split('.');
+                    if (parts.length > 2) value = parts[0] + '.' + parts.slice(1).join('');
+                    e.target.value = value;
+                });
+            }
+
+            // 7-2 controls
+            modalElement.querySelector('#edit-72-minus')?.addEventListener('click', () => {
+                apiAction(() => this.api.put(`sessions/${sessionId}/players/${player.id}/seven-two-wins/decrement`));
+            });
+            modalElement.querySelector('#edit-72-plus')?.addEventListener('click', () => {
+                apiAction(() => this.api.put(`sessions/${sessionId}/players/${player.id}/seven-two-wins/increment`));
+            });
+
+            // Strikes controls
+            modalElement.querySelector('#edit-strikes-minus')?.addEventListener('click', () => {
+                apiAction(() => this.api.put(`sessions/${sessionId}/players/${player.id}/strikes/decrement`));
+            });
+            modalElement.querySelector('#edit-strikes-plus')?.addEventListener('click', () => {
+                apiAction(() => this.api.put(`sessions/${sessionId}/players/${player.id}/strikes/increment`));
+            });
+        };
+
+        attachListeners();
+
+        // Focus the cash-out input if it's empty (likely what they want to edit)
+        const cashoutInput = modalElement.querySelector('#edit-cashout-input');
+        if (cashoutInput && !cashoutInput.value) {
+            setTimeout(() => cashoutInput.focus(), 100);
+        }
+    }
+
     setupPlayerEventListeners(sessionData, sessionId) {
         const isActive = sessionData.is_active === true;
 
-        // Clickable player card — navigate to player page (active and inactive)
+        // Clickable player card — edit popup for active sessions, navigate for inactive
         document.querySelectorAll('.clickable-player-details').forEach(element => {
             element.addEventListener('click', (e) => {
                 if (e.target.tagName === 'A' || e.target.tagName === 'BUTTON' || e.target.closest('button')) {
                     return;
                 }
                 const playerId = element.dataset.playerId;
-                if (playerId) {
+                if (!playerId) return;
+                if (isActive) {
+                    const player = this.currentSession.players.find(p => p.id === playerId);
+                    if (player) this.showPlayerEditModal(player, sessionData, sessionId);
+                } else {
                     window.location.hash = `#player/${playerId}`;
                 }
             });
@@ -1193,8 +1354,8 @@ export default class SessionDetailPage {
                 const playerId = e.target.dataset.playerId;
 
                 const modalHtml = `
-                    <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; display: flex; align-items: center; justify-content: center;">
-                        <div style="background: white; padding: 20px; border-radius: 8px; max-width: 400px; width: 90%;">
+                    <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; display: flex; align-items: flex-start; justify-content: center; overflow-y: auto; padding: 1rem;">
+                        <div style="background: white; padding: 20px; border-radius: 8px; max-width: 400px; width: 90%; margin-top: 3rem;">
                             <h3>Cash Out Player</h3>
                             <label for="cashout-amount">Enter cash-out amount ($):</label>
                             <input type="text" id="cashout-amount" inputmode="decimal" pattern="[0-9]*\.?[0-9]*" style="width: 100%; padding: 10px; margin: 10px 0; font-size: 16px; border: 2px solid #ddd; border-radius: 4px;">
@@ -1274,8 +1435,8 @@ export default class SessionDetailPage {
                 const playerId = e.target.dataset.playerId;
 
                 const modalHtml = `
-                    <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; display: flex; align-items: center; justify-content: center;">
-                        <div style="background: white; padding: 20px; border-radius: 8px; max-width: 400px; width: 90%;">
+                    <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; display: flex; align-items: flex-start; justify-content: center; overflow-y: auto; padding: 1rem;">
+                        <div style="background: white; padding: 20px; border-radius: 8px; max-width: 400px; width: 90%; margin-top: 3rem;">
                             <h3>Buy In Player</h3>
                             <label for="buyin-amount">Enter buy-in amount ($):</label>
                             <input type="number" id="buyin-amount" inputmode="decimal" step="0.01" min="0" value="${sessionData.default_buy_in_value ? sessionData.default_buy_in_value.toFixed(2) : '20.00'}" style="width: 100%; padding: 10px; margin: 10px 0; font-size: 16px; border: 2px solid #ddd; border-radius: 4px;">
@@ -1352,6 +1513,28 @@ export default class SessionDetailPage {
                         confirmBtn.click();
                     }
                 });
+            });
+        });
+
+        // Re-buy button
+        document.querySelectorAll('.rebuy-player-btn').forEach(button => {
+            button.addEventListener('click', async (e) => {
+                const playerId = e.target.dataset.playerId;
+                const defaultBuyin = sessionData.default_buy_in_value || 20;
+                if (!confirm(`Add a re-buy of $${defaultBuyin.toFixed(2)}?`)) return;
+                try {
+                    button.disabled = true;
+                    button.textContent = 'Processing...';
+                    const newEntries = await this.api.post(`sessions/${sessionId}/entries/${playerId}/buy-in`, {
+                        num_buy_ins: 1
+                    });
+                    this.refreshEntries(newEntries, sessionId);
+                } catch (error) {
+                    console.error('Error processing re-buy:', error);
+                    alert(`Error: ${error.message}`);
+                    button.disabled = false;
+                    button.textContent = '🔄 Re-buy';
+                }
             });
         });
 
