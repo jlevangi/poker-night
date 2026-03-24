@@ -261,6 +261,53 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
             }
         });
+
+        setupNewSessionQuickBuyins();
+    }
+
+    function setActiveQuickBuyin(targetButton = null) {
+        document.querySelectorAll('.modal-buyin-chip').forEach(button => {
+            button.classList.toggle('is-active', button === targetButton);
+        });
+    }
+
+    function syncQuickBuyinSelection() {
+        const buyinInput = document.getElementById('modal-session-buyin');
+        if (!buyinInput) return;
+
+        const normalizedValue = String(Number(buyinInput.value || 0));
+        const presetButton = document.querySelector(`.modal-buyin-chip[data-buyin-value="${normalizedValue}"]`);
+        const customButton = document.querySelector('.modal-buyin-chip[data-buyin-custom="true"]');
+
+        if (presetButton) {
+            setActiveQuickBuyin(presetButton);
+        } else if (customButton) {
+            setActiveQuickBuyin(customButton);
+        }
+    }
+
+    function setupNewSessionQuickBuyins() {
+        const buyinInput = document.getElementById('modal-session-buyin');
+        if (!buyinInput) return;
+
+        document.querySelectorAll('.modal-buyin-chip').forEach(button => {
+            button.addEventListener('click', () => {
+                const presetValue = button.dataset.buyinValue;
+
+                if (presetValue) {
+                    buyinInput.value = presetValue;
+                    setActiveQuickBuyin(button);
+                    return;
+                }
+
+                setActiveQuickBuyin(button);
+                buyinInput.focus();
+                buyinInput.select();
+            });
+        });
+
+        buyinInput.addEventListener('input', syncQuickBuyinSelection);
+        syncQuickBuyinSelection();
     }
 
     async function handleCreateSession() {
@@ -296,9 +343,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.addEventListener('showNewSessionModal', () => {
         // Update date field to today
         const dateInput = document.getElementById('modal-session-date');
+        const buyinInput = document.getElementById('modal-session-buyin');
         if (dateInput) {
             dateInput.value = new Date().toISOString().split('T')[0];
         }
+        if (buyinInput) {
+            buyinInput.value = '20';
+        }
+        syncQuickBuyinSelection();
         newSessionModal.show();
     });
 

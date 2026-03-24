@@ -109,6 +109,40 @@ button:active,
     background-color: #475569;
 }
 
+.modal-date-shortcut {
+    margin-left: 0;
+    min-height: 46px;
+    padding: 0.35rem 0.9rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-buyin-chip {
+    min-height: 42px;
+    padding: 0.65rem 0.5rem;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.modal-buyin-chip:hover {
+    border-color: var(--primary-color);
+    color: var(--text-primary);
+}
+
+.modal-buyin-chip.is-active {
+    background: var(--casino-green);
+    border-color: var(--casino-green);
+    color: #fff;
+    box-shadow: var(--neo-shadow-sm);
+}
+
 .modal-actions .primary-btn {
     background-color: var(--primary-color);
     border-radius: 10px;
