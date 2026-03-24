@@ -1,6 +1,7 @@
 // Event detail page module
 import Router from './router.js';
 import { staggerChildren } from './animations.js';
+import EventBus from './event-bus.js';
 
 export default class EventDetailPage {
     static skeleton() {
@@ -365,6 +366,7 @@ export default class EventDetailPage {
 
         try {
             await this.api.put(`events/${this.event.event_id}`, data);
+            EventBus.emit('data:events-changed');
             this.editing = false;
             await this.load(this.event.event_id);
         } catch (error) {
@@ -378,6 +380,7 @@ export default class EventDetailPage {
                 player_id: playerId,
                 status: status
             });
+            EventBus.emit('data:events-changed');
             await this.load(eventId);
         } catch (error) {
             alert(`Error submitting RSVP: ${error.message}`);
@@ -387,6 +390,7 @@ export default class EventDetailPage {
     async handleCancelEvent(eventId) {
         try {
             await this.api.put(`events/${eventId}/cancel`);
+            EventBus.emit('data:events-changed');
             await this.load(eventId);
         } catch (error) {
             alert(`Error cancelling event: ${error.message}`);
@@ -396,6 +400,7 @@ export default class EventDetailPage {
     async handleUncancelEvent(eventId) {
         try {
             await this.api.put(`events/${eventId}/uncancel`);
+            EventBus.emit('data:events-changed');
             await this.load(eventId);
         } catch (error) {
             alert(`Error restoring event: ${error.message}`);
@@ -420,6 +425,8 @@ export default class EventDetailPage {
             }
 
             const result = await this.api.startSessionFromEvent(eventId);
+            EventBus.emit('data:sessions-changed');
+            EventBus.emit('data:events-changed');
             if (result && result.session) {
                 window.location.hash = `#session/${result.session.session_id}`;
             }

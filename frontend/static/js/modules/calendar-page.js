@@ -1,5 +1,6 @@
 // Calendar page module
 import { staggerChildren } from './animations.js';
+import EventBus from './event-bus.js';
 
 export default class CalendarPage {
     constructor(appContent, apiService) {
@@ -232,6 +233,7 @@ export default class CalendarPage {
             if (maxPlayers) data.max_players = parseInt(maxPlayers);
 
             const newEvent = await this.api.post('events', data);
+            EventBus.emit('data:events-changed');
             window.location.hash = `#event/${newEvent.event_id}`;
         } catch (error) {
             alert(`Error creating event: ${error.message}`);

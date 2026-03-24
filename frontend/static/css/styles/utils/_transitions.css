@@ -1,5 +1,27 @@
 /* Page Transitions & Micro-interactions */
 
+/* Keep-alive page containers */
+.page-container { display: none; width: 100%; }
+.page-container.active { display: block; }
+.page-container.page-refreshing { position: relative; }
+.page-container.page-refreshing::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0));
+    opacity: 1;
+    transition: opacity 180ms ease;
+}
+
+[data-theme="dark"] .page-container.page-refreshing::after {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0));
+}
+
+.page-container.page-refresh-enter {
+    animation: pageRefreshEnter 180ms ease-out;
+}
+
 /* Page exit/enter animations */
 .page-exit {
     animation: pageExit 150ms ease-in forwards;
@@ -29,6 +51,23 @@
         opacity: 1;
         transform: translateY(0);
     }
+}
+
+@keyframes pageRefreshEnter {
+    from {
+        opacity: 0.985;
+        transform: translateY(4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+::view-transition-old(route-refresh),
+::view-transition-new(route-refresh) {
+    animation-duration: 180ms;
+    animation-timing-function: ease;
 }
 
 /* Stagger animation for list items */

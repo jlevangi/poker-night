@@ -77,22 +77,32 @@
     <!-- Settings Overlay -->
     <div id="settings-overlay" class="neo-settings-overlay"></div>
 
-    <main id="app-content">
-        <p>Loading...</p>
-    </main>    <footer>
-        <p>&copy; <script>document.write(new Date().getFullYear())</script> The Gamble King</p>    </footer>
+    <main id="app-content"></main>
+    <footer>
+        <p>&copy; <script>document.write(new Date().getFullYear())</script> The Gamble King</p>
+    </footer>
 
-    <div id="new-session-modal" class="modal-overlay">
+    <div id="new-session-modal" class="modal-overlay" data-mobile-sheet="true">
         <div class="modal-content">
             <span class="modal-close-btn">&times;</span>
             <h3>Create New Poker Session</h3>
             <div class="modal-form-group">
                 <label for="modal-session-date">Session Date:</label>
-                <input type="date" id="modal-session-date">
-                <button id="modal-today-btn" class="small-btn">Today</button>
+                <div class="modal-date-row">
+                    <div class="modal-date-input-wrap">
+                        <input type="date" id="modal-session-date">
+                    </div>
+                    <button id="modal-today-btn" class="small-btn modal-date-shortcut" type="button">Today</button>
+                </div>
             </div>
             <div class="modal-form-group">
                 <label for="modal-session-buyin">Default Buy-in ($):</label>
+                <div class="modal-buyin-quick-picks">
+                    <button type="button" class="modal-buyin-chip is-active" data-buyin-value="20">20</button>
+                    <button type="button" class="modal-buyin-chip" data-buyin-value="40">40</button>
+                    <button type="button" class="modal-buyin-chip" data-buyin-value="100">100</button>
+                    <button type="button" class="modal-buyin-chip" data-buyin-custom="true">Custom</button>
+                </div>
                 <input type="number" id="modal-session-buyin" value="20" min="0" step="0.01">
             </div>
             <div class="modal-actions">

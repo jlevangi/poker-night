@@ -93,6 +93,10 @@ export default class ModalManager {
             
             // Add the active class for CSS transitions
             this.modal.classList.add('active');
+
+            const shouldUseMobileSheet =
+                this.modal.dataset.mobileSheet === 'true' &&
+                window.matchMedia('(max-width: 700px)').matches;
             
             // As a backup, explicitly set all necessary styles
             const modalStyles = {
@@ -108,7 +112,7 @@ export default class ModalManager {
                 'height': '100%',
                 'background-color': 'rgba(0, 0, 0, 0.6)',
                 'justify-content': 'center',
-                'align-items': 'center'
+                'align-items': shouldUseMobileSheet ? 'flex-start' : 'center'
             };
             
             // Apply all styles

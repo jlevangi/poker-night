@@ -1,9 +1,12 @@
-// Router module for handling navigation with page transitions and skeletons
+// Router module for handling navigation with keep-alive pages
 export default class Router {
-    constructor(appContent) {
+    constructor(appContent, pageManager, dataCache) {
         this.appContent = appContent;
+        this.pageManager = pageManager;
+        this.dataCache = dataCache;
         this.routes = {};
         this.skeletons = {};
+        this.titles = {};
         this._transitioning = false;
         this.historyStack = [];
         this._isNavigatingBack = false;
@@ -22,6 +25,12 @@ export default class Router {
     // Register a skeleton for a route
     registerSkeleton(path, skeletonFn) {
         this.skeletons[path] = skeletonFn;
+        return this;
+    }
+
+    // Register a title for a route (used for cached page display)
+    registerTitle(path, title) {
+        this.titles[path] = title;
         return this;
     }
 
@@ -56,6 +65,14 @@ export default class Router {
         window.location.hash = `#${fallbackPath}`;
     }
 
+    // Get the base route key from a path
+    _getRouteKey(path) {
+        if (path.includes('/')) {
+            return path.split('/')[0];
+        }
+        return path;
+    }
+
     // Get skeleton HTML for a given path
     _getSkeletonHtml(path) {
         const basePath = path.includes('/') ? path.split('/')[0] : path;
@@ -82,7 +99,51 @@ export default class Router {
         `;
     }
 
-    // Load content for the current route with transitions
+    async _refreshVisiblePage(routeKey, handler) {
+        const container = this.pageManager.getContainer(routeKey);
+        if (!container || !handler) {
+            return;
+        }
+
+        container.classList.add('page-refreshing');
+
+        try {
+            if (typeof document.startViewTransition === 'function') {
+                const previousTransitionName = container.style.viewTransitionName;
+                try {
+                    container.style.viewTransitionName = 'route-refresh';
+
+                    let refreshPromise;
+                    const transition = document.startViewTransition(() => {
+                        refreshPromise = Promise.resolve(handler());
+                        return refreshPromise;
+                    });
+
+                    await refreshPromise;
+                    await transition.finished.catch(() => {});
+                } finally {
+                    container.style.viewTransitionName = previousTransitionName;
+                }
+                return;
+            }
+
+            await handler();
+            container.classList.add('page-refresh-enter');
+            let cleaned = false;
+            const cleanup = () => {
+                if (cleaned) return;
+                cleaned = true;
+                container.classList.remove('page-refresh-enter');
+                container.removeEventListener('animationend', cleanup);
+            };
+            container.addEventListener('animationend', cleanup);
+            setTimeout(cleanup, 250);
+        } finally {
+            container.classList.remove('page-refreshing');
+        }
+    }
+
+    // Load content for the current route with keep-alive pages
     async loadContent(path) {
         if (this._transitioning) {
             this._pendingPath = path;
@@ -91,46 +152,82 @@ export default class Router {
         this._transitioning = true;
 
         try {
-            // Phase 1: Exit animation (if there's existing content)
-            if (this.appContent.innerHTML.trim()) {
-                this.appContent.classList.add('page-exit');
-                await new Promise(resolve => setTimeout(resolve, 150));
-                this.appContent.classList.remove('page-exit');
-            }
+            const routeKey = this._getRouteKey(path);
+            const isTopLevel = this.pageManager.isTopLevel(routeKey);
+            const isDetail = path.includes('/');
 
-            // Phase 2: Show skeleton
-            this.appContent.innerHTML = this._getSkeletonHtml(path);
-            this.appContent.classList.add('page-enter');
+            if (isTopLevel) {
+                // Set title for cached pages
+                if (this.titles[routeKey]) {
+                    document.title = this.titles[routeKey];
+                }
 
-            // Phase 3: Load actual content
-            if (path.includes('/')) {
+                if (this.pageManager.isLoaded(routeKey) && this.dataCache.isFreshForRoute(routeKey)) {
+                    // Case 1: loaded + fresh → instant show, no fetch
+                    this.pageManager.show(routeKey);
+                } else if (this.pageManager.isLoaded(routeKey)) {
+                    // Case 2: loaded + stale → show immediately, refresh in-place
+                    this.pageManager.show(routeKey);
+                    const handler = this.routes[routeKey];
+                    if (handler) {
+                        await this._refreshVisiblePage(routeKey, handler);
+                        this.dataCache.markFresh(routeKey);
+                    }
+                } else {
+                    // Case 3: never loaded → show skeleton, fetch, render with animation
+                    const container = this.pageManager.getContainer(routeKey);
+                    container.innerHTML = this._getSkeletonHtml(path);
+                    this.pageManager.show(routeKey);
+
+                    const handler = this.routes[routeKey];
+                    if (handler) {
+                        await handler();
+                        this.pageManager.markLoaded(routeKey);
+                        this.dataCache.markFresh(routeKey);
+                        // Enter animation for first load only
+                        container.classList.add('page-enter');
+                        let cleaned = false;
+                        const cleanup = () => {
+                            if (cleaned) return;
+                            cleaned = true;
+                            container.classList.remove('page-enter');
+                            container.removeEventListener('animationend', cleanup);
+                        };
+                        container.addEventListener('animationend', cleanup);
+                        // Fallback in case animationend never fires (e.g. background tab)
+                        setTimeout(cleanup, 300);
+                    }
+                }
+            } else if (isDetail) {
+                // Case 4: detail page → always re-render
                 const [basePath, id] = path.split('/');
                 const handler = this.routes[`${basePath}/:id`];
 
                 if (handler) {
-                    // Remove enter class before handler renders
-                    this.appContent.classList.remove('page-enter');
+                    const container = this.pageManager.getContainer('detail');
+                    container.innerHTML = this._getSkeletonHtml(path);
+                    this.pageManager.show('detail');
                     await handler(id);
-                    // Re-add enter animation for the loaded content
-                    this.appContent.classList.add('page-enter');
-                    this._cleanupAnimation();
-                    return;
                 }
-            }
-
-            const handler = this.routes[path];
-            if (handler) {
-                this.appContent.classList.remove('page-enter');
-                await handler();
-                this.appContent.classList.add('page-enter');
-                this._cleanupAnimation();
             } else {
-                this.appContent.innerHTML = '<div class="skeleton-page"><h2>Page Not Found</h2></div>';
-                this._cleanupAnimation();
+                // Unknown route
+                const handler = this.routes[path];
+                if (handler) {
+                    const container = this.pageManager.getContainer('detail');
+                    container.innerHTML = '';
+                    this.pageManager.show('detail');
+                    await handler();
+                } else {
+                    const container = this.pageManager.getContainer('detail');
+                    container.innerHTML = '<div class="skeleton-page"><h2>Page Not Found</h2></div>';
+                    this.pageManager.show('detail');
+                }
             }
         } catch (error) {
             console.error("Error loading content:", error);
-            this.appContent.innerHTML = `<div class="skeleton-page"><p>Error loading content: ${error.message}. Check console.</p></div>`;
+            const container = this.pageManager.getContainer('detail');
+            container.innerHTML = `<div class="skeleton-page"><p>Error loading content: ${error.message}. Check console.</p></div>`;
+            this.pageManager.show('detail');
         } finally {
             this._transitioning = false;
             if (this._pendingPath) {
@@ -139,15 +236,6 @@ export default class Router {
                 this.loadContent(next);
             }
         }
-    }
-
-    // Clean up animation classes after they finish
-    _cleanupAnimation() {
-        const handler = () => {
-            this.appContent.classList.remove('page-enter');
-            this.appContent.removeEventListener('animationend', handler);
-        };
-        this.appContent.addEventListener('animationend', handler);
     }
 
     // Update active nav button based on current hash
