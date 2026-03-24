@@ -3,6 +3,7 @@ import ApiService from './api-service.js';
 import { NotificationManager } from './notification-manager.js';
 import { staggerChildren } from './animations.js';
 import Router from './router.js';
+import EventBus from './event-bus.js';
 
 export default class SessionDetailPage {
     static skeleton() {
@@ -330,7 +331,7 @@ export default class SessionDetailPage {
 
         return `
             <div class="session-player-picker-card">
-                <button id="open-player-picker-btn" class="neo-btn neo-btn-green" type="button" style="padding: 0.8rem 1.1rem;">Select Players</button>
+                <button id="open-player-picker-btn" class="neo-btn neo-btn-green" type="button" style="padding: 0.8rem 1.1rem;">Add Players</button>
                 ${this.isAddPlayersModalOpen ? this.renderAddPlayersModal(sessionData, totalPlayers) : ''}
             </div>
         `;
@@ -346,7 +347,7 @@ export default class SessionDetailPage {
                 <div class="session-player-picker-modal">
                     <div class="session-player-picker-modal-header">
                         <div>
-                            <h4 style="font-size: 1.2rem; font-weight: 700; margin: 0; color: var(--text-primary);">Select Players</h4>
+                            <h4 style="font-size: 1.2rem; font-weight: 700; margin: 0; color: var(--text-primary);">Add Players</h4>
                             <p style="margin: 0.35rem 0 0; color: var(--text-secondary); font-weight: 600;">${totalPlayers} total players</p>
                         </div>
                         <button id="close-player-picker-btn" class="neo-btn" type="button" style="padding: 0.65rem 0.9rem;">Close</button>
@@ -966,7 +967,8 @@ export default class SessionDetailPage {
                             reactivateBtn.textContent = 'Reactivating...';
                             
                             await this.api.put(`sessions/${sessionId}/reactivate`);
-                            
+                            EventBus.emit('data:sessions-changed');
+
                             // Reload the page to show updated session state
                             this.load(sessionId);
                         } catch (error) {
@@ -1140,6 +1142,7 @@ export default class SessionDetailPage {
                         player_ids: selectedPlayerIds,
                         num_buy_ins: numBuyIns
                     });
+                    EventBus.emit('data:entries-changed');
 
                     this.selectedPlayerIds.clear();
                     this.addPlayerSearchQuery = '';
@@ -1871,6 +1874,7 @@ export default class SessionDetailPage {
             endSessionBtn.textContent = 'Ending...';
 
             await this.api.put(`sessions/${sessionId}/end`);
+            EventBus.emit('data:sessions-changed');
 
             // Reload the page to show updated session state
             this.load(sessionId);

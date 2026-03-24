@@ -1,6 +1,9 @@
 // Import modules
 import ApiService from './modules/api-service.js';
 import Router from './modules/router.js';
+import PageManager from './modules/page-manager.js';
+import DataCache from './modules/data-cache.js';
+import EventBus from './modules/event-bus.js';
 import ModalManager from './modules/modal-manager.js';
 import DashboardPage from './modules/dashboard-page.js';
 import PlayersPage from './modules/players-page.js';
@@ -192,43 +195,46 @@ document.addEventListener('DOMContentLoaded', async () => {
         const savedTheme = localStorage.getItem('gamble-king-dark-mode');
         document.documentElement.setAttribute('data-theme', savedTheme);
     }
-    
+
     const appContent = document.getElementById('app-content');
-    
+
     // Load configuration first
     const config = await appConfig.getConfig();
     const APP_VERSION = config.APP_VERSION;
     console.log('App initialized with version:', APP_VERSION);
-    
+
     // Initialize services and managers
     const apiService = new ApiService();
-    const router = new Router(appContent);
+    const pageManager = new PageManager(appContent);
+    const dataCache = new DataCache();
+    const router = new Router(appContent, pageManager, dataCache);
     const newSessionModal = new ModalManager('new-session-modal');
     const darkModeManager = new DarkModeManager();
     // Force dark mode on first load if no user preference
     if (!localStorage.getItem('gamble-king-dark-mode')) {
         darkModeManager.setTheme('dark');
     }
-    
+
     // Initialize settings manager
     const settingsManager = new SettingsManager(darkModeManager);
 
     // Initialize more menu manager (mobile)
     const moreMenuManager = new MoreMenuManager(darkModeManager);
-    
-    // Initialize modules
-    const dashboardPage = new DashboardPage(appContent, apiService);
-    const playersPage = new PlayersPage(appContent, apiService);
-    const sessionsPage = new SessionsPage(appContent, apiService);
-    const sessionDetailPage = new SessionDetailPage(appContent, apiService);
-    const playerDetailPage = new PlayerDetailPage(appContent, apiService);
-    const statsPage = new StatsPage(appContent, apiService);
-    const calendarPage = new CalendarPage(appContent, apiService);
-    const eventDetailPage = new EventDetailPage(appContent, apiService);
-    
+
+    // Initialize page modules with their persistent containers
+    const dashboardPage = new DashboardPage(pageManager.getContainer('dashboard'), apiService);
+    const playersPage = new PlayersPage(pageManager.getContainer('players'), apiService);
+    const sessionsPage = new SessionsPage(pageManager.getContainer('sessions'), apiService);
+    const calendarPage = new CalendarPage(pageManager.getContainer('calendar'), apiService);
+    const statsPage = new StatsPage(pageManager.getContainer('stats'), apiService);
+    // Detail pages share the 'detail' container
+    const sessionDetailPage = new SessionDetailPage(pageManager.getContainer('detail'), apiService);
+    const playerDetailPage = new PlayerDetailPage(pageManager.getContainer('detail'), apiService);
+    const eventDetailPage = new EventDetailPage(pageManager.getContainer('detail'), apiService);
+
     // Setup new session modal
     setupNewSessionModal();
-    
+
     function setupNewSessionModal() {
         newSessionModal.setup({
             cancelButton: 'modal-cancel-session-btn',
@@ -256,11 +262,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         });
     }
-    
+
     async function handleCreateSession() {
         const dateInput = document.getElementById('modal-session-date');
         const buyinInput = document.getElementById('modal-session-buyin');
-        
+
         const date = dateInput?.value;
         const buyin = parseFloat(buyinInput?.value || 0);
 
@@ -274,17 +280,18 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         try {
-            const newSession = await apiService.createSession({ 
-                date: date, 
-                default_buy_in_value: buyin 
+            const newSession = await apiService.createSession({
+                date: date,
+                default_buy_in_value: buyin
             });
             newSessionModal.hide();
+            EventBus.emit('data:sessions-changed');
             window.location.hash = `#session/${newSession.session_id}`;
         } catch (error) {
             alert(`Error: ${error.message}`);
         }
     }
-    
+
     // Listen for custom events to show modal
     document.addEventListener('showNewSessionModal', () => {
         // Update date field to today
@@ -294,16 +301,16 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
         newSessionModal.show();
     });
-    
+
     // Initialize service worker
     const serviceWorkerManager = new ServiceWorkerManager(APP_VERSION);
     serviceWorkerManager.initialize();
-    
+
     // Setup navigation highlighting
     function updateActiveNavigation() {
         const currentHash = window.location.hash || '#dashboard';
         const currentPage = currentHash.split('/')[0].replace('#', '') || 'dashboard';
-        
+
         // Update desktop navigation (both old and new classes)
         document.querySelectorAll('.desktop-nav a, .neo-desktop-nav .neo-nav-btn').forEach(link => {
             link.classList.remove('active');
@@ -311,7 +318,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 link.classList.add('active');
             }
         });
-        
+
         // Update mobile navigation (both old and new classes, excluding more trigger)
         document.querySelectorAll('.bottom-nav .nav-btn, .neo-bottom-nav .neo-nav-mobile-btn:not(#more-trigger)').forEach(btn => {
             btn.classList.remove('active');
@@ -324,7 +331,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Update More menu active states
         moreMenuManager.updateActiveItems();
     }
-    
+
     // Setup navigation event listeners
     function setupNavigation() {
         // Desktop navigation (both old and new classes, excluding settings button)
@@ -338,7 +345,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
             });
         });
-        
+
         // Mobile navigation (both old and new classes, excluding more trigger)
         document.querySelectorAll('.bottom-nav .nav-btn, .neo-bottom-nav .neo-nav-mobile-btn:not(#more-trigger)').forEach(btn => {
             btn.addEventListener('click', (e) => {
@@ -350,7 +357,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
             });
         });
-        
+
         // Settings button functionality (desktop)
         const settingsBtn = document.getElementById('settings-btn');
         if (settingsBtn) {
@@ -359,7 +366,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 showSettings();
             });
         }
-        
+
         // Settings close button functionality
         const settingsClose = document.getElementById('settings-close');
         if (settingsClose) {
@@ -368,7 +375,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 hideSettings();
             });
         }
-        
+
         // Settings overlay close functionality
         const settingsOverlay = document.getElementById('settings-overlay');
         if (settingsOverlay) {
@@ -377,7 +384,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
         }
     }
-    
+
     // Helper function to show settings
     function showSettings() {
         const settingsMenu = document.getElementById('settings-menu');
@@ -389,7 +396,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             settingsOverlay.classList.add('active');
         }
     }
-    
+
     // Helper function to hide settings
     function hideSettings() {
         const settingsMenu = document.getElementById('settings-menu');
@@ -405,6 +412,43 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Update navigation on hash change
     window.addEventListener('hashchange', updateActiveNavigation);
 
+    // Wire EventBus invalidation listeners
+    EventBus.on('data:players-changed', () => {
+        dataCache.invalidate('dashboard');
+        dataCache.invalidate('players');
+        dataCache.invalidate('stats');
+    });
+
+    EventBus.on('data:sessions-changed', () => {
+        dataCache.invalidate('dashboard');
+        dataCache.invalidate('sessions');
+        dataCache.invalidate('stats');
+    });
+
+    EventBus.on('data:events-changed', () => {
+        dataCache.invalidate('dashboard');
+        dataCache.invalidate('calendar');
+    });
+
+    EventBus.on('data:entries-changed', () => {
+        dataCache.invalidate('dashboard');
+        dataCache.invalidate('sessions');
+        dataCache.invalidate('players');
+        dataCache.invalidate('stats');
+    });
+
+    // Register lifecycle handlers for stats page (resize listener management)
+    pageManager.registerLifecycle('stats', {
+        onShow: () => {
+            if (statsPage.boundHandleResize) {
+                statsPage.setupResizeListener();
+            }
+        },
+        onHide: () => {
+            statsPage.cleanup();
+        }
+    });
+
     // Register skeletons for each route
     router
         .registerSkeleton('dashboard', DashboardPage.skeleton)
@@ -415,6 +459,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         .registerSkeleton('session/:id', SessionDetailPage.skeleton)
         .registerSkeleton('player/:id', PlayerDetailPage.skeleton)
         .registerSkeleton('event/:id', EventDetailPage.skeleton);
+
+    // Register titles for cached top-level pages
+    router
+        .registerTitle('dashboard', 'Gamble King')
+        .registerTitle('sessions', 'Sessions - Gamble King')
+        .registerTitle('players', 'Players - Gamble King')
+        .registerTitle('calendar', 'Calendar - Gamble King')
+        .registerTitle('stats', 'Stats & Awards - Gamble King');
 
     // Setup router with all routes
     router
@@ -450,13 +502,13 @@ document.addEventListener('DOMContentLoaded', async () => {
             updateActiveNavigation();
             return eventDetailPage.load(id);
         });
-    
+
     // Initialize navigation
     setupNavigation();
-    
+
     // Start the router
     router.route();
-    
+
     // Setup service worker update handling
     setupServiceWorkerUpdates();
 });

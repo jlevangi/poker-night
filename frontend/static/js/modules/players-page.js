@@ -1,5 +1,6 @@
 // Players page module
 import { staggerChildren } from './animations.js';
+import EventBus from './event-bus.js';
 
 export default class PlayersPage {
     constructor(appContent, apiService) {
@@ -9,6 +10,7 @@ export default class PlayersPage {
         this.filteredPlayers = [];
         this.searchQuery = '';
         this.sortBy = 'rank'; // 'rank', 'name', or 'sessions'
+        this._abortController = null;
     }
 
     static skeleton() {
@@ -215,6 +217,13 @@ export default class PlayersPage {
 
     // Setup event listeners for the page
     setupEventListeners() {
+        // Abort previous document-level listeners to prevent accumulation
+        if (this._abortController) {
+            this._abortController.abort();
+        }
+        this._abortController = new AbortController();
+        const signal = this._abortController.signal;
+
         const addPlayerBtn = document.getElementById('add-player-btn');
         const newPlayerNameInput = document.getElementById('new-player-name');
         const searchInput = document.getElementById('player-search');
@@ -247,6 +256,7 @@ export default class PlayersPage {
 
                     // Reload the players list
                     this.load();
+                    EventBus.emit('data:players-changed');
 
                     // Clear the input field
                     newPlayerNameInput.value = '';
@@ -303,7 +313,7 @@ export default class PlayersPage {
                 if (!searchInput.contains(e.target) && !suggestionsContainer.contains(e.target)) {
                     suggestionsContainer.style.display = 'none';
                 }
-            });
+            }, { signal });
 
             // Handle Enter key to search
             searchInput.addEventListener('keydown', (e) => {
