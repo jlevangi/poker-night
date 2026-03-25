@@ -18,14 +18,11 @@ export default class DarkModeManager {
     setup() {
         // Get the toggle button
         this.toggleButton = document.getElementById('dark-mode-toggle');
-        
-        if (!this.toggleButton) {
-            console.warn('Dark mode toggle button not found');
-            return;
-        }
 
-        // Set up event listener
-        this.toggleButton.addEventListener('click', () => this.toggle());
+        // Set up event listener when a standalone toggle exists
+        if (this.toggleButton) {
+            this.toggleButton.addEventListener('click', () => this.toggle());
+        }
 
         // Apply saved theme or detect system preference
         this.applyTheme(this.getTheme());
@@ -65,6 +62,10 @@ export default class DarkModeManager {
         
         // Update meta theme-color for mobile browsers
         this.updateMetaThemeColor(theme);
+
+        document.dispatchEvent(new CustomEvent('themeChanged', {
+            detail: { theme }
+        }));
         
         console.log(`Applied ${theme} theme`);
     }

@@ -7,6 +7,7 @@ export default class Router {
         this.routes = {};
         this.skeletons = {};
         this.titles = {};
+        this.routeChangeListeners = [];
         this._transitioning = false;
         this.historyStack = [];
         this._isNavigatingBack = false;
@@ -34,12 +35,18 @@ export default class Router {
         return this;
     }
 
+    onRouteChange(listener) {
+        this.routeChangeListeners.push(listener);
+        return this;
+    }
+
     // Route to the current hash
     route() {
         const path = window.location.hash.slice(1) || 'dashboard';
         this._recordNavigation(path);
         this.loadContent(path);
         this.updateActiveNavButton();
+        this._emitRouteChange(path);
         return this;
     }
 
@@ -108,25 +115,6 @@ export default class Router {
         container.classList.add('page-refreshing');
 
         try {
-            if (typeof document.startViewTransition === 'function') {
-                const previousTransitionName = container.style.viewTransitionName;
-                try {
-                    container.style.viewTransitionName = 'route-refresh';
-
-                    let refreshPromise;
-                    const transition = document.startViewTransition(() => {
-                        refreshPromise = Promise.resolve(handler());
-                        return refreshPromise;
-                    });
-
-                    await refreshPromise;
-                    await transition.finished.catch(() => {});
-                } finally {
-                    container.style.viewTransitionName = previousTransitionName;
-                }
-                return;
-            }
-
             await handler();
             container.classList.add('page-refresh-enter');
             let cleaned = false;
@@ -242,8 +230,8 @@ export default class Router {
     updateActiveNavButton() {
         const currentHash = window.location.hash.slice(1) || 'dashboard';
 
-        // Update bottom navigation (mobile) - exclude settings button
-        document.querySelectorAll('.bottom-nav .nav-btn, .neo-bottom-nav .neo-nav-mobile-btn:not(#settings-trigger)').forEach(btn => {
+        // Update bottom navigation (mobile) for route buttons only
+        document.querySelectorAll('.bottom-nav .nav-btn[data-hash], .neo-bottom-nav .neo-nav-mobile-btn[data-hash]').forEach(btn => {
             if (btn.dataset && btn.dataset.hash && (btn.dataset.hash === `#${currentHash}` ||
                (btn.dataset.hash === '#dashboard' && currentHash === ''))) {
                 btn.classList.add('active');
@@ -252,14 +240,24 @@ export default class Router {
             }
         });
 
-        // Update desktop navigation
-        document.querySelectorAll('.desktop-nav a, .neo-desktop-nav .neo-nav-btn').forEach(link => {
+        // Update desktop navigation for route links only
+        document.querySelectorAll('.desktop-nav a[href], .neo-desktop-nav .neo-nav-btn[href]').forEach(link => {
             const linkHash = link.getAttribute('href');
             if (linkHash === `#${currentHash}` ||
                (linkHash === '#dashboard' && currentHash === '')) {
                 link.classList.add('active');
             } else {
                 link.classList.remove('active');
+            }
+        });
+    }
+
+    _emitRouteChange(path) {
+        this.routeChangeListeners.forEach(listener => {
+            try {
+                listener(path);
+            } catch (error) {
+                console.error('Error in route change listener:', error);
             }
         });
     }

@@ -198,9 +198,9 @@ footer {
     border-top: 1px solid var(--border-light);
 }
 
-/* Ensure header text stays white */
-header h1,
-header nav a {
+/* Ensure legacy header/nav text stays white only in dark mode */
+[data-theme="dark"] header h1,
+[data-theme="dark"] header nav a {
     color: #FFFFFF !important;
 }
 
