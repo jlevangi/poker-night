@@ -65,13 +65,25 @@ textarea,
     --bg-body: #F8FAFC;
     --bg-content: #FFFFFF;
     --bg-card: #FFFFFF;
-    --bg-header: #0F172A;
+    --bg-header: #FFFFFF;
+    --bg-header-gradient-start: #FFFFFF;
+    --bg-header-gradient-end: #F8FAFC;
+    --bg-shell-hover: rgba(37, 99, 235, 0.08);
+    --bg-shell-active: rgba(37, 99, 235, 0.12);
+    --bg-bottom-nav: rgba(255, 255, 255, 0.92);
+    --gamble-king-stripe-color: rgba(217, 119, 6, 0.08);
 
     /* Text Updates */
     --text-primary: #0F172A;
     --text-secondary: #475569;
     --text-muted: #94A3B8;
     --text-white: #FFFFFF;
+    --text-header: #0F172A;
+    --text-header-muted: #475569;
+
+    /* Shell borders */
+    --border-header: rgba(148, 163, 184, 0.2);
+    --border-bottom-nav: rgba(148, 163, 184, 0.25);
 
     /* Success/Error Colors */
     --color-success: #10B981;
@@ -119,12 +131,23 @@ textarea,
     --bg-content: #1E293B;
     --bg-card: #1E293B;
     --bg-header: #0F172A;
+    --bg-header-gradient-start: #0F172A;
+    --bg-header-gradient-end: #1E293B;
+    --bg-shell-hover: rgba(255, 255, 255, 0.1);
+    --bg-shell-active: rgba(255, 255, 255, 0.15);
+    --bg-bottom-nav: rgba(15, 23, 42, 0.95);
+    --gamble-king-stripe-color: rgba(252, 211, 77, 0.12);
 
     --text-primary: #F8FAFC;
     --text-secondary: #CBD5E1;
     --text-muted: #64748B;
+    --text-header: #F8FAFC;
+    --text-header-muted: rgba(255, 255, 255, 0.6);
 
     --casino-cream: #1E293B;
+
+    --border-header: rgba(255, 255, 255, 0.08);
+    --border-bottom-nav: rgba(255, 255, 255, 0.08);
 
     --neo-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
     --neo-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -2px rgba(0, 0, 0, 0.2);
@@ -210,7 +233,7 @@ textarea,
 
 .neo-header {
     background: var(--bg-header);
-    border-bottom: none;
+    border-bottom: 1px solid var(--border-header);
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     position: relative;
 }
@@ -222,7 +245,7 @@ textarea,
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
+    background: linear-gradient(135deg, var(--bg-header-gradient-start) 0%, var(--bg-header-gradient-end) 100%);
     z-index: 1;
 }
 
@@ -252,7 +275,7 @@ textarea,
 .neo-header h1 {
     font-size: 1.75rem;
     font-weight: 700;
-    color: #FFFFFF;
+    color: var(--text-header);
     text-shadow: none;
     margin: 0;
     text-transform: none;
@@ -269,7 +292,7 @@ textarea,
 .neo-nav-btn {
     background: transparent;
     border: 1px solid transparent;
-    color: rgba(255, 255, 255, 0.7);
+    color: var(--text-header-muted);
     padding: 0.5rem 1rem;
     font-weight: 500;
     font-size: 0.875rem;
@@ -287,13 +310,13 @@ textarea,
 .neo-nav-btn:hover {
     transform: none;
     box-shadow: none;
-    background: rgba(255, 255, 255, 0.1);
-    color: #FFFFFF;
+    background: var(--bg-shell-hover);
+    color: var(--text-header);
 }
 
 .neo-nav-btn.active {
-    background: rgba(255, 255, 255, 0.15);
-    color: #FFFFFF;
+    background: var(--bg-shell-active);
+    color: var(--text-header);
     box-shadow: none;
 }
 
@@ -351,10 +374,10 @@ textarea,
     left: 50%;
     transform: translateX(-50%);
     bottom: 1rem;
-    background: rgba(15, 23, 42, 0.92);
+    background: var(--bg-bottom-nav);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--border-bottom-nav);
     box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
     z-index: var(--z-nav);
     flex-direction: row;
@@ -370,7 +393,7 @@ textarea,
 .neo-nav-mobile-btn {
     background: transparent;
     border: none;
-    color: rgba(255, 255, 255, 0.6);
+    color: var(--text-header-muted);
     flex: 1;
     display: flex;
     align-items: center;
@@ -385,10 +408,15 @@ textarea,
     touch-action: manipulation;
 }
 
-.neo-nav-mobile-btn:hover,
+.neo-nav-mobile-btn:hover {
+    background: var(--bg-shell-hover);
+    color: var(--text-header);
+    border-radius: 14px;
+}
+
 .neo-nav-mobile-btn.active {
-    background: rgba(255, 255, 255, 0.12);
-    color: #FFFFFF;
+    background: var(--bg-shell-active);
+    color: var(--text-header);
     border-radius: 14px;
 }
 
@@ -575,11 +603,11 @@ textarea,
 }
 
 [data-theme="dark"] .neo-header::before {
-    background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
+    background: linear-gradient(135deg, var(--bg-header-gradient-start) 0%, var(--bg-header-gradient-end) 100%);
 }
 
 [data-theme="dark"] .neo-header h1 {
-    color: #F8FAFC;
+    color: var(--text-header);
     text-shadow: none;
 }
 
@@ -588,17 +616,17 @@ textarea,
 }
 
 [data-theme="dark"] .neo-nav-btn {
-    color: rgba(255, 255, 255, 0.6);
+    color: var(--text-header-muted);
 }
 
 [data-theme="dark"] .neo-nav-btn:hover {
-    background: rgba(255, 255, 255, 0.1);
-    color: #FFFFFF;
+    background: var(--bg-shell-hover);
+    color: var(--text-header);
 }
 
 [data-theme="dark"] .neo-nav-btn.active {
-    background: rgba(255, 255, 255, 0.15);
-    color: #FFFFFF;
+    background: var(--bg-shell-active);
+    color: var(--text-header);
 }
 
 [data-theme="dark"] .neo-header-btn {
@@ -611,18 +639,22 @@ textarea,
 }
 
 [data-theme="dark"] .neo-bottom-nav {
-    background: rgba(15, 23, 42, 0.95);
-    border-color: rgba(255, 255, 255, 0.08);
+    background: var(--bg-bottom-nav);
+    border-color: var(--border-bottom-nav);
 }
 
 [data-theme="dark"] .neo-nav-mobile-btn {
-    color: rgba(255, 255, 255, 0.5);
+    color: var(--text-header-muted);
 }
 
-[data-theme="dark"] .neo-nav-mobile-btn:hover,
+[data-theme="dark"] .neo-nav-mobile-btn:hover {
+    background: var(--bg-shell-hover);
+    color: var(--text-header);
+}
+
 [data-theme="dark"] .neo-nav-mobile-btn.active {
-    background: rgba(255, 255, 255, 0.1);
-    color: #FFFFFF;
+    background: var(--bg-shell-active);
+    color: var(--text-header);
 }
 
 [data-theme="dark"] .neo-settings-menu {
@@ -1225,6 +1257,10 @@ div .neo-btn.neo-btn-green:hover,
     animation: goldGlow 4s ease-in-out infinite;
 }
 
+.neo-gamble-king .neo-stats-grid {
+    margin-bottom: 0;
+}
+
 @keyframes goldGlow {
     0%, 100% { box-shadow: var(--neo-shadow-md), 0 0 8px rgba(245, 158, 11, 0.08); }
     50% { box-shadow: var(--neo-shadow-md), 0 0 20px rgba(245, 158, 11, 0.15), 0 0 40px rgba(245, 158, 11, 0.05); }
@@ -1241,8 +1277,8 @@ div .neo-btn.neo-btn-green:hover,
         45deg,
         transparent,
         transparent 20px,
-        rgba(245, 158, 11, 0.04) 20px,
-        rgba(245, 158, 11, 0.04) 40px
+        var(--gamble-king-stripe-color) 20px,
+        var(--gamble-king-stripe-color) 40px
     );
     pointer-events: none;
     animation: slideStripes 8s linear infinite;

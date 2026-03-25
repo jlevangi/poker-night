@@ -92,7 +92,6 @@ export default class SettingsManager {
     toggleTheme() {
         if (this.darkModeManager) {
             this.darkModeManager.toggle();
-            this.updateThemeButton();
         }
     }
     

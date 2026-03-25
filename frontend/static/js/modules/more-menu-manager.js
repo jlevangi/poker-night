@@ -64,6 +64,10 @@ export default class MoreMenuManager {
 
         // Update theme button text on init
         this.updateThemeButton();
+
+        document.addEventListener('themeChanged', () => {
+            this.updateThemeButton();
+        });
     }
 
     open() {
@@ -91,7 +95,6 @@ export default class MoreMenuManager {
     toggleTheme() {
         if (this.darkModeManager) {
             this.darkModeManager.toggle();
-            this.updateThemeButton();
         }
     }
 

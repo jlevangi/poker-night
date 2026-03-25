@@ -358,111 +358,30 @@ document.addEventListener('DOMContentLoaded', async () => {
     const serviceWorkerManager = new ServiceWorkerManager(APP_VERSION);
     serviceWorkerManager.initialize();
 
-    // Setup navigation highlighting
-    function updateActiveNavigation() {
-        const currentHash = window.location.hash || '#dashboard';
-        const currentPage = currentHash.split('/')[0].replace('#', '') || 'dashboard';
-
-        // Update desktop navigation (both old and new classes)
-        document.querySelectorAll('.desktop-nav a, .neo-desktop-nav .neo-nav-btn').forEach(link => {
-            link.classList.remove('active');
-            if (link.getAttribute('href') === `#${currentPage}`) {
-                link.classList.add('active');
-            }
-        });
-
-        // Update mobile navigation (both old and new classes, excluding more trigger)
-        document.querySelectorAll('.bottom-nav .nav-btn, .neo-bottom-nav .neo-nav-mobile-btn:not(#more-trigger)').forEach(btn => {
-            btn.classList.remove('active');
-            const hash = btn.getAttribute('data-hash');
-            if (hash === `#${currentPage}`) {
-                btn.classList.add('active');
-            }
-        });
-
-        // Update More menu active states
-        moreMenuManager.updateActiveItems();
-    }
-
     // Setup navigation event listeners
     function setupNavigation() {
-        // Desktop navigation (both old and new classes, excluding settings button)
-        document.querySelectorAll('.desktop-nav a, .neo-desktop-nav .neo-nav-btn:not(#settings-btn)').forEach(link => {
+        // Desktop navigation (route links only)
+        document.querySelectorAll('.desktop-nav a[href], .neo-desktop-nav .neo-nav-btn[href]').forEach(link => {
             link.addEventListener('click', (e) => {
                 e.preventDefault();
                 const href = link.getAttribute('href');
                 if (href) {
                     window.location.hash = href;
-                    updateActiveNavigation();
                 }
             });
         });
 
-        // Mobile navigation (both old and new classes, excluding more trigger)
-        document.querySelectorAll('.bottom-nav .nav-btn, .neo-bottom-nav .neo-nav-mobile-btn:not(#more-trigger)').forEach(btn => {
+        // Mobile navigation (route buttons only)
+        document.querySelectorAll('.bottom-nav .nav-btn[data-hash], .neo-bottom-nav .neo-nav-mobile-btn[data-hash]').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 e.preventDefault();
                 const hash = btn.getAttribute('data-hash');
-                if (hash) {  // Only navigate if there's a hash (not for settings button)
+                if (hash) {
                     window.location.hash = hash;
-                    updateActiveNavigation();
                 }
             });
         });
-
-        // Settings button functionality (desktop)
-        const settingsBtn = document.getElementById('settings-btn');
-        if (settingsBtn) {
-            settingsBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                showSettings();
-            });
-        }
-
-        // Settings close button functionality
-        const settingsClose = document.getElementById('settings-close');
-        if (settingsClose) {
-            settingsClose.addEventListener('click', (e) => {
-                e.preventDefault();
-                hideSettings();
-            });
-        }
-
-        // Settings overlay close functionality
-        const settingsOverlay = document.getElementById('settings-overlay');
-        if (settingsOverlay) {
-            settingsOverlay.addEventListener('click', (e) => {
-                hideSettings();
-            });
-        }
     }
-
-    // Helper function to show settings
-    function showSettings() {
-        const settingsMenu = document.getElementById('settings-menu');
-        const settingsOverlay = document.getElementById('settings-overlay');
-        if (settingsMenu) {
-            settingsMenu.classList.add('show');
-        }
-        if (settingsOverlay) {
-            settingsOverlay.classList.add('active');
-        }
-    }
-
-    // Helper function to hide settings
-    function hideSettings() {
-        const settingsMenu = document.getElementById('settings-menu');
-        const settingsOverlay = document.getElementById('settings-overlay');
-        if (settingsMenu) {
-            settingsMenu.classList.remove('show');
-        }
-        if (settingsOverlay) {
-            settingsOverlay.classList.remove('active');
-        }
-    }
-
-    // Update navigation on hash change
-    window.addEventListener('hashchange', updateActiveNavigation);
 
     // Wire EventBus invalidation listeners
     EventBus.on('data:players-changed', () => {
@@ -523,37 +442,33 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Setup router with all routes
     router
         .register('dashboard', () => {
-            updateActiveNavigation();
             return dashboardPage.load();
         })
         .register('players', () => {
-            updateActiveNavigation();
             return playersPage.load();
         })
         .register('sessions', () => {
-            updateActiveNavigation();
             return sessionsPage.load();
         })
         .register('calendar', () => {
-            updateActiveNavigation();
             return calendarPage.load();
         })
         .register('stats', () => {
-            updateActiveNavigation();
             return statsPage.load();
         })
         .register('player/:id', (id) => {
-            updateActiveNavigation();
             return playerDetailPage.load(id);
         })
         .register('session/:id', (id) => {
-            updateActiveNavigation();
             return sessionDetailPage.load(id);
         })
         .register('event/:id', (id) => {
-            updateActiveNavigation();
             return eventDetailPage.load(id);
         });
+
+    router.onRouteChange(() => {
+        moreMenuManager.updateActiveItems();
+    });
 
     // Initialize navigation
     setupNavigation();
