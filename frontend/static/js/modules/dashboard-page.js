@@ -79,13 +79,13 @@ export default class DashboardPage {
                 
                 <!-- Gamble King Section -->
                 ${data.gambleKing ? this.renderGambleKingSection(data.gambleKing) : ''}
-                
-                <!-- Next Event Card -->
-                ${data.nextEvent ? this.renderNextEventCard(data.nextEvent) : ''}
 
                 <!-- Quick Actions and Stats Grid -->
                 ${this.renderQuickActionsAndStatsGrid(data)}
-                
+
+                <!-- Next Event Card -->
+                ${data.nextEvent ? this.renderNextEventCard(data.nextEvent) : ''}
+
                 <!-- Top Players Section -->
                 ${this.renderStandingsSection(data.players)}
                 
