@@ -28,3 +28,7 @@ vapid_keys.txt
 vapid_keys.json
 
 poker_data/
+
+# lmloop: agent run worktrees and local run config
+.worktrees/
+.lmloop.toml
