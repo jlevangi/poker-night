@@ -1,0 +1,33 @@
+/* Legacy UI variables migrated from modern-ui.css.
+ * These load after the core theme files so that --primary-light (#93C5FD)
+ * intentionally overrides the #EFF6FF value defined in _theme.css /
+ * _modern-theme.css.  Several components consume the #93C5FD value.
+ *
+ * The remaining token names (--neutral-50, --space-2, --secondary-color,
+ * etc.) use legacy naming conventions not yet unified with the structured
+ * token system and are still referenced by component CSS throughout the
+ * stylesheets below.
+ */
+
+:root {
+    --primary-light: #93C5FD;
+
+    --secondary-color: #10B981;
+    --secondary-dark: #059669;
+    --secondary-light: #6EE7B7;
+
+    --error-color: #EF4444;
+
+    --neutral-50: #F8FAFC;
+    --neutral-100: #F1F5F9;
+    --neutral-300: #CBD5E1;
+    --neutral-400: #94A3B8;
+    --neutral-500: #64748B;
+    --neutral-600: #475569;
+    --neutral-700: #334155;
+    --neutral-800: #1E293B;
+    --neutral-900: #0F172A;
+
+    --space-2: 0.5rem;
+    --space-4: 1rem;
+}

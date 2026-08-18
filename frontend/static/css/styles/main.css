@@ -6,6 +6,11 @@
 /* Modern Theme */
 @import 'themes/_modern-theme.css';
 
+/* Legacy UI variables migrated from modern-ui.css (load after themes so */
+/* --primary-light override is preserved).  Eventually these will be */
+/* unified into the structured token system. */
+@import 'themes/_legacy-vars.css';
+
 /* 2. Base styles - resets, typography, global styles */
 @import 'base/_reset.css';
 @import 'base/_base.css';
