@@ -8,7 +8,9 @@ This module provides:
   a working Flask application with the expected configuration.
 """
 
+import atexit
 import os
+import shutil
 import tempfile
 import unittest
 
@@ -23,6 +25,10 @@ from app.config import Config
 # ---------------------------------------------------------------------------
 _TEST_DB_DIR = tempfile.mkdtemp(prefix="poker_test_")
 _TEST_DB_PATH = os.path.join(_TEST_DB_DIR, "test.db")
+
+# Without this every test run leaves its temporary database behind; fifty runs
+# left fifty directories in /tmp.
+atexit.register(shutil.rmtree, _TEST_DB_DIR, ignore_errors=True)
 
 
 class TestConfig(Config):
