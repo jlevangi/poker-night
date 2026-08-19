@@ -8,7 +8,7 @@ export default class DashboardPage {
                 <!-- Gamble King Banner Skeleton -->
                 <div class="neo-card skeleton" style="height: 140px; margin-bottom: 1rem;"></div>
                 <!-- Stats Grid Skeleton (2x2) -->
-                <div class="neo-stats-grid" style="grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                <div class="neo-stats-grid" style="grid-template-rows: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
                     <div class="neo-stat-card skeleton" style="height: 90px;"></div>
                     <div class="neo-stat-card skeleton" style="height: 90px;"></div>
                     <div class="neo-stat-card skeleton" style="height: 90px;"></div>
@@ -142,7 +142,7 @@ export default class DashboardPage {
         const { totalGambled, totalPlayers, totalSessions, activeSession } = data;
         
         return `
-            <div class="neo-stats-grid" style="grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 1rem;">
+            <div class="neo-stats-grid" style="grid-template-rows: 1fr 1fr; gap: 1rem;">
                 <!-- Quick Action Card (Top Left) -->
                 ${activeSession ? `
                     <a href="#session/${activeSession.session_id}" class="neo-stat-card neo-card-primary" style="text-decoration: none; color: inherit; cursor: pointer;">
@@ -192,7 +192,7 @@ export default class DashboardPage {
             <div class="neo-gamble-king neo-bounce">
                 <div class="neo-gamble-king-title">Current Gamble King</div>
                 <div class="neo-gamble-king-name">${gambleKing.name}</div>
-                <div class="neo-stats-grid" style="grid-template-columns: repeat(4, 1fr);">
+                <div class="neo-stats-grid">
                     <div class="neo-stat-card" style="background: var(--bg-card);">
                         <div class="neo-stat-value profit-${gambleKing.net_profit >= 0 ? 'positive' : 'negative'}">$${gambleKing.net_profit ? gambleKing.net_profit.toFixed(2) : '0.00'}</div>
                         <div class="neo-stat-label">Total Profit</div>

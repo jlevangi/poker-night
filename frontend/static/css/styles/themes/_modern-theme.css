@@ -1906,6 +1906,14 @@ div .neo-btn.neo-btn-green:hover,
 }
 
 @media (max-width: 360px) {
+    .neo-stats-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    .neo-gamble-king .neo-stats-grid {
+        grid-template-columns: 1fr !important;
+    }
+
     .neo-header h1 {
         font-size: 1.25rem;
     }
