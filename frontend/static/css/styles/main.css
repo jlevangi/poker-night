@@ -31,6 +31,7 @@
 @import 'components/_calendar.css';
 @import 'components/_charts.css';
 @import 'components/_chips.css';
+@import 'components/_tables.css';
 
 /* 5. Utility styles */
 @import 'utils/_animations.css';

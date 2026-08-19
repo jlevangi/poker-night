@@ -136,3 +136,16 @@
         font-size: 0.55rem;
     }
 }
+
+/* Migrated from chip-styles.css (missed by the original migration). */
+/* Ensure white chip text is black (border handled by JavaScript) */ .chip[style*="background-color: #FFFFFF"], .chip[style*="background-color:#FFFFFF"], .chip[style*="background: #FFFFFF"], .chip[style*="background:#FFFFFF"] {
+    color: #000000 !important;
+}
+
+.chip[style*="background-color: #FFFFFF"] .chip-count, .chip[style*="background-color:#FFFFFF"] .chip-count, .chip[style*="background: #FFFFFF"] .chip-count, .chip[style*="background:#FFFFFF"] .chip-count {
+    color: #000000 !important;
+}
+
+.chip[style*="background-color: #FFFFFF"] .chip-name, .chip[style*="background-color:#FFFFFF"] .chip-name, .chip[style*="background: #FFFFFF"] .chip-name, .chip[style*="background:#FFFFFF"] .chip-name {
+    color: #000000 !important;
+}

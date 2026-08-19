@@ -56,3 +56,12 @@ header h1 {
         padding: 0.625rem 0.25rem;
     }
 }
+
+/* Migrated from responsive-fixes.css (missed by the original migration). */
+.royal-crown.left {
+    transform: rotate(-10deg);
+}
+
+.royal-crown.right {
+    transform: rotate(10deg);
+}
