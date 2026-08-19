@@ -442,8 +442,6 @@ nav a:hover {
     .top-nav, .desktop-nav, .main-nav, .header-links {
         display: none !important;
     }
-        display: none !important;
-    }
 }
 
 /* More Menu responsive refinements */
