@@ -180,6 +180,7 @@
     .table-responsive {
         margin: 0 !important;
         padding: 0 !important;
+        -webkit-overflow-scrolling: touch;
     }
 
     .modern-table th,
