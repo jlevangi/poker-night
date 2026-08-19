@@ -105,6 +105,40 @@
     margin-right: 20px;
 }
 
+/* Player Stats Container */
+.player-stats-container {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: clamp(1rem, 3vw, 2rem);
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+.player-stats-container .seven-two-counter {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-left: auto;
+}
+
+/* Clickable Player Stats */
+.clickable-player-stats {
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.clickable-player-stats:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--neo-shadow-md);
+    border-color: var(--primary-color);
+}
+
 /* Mobile Card Adjustments */
 @media (max-width: 400px) {
     .session-item {
@@ -179,5 +213,13 @@
     .ui-card-header {
         padding-bottom: var(--spacing-sm) !important;
         margin-bottom: 0.75rem !important;
+    }
+    /* Player stats container mobile overrides */
+    .player-stats-container {
+        flex: 1 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        gap: clamp(0.25rem, 2vw, 1rem) !important;
     }
 }
