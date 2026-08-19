@@ -13,7 +13,7 @@ nav a {
 
 nav a:hover {
     text-decoration: none;
-    color: #FFFFFF;
+    color: var(--text-white);
 }
 
 /* Desktop Navigation */

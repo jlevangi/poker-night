@@ -34,22 +34,22 @@
 
 .neo-rsvp-badge-yes {
     background: var(--casino-green, #2ecc71);
-    color: #fff;
+    color: var(--text-white);
 }
 
 .neo-rsvp-badge-maybe {
     background: var(--casino-gold, #f1c40f);
-    color: #222;
+    color: var(--text-primary);
 }
 
 .neo-rsvp-badge-no {
     background: var(--casino-red, #e74c3c);
-    color: #fff;
+    color: var(--text-white);
 }
 
 .neo-rsvp-btn-yes {
     background: var(--casino-green, #2ecc71) !important;
-    color: #fff !important;
+    color: var(--text-white) !important;
     font-weight: 700 !important;
     border: 1px solid transparent !important;
     border-radius: var(--radius-md) !important;
@@ -63,7 +63,7 @@
 
 .neo-rsvp-btn-maybe {
     background: var(--casino-gold, #f1c40f) !important;
-    color: #222 !important;
+    color: var(--text-primary) !important;
     font-weight: 700 !important;
     border: 1px solid transparent !important;
     border-radius: var(--radius-md) !important;
@@ -77,7 +77,7 @@
 
 .neo-rsvp-btn-no {
     background: var(--casino-red, #e74c3c) !important;
-    color: #fff !important;
+    color: var(--text-white) !important;
     font-weight: 700 !important;
     border: 1px solid transparent !important;
     border-radius: var(--radius-md) !important;

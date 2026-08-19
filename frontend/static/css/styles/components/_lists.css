@@ -11,7 +11,7 @@ li:last-child {
 
 li a {
     text-decoration: none;
-    color: #007bff;
+    color: var(--primary-color);
 }
 
 li a:hover {
@@ -47,7 +47,7 @@ li a:hover {
 }
 
 .session-buyin, .session-total-value, .session-unpaid-value {
-    color: #555;
+    color: var(--text-secondary);
     font-size: 0.9rem;
 }
 
@@ -99,7 +99,7 @@ li a:hover {
 }
 
 .player-row:hover {
-    background-color: #f8f9fa;
+    background-color: var(--bg-secondary);
 }
 
 .player-name {

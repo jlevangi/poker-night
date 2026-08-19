@@ -48,7 +48,7 @@
 }
 
 .session-item:hover {
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    box-shadow: var(--shadow-medium);
 }
 
 /* Session Value Summary Card */
@@ -66,7 +66,6 @@
     margin: 0 0 var(--spacing-sm) 0;
     font-weight: 500;
     color: var(--primary-color);
-    margin-top: 0.2rem;
 }
 
 .session-unpaid-value {
@@ -86,8 +85,8 @@
 .seven-two-stats-detail {
     display: flex;
     align-items: center;
-    margin-top: 15px;
-    padding: 10px 15px;
+    margin-top: var(--spacing-md);
+    padding: var(--spacing-sm) var(--spacing-md);
     background-color: var(--bg-card);
     border-radius: var(--radius-lg);
     border-left: 4px solid var(--seven-two-border);
@@ -95,13 +94,13 @@
 
 .seven-two-stats-detail .seven-two-label {
     font-weight: 600;
-    margin-right: 15px;
+    margin-right: var(--spacing-md);
 }
 
 .seven-two-stats-detail .seven-two-value {
     font-size: 1.4rem;
     font-weight: bold;
-    margin-right: 20px;
+    margin-right: var(--spacing-md);
 }
 
 /* Player Stats Container */
@@ -120,7 +119,7 @@
     flex: 0 0 auto;
     display: flex;
     align-items: center;
-    gap: 0.25rem;
+    gap: var(--spacing-xs);
     font-size: 0.85rem;
     color: var(--text-muted);
     margin-left: auto;
