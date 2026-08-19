@@ -19,7 +19,7 @@
 .gamble-king-name {
     font-size: 1.8rem;
     font-weight: bold;
-    color: #2c3e50;
+    color: var(--text-primary);
     margin: var(--spacing-sm) 0;
 }
 
@@ -43,7 +43,7 @@
     margin-bottom: 0.75rem;
     background-color: var(--bg-card);
     border-radius: var(--radius-md);
-    border: 1px solid #e7e7e7;
+    border: 1px solid var(--border-color);
     transition: box-shadow var(--transition-fast);
 }
 
@@ -53,7 +53,7 @@
 
 /* Session Value Summary Card */
 .session-value-summary {
-    background-color: #f8f8f8;
+    background-color: var(--bg-content);
     padding: var(--spacing-md);
     border-left: 4px solid var(--primary-color);
     margin: var(--spacing-md) 0;
@@ -64,7 +64,6 @@
 .session-total-value {
     font-size: 1.2rem;
     margin: 0 0 var(--spacing-sm) 0;
-    color: #343a40;
     font-weight: 500;
     color: var(--primary-color);
     margin-top: 0.2rem;
