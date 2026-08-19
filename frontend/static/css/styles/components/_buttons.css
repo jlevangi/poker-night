@@ -143,10 +143,18 @@ button:disabled,
     }
 }
 
-/* Sessions Actions
-   The previous .sessions-actions .action-btn block duplicated the base
-   .action-btn rule with identical values (background, color, padding,
-   border-radius, font-size) — removed to eliminate redundancy. */
+/* Sessions Actions */
+.sessions-actions .action-btn {
+    background-color: var(--primary-color);
+    color: var(--text-white);
+    padding: 0.625rem 1.125rem;
+    border-radius: var(--radius-md);
+    font-size: 0.9375rem;
+}
+
+.sessions-actions .action-btn:hover {
+    background-color: var(--primary-hover);
+}
 
 /* Modal Button Styles */
 .modal-form-group button.small-btn {

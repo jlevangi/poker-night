@@ -196,6 +196,15 @@
         min-width: 100%;
         width: 100%;
     }
+    /* Tighten the numeric columns so they fit without the name column
+       losing room.  Kept ahead of the .dashboard-content padding rule
+       below to preserve the original responsive-fixes.css cascade order
+       (both selectors have equal specificity). */
+    .players-stats-table td:not(:first-child),
+    .players-dashboard-table td:not(:first-child) {
+        padding-left: 0.15rem;
+        padding-right: 0.15rem;
+    }
     .dashboard-content .players-stats-table th, .dashboard-content .players-stats-table td {
         padding: 0.4rem 0.2rem;
     }
