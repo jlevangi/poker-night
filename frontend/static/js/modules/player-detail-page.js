@@ -223,9 +223,9 @@ export default class PlayerDetailPage {
             `;
         } else {
             html += `
-                <div class="neo-card" style="text-align: center; padding: 3rem;">
-                    <div style="font-size: 4rem; margin-bottom: 1rem;">📈</div>
-                    <p style="font-size: 1.25rem; font-weight: 700; color: var(--text-secondary); margin: 0;">No sessions found for this player.</p>
+                <div class="neo-card empty-state">
+                    <div class="empty-state__icon">📈</div>
+                    <p class="empty-state__message">No sessions found for this player.</p>
                 </div>
             `;
         }
@@ -300,7 +300,7 @@ export default class PlayerDetailPage {
         const data = this.chartData.data;
 
         if (data.length === 0) {
-            chartContainer.innerHTML = '<p style="text-align: center; padding: 2rem;">No data to display</p>';
+            chartContainer.innerHTML = '<div class="empty-state"><p class="empty-state__message">No data to display</p></div>';
             return;
         }
 

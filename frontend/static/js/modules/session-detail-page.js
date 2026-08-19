@@ -369,7 +369,7 @@ export default class SessionDetailPage {
                                 ${player.isInSession ? '<span class="session-player-picker-badge">In Session</span>' : ''}
                             </label>
                         `).join('') : `
-                            <div class="session-player-picker-empty">No players match your search.</div>
+                            <div class="empty-state"><p class="empty-state__message">No players match your search.</p></div>
                         `}
                     </div>
                     <div class="session-player-picker-footer">
@@ -424,9 +424,9 @@ export default class SessionDetailPage {
             html += `</div>`;
         } else {
             html += `
-                <div class="neo-card" style="text-align: center; padding: 3rem;">
-                    <div style="font-size: 4rem; margin-bottom: 1rem;">👤</div>
-                    <p style="font-size: 1.25rem; font-weight: 700; color: var(--text-secondary); margin: 0;">No players in this session yet.</p>
+                <div class="neo-card empty-state">
+                    <div class="empty-state__icon">👤</div>
+                    <p class="empty-state__message">No players in this session yet.</p>
                 </div>
             `;
         }
