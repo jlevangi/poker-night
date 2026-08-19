@@ -64,8 +64,16 @@ nav a:hover {
 .session-action-buttons {
     display: flex;
     justify-content: flex-end;
-    margin: var(--spacing-md) 0;
+    margin: 1.25rem 0;
     gap: var(--spacing-sm);
+    padding: 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    background-color: var(--bg-card);
+}
+
+.session-action-buttons button {
+    margin-bottom: 0.625rem;
 }
 
 .session-player-actions {
