@@ -356,7 +356,7 @@ export default class StatsPage {
         const data = this.chartData.data;
         
         if (data.length === 0) {
-            chartContainer.innerHTML = '<p style="text-align: center; padding: 2rem;">No data to display</p>';
+            chartContainer.innerHTML = '<div class="empty-state"><p class="empty-state__message">No data to display</p></div>';
             return;
         }
         
@@ -816,7 +816,7 @@ export default class StatsPage {
             .sort((a, b) => b.total_buy_ins_value - a.total_buy_ins_value);
 
         if (playersWithBuyIns.length === 0) {
-            pieContainer.innerHTML = '<p style="text-align: center; padding: 2rem;">No data to display</p>';
+            pieContainer.innerHTML = '<div class="empty-state"><p class="empty-state__message">No data to display</p></div>';
             return;
         }
 

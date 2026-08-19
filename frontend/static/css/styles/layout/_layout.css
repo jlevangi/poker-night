@@ -9,79 +9,25 @@
     box-shadow: var(--shadow-light);
 }
 
-/* Shared Counter Layout Styles */
-.counter-controls {
+/* Shared Counter / Seven-Two / Strikes Layout Styles
+   Consolidated: the three feature blocks (counter-controls, seven-two-stat,
+   strikes-stat) were previously triplicated with identical declarations. They
+   now share one rule to keep spacing and alignment in sync. */
+
+/* Shared stat row */
+.counter-controls,
+.seven-two-stat,
+.strikes-stat {
     display: flex;
     align-items: center;
-    gap: 8px;
-    margin: 4px 0;
+    gap: var(--spacing-sm);
+    margin: var(--spacing-xs) 0;
     flex-wrap: wrap;
 }
 
-.counter-label {
-    font-weight: 500;
-    color: var(--text-secondary);
-    white-space: nowrap;
-    min-width: fit-content;
-}
-
-.counter-value {
-    font-size: 1rem;
-    font-weight: bold;
-    background-color: var(--bg-secondary);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-pill);
-    padding: 4px 12px;
-    min-width: 30px;
-    text-align: center;
-    color: var(--text-primary);
-    flex-shrink: 0;
-}
-
-.counter-buttons {
-    display: flex;
-    align-items: center;
-    gap: 2px;
-    flex-shrink: 0;
-}
-
-/* Seven-Two Game Layout - Apply shared styles */
-.seven-two-label {
-    font-weight: 500;
-    color: var(--text-secondary);
-    white-space: nowrap;
-    min-width: fit-content;
-}
-
-.seven-two-value {
-    font-size: 1rem;
-    font-weight: bold;
-    background-color: var(--bg-secondary);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-pill);
-    padding: 4px 12px;
-    min-width: 30px;
-    text-align: center;
-    color: var(--text-primary);
-    flex-shrink: 0;
-}
-
-.seven-two-stat {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin: 4px 0;
-    flex-wrap: wrap;
-}
-
-.seven-two-buttons {
-    display: flex;
-    align-items: center;
-    gap: 2px;
-    flex-shrink: 0;
-}
-
-/* Strikes Layout - Apply shared styles */
+/* Shared stat label */
+.counter-label,
+.seven-two-label,
 .strikes-label {
     font-weight: 500;
     color: var(--text-secondary);
@@ -89,27 +35,25 @@
     min-width: fit-content;
 }
 
+/* Shared stat value */
+.counter-value,
+.seven-two-value,
 .strikes-value {
     font-size: 1rem;
     font-weight: bold;
     background-color: var(--bg-secondary);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-pill);
-    padding: 4px 12px;
+    padding: var(--spacing-xs) var(--spacing-sm);
     min-width: 30px;
     text-align: center;
     color: var(--text-primary);
     flex-shrink: 0;
 }
 
-.strikes-stat {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin: 4px 0;
-    flex-wrap: wrap;
-}
-
+/* Shared stat buttons */
+.counter-buttons,
+.seven-two-buttons,
 .strikes-buttons {
     display: flex;
     align-items: center;
@@ -122,8 +66,8 @@
 .session-strikes-controls {
     display: flex;
     align-items: center;
-    gap: 8px;
-    margin: 4px 0;
+    gap: var(--spacing-sm);
+    margin: var(--spacing-xs) 0;
     flex-wrap: wrap;
 }
 
@@ -133,24 +77,27 @@
         margin: var(--spacing-sm);
         padding: var(--spacing-md);
     }
-    
+
     /* Ensure counter controls remain aligned on mobile */
+    .counter-controls,
     .seven-two-stat,
     .strikes-stat,
     .session-seven-two-controls,
     .session-strikes-controls {
-        gap: 6px;
-        margin: 6px 0;
+        gap: var(--spacing-xs);
+        margin: var(--spacing-xs) 0;
     }
-    
+
     /* Adjust label width for better mobile layout */
+    .counter-label,
     .seven-two-label,
     .strikes-label {
         font-size: 0.9rem;
         min-width: 120px;
     }
-    
+
     /* Ensure buttons stay together */
+    .counter-buttons,
     .seven-two-buttons,
     .strikes-buttons {
         margin-left: auto;
@@ -164,7 +111,7 @@
         padding-bottom: 90px;
         margin-bottom: 0;
     }
-    
+
     .seven-two-counter {
         font-size: 0.8rem !important;
     }

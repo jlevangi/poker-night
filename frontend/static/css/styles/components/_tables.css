@@ -180,6 +180,7 @@
     .table-responsive {
         margin: 0 !important;
         padding: 0 !important;
+        -webkit-overflow-scrolling: touch;
     }
 
     .modern-table th,
@@ -187,4 +188,65 @@
         padding: var(--spacing-sm) !important;
         font-size: 0.875rem !important;
     }
+}
+
+/* Migrated from responsive-fixes.css (missed by the original migration). */
+@media (max-width: 600px) {
+    .dashboard-content .players-stats-table {
+        min-width: 100%;
+        width: 100%;
+    }
+    /* Tighten the numeric columns so they fit without the name column
+       losing room.  Kept ahead of the .dashboard-content padding rule
+       below to preserve the original responsive-fixes.css cascade order
+       (both selectors have equal specificity). */
+    .players-stats-table td:not(:first-child),
+    .players-dashboard-table td:not(:first-child) {
+        padding-left: 0.15rem;
+        padding-right: 0.15rem;
+    }
+    .dashboard-content .players-stats-table th, .dashboard-content .players-stats-table td {
+        padding: 0.4rem 0.2rem;
+    }
+    .dashboard-content .players-stats-table td:first-child {
+        width: 60%;
+    }
+    .dashboard-content .players-stats-table td:nth-child(2), .dashboard-content .players-stats-table td:nth-child(3) {
+        width: 20%;
+        text-align: center;
+    }
+}
+
+@media (max-width: 400px) {
+    .dashboard-content .players-stats-table th {
+        font-size: 0.875rem;
+        padding: 0.35rem 0.2rem;
+    }
+    .dashboard-content .players-stats-table td {
+        font-size: 0.9375rem;
+    }
+    .dashboard-content .gamble-king-label {
+        font-size: 0.7rem;
+        padding: 0.1rem 0.3rem;
+    }
+}
+
+/* Dashboard content */ .dashboard-content {
+    width: 100%;
+}
+
+.dashboard-content .table-responsive {
+    margin-bottom: 1rem;
+}
+
+@media (max-width: 600px) {
+    .dashboard-content .table-responsive {
+        margin: 0 -0.5rem;
+        width: calc(100% + 1rem);
+    }
+}
+
+/* Migrated from responsive-fixes.css (missed by the original migration). */
+.players-dashboard-table td:first-child {
+    white-space: nowrap;
 }

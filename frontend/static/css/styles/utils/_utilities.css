@@ -10,5 +10,20 @@
     margin-bottom: var(--spacing-md);
 }
 
+/* Global keyboard focus indicator — ensures every interactive element
+   (links, buttons, form controls, focusable custom elements) has a
+   visible focus ring when navigated via keyboard. Placed last in the
+   cascade so component-specific :focus-visible rules can override
+   with higher specificity when needed. */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
 /* Currently the original CSS doesn't have many utility classes,
    but this file provides a place to add them as needed */

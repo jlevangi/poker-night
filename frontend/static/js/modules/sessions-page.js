@@ -185,9 +185,9 @@ export default class SessionsPage {
             html += `</div>`;
         } else {
             html += `
-                <div class="neo-card" style="text-align: center; padding: 3rem;">
-                    <div style="font-size: 4rem; margin-bottom: 1rem;">🎯</div>
-                    <p style="font-size: 1.25rem; font-weight: 600; color: var(--text-secondary); margin: 0;">No sessions found. Create your first session above!</p>
+                <div class="neo-card empty-state">
+                    <div class="empty-state__icon">🎯</div>
+                    <p class="empty-state__message">No sessions found. Create your first session above!</p>
                 </div>
             `;
         }

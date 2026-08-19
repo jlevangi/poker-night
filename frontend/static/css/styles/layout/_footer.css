@@ -7,3 +7,10 @@ footer {
     color: var(--text-light);
     font-size: 0.9rem;
 }
+
+@media (max-width: 400px) {
+    footer {
+        margin-bottom: 60px;
+        padding-bottom: var(--spacing-md);
+    }
+}

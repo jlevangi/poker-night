@@ -41,9 +41,27 @@ header h1 {
         font-size: 1.5rem;
     }
 }
+@media (max-width: 500px) {
+    header {
+        padding: 0.75rem 0.5rem;
+    }
+}
 
 @media (max-width: 400px) {
     header h1 {
         font-size: 1.25rem;
     }
+
+    header {
+        padding: 0.625rem 0.25rem;
+    }
+}
+
+/* Migrated from responsive-fixes.css (missed by the original migration). */
+.royal-crown.left {
+    transform: rotate(-10deg);
+}
+
+.royal-crown.right {
+    transform: rotate(10deg);
 }

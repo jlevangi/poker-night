@@ -1,0 +1,151 @@
+/* Chip Component Styles */
+/* Poker chip display for the chip calculator page */
+
+.chip-distribution {
+    background-color: var(--bg-content);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-md);
+    margin: var(--spacing-xl) 0;
+    box-shadow: var(--shadow-card);
+}
+
+.chip-distribution h3 {
+    margin-top: 0;
+    color: var(--text-primary);
+    font-size: 1.3rem;
+}
+
+.chip-description {
+    font-size: 0.95rem;
+    margin-bottom: var(--spacing-md);
+    color: var(--text-secondary);
+}
+
+.chip-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-md);
+    justify-content: center;
+}
+
+.chip {
+    width: 70px;
+    height: 70px;
+    border-radius: var(--radius-circle);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-heavy);
+    position: relative;
+    color: var(--text-white); /* Default white text for all chips */
+    /* Border styles are set inline by JavaScript to match real poker chips */
+}
+
+.chip-count {
+    font-size: 1.4rem;
+    font-weight: bold;
+    line-height: 1;
+}
+
+.chip-name {
+    font-size: 0.8rem;
+    margin-top: var(--spacing-xs);
+}
+
+/* Ensure white chip text is black (border handled by JavaScript) */
+.chip[style*="background-color: #FFFFFF"],
+.chip[style*="background-color=#FFFFFF"],
+.chip[style*="background: #FFFFFF"],
+.chip[style*="background=#FFFFFF"] {
+    color: var(--text-primary) !important;
+}
+
+.chip[style*="background-color: #FFFFFF"] .chip-count,
+.chip[style*="background-color=#FFFFFF"] .chip-count,
+.chip[style*="background: #FFFFFF"] .chip-count,
+.chip[style*="background=#FFFFFF"] .chip-count {
+    color: var(--text-primary) !important;
+}
+
+.chip[style*="background-color: #FFFFFF"] .chip-name,
+.chip[style*="background-color=#FFFFFF"] .chip-name,
+.chip[style*="background: #FFFFFF"] .chip-name,
+.chip[style*="background=#FFFFFF"] .chip-name {
+    color: var(--text-primary) !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 700px) {
+    .chip-container {
+        justify-content: space-evenly;
+        max-width: 100%;
+    }
+
+    .chip {
+        width: 55px;
+        height: 55px;
+        flex: 0 0 auto;
+    }
+
+    .chip-count {
+        font-size: 1.1rem;
+    }
+
+    .chip-name {
+        font-size: 0.65rem;
+    }
+}
+
+@media (max-width: 500px) {
+    .chip-container {
+        gap: var(--spacing-sm);
+        justify-content: space-around;
+    }
+
+    .chip {
+        width: 50px;
+        height: 50px;
+    }
+
+    .chip-count {
+        font-size: 1rem;
+    }
+
+    .chip-name {
+        font-size: 0.6rem;
+    }
+}
+
+@media (max-width: 350px) {
+    .chip-container {
+        gap: var(--spacing-xs);
+        justify-content: space-between;
+    }
+
+    .chip {
+        width: 45px;
+        height: 45px;
+    }
+
+    .chip-count {
+        font-size: 0.9rem;
+    }
+
+    .chip-name {
+        font-size: 0.55rem;
+    }
+}
+
+/* Migrated from chip-styles.css (missed by the original migration). */
+/* Ensure white chip text is black (border handled by JavaScript) */ .chip[style*="background-color: #FFFFFF"], .chip[style*="background-color:#FFFFFF"], .chip[style*="background: #FFFFFF"], .chip[style*="background:#FFFFFF"] {
+    color: #000000 !important;
+}
+
+.chip[style*="background-color: #FFFFFF"] .chip-count, .chip[style*="background-color:#FFFFFF"] .chip-count, .chip[style*="background: #FFFFFF"] .chip-count, .chip[style*="background:#FFFFFF"] .chip-count {
+    color: #000000 !important;
+}
+
+.chip[style*="background-color: #FFFFFF"] .chip-name, .chip[style*="background-color:#FFFFFF"] .chip-name, .chip[style*="background: #FFFFFF"] .chip-name, .chip[style*="background:#FFFFFF"] .chip-name {
+    color: #000000 !important;
+}

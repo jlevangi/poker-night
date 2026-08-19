@@ -3,12 +3,14 @@
 button,
 .button,
 .action-btn,
-.quick-action-btn {
+.quick-action-btn,
+.danger-btn,
+.reactivate-session-btn {
     padding: 0.625rem 1.125rem;
     background-color: var(--primary-color);
     color: var(--text-white);
     border: none;
-    border-radius: 10px;
+    border-radius: var(--radius-md);
     cursor: pointer;
     font-size: 0.9375rem;
     font-weight: 500;
@@ -21,7 +23,9 @@ button,
 button:hover,
 .button:hover,
 .action-btn:hover,
-.quick-action-btn:hover {
+.quick-action-btn:hover,
+.danger-btn:hover,
+.reactivate-session-btn:hover {
     background-color: var(--primary-hover);
     transform: translateY(-1px);
     box-shadow: var(--shadow-medium);
@@ -30,15 +34,46 @@ button:hover,
 button:active,
 .button:active,
 .action-btn:active,
-.quick-action-btn:active {
+.quick-action-btn:active,
+.danger-btn:active,
+.reactivate-session-btn:active {
     transform: translateY(0);
+}
+
+button:focus-visible,
+.button:focus-visible,
+.action-btn:focus-visible,
+.quick-action-btn:focus-visible,
+.danger-btn:focus-visible,
+.reactivate-session-btn:focus-visible {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
+button:disabled,
+.button:disabled,
+.action-btn:disabled,
+.quick-action-btn:disabled,
+.danger-btn:disabled,
+.reactivate-session-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Action Button */
+.action-btn {
+    margin-right: var(--spacing-sm);
+}
+
+.action-btn i {
+    margin-right: var(--spacing-xs);
 }
 
 /* Quick Action Buttons */
 .quick-action-btn {
-    padding: 0.75rem 1.5rem;
+    padding: var(--spacing-sm) var(--spacing-lg);
     font-size: 1rem;
-    border-radius: 12px;
+    border-radius: var(--radius-md);
     background-color: var(--color-success);
     color: var(--text-white);
 }
@@ -67,6 +102,8 @@ button:active,
 /* Danger Button */
 .danger-btn {
     background-color: var(--color-danger);
+    margin: 0.625rem 0;
+    border-radius: var(--radius-md);
 }
 
 .danger-btn:hover {
@@ -75,11 +112,35 @@ button:active,
 
 /* Reactivate Session Button */
 .reactivate-session-btn {
-    background-color: var(--color-info);
+    background-color: var(--color-success);
+    border-radius: var(--radius-md);
 }
 
 .reactivate-session-btn:hover {
-    background-color: var(--color-info-hover);
+    background-color: var(--color-success-hover);
+}
+
+/* Session Ended Actions */
+.session-ended-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.625rem;
+    margin: var(--spacing-md) 0;
+}
+
+#end-session-btn {
+    width: fit-content;
+    min-width: 140px;
+}
+
+@media (max-width: 600px) {
+    .session-ended-actions {
+        flex-direction: column;
+    }
+
+    .session-ended-actions button {
+        width: 100%;
+    }
 }
 
 /* Sessions Actions */
@@ -87,7 +148,7 @@ button:active,
     background-color: var(--primary-color);
     color: var(--text-white);
     padding: 0.625rem 1.125rem;
-    border-radius: 10px;
+    border-radius: var(--radius-md);
     font-size: 0.9375rem;
 }
 
@@ -97,16 +158,16 @@ button:active,
 
 /* Modal Button Styles */
 .modal-form-group button.small-btn {
-    padding: 0.5rem 0.75rem;
+    padding: var(--spacing-xs) var(--spacing-sm);
     font-size: 0.875rem;
     margin-left: var(--spacing-sm);
     vertical-align: baseline;
     background-color: #64748B;
-    border-radius: 8px;
+    border-radius: var(--radius-sm);
 }
 
 .modal-form-group button.small-btn:hover {
-    background-color: #475569;
+    background-color: var(--text-secondary);
 }
 
 .modal-date-shortcut {
@@ -120,15 +181,15 @@ button:active,
 
 .modal-buyin-chip {
     min-height: 42px;
-    padding: 0.65rem 0.5rem;
+    padding: 0.65rem var(--spacing-sm);
     border: 1px solid var(--border-color);
-    border-radius: 10px;
+    border-radius: var(--radius-md);
     background: var(--bg-card);
     color: var(--text-secondary);
     font-size: 0.95rem;
     font-weight: 700;
     cursor: pointer;
-    transition: all 0.15s ease;
+    transition: all var(--transition-fast);
 }
 
 .modal-buyin-chip:hover {
@@ -136,33 +197,52 @@ button:active,
     color: var(--text-primary);
 }
 
+.modal-buyin-chip:focus-visible {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
 .modal-buyin-chip.is-active {
     background: var(--casino-green);
     border-color: var(--casino-green);
-    color: #fff;
+    color: var(--text-white);
     box-shadow: var(--neo-shadow-sm);
 }
 
 .modal-actions .primary-btn {
     background-color: var(--primary-color);
-    border-radius: 10px;
+    border-radius: var(--radius-md);
 }
 
 .modal-actions .primary-btn:hover {
     background-color: var(--primary-hover);
 }
 
+.modal-actions .primary-btn:focus-visible {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
 .modal-actions .secondary-btn {
-    background-color: #94A3B8;
-    border-radius: 10px;
+    background-color: var(--text-muted);
+    border-radius: var(--radius-md);
 }
 
 .modal-actions .secondary-btn:hover {
     background-color: #64748B;
 }
 
+.modal-actions .secondary-btn:focus-visible {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
 /* Shared Counter Button Styles */
-.counter-btn {
+.counter-btn,
+.seven-two-increment-btn,
+.seven-two-decrement-btn,
+.strikes-increment-btn,
+.strikes-decrement-btn {
     width: 32px;
     height: 32px;
     border-radius: 8px;
@@ -175,31 +255,52 @@ button:active,
     justify-content: center;
     cursor: pointer;
     margin: 0 3px;
-    transition: all 0.15s ease;
+    transition: all var(--transition-fast);
     padding: 0;
     text-align: center;
     line-height: 1;
 }
 
-.counter-btn:active {
+.counter-btn:active,
+.seven-two-increment-btn:active,
+.seven-two-decrement-btn:active,
+.strikes-increment-btn:active,
+.strikes-decrement-btn:active {
     transform: scale(0.9);
 }
 
-.counter-btn-increment {
+.counter-btn:focus-visible,
+.seven-two-increment-btn:focus-visible,
+.seven-two-decrement-btn:focus-visible,
+.strikes-increment-btn:focus-visible,
+.strikes-decrement-btn:focus-visible {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
+.counter-btn-increment,
+.seven-two-increment-btn,
+.strikes-increment-btn {
     background-color: var(--counter-increment);
 }
 
-.counter-btn-increment:hover {
+.counter-btn-increment:hover,
+.seven-two-increment-btn:hover,
+.strikes-increment-btn:hover {
     background-color: var(--counter-increment-hover);
 }
 
-.counter-btn-decrement {
+.counter-btn-decrement,
+.seven-two-decrement-btn,
+.strikes-decrement-btn {
     background-color: var(--counter-decrement);
     position: relative;
     color: transparent;
 }
 
-.counter-btn-decrement::before {
+.counter-btn-decrement::before,
+.seven-two-decrement-btn::before,
+.strikes-decrement-btn::before {
     content: "\2212";
     position: absolute;
     top: 50%;
@@ -210,7 +311,9 @@ button:active,
     color: var(--text-white);
 }
 
-.counter-btn-decrement:hover {
+.counter-btn-decrement:hover,
+.seven-two-decrement-btn:hover,
+.strikes-decrement-btn:hover {
     background-color: var(--counter-decrement-hover);
 }
 
@@ -236,68 +339,9 @@ button:active,
     background-color: var(--seven-two-bg-hover);
 }
 
-/* Apply counter button styles to specific seven-two and strikes buttons */
-.seven-two-increment-btn,
-.seven-two-decrement-btn,
-.strikes-increment-btn,
-.strikes-decrement-btn {
-    width: 32px;
-    height: 32px;
-    border-radius: 8px;
-    border: none;
-    color: var(--text-white);
-    font-size: 16px;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    margin: 0 3px;
-    transition: all 0.15s ease;
-    padding: 0;
-    text-align: center;
-    line-height: 1;
-}
-
-.seven-two-increment-btn:active,
-.seven-two-decrement-btn:active,
-.strikes-increment-btn:active,
-.strikes-decrement-btn:active {
-    transform: scale(0.9);
-}
-
-.seven-two-increment-btn,
-.strikes-increment-btn {
-    background-color: var(--counter-increment);
-}
-
-.seven-two-increment-btn:hover,
-.strikes-increment-btn:hover {
-    background-color: var(--counter-increment-hover);
-}
-
-.seven-two-decrement-btn,
-.strikes-decrement-btn {
-    background-color: var(--counter-decrement);
-    position: relative;
-    color: transparent;
-}
-
-.seven-two-decrement-btn::before,
-.strikes-decrement-btn::before {
-    content: "\2212";
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 16px;
-    line-height: 1;
-    color: var(--text-white);
-}
-
-.seven-two-decrement-btn:hover,
-.strikes-decrement-btn:hover {
-    background-color: var(--counter-decrement-hover);
+.seven-two-btn:focus-visible {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
 }
 
 /* Mobile Button Adjustments */
