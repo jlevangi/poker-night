@@ -192,9 +192,9 @@ export default class PlayersPage {
             html += `</div>`;
         } else {
             html += `
-                <div class="neo-card" style="text-align: center; padding: 3rem;">
-                    <div style="font-size: 4rem; margin-bottom: 1rem;">🎲</div>
-                    <p style="font-size: 1.25rem; font-weight: 700; opacity: 0.8; margin: 0;">${this.searchQuery.length >= 2 ? 'No players match your search.' : 'No players found. Add your first player above!'}</p>
+                <div class="neo-card empty-state">
+                    <div class="empty-state__icon">🎲</div>
+                    <p class="empty-state__message">${this.searchQuery.length >= 2 ? 'No players match your search.' : 'No players found. Add your first player above!'}</p>
                 </div>
             `;
         }

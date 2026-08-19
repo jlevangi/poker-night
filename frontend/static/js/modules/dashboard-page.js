@@ -220,7 +220,9 @@ export default class DashboardPage {
             return `
                 <div class="neo-card">
                     <h3 class="section-title" style="margin-bottom: 1.5rem;">🏆 Player Standings</h3>
-                    <p class="card-subtitle">No players found.</p>
+                    <div class="empty-state">
+                        <p class="empty-state__message">No players found.</p>
+                    </div>
                 </div>
             `;
         }
