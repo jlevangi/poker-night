@@ -8,7 +8,7 @@ export default class DashboardPage {
                 <!-- Gamble King Banner Skeleton -->
                 <div class="neo-card skeleton" style="height: 140px; margin-bottom: 1rem;"></div>
                 <!-- Stats Grid Skeleton (2x2) -->
-                <div class="neo-stats-grid" style="grid-template-rows: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                <div class="neo-stats-grid" style="margin-bottom: 1rem;">
                     <div class="neo-stat-card skeleton" style="height: 90px;"></div>
                     <div class="neo-stat-card skeleton" style="height: 90px;"></div>
                     <div class="neo-stat-card skeleton" style="height: 90px;"></div>
@@ -142,7 +142,7 @@ export default class DashboardPage {
         const { totalGambled, totalPlayers, totalSessions, activeSession } = data;
         
         return `
-            <div class="neo-stats-grid" style="grid-template-rows: 1fr 1fr; gap: 1rem;">
+            <div class="neo-stats-grid">
                 <!-- Quick Action Card (Top Left) -->
                 ${activeSession ? `
                     <a href="#session/${activeSession.session_id}" class="neo-stat-card neo-card-primary" style="text-decoration: none; color: inherit; cursor: pointer;">
