@@ -25,7 +25,7 @@
 
 .gamble-king-stats {
     border-radius: var(--radius-md);
-    padding: 0.8rem 1rem;
+    padding: 0.8rem var(--spacing-md);
     margin-top: var(--spacing-md);
 }
 
@@ -40,7 +40,7 @@
     justify-content: space-between;
     align-items: center;
     padding: var(--spacing-md);
-    margin-bottom: 0.75rem;
+    margin-bottom: var(--spacing-sm);
     background-color: var(--bg-card);
     border-radius: var(--radius-md);
     border: 1px solid var(--border-color);
