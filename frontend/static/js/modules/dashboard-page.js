@@ -147,7 +147,8 @@ export default class DashboardPage {
                 ${activeSession ? `
                     <a href="#session/${activeSession.session_id}" class="neo-stat-card neo-card-primary" style="text-decoration: none; color: inherit; cursor: pointer;">
                         <div class="neo-stat-value">🎯</div>
-                        <div class="neo-stat-label">View Active Session</div>
+                        <div class="neo-stat-label">Active Session</div>
+                        <div class="neo-stat-sublabel">Buy-in: $${activeSession.default_buy_in_value ? activeSession.default_buy_in_value.toFixed(2) : '0.00'}</div>
                     </a>
                 ` : `
                     <button id="quick-start-session-btn" class="neo-stat-card neo-card-primary" style="background: var(--bg-card); border: var(--neo-border); cursor: pointer; color: inherit; padding: var(--spacing-neo); text-align: center; position: relative; width: 100%; font-family: inherit;">

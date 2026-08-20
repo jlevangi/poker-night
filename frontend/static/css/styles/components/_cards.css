@@ -137,6 +137,16 @@
     border-color: var(--primary-color);
 }
 
+/* Stat Card Sublabel - secondary info like buy-in on active session card */
+.neo-stat-sublabel {
+    font-size: 0.65rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    margin-top: 0.15rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
 /* Mobile Card Adjustments */
 @media (max-width: 400px) {
     .session-item {
