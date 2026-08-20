@@ -37,7 +37,9 @@ button:active,
 .quick-action-btn:active,
 .danger-btn:active,
 .reactivate-session-btn:active {
-    transform: translateY(0);
+    transform: translateY(1px) scale(0.98);
+    filter: brightness(0.92);
+    box-shadow: none;
 }
 
 button:focus-visible,

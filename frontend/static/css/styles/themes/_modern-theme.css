@@ -1077,12 +1077,18 @@ button.neo-stat-card:active {
 }
 
 .neo-btn:active {
-    transform: translateY(0);
+    transform: translateY(1px) scale(0.98);
     box-shadow: var(--neo-shadow-sm);
+    filter: brightness(0.93);
 }
 
 .neo-btn:focus {
     outline: none !important;
+}
+
+.neo-btn:focus-visible {
+    outline: 2px solid var(--primary-color) !important;
+    outline-offset: 2px;
 }
 
 /* Remove gradient overrides — clean flat colors */
