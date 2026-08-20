@@ -1,5 +1,6 @@
 // Dashboard page module
 import { staggerChildren, animateAllValues } from './animations.js';
+import { formatCurrency, formatPercent } from './formatters.js';
 
 export default class DashboardPage {
     static skeleton() {
@@ -107,7 +108,7 @@ export default class DashboardPage {
     
     // Render active session hero card — answers "what's happening right now"
     renderActiveSessionCard(session) {
-        const buyIn = session.default_buy_in_value ? session.default_buy_in_value.toFixed(2) : '0.00';
+        const buyIn = formatCurrency(session.default_buy_in_value || 0);
         const heroHref = '#session/' + session.session_id;
         return `
             <a href="${heroHref}" class="neo-card neo-card-gold neo-active-session-hero">
@@ -122,7 +123,7 @@ export default class DashboardPage {
                         </div>
                     </div>
                     <div style="text-align: right;">
-                        <div class="neo-stat-value profit-positive" style="margin-bottom: 0;">$${buyIn}</div>
+                        <div class="neo-stat-value profit-positive" style="margin-bottom: 0;">${buyIn}</div>
                         <div class="neo-stat-label">to sit down</div>
                     </div>
                 </div>
@@ -191,7 +192,7 @@ export default class DashboardPage {
                 </a>
 
                 <div class="neo-stat-card neo-card-gold">
-                    <div class="neo-stat-value" data-animate-value="${totalGambled ? totalGambled.toFixed(2) : '0.00'}" data-animate-prefix="$" data-animate-decimals="2">$${totalGambled ? totalGambled.toFixed(2) : '0.00'}</div>
+                    <div class="neo-stat-value" data-animate-value="${totalGambled || 0}" data-animate-prefix="$" data-animate-decimals="2">${formatCurrency(totalGambled || 0)}</div>
                     <div class="neo-stat-label">Total Gambled</div>
                 </div>
 
@@ -224,7 +225,7 @@ export default class DashboardPage {
                 <div class="neo-gamble-king-name">${gambleKing.name}</div>
                 <div class="neo-stats-grid">
                     <div class="neo-stat-card" style="background: var(--bg-card);">
-                        <div class="neo-stat-value profit-${gambleKing.net_profit >= 0 ? 'positive' : 'negative'}">$${gambleKing.net_profit ? gambleKing.net_profit.toFixed(2) : '0.00'}</div>
+                        <div class="neo-stat-value profit-${gambleKing.net_profit >= 0 ? 'positive' : 'negative'}">${formatCurrency(gambleKing.net_profit || 0)}</div>
                         <div class="neo-stat-label">Total Profit</div>
                     </div>
                     <div class="neo-stat-card" style="background: var(--bg-card);">
@@ -232,7 +233,7 @@ export default class DashboardPage {
                         <div class="neo-stat-label">Sessions</div>
                     </div>
                     <div class="neo-stat-card" style="background: var(--bg-card);">
-                        <div class="neo-stat-value">${gambleKing.win_percentage ? gambleKing.win_percentage.toFixed(1) : '0'}%</div>
+                        <div class="neo-stat-value">${formatPercent(gambleKing.win_percentage || 0)}</div>
                         <div class="neo-stat-label">Win Rate</div>
                     </div>
                     <div class="neo-stat-card" style="background: var(--bg-card);">
@@ -285,9 +286,9 @@ export default class DashboardPage {
                         </a>
                     </td>
                     <td class="${player.net_profit >= 0 ? 'profit-positive' : 'profit-negative'}" style="font-weight: 600;">
-                        $${player.net_profit ? player.net_profit.toFixed(2) : '0.00'}
+                        ${formatCurrency(player.net_profit || 0)}
                     </td>
-                    <td style="font-weight: 600;">${player.win_percentage ? player.win_percentage.toFixed(1) : '0'}%</td>
+                    <td style="font-weight: 600;">${formatPercent(player.win_percentage || 0)}</td>
                 </tr>
             `;
         });
@@ -345,7 +346,7 @@ export default class DashboardPage {
                                 📅 ${this.formatDate(session.date)}
                             </div>
                             <div style="font-size: 0.875rem; color: inherit; font-weight: 600; opacity: 0.8;">
-                                Buy-in: $${session.default_buy_in_value ? session.default_buy_in_value.toFixed(2) : '0.00'}
+                                Buy-in: ${formatCurrency(session.default_buy_in_value || 0)}
                             </div>
                         </div>
                         <div style="display: flex; align-items: center; gap: 0.5rem;">

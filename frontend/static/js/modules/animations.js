@@ -1,5 +1,9 @@
 // Animation utilities for the modern theme
 
+function formatNumber(value, decimals) {
+    return value.toLocaleString('en-US', { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
+}
+
 /**
  * Animate a numeric value from start to end with easing
  * @param {HTMLElement} element - Element to update
@@ -12,7 +16,7 @@
  */
 export function animateValue(element, start, end, duration = 600, prefix = '', suffix = '', decimals = 0) {
     if (!element || start === end) {
-        if (element) element.textContent = `${prefix}${end.toFixed(decimals)}${suffix}`;
+        if (element) element.textContent = `${prefix}${formatNumber(end, decimals)}${suffix}`;
         return;
     }
 
@@ -28,7 +32,7 @@ export function animateValue(element, start, end, duration = 600, prefix = '', s
         const easedProgress = easeOutCubic(progress);
         const current = start + (end - start) * easedProgress;
 
-        element.textContent = `${prefix}${current.toFixed(decimals)}${suffix}`;
+        element.textContent = `${prefix}${formatNumber(current, decimals)}${suffix}`;
 
         if (progress < 1) {
             requestAnimationFrame(update);
