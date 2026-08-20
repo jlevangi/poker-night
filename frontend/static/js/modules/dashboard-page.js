@@ -7,6 +7,8 @@ export default class DashboardPage {
             <div style="padding: 1.5rem; max-width: 1200px; margin: 0 auto;">
                 <!-- Gamble King Banner Skeleton -->
                 <div class="neo-card skeleton" style="height: 140px; margin-bottom: 1rem;"></div>
+                <!-- Active Session Hero Skeleton -->
+                <div class="neo-card skeleton" style="height: 96px; margin-bottom: 1rem;"></div>
                 <!-- Stats Grid Skeleton (2x2) -->
                 <div class="neo-stats-grid" style="margin-bottom: 1rem;">
                     <div class="neo-stat-card skeleton" style="height: 90px;"></div>
@@ -80,6 +82,9 @@ export default class DashboardPage {
                 <!-- Gamble King Section -->
                 ${data.gambleKing ? this.renderGambleKingSection(data.gambleKing) : ''}
 
+                <!-- Active Session Hero (leads: what's happening right now) -->
+                ${data.activeSession ? this.renderActiveSessionCard(data.activeSession) : ''}
+
                 <!-- Quick Actions and Stats Grid -->
                 ${this.renderQuickActionsAndStatsGrid(data)}
 
@@ -100,6 +105,31 @@ export default class DashboardPage {
         this.setupEventListeners(data.activeSession);
     }
     
+    // Render active session hero card — answers "what's happening right now"
+    renderActiveSessionCard(session) {
+        const buyIn = session.default_buy_in_value ? session.default_buy_in_value.toFixed(2) : '0.00';
+        const heroHref = '#session/' + session.session_id;
+        return `
+            <a href="${heroHref}" class="neo-card neo-card-gold" style="text-decoration: none; color: inherit; display: block; margin-bottom: 1rem;">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 0.5rem;">
+                    <div>
+                        <div class="section-title" style="color: var(--text-primary); display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+                            <span style="background: var(--casino-green); color: #fff; padding: 0.25rem 0.625rem; border-radius: 50px; font-weight: 600; font-size: 0.75rem;">LIVE</span>
+                            Active Session
+                        </div>
+                        <div class="card-subtitle" style="margin-top: 0.25rem;">
+                            ${this.formatDate(session.date)}
+                        </div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div class="neo-stat-value profit-positive" style="margin-bottom: 0;">$${buyIn}</div>
+                        <div class="neo-stat-label">to sit down</div>
+                    </div>
+                </div>
+            </a>
+        `;
+    }
+
     // Render next upcoming event card
     renderNextEventCard(event) {
         const dateObj = new Date(event.date + 'T00:00:00');
@@ -143,13 +173,12 @@ export default class DashboardPage {
         
         return `
             <div class="neo-stats-grid">
-                <!-- Quick Action Card (Top Left) -->
+                <!-- Quick Action / Players Tile (Top Left) -->
                 ${activeSession ? `
-                    <a href="#session/${activeSession.session_id}" class="neo-stat-card neo-card-primary" style="text-decoration: none; color: inherit; cursor: pointer;">
-                        <div class="neo-stat-value">🎯</div>
-                        <div class="neo-stat-label">Active Session</div>
-                        <div class="neo-stat-sublabel">Buy-in: $${activeSession.default_buy_in_value ? activeSession.default_buy_in_value.toFixed(2) : '0.00'}</div>
-                    </a>
+                    <div class="neo-stat-card neo-card-primary">
+                        <div class="neo-stat-value" data-animate-value="${totalPlayers || 0}">${totalPlayers || 0}</div>
+                        <div class="neo-stat-label">Players</div>
+                    </div>
                 ` : `
                     <button id="quick-start-session-btn" class="neo-stat-card neo-card-primary" style="background: var(--bg-card); border: var(--neo-border); cursor: pointer; color: inherit; padding: var(--spacing-neo); text-align: center; position: relative; width: 100%; font-family: inherit;">
                         <div class="neo-stat-value">🃏</div>
