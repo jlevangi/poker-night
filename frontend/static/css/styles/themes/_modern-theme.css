@@ -1962,13 +1962,24 @@ div .neo-btn.neo-btn-green:hover,
     }
 }
 
-/* Touch devices — prevent stuck hover states */
+/* Touch devices — prevent stuck hover states; ensure real touch targets */
 @media (hover: none) {
     a.neo-card:hover, a .neo-card:hover,
     .neo-card-clickable:hover, .neo-card[onclick]:hover,
     a.neo-stat-card:hover, button.neo-stat-card:hover {
         transform: none;
         box-shadow: var(--neo-shadow-sm);
+    }
+
+    .neo-btn,
+    .neo-btn-lg {
+        min-height: 44px;
+    }
+
+    .neo-btn-sm:not(.counter-btn):not(.seven-two-btn):not(.seven-two-increment-btn):not(.seven-two-decrement-btn):not(.strikes-increment-btn):not(.strikes-decrement-btn) {
+        min-height: 44px;
+        padding-top: 0.78rem;
+        padding-bottom: 0.78rem;
     }
 }
 
