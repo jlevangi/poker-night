@@ -1,5 +1,6 @@
 // Stats page module
 import { staggerChildren } from './animations.js';
+import { formatCurrency, formatCurrencyWhole, formatPercent } from './formatters.js';
 
 export default class StatsPage {
     static skeleton() {
@@ -154,7 +155,7 @@ export default class StatsPage {
         return `
             <div class="neo-stats-grid" style="margin-bottom: 2rem;">
                 <div class="neo-stat-card neo-card-gold">
-                    <div class="neo-stat-value">$${(stats.total_buy_ins || 0).toLocaleString()}</div>
+                    <div class="neo-stat-value">${formatCurrency(stats.total_buy_ins || 0)}</div>
                     <div class="neo-stat-label">Total Buy-ins</div>
                 </div>
                 <div class="neo-stat-card neo-card-green">
@@ -162,11 +163,11 @@ export default class StatsPage {
                     <div class="neo-stat-label">Poker Sessions</div>
                 </div>
                 <div class="neo-stat-card neo-card-purple">
-                    <div class="neo-stat-value">$${(stats.average_session_value || 0).toLocaleString()}</div>
+                    <div class="neo-stat-value">${formatCurrency(stats.average_session_value || 0)}</div>
                     <div class="neo-stat-label">Avg Session Value</div>
                 </div>
                 <div class="neo-stat-card neo-card-red">
-                    <div class="neo-stat-value">-$${Math.abs(stats.house_loss || 0).toLocaleString()}</div>
+                    <div class="neo-stat-value">-${formatCurrency(Math.abs(stats.house_loss || 0))}</div>
                     <div class="neo-stat-label">House Loss</div>
                 </div>
             </div>
@@ -197,7 +198,7 @@ export default class StatsPage {
                         ${dateRange?.start && dateRange?.end
                             ? `${dateRange.start} - ${dateRange.end}`
                             : 'All Time'
-                        } • Total: $${(this.chartData.total_gambled || 0).toLocaleString()}
+                        } • Total: ${formatCurrency(this.chartData.total_gambled || 0)}
                     </div>
                 </div>
                 <div id="gambling-chart" class="neo-chart-container" style="border: none; border-radius: 0; box-shadow: none; margin: 0; padding: 0;">
@@ -230,7 +231,7 @@ export default class StatsPage {
                         Who's contributing to the pot?
                     </div>
                     <div class="neo-chart-subtitle">
-                        • Total: $${totalGambled.toLocaleString()}
+                        • Total: ${formatCurrency(totalGambled)}
                     </div>
                 </div>
                 <div id="pie-chart-container" class="neo-pie-chart-container">
@@ -261,7 +262,7 @@ export default class StatsPage {
                 <div class="neo-leaderboard-stat green">
                     <div class="neo-leaderboard-stat-label">💰 Biggest Session Win</div>
                     <div class="neo-leaderboard-stat-value">${formatPlayers(data.biggest_session_win?.players)}</div>
-                    <div class="neo-leaderboard-stat-subtitle">$${(data.biggest_session_win?.amount || 0).toLocaleString()}</div>
+                    <div class="neo-leaderboard-stat-subtitle">${formatCurrency(data.biggest_session_win?.amount || 0)}</div>
                 </div>
 
                 <div class="neo-leaderboard-stat purple">
@@ -273,7 +274,7 @@ export default class StatsPage {
                 <div class="neo-leaderboard-stat gold">
                     <div class="neo-leaderboard-stat-label">📊 Highest Win Rate</div>
                     <div class="neo-leaderboard-stat-value">${formatPlayers(data.highest_win_percentage?.players)}</div>
-                    <div class="neo-leaderboard-stat-subtitle">${(data.highest_win_percentage?.percentage || 0).toFixed(1)}%
+                    <div class="neo-leaderboard-stat-subtitle">${formatPercent(data.highest_win_percentage?.percentage || 0)}
                         <div class="neo-leaderboard-stat-explanation">${data.highest_win_percentage?.games || 0} games minimum</div>
                     </div>
                 </div>
@@ -297,8 +298,8 @@ export default class StatsPage {
                 <div class="neo-leaderboard-stat blue">
                     <div class="neo-leaderboard-stat-label">🎯 Most Consistent</div>
                     <div class="neo-leaderboard-stat-value">${formatPlayers(data.most_consistent?.players)}</div>
-                    <div class="neo-leaderboard-stat-subtitle">±$${Math.round(data.most_consistent?.std_dev || 0).toLocaleString()}
-                        <div class="neo-leaderboard-stat-explanation">Lowest variability (avg: $${Math.round(data.most_consistent?.avg_profit || 0).toLocaleString()})</div>
+                    <div class="neo-leaderboard-stat-subtitle">±${formatCurrency(data.most_consistent?.std_dev || 0)}
+                        <div class="neo-leaderboard-stat-explanation">Lowest variability (avg: ${formatCurrency(data.most_consistent?.avg_profit || 0)})</div>
                     </div>
                 </div>
 
@@ -313,7 +314,7 @@ export default class StatsPage {
                 <div class="neo-leaderboard-stat red">
                     <div class="neo-leaderboard-stat-label">💸 Biggest Session Loss</div>
                     <div class="neo-leaderboard-stat-value">${formatPlayers(data.biggest_session_loss?.players)}</div>
-                    <div class="neo-leaderboard-stat-subtitle">-$${Math.abs(data.biggest_session_loss?.amount || 0).toLocaleString()}</div>
+                    <div class="neo-leaderboard-stat-subtitle">-${formatCurrency(Math.abs(data.biggest_session_loss?.amount || 0))}</div>
                 </div>
 
                 <div class="neo-leaderboard-stat red">
@@ -327,7 +328,7 @@ export default class StatsPage {
                 <div class="neo-leaderboard-stat blue">
                     <div class="neo-leaderboard-stat-label">🎖️ Attendance Award</div>
                     <div class="neo-leaderboard-stat-value">${formatPlayers(data.best_attendance?.players)}</div>
-                    <div class="neo-leaderboard-stat-subtitle">${(data.best_attendance?.percentage || 0).toFixed(1)}%
+                    <div class="neo-leaderboard-stat-subtitle">${formatPercent(data.best_attendance?.percentage || 0)}
                         <div class="neo-leaderboard-stat-explanation">${data.best_attendance?.sessions_attended || 0}/${data.best_attendance?.total_sessions || 0} sessions attended</div>
                     </div>
                 </div>
@@ -418,7 +419,7 @@ export default class StatsPage {
                 <div style="width: ${margin.left}px; position: relative; height: ${height + margin.top}px;">
                     ${[...yLabels].reverse().map(value => {
                         const y = margin.top + yScale(value);
-                        return `<div style="position: absolute; top: ${y}px; right: ${labelRightMargin}; transform: translateY(-50%); font-size: ${labelFontSize}; font-weight: bold; color: var(--text-secondary);">$${value.toLocaleString()}</div>`;
+                        return `<div style="position: absolute; top: ${y}px; right: ${labelRightMargin}; transform: translateY(-50%); font-size: ${labelFontSize}; font-weight: bold; color: var(--text-secondary);">${formatCurrencyWhole(value)}</div>`;
                     }).join('')}
                 </div>
 
@@ -453,8 +454,8 @@ export default class StatsPage {
                                         class="neo-data-point"
                                         data-session-id="${point.session_id}"
                                         data-date="${point.date}"
-                                        data-session-amount="$${point.session_amount.toLocaleString()}"
-                                        data-value="$${point.cumulative_amount.toLocaleString()}"
+                                        data-session-amount="${formatCurrency(point.session_amount)}"
+                                        data-value="${formatCurrency(point.cumulative_amount)}"
                                         data-players="${point.player_count}" />
                             `;
                         }).join('')}
@@ -571,7 +572,7 @@ export default class StatsPage {
     createYAxisLabels(coords) {
         return coords.yLabels.map(value => {
             const y = coords.getLabelYCoordinate(value);
-            return `<div class="neo-y-label" style="position: absolute; top: ${y}px; right: 0.5rem; transform: translateY(-50%);">$${value.toLocaleString()}</div>`;
+            return `<div class="neo-y-label" style="position: absolute; top: ${y}px; right: 0.5rem; transform: translateY(-50%);">${formatCurrencyWhole(value)}</div>`;
         }).join('');
     }
 
@@ -649,8 +650,8 @@ export default class StatsPage {
                         class="neo-data-point"
                         data-session-id="${point.session_id}"
                         data-date="${point.date}"
-                        data-session-amount="$${point.session_amount.toLocaleString()}"
-                        data-value="$${point.cumulative_amount.toLocaleString()}"
+                        data-session-amount="${formatCurrency(point.session_amount)}"
+                        data-value="${formatCurrency(point.cumulative_amount)}"
                         data-players="${point.player_count}"/>
             `;
         }).join('');
@@ -894,7 +895,7 @@ export default class StatsPage {
                 <div class="neo-pie-legend-swatch" style="background: ${slice.color}; flex-shrink: 0;"></div>
                 <div style="flex: 1; min-width: 0;">
                     <div style="font-weight: 700; font-size: 0.8rem; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${slice.name}</div>
-                    <div class="neo-pie-legend-meta">$${slice.value.toLocaleString()} • ${slice.percentage.toFixed(1)}%</div>
+                    <div class="neo-pie-legend-meta">${formatCurrency(slice.value)} • ${formatPercent(slice.percentage)}</div>
                 </div>
             </div>
         `).join('');
@@ -905,7 +906,7 @@ export default class StatsPage {
                 <div class="neo-pie-legend-swatch" style="background: #6B7280; flex-shrink: 0;"></div>
                 <div style="flex: 1; min-width: 0;">
                     <div style="font-weight: 700; font-size: 0.8rem; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Everyone Else (${otherPlayers.length})</div>
-                    <div class="neo-pie-legend-meta">$${otherPlayers.reduce((sum, p) => sum + p.total_buy_ins_value, 0).toLocaleString()} • ${((otherPlayers.reduce((sum, p) => sum + p.total_buy_ins_value, 0) / totalGambled) * 100).toFixed(1)}%</div>
+                    <div class="neo-pie-legend-meta">${formatCurrency(otherPlayers.reduce((sum, p) => sum + p.total_buy_ins_value, 0))} • ${formatPercent((otherPlayers.reduce((sum, p) => sum + p.total_buy_ins_value, 0) / totalGambled) * 100)}</div>
                 </div>
                 <div class="everyone-else-arrow" style="font-weight: 600; color: var(--casino-purple); font-size: 1rem;">▼</div>
             </div>
@@ -917,7 +918,7 @@ export default class StatsPage {
                 ${otherPlayers.map((player, idx) => `
                     <div class="neo-pie-expanded-row" style="display: flex; justify-content: space-between; gap: 1rem; padding: 0.625rem 0.5rem; border-bottom: ${idx < otherPlayers.length - 1 ? '1px solid var(--border-light)' : 'none'};">
                         <span style="font-weight: 700; font-size: 0.8rem; color: var(--text-primary);">${player.name}</span>
-                        <span class="neo-pie-legend-meta">$${player.total_buy_ins_value.toLocaleString()} • ${((player.total_buy_ins_value / totalGambled) * 100).toFixed(1)}%</span>
+                        <span class="neo-pie-legend-meta">${formatCurrency(player.total_buy_ins_value)} • ${formatPercent((player.total_buy_ins_value / totalGambled) * 100)}</span>
                     </div>
                 `).join('')}
             </div>
@@ -935,9 +936,9 @@ export default class StatsPage {
                         </defs>
                         ${slicePaths.join('')}
                     </svg>
-                    <div class="neo-pie-chart-center" data-default-label="Total Gambled" data-default-value="$${totalGambled.toLocaleString()}" data-default-subtitle="${playersWithBuyIns.length} players">
+                    <div class="neo-pie-chart-center" data-default-label="Total Gambled" data-default-value="${formatCurrency(totalGambled)}" data-default-subtitle="${playersWithBuyIns.length} players">
                         <div id="pie-chart-center-label" class="neo-pie-chart-center-label">Total Gambled</div>
-                        <div id="pie-chart-center-value" class="neo-pie-chart-center-value">$${totalGambled.toLocaleString()}</div>
+                        <div id="pie-chart-center-value" class="neo-pie-chart-center-value">${formatCurrency(totalGambled)}</div>
                         <div id="pie-chart-center-subtitle" class="neo-pie-chart-center-subtitle">${playersWithBuyIns.length} players</div>
                     </div>
                 </div>
@@ -1058,8 +1059,8 @@ export default class StatsPage {
 
         // Get player data from slices array
         const slice = this.getCurrentSliceData(sliceIndex);
-        const playerValue = slice ? slice.value.toLocaleString() : '0';
-        const playerPercentage = slice ? slice.percentage.toFixed(1) : '0';
+        const playerValue = slice ? formatCurrency(slice.value) : '0.00';
+        const playerPercentage = slice ? formatPercent(slice.percentage) : '0.0%';
 
         return `<path d="${pathData}"
                       fill="${color}"
