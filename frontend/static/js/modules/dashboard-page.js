@@ -110,11 +110,11 @@ export default class DashboardPage {
         const buyIn = session.default_buy_in_value ? session.default_buy_in_value.toFixed(2) : '0.00';
         const heroHref = '#session/' + session.session_id;
         return `
-            <a href="${heroHref}" class="neo-card neo-card-gold" style="text-decoration: none; color: inherit; display: block; margin-bottom: 1rem;">
+            <a href="${heroHref}" class="neo-card neo-card-gold neo-active-session-hero">
                 <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 0.5rem;">
                     <div>
                         <div class="section-title" style="color: var(--text-primary); display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
-                            <span style="background: var(--casino-green); color: #fff; padding: 0.25rem 0.625rem; border-radius: 50px; font-weight: 600; font-size: 0.75rem;">LIVE</span>
+                            <span class="neo-live-badge">LIVE</span>
                             Active Session
                         </div>
                         <div class="card-subtitle" style="margin-top: 0.25rem;">
