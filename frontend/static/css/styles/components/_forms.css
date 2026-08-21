@@ -6,25 +6,14 @@ input[type="date"],
 input[type="time"],
 select {
     padding: 0.75rem;
-    margin-right: var(--spacing-sm);
     margin-bottom: var(--spacing-sm);
     border: 1px solid var(--border-color);
     border-radius: 10px;
-    font-size: 0.9375rem;
+    font-size: 1rem;
     box-sizing: border-box;
     transition: all 0.2s ease;
     background-color: var(--bg-card);
     color: var(--text-primary);
-}
-
-input[type="text"]:focus,
-input[type="number"]:focus,
-input[type="date"]:focus,
-input[type="time"]:focus,
-select:focus {
-    outline: none;
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
 }
 
 /* Modal Form Styles */
@@ -42,11 +31,7 @@ select:focus {
 
 .modal-form-group input[type="date"],
 .modal-form-group input[type="number"] {
-    width: calc(100% - 1.5rem);
-    padding: 0.75rem;
-    border: 1px solid var(--border-color);
-    border-radius: 10px;
-    box-sizing: border-box;
+    width: 100%;
 }
 
 .modal-form-group input[type="number"] {
@@ -66,7 +51,6 @@ select:focus {
 
 .modal-date-input-wrap input[type="date"] {
     width: 100%;
-    margin-right: 0;
     margin-bottom: 0;
 }
 

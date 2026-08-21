@@ -345,7 +345,7 @@ export default class SessionDetailPage {
                     <h3>Add Players</h3>
                     <p class="modal-subtitle">${totalPlayers} total players</p>
                     <div class="session-player-picker-toolbar">
-                        <input type="text" id="add-player-search" class="neo-input" placeholder="Search players..." value="${this.escapeHtml(this.addPlayerSearchQuery)}" style="margin: 0;">
+                        <input type="text" id="add-player-search" class="neo-input" placeholder="Search players..." value="${this.escapeHtml(this.addPlayerSearchQuery)}" style="margin-bottom: 0;">
                     </div>
                     <div class="session-player-picker-list">
                         ${filteredPlayers.length > 0 ? filteredPlayers.map(player => `

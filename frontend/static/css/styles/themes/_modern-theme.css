@@ -1461,7 +1461,7 @@ div .neo-btn.neo-btn-green:hover,
     border: 1px solid var(--border-light, #E2E8F0);
     border-radius: 10px;
     padding: 0.75rem 1rem;
-    font-size: 0.9375rem;
+    font-size: 1rem;
     font-weight: 400;
     color: var(--text-primary);
     transition: all 0.2s ease;
@@ -1493,13 +1493,6 @@ div .neo-btn.neo-btn-green:hover,
     transform: translateY(-1px);
 }
 
-.neo-input:focus,
-.neo-select:focus {
-    transform: none;
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
-    border-color: var(--primary-color);
-}
-
 .neo-player-select:focus {
     transform: none;
 }
@@ -1521,12 +1514,6 @@ div .neo-btn.neo-btn-green:hover,
         url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%23CBD5E1' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"),
         linear-gradient(180deg, rgba(30,41,59,0.98) 0%, rgba(15,23,42,0.98) 100%);
     box-shadow: var(--neo-shadow-md);
-}
-
-[data-theme="dark"] .neo-input:focus,
-[data-theme="dark"] .neo-select:focus {
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25);
-    border-color: var(--primary-color);
 }
 
 /* ============================================================================ */
