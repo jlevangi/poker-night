@@ -232,15 +232,15 @@ export default class SessionDetailPage {
                 <!-- Stats grid: Buy-in, Cash-out, 7-2 Wins, Strikes -->
                 <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem; text-align: center;">
                     <div>
-                        <div style="font-size: 0.7rem; font-weight: 600; opacity: 0.7; margin-bottom: 0.125rem;">Buy-in</div>
+                        <div class="stat-label stat-label--sm">Buy-in</div>
                         <div style="font-size: 0.95rem; font-weight: 600; color: var(--casino-red);">${formatCurrency(buyIn)}</div>
                     </div>
                     <div>
-                        <div style="font-size: 0.7rem; font-weight: 600; opacity: 0.7; margin-bottom: 0.125rem;">Cash-out</div>
+                        <div class="stat-label stat-label--sm">Cash-out</div>
                         <div style="font-size: 0.95rem; font-weight: 600; color: var(--casino-gold);">${formatCurrency(cashOut)}</div>
                     </div>
                     <div>
-                        <div style="font-size: 0.7rem; font-weight: 600; opacity: 0.7; margin-bottom: 0.125rem;">7-2 Wins</div>
+                        <div class="stat-label stat-label--sm">7-2 Wins</div>
                         <div style="display: flex; align-items: center; justify-content: center; gap: 0.25rem;">
                             ${isActive ? `
                                 <button class="neo-btn neo-btn-sm seven-two-decrement-btn" data-player-id="${player.id}" style="
@@ -264,7 +264,7 @@ export default class SessionDetailPage {
                         </div>
                     </div>
                     <div>
-                        <div style="font-size: 0.7rem; font-weight: 600; opacity: 0.7; margin-bottom: 0.125rem;">Strikes</div>
+                        <div class="stat-label stat-label--sm">Strikes</div>
                         <div style="display: flex; align-items: center; justify-content: center; gap: 0.25rem;">
                             ${isActive ? `
                                 <button class="neo-btn neo-btn-sm strikes-decrement-btn" data-player-id="${player.id}" style="
@@ -551,17 +551,17 @@ export default class SessionDetailPage {
                     </div>
                     <div style="display: flex; justify-content: space-around; text-align: center; margin-bottom: 0.5rem;">
                         <div>
-                            <div style="font-size: 0.75rem; font-weight: 600; opacity: 0.7; margin-bottom: 0.25rem;">Buy-in</div>
+                            <div class="stat-label">Buy-in</div>
                             <div style="font-size: 1.125rem; font-weight: 700;">${formatCurrency(sessionData.default_buy_in_value || 0)}</div>
                         </div>
                         <div style="width: 1px; background: var(--border-light, #E2E8F0);"></div>
                         <div>
-                            <div style="font-size: 0.75rem; font-weight: 600; opacity: 0.7; margin-bottom: 0.25rem;">Total Value</div>
+                            <div class="stat-label">Total Value</div>
                             <div id="session-total-value" style="font-size: 1.125rem; font-weight: 700;">${formatCurrency(session.totalValue || 0)}</div>
                         </div>
                         <div style="width: 1px; background: var(--border-light, #E2E8F0);"></div>
                         <div>
-                            <div id="session-unpaid-label" style="font-size: 0.75rem; font-weight: 600; opacity: 0.7; margin-bottom: 0.25rem;">${session.unpaidValue > 0.01 ? 'Unpaid' : session.unpaidValue < -0.01 ? 'House Loss' : 'Payout'}</div>
+                            <div id="session-unpaid-label" class="stat-label">${session.unpaidValue > 0.01 ? 'Unpaid' : session.unpaidValue < -0.01 ? 'House Loss' : 'Payout'}</div>
                             <div id="session-unpaid-value" class="${session.unpaidValue > 0.01 || session.unpaidValue < -0.01 ? 'profit-negative' : 'profit-positive'}" style="font-size: 1.125rem; font-weight: 700;">
                                 ${session.unpaidValue > 0.01 ?
                                     formatCurrency(session.unpaidValue) :

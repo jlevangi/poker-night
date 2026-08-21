@@ -42,6 +42,25 @@ select {
     color: var(--text-secondary);
 }
 
+/* Muted value labels on the main session-detail page: a small secondary-color
+   label sitting above a value figure (session info card value summary, and the
+   4-column per-player stat rows). Main-page counterpart of .modal-section-label.
+   Uses the theme's --text-secondary color (not an opacity trick) so it reads
+   correctly in both light and dark. --sm is the compact step for the tight
+   per-player stat rows. */
+.stat-label {
+    display: block;
+    margin-bottom: 0.25rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.stat-label--sm {
+    margin-bottom: 0.125rem;
+    font-size: 0.7rem;
+}
+
 .modal-form-group input[type="date"],
 .modal-form-group input[type="number"] {
     width: 100%;
