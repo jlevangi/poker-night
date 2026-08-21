@@ -9,68 +9,6 @@
     box-shadow: var(--shadow-light);
 }
 
-/* Shared Counter / Seven-Two / Strikes Layout Styles
-   Consolidated: the three feature blocks (counter-controls, seven-two-stat,
-   strikes-stat) were previously triplicated with identical declarations. They
-   now share one rule to keep spacing and alignment in sync. */
-
-/* Shared stat row */
-.counter-controls,
-.seven-two-stat,
-.strikes-stat {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-sm);
-    margin: var(--spacing-xs) 0;
-    flex-wrap: wrap;
-}
-
-/* Shared stat label */
-.counter-label,
-.seven-two-label,
-.strikes-label {
-    font-weight: 500;
-    color: var(--text-secondary);
-    white-space: nowrap;
-    min-width: fit-content;
-}
-
-/* Shared stat value */
-.counter-value,
-.seven-two-value,
-.strikes-value {
-    font-size: 1rem;
-    font-weight: bold;
-    background-color: var(--bg-secondary);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-pill);
-    padding: var(--spacing-xs) var(--spacing-sm);
-    min-width: 30px;
-    text-align: center;
-    color: var(--text-primary);
-    flex-shrink: 0;
-}
-
-/* Shared stat buttons */
-.counter-buttons,
-.seven-two-buttons,
-.strikes-buttons {
-    display: flex;
-    align-items: center;
-    gap: 2px;
-    flex-shrink: 0;
-}
-
-/* Also style the session controls containers */
-.session-seven-two-controls,
-.session-strikes-controls {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-sm);
-    margin: var(--spacing-xs) 0;
-    flex-wrap: wrap;
-}
-
 /* Mobile Layout Adjustments */
 @media (max-width: 600px) {
     #app-content {
@@ -78,31 +16,6 @@
         padding: var(--spacing-md);
     }
 
-    /* Ensure counter controls remain aligned on mobile */
-    .counter-controls,
-    .seven-two-stat,
-    .strikes-stat,
-    .session-seven-two-controls,
-    .session-strikes-controls {
-        gap: var(--spacing-xs);
-        margin: var(--spacing-xs) 0;
-    }
-
-    /* Adjust label width for better mobile layout */
-    .counter-label,
-    .seven-two-label,
-    .strikes-label {
-        font-size: 0.9rem;
-        min-width: 120px;
-    }
-
-    /* Ensure buttons stay together */
-    .counter-buttons,
-    .seven-two-buttons,
-    .strikes-buttons {
-        margin-left: auto;
-        min-width: 70px;
-    }
 }
 
 @media (max-width: 700px) {
@@ -112,7 +25,4 @@
         margin-bottom: 0;
     }
 
-    .seven-two-counter {
-        font-size: 0.8rem !important;
-    }
 }
