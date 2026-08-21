@@ -887,7 +887,7 @@ export default class StatsPage {
             <div class="neo-pie-legend-item" style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; border: 1px solid var(--border-color); background: var(--bg-card);">
                 <div class="neo-pie-legend-swatch" style="background: ${slice.color}; flex-shrink: 0;"></div>
                 <div style="flex: 1; min-width: 0;">
-                    <div style="font-weight: 700; font-size: 0.8rem; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${slice.name}</div>
+                    <div style="font-weight: 700; font-size: 0.75rem; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${slice.name}</div>
                     <div class="neo-pie-legend-meta">${formatCurrency(slice.value)} • ${formatPercent(slice.percentage)}</div>
                 </div>
             </div>
@@ -898,7 +898,7 @@ export default class StatsPage {
             <div class="neo-pie-legend-item" style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; border: 1px solid var(--border-color); background: var(--bg-card); cursor: pointer;" id="everyone-else-item">
                 <div class="neo-pie-legend-swatch" style="background: #6B7280; flex-shrink: 0;"></div>
                 <div style="flex: 1; min-width: 0;">
-                    <div style="font-weight: 700; font-size: 0.8rem; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Everyone Else (${otherPlayers.length})</div>
+                    <div style="font-weight: 700; font-size: 0.75rem; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Everyone Else (${otherPlayers.length})</div>
                     <div class="neo-pie-legend-meta">${formatCurrency(otherPlayers.reduce((sum, p) => sum + p.total_buy_ins_value, 0))} • ${formatPercent((otherPlayers.reduce((sum, p) => sum + p.total_buy_ins_value, 0) / totalGambled) * 100)}</div>
                 </div>
                 <div class="everyone-else-arrow" style="font-weight: 600; color: var(--casino-purple-dark); font-size: 1rem;">▼</div>
@@ -910,7 +910,7 @@ export default class StatsPage {
             <div id="everyone-else-expanded" style="display: none; margin-top: 0.5rem; padding: 0.75rem; border: 1px solid var(--border-color); background: var(--bg-content); border-radius: var(--radius-lg); grid-column: 1 / -1;">
                 ${otherPlayers.map((player, idx) => `
                     <div class="neo-pie-expanded-row" style="display: flex; justify-content: space-between; gap: 1rem; padding: 0.625rem 0.5rem; border-bottom: ${idx < otherPlayers.length - 1 ? '1px solid var(--border-light)' : 'none'};">
-                        <span style="font-weight: 700; font-size: 0.8rem; color: var(--text-primary);">${player.name}</span>
+                        <span style="font-weight: 700; font-size: 0.75rem; color: var(--text-primary);">${player.name}</span>
                         <span class="neo-pie-legend-meta">${formatCurrency(player.total_buy_ins_value)} • ${formatPercent((player.total_buy_ins_value / totalGambled) * 100)}</span>
                     </div>
                 `).join('')}
