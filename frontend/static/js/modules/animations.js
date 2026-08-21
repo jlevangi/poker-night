@@ -5,6 +5,15 @@ function formatNumber(value, decimals) {
 }
 
 /**
+ * True when the OS-level "reduce motion" preference is set.
+ * @returns {boolean}
+ */
+function prefersReducedMotion() {
+    return typeof window !== 'undefined' && !!window.matchMedia &&
+        window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+}
+
+/**
  * Animate a numeric value from start to end with easing
  * @param {HTMLElement} element - Element to update
  * @param {number} start - Starting value
@@ -15,7 +24,7 @@ function formatNumber(value, decimals) {
  * @param {number} decimals - Number of decimal places
  */
 export function animateValue(element, start, end, duration = 600, prefix = '', suffix = '', decimals = 0) {
-    if (!element || start === end) {
+    if (!element || start === end || prefersReducedMotion()) {
         if (element) element.textContent = `${prefix}${formatNumber(end, decimals)}${suffix}`;
         return;
     }
@@ -50,6 +59,7 @@ export function animateValue(element, start, end, duration = 600, prefix = '', s
  */
 export function staggerChildren(container, selector, delayMs = 50) {
     if (!container) return;
+    if (prefersReducedMotion()) return; // no arrival motion; content is already visible
 
     const children = container.querySelectorAll(selector);
     children.forEach((child, index) => {

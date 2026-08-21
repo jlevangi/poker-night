@@ -1,19 +1,14 @@
 /* Animation Utilities */
 
-@keyframes shine {
-    0% { background-position: 0; }
-    60% { background-position: 100px; }
-    100% { background-position: 200px; }
-}
-
-@keyframes slidein-down {
-    from { transform: translateY(-100%); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
-}
-
-@keyframes slidein {
-    from { transform: translateX(100%); opacity: 0; }
-    to { transform: translateX(0); opacity: 1; }
+/* Respect the OS-level "reduce motion" preference: state changes still
+   apply, but movement (loops, sweeps, slides, fades) is neutralized. */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+        scroll-behavior: auto !important;
+    }
 }
 
 /* Update Notification Animations */
