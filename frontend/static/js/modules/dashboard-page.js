@@ -1,36 +1,28 @@
 // Dashboard page module
 import { staggerChildren, animateAllValues } from './animations.js';
+import { formatCurrency, formatPercent, formatDate } from './formatters.js';
+import { renderEmptyState, renderSkeleton, renderSkeletonPage, renderSkeletonRows, renderSkeletonStatGrid, showPageError } from './ui.js';
 
 export default class DashboardPage {
     static skeleton() {
-        return `
-            <div style="padding: 1.5rem; max-width: 1200px; margin: 0 auto;">
-                <!-- Gamble King Banner Skeleton -->
-                <div class="neo-card skeleton" style="height: 140px; margin-bottom: 1rem;"></div>
-                <!-- Stats Grid Skeleton (2x2) -->
-                <div class="neo-stats-grid" style="margin-bottom: 1rem;">
-                    <div class="neo-stat-card skeleton" style="height: 90px;"></div>
-                    <div class="neo-stat-card skeleton" style="height: 90px;"></div>
-                    <div class="neo-stat-card skeleton" style="height: 90px;"></div>
-                    <div class="neo-stat-card skeleton" style="height: 90px;"></div>
-                </div>
-                <!-- Standings Table Skeleton -->
-                <div class="neo-card" style="margin-bottom: 1rem;">
-                    <div class="skeleton" style="height: 1.25rem; width: 50%; margin-bottom: 1.5rem; border-radius: 4px;"></div>
-                    <div class="skeleton" style="height: 2rem; width: 100%; margin-bottom: 0.75rem; border-radius: 4px;"></div>
-                    <div class="skeleton" style="height: 2rem; width: 100%; margin-bottom: 0.75rem; border-radius: 4px;"></div>
-                    <div class="skeleton" style="height: 2rem; width: 100%; margin-bottom: 0.75rem; border-radius: 4px;"></div>
-                    <div class="skeleton" style="height: 2rem; width: 100%; border-radius: 4px;"></div>
-                </div>
-                <!-- Recent Sessions Skeleton -->
-                <div class="neo-card">
-                    <div class="skeleton" style="height: 1.25rem; width: 50%; margin-bottom: 1.5rem; border-radius: 4px;"></div>
-                    <div class="skeleton" style="height: 4rem; width: 100%; margin-bottom: 0.75rem; border-radius: 4px;"></div>
-                    <div class="skeleton" style="height: 4rem; width: 100%; margin-bottom: 0.75rem; border-radius: 4px;"></div>
-                    <div class="skeleton" style="height: 4rem; width: 100%; border-radius: 4px;"></div>
-                </div>
-            </div>
-        `;
+        return renderSkeletonPage([
+            // Gamble King Banner Skeleton
+            renderSkeleton({ classes: 'neo-card', style: 'height: 140px; margin-bottom: 1rem;' }),
+            // Active Session Hero Skeleton
+            renderSkeleton({ classes: 'neo-card', style: 'height: 96px; margin-bottom: 1rem;' }),
+            // Stats Grid Skeleton (2x2)
+            renderSkeletonStatGrid({ count: 4 }),
+            // Standings Table Skeleton
+            '<div class="neo-card" style="margin-bottom: 1rem;">' +
+                renderSkeleton({ style: 'height: 1.25rem; width: 50%; margin-bottom: 1.5rem; border-radius: 4px;' }) +
+                renderSkeletonRows({ count: 3 }) +
+            '</div>',
+            // Recent Sessions Skeleton
+            '<div class="neo-card">' +
+                renderSkeleton({ style: 'height: 1.25rem; width: 50%; margin-bottom: 1.5rem; border-radius: 4px;' }) +
+                renderSkeletonRows({ count: 3, height: '4rem' }) +
+            '</div>'
+        ]);
     }
 
     constructor(appContent, apiService) {
@@ -68,7 +60,11 @@ export default class DashboardPage {
             this.render(data);
         } catch (error) {
             console.error('Error loading dashboard:', error);
-            this.appContent.innerHTML = `<p>Error loading dashboard: ${error.message}</p>`;
+            showPageError(this.appContent, {
+                message: 'Could not load the dashboard. ' + error.message,
+                actionLabel: 'Try Again',
+                onAction: () => this.load()
+            });
         }
     }
     
@@ -79,6 +75,9 @@ export default class DashboardPage {
                 
                 <!-- Gamble King Section -->
                 ${data.gambleKing ? this.renderGambleKingSection(data.gambleKing) : ''}
+
+                <!-- Active Session Hero (leads: what's happening right now) -->
+                ${data.activeSession ? this.renderActiveSessionCard(data.activeSession) : ''}
 
                 <!-- Quick Actions and Stats Grid -->
                 ${this.renderQuickActionsAndStatsGrid(data)}
@@ -100,12 +99,34 @@ export default class DashboardPage {
         this.setupEventListeners(data.activeSession);
     }
     
+    // Render active session hero card — answers "what's happening right now"
+    renderActiveSessionCard(session) {
+        const buyIn = formatCurrency(session.default_buy_in_value || 0);
+        const heroHref = '#session/' + session.session_id;
+        return `
+            <a href="${heroHref}" class="neo-card neo-card-gold neo-active-session-hero">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 0.5rem;">
+                    <div>
+                        <div class="section-title" style="color: var(--text-primary); display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+                            <span class="neo-live-badge">LIVE</span>
+                            Active Session
+                        </div>
+                        <div class="card-subtitle" style="margin-top: 0.25rem;">
+                            ${formatDate(session.date)}
+                        </div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div class="neo-stat-value profit-positive" style="margin-bottom: 0;">${buyIn}</div>
+                        <div class="neo-stat-label">to sit down</div>
+                    </div>
+                </div>
+            </a>
+        `;
+    }
+
     // Render next upcoming event card
     renderNextEventCard(event) {
-        const dateObj = new Date(event.date + 'T00:00:00');
-        const dateFormatted = dateObj.toLocaleDateString(undefined, {
-            weekday: 'short', month: 'short', day: 'numeric'
-        });
+        const dateFormatted = formatDate(event.date);
         let timeFormatted = '';
         if (event.time) {
             const [hours, minutes] = event.time.split(':');
@@ -143,13 +164,12 @@ export default class DashboardPage {
         
         return `
             <div class="neo-stats-grid">
-                <!-- Quick Action Card (Top Left) -->
+                <!-- Quick Action / Players Tile (Top Left) -->
                 ${activeSession ? `
-                    <a href="#session/${activeSession.session_id}" class="neo-stat-card neo-card-primary" style="text-decoration: none; color: inherit; cursor: pointer;">
-                        <div class="neo-stat-value">🎯</div>
-                        <div class="neo-stat-label">Active Session</div>
-                        <div class="neo-stat-sublabel">Buy-in: $${activeSession.default_buy_in_value ? activeSession.default_buy_in_value.toFixed(2) : '0.00'}</div>
-                    </a>
+                    <div class="neo-stat-card neo-card-primary">
+                        <div class="neo-stat-value" data-animate-value="${totalPlayers || 0}">${totalPlayers || 0}</div>
+                        <div class="neo-stat-label">Players</div>
+                    </div>
                 ` : `
                     <button id="quick-start-session-btn" class="neo-stat-card neo-card-primary" style="background: var(--bg-card); border: var(--neo-border); cursor: pointer; color: inherit; padding: var(--spacing-neo); text-align: center; position: relative; width: 100%; font-family: inherit;">
                         <div class="neo-stat-value">🃏</div>
@@ -162,7 +182,7 @@ export default class DashboardPage {
                 </a>
 
                 <div class="neo-stat-card neo-card-gold">
-                    <div class="neo-stat-value" data-animate-value="${totalGambled ? totalGambled.toFixed(2) : '0.00'}" data-animate-prefix="$" data-animate-decimals="2">$${totalGambled ? totalGambled.toFixed(2) : '0.00'}</div>
+                    <div class="neo-stat-value" data-animate-value="${totalGambled || 0}" data-animate-prefix="$" data-animate-decimals="2">${formatCurrency(totalGambled || 0)}</div>
                     <div class="neo-stat-label">Total Gambled</div>
                 </div>
 
@@ -195,7 +215,7 @@ export default class DashboardPage {
                 <div class="neo-gamble-king-name">${gambleKing.name}</div>
                 <div class="neo-stats-grid">
                     <div class="neo-stat-card" style="background: var(--bg-card);">
-                        <div class="neo-stat-value profit-${gambleKing.net_profit >= 0 ? 'positive' : 'negative'}">$${gambleKing.net_profit ? gambleKing.net_profit.toFixed(2) : '0.00'}</div>
+                        <div class="neo-stat-value profit-${gambleKing.net_profit >= 0 ? 'positive' : 'negative'}">${formatCurrency(gambleKing.net_profit || 0)}</div>
                         <div class="neo-stat-label">Total Profit</div>
                     </div>
                     <div class="neo-stat-card" style="background: var(--bg-card);">
@@ -203,7 +223,7 @@ export default class DashboardPage {
                         <div class="neo-stat-label">Sessions</div>
                     </div>
                     <div class="neo-stat-card" style="background: var(--bg-card);">
-                        <div class="neo-stat-value">${gambleKing.win_percentage ? gambleKing.win_percentage.toFixed(1) : '0'}%</div>
+                        <div class="neo-stat-value">${formatPercent(gambleKing.win_percentage || 0)}</div>
                         <div class="neo-stat-label">Win Rate</div>
                     </div>
                     <div class="neo-stat-card" style="background: var(--bg-card);">
@@ -221,9 +241,7 @@ export default class DashboardPage {
             return `
                 <div class="neo-card">
                     <h3 class="section-title" style="margin-bottom: 1.5rem;">🏆 Player Standings</h3>
-                    <div class="empty-state">
-                        <p class="empty-state__message">No players found.</p>
-                    </div>
+                    ${renderEmptyState({ icon: '🏆', message: 'No players found.', card: false })}
                 </div>
             `;
         }
@@ -250,15 +268,15 @@ export default class DashboardPage {
                 <tr${isGambleKing ? ' style="background: var(--casino-gold-light);"' : ''}>
                     <td style="font-weight: 600;">${index + 1}</td>
                     <td>
-                        <a href="#player/${player.player_id}" style="color: var(--primary-color); text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 0.5rem;">
+                        <a href="#player/${player.player_id}" style="color: var(--link-color); text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 0.5rem;">
                             ${player.name}
                             ${isGambleKing ? '<span style="font-size: 1.2rem;">👑</span>' : ''}
                         </a>
                     </td>
                     <td class="${player.net_profit >= 0 ? 'profit-positive' : 'profit-negative'}" style="font-weight: 600;">
-                        $${player.net_profit ? player.net_profit.toFixed(2) : '0.00'}
+                        ${formatCurrency(player.net_profit || 0)}
                     </td>
-                    <td style="font-weight: 600;">${player.win_percentage ? player.win_percentage.toFixed(1) : '0'}%</td>
+                    <td style="font-weight: 600;">${formatPercent(player.win_percentage || 0)}</td>
                 </tr>
             `;
         });
@@ -273,13 +291,6 @@ export default class DashboardPage {
         return html;
     }
     
-    // Helper to format date as 'MMM DD, YYYY' or fallback
-    formatDate(dateStr) {
-        if (!dateStr) return 'Unknown Date';
-        const date = new Date(dateStr);
-        if (isNaN(date.getTime())) return 'Unknown Date';
-        return date.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
-    }
     
     // Render recent sessions section
     renderRecentSessionsSection(sessions) {
@@ -287,7 +298,7 @@ export default class DashboardPage {
             return `
                 <div class="neo-card">
                     <h3 class="section-title" style="margin-bottom: 1.5rem;">🃏 Recent Sessions</h3>
-                    <p class="card-subtitle">No recent sessions found.</p>
+                    ${renderEmptyState({ icon: '🃏', message: 'No recent sessions found.', card: false })}
                 </div>
             `;
         }
@@ -313,10 +324,10 @@ export default class DashboardPage {
                     <div style="display: flex; justify-content: space-between; align-items: center;">
                         <div>
                             <div style="font-weight: 600; color: inherit; margin-bottom: 0.25rem; font-size: 1.125rem;">
-                                📅 ${this.formatDate(session.date)}
+                                📅 ${formatDate(session.date)}
                             </div>
                             <div style="font-size: 0.875rem; color: inherit; font-weight: 600; opacity: 0.8;">
-                                Buy-in: $${session.default_buy_in_value ? session.default_buy_in_value.toFixed(2) : '0.00'}
+                                Buy-in: ${formatCurrency(session.default_buy_in_value || 0)}
                             </div>
                         </div>
                         <div style="display: flex; align-items: center; gap: 0.5rem;">

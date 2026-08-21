@@ -89,23 +89,6 @@
     box-shadow: var(--neo-shadow-md);
 }
 
-.neo-create-event-form .neo-input {
-    border: 1px solid var(--border-color, #E2E8F0);
-    padding: 0.5rem 0.75rem;
-    font-weight: 600;
-    font-size: 0.9375rem;
-    background: var(--bg-card, #fff);
-    color: var(--text-primary, #222);
-    border-radius: var(--radius-md);
-    box-sizing: border-box;
-}
-
-.neo-create-event-form .neo-input:focus {
-    outline: none;
-    box-shadow: var(--neo-shadow-md);
-    transform: translate(-1px, -1px);
-}
-
 .rsvp-player-select {
     border: 1px solid var(--border-color, #E2E8F0) !important;
     font-weight: 600 !important;

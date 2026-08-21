@@ -1,5 +1,18 @@
 // Animation utilities for the modern theme
 
+function formatNumber(value, decimals) {
+    return value.toLocaleString('en-US', { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
+}
+
+/**
+ * True when the OS-level "reduce motion" preference is set.
+ * @returns {boolean}
+ */
+function prefersReducedMotion() {
+    return typeof window !== 'undefined' && !!window.matchMedia &&
+        window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+}
+
 /**
  * Animate a numeric value from start to end with easing
  * @param {HTMLElement} element - Element to update
@@ -11,8 +24,8 @@
  * @param {number} decimals - Number of decimal places
  */
 export function animateValue(element, start, end, duration = 600, prefix = '', suffix = '', decimals = 0) {
-    if (!element || start === end) {
-        if (element) element.textContent = `${prefix}${end.toFixed(decimals)}${suffix}`;
+    if (!element || start === end || prefersReducedMotion()) {
+        if (element) element.textContent = `${prefix}${formatNumber(end, decimals)}${suffix}`;
         return;
     }
 
@@ -28,7 +41,7 @@ export function animateValue(element, start, end, duration = 600, prefix = '', s
         const easedProgress = easeOutCubic(progress);
         const current = start + (end - start) * easedProgress;
 
-        element.textContent = `${prefix}${current.toFixed(decimals)}${suffix}`;
+        element.textContent = `${prefix}${formatNumber(current, decimals)}${suffix}`;
 
         if (progress < 1) {
             requestAnimationFrame(update);
@@ -46,6 +59,7 @@ export function animateValue(element, start, end, duration = 600, prefix = '', s
  */
 export function staggerChildren(container, selector, delayMs = 50) {
     if (!container) return;
+    if (prefersReducedMotion()) return; // no arrival motion; content is already visible
 
     const children = container.querySelectorAll(selector);
     children.forEach((child, index) => {

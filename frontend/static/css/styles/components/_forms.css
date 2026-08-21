@@ -6,42 +6,14 @@ input[type="date"],
 input[type="time"],
 select {
     padding: 0.75rem;
-    margin-right: var(--spacing-sm);
     margin-bottom: var(--spacing-sm);
     border: 1px solid var(--border-color);
     border-radius: 10px;
-    font-size: 0.9375rem;
+    font-size: 1rem;
     box-sizing: border-box;
     transition: all 0.2s ease;
     background-color: var(--bg-card);
     color: var(--text-primary);
-}
-
-input[type="text"]:focus,
-input[type="number"]:focus,
-input[type="date"]:focus,
-input[type="time"]:focus,
-select:focus {
-    outline: none;
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
-}
-
-/* Form Containers */
-.add-player-form,
-.create-session-form,
-.session-controls {
-    margin-bottom: var(--spacing-lg);
-    padding: var(--spacing-md);
-    background-color: var(--bg-card);
-    border-radius: 14px;
-    border: 1px solid var(--border-card);
-}
-
-.player-stats-summary p,
-.session-controls h3 {
-    margin-top: var(--spacing-sm);
-    margin-bottom: var(--spacing-sm);
 }
 
 /* Modal Form Styles */
@@ -59,11 +31,7 @@ select:focus {
 
 .modal-form-group input[type="date"],
 .modal-form-group input[type="number"] {
-    width: calc(100% - 1.5rem);
-    padding: 0.75rem;
-    border: 1px solid var(--border-color);
-    border-radius: 10px;
-    box-sizing: border-box;
+    width: 100%;
 }
 
 .modal-form-group input[type="number"] {
@@ -83,7 +51,6 @@ select:focus {
 
 .modal-date-input-wrap input[type="date"] {
     width: 100%;
-    margin-right: 0;
     margin-bottom: 0;
 }
 
@@ -97,77 +64,5 @@ select:focus {
 @media (max-width: 600px) {
     .modal-date-row {
         grid-template-columns: minmax(0, 2fr) minmax(96px, 1fr);
-    }
-}
-
-/* Add Player Form Layout */
-.add-player-form {
-    display: flex !important;
-    flex-direction: column !important;
-    gap: var(--spacing-sm) !important;
-}
-
-.add-player-form h3 {
-    margin: 0 0 var(--spacing-sm) 0 !important;
-    font-weight: 600;
-}
-
-.add-player-form .form-row {
-    display: flex !important;
-    gap: var(--spacing-sm) !important;
-    align-items: stretch !important;
-}
-
-.add-player-form .form-row input[type="text"] {
-    flex: 2 !important;
-    margin-right: 0 !important;
-    margin-bottom: 0 !important;
-    padding: 0.75rem !important;
-    border: 1px solid var(--border-color) !important;
-    border-radius: 10px !important;
-    font-size: 0.9375rem !important;
-    transition: all 0.2s ease !important;
-    background-color: var(--bg-card) !important;
-    color: var(--text-primary) !important;
-}
-
-.add-player-form .form-row input[type="text"]:focus {
-    outline: none !important;
-    border-color: var(--primary-color) !important;
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12) !important;
-}
-
-.add-player-form .form-row select,
-.add-player-form .form-row input[type="number"] {
-    flex: 1 !important;
-    margin-right: 0 !important;
-    margin-bottom: 0 !important;
-    padding: 0.75rem !important;
-    border: 1px solid var(--border-color) !important;
-    border-radius: 10px !important;
-    font-size: 0.9375rem !important;
-    transition: all 0.2s ease !important;
-    background-color: var(--bg-card) !important;
-    color: var(--text-primary) !important;
-}
-
-.add-player-form .form-row button {
-    flex: 1 !important;
-    margin-bottom: 0 !important;
-    min-width: 0 !important;
-}
-
-/* Mobile responsive */
-@media (max-width: 600px) {
-    .add-player-form .form-row {
-        flex-direction: column;
-    }
-
-    .add-player-form input[type="text"],
-    .add-player-form select,
-    .add-player-form input[type="number"],
-    .add-player-form button {
-        flex: none;
-        width: 100%;
     }
 }

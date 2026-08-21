@@ -1,25 +1,23 @@
 // Sessions page module
 import { staggerChildren } from './animations.js';
+import { formatCurrency, formatDate } from './formatters.js';
+import { renderEmptyState, renderSkeleton, renderSkeletonPage, showPageError } from './ui.js';
 
 export default class SessionsPage {
     static skeleton() {
-        return `
-            <div style="padding: 1.5rem; max-width: 1200px; margin: 0 auto;">
-                <!-- Title Skeleton -->
-                <div class="skeleton" style="height: 2.5rem; width: 40%; margin-bottom: 2rem; border-radius: 4px;"></div>
-                <!-- Create Button Skeleton -->
-                <div class="neo-card skeleton" style="height: 4rem; margin-bottom: 2rem;"></div>
-                <!-- Session Card Skeletons -->
-                <div class="skeleton" style="height: 1.75rem; width: 30%; margin-bottom: 1.5rem; border-radius: 4px;"></div>
-                <div style="display: grid; gap: 1rem;">
-                    <div class="neo-card skeleton" style="height: 4.5rem;"></div>
-                    <div class="neo-card skeleton" style="height: 4.5rem;"></div>
-                    <div class="neo-card skeleton" style="height: 4.5rem;"></div>
-                    <div class="neo-card skeleton" style="height: 4.5rem;"></div>
-                    <div class="neo-card skeleton" style="height: 4.5rem;"></div>
-                </div>
-            </div>
-        `;
+        let cards = '';
+        for (let i = 0; i < 5; i++) {
+            cards += renderSkeleton({ classes: 'neo-card', style: 'height: 4.5rem;' });
+        }
+        return renderSkeletonPage([
+            // Title Skeleton
+            renderSkeleton({ style: 'height: 2.5rem; width: 40%; margin-bottom: 2rem; border-radius: 4px;' }),
+            // Create Button Skeleton
+            renderSkeleton({ classes: 'neo-card', style: 'height: 4rem; margin-bottom: 2rem;' }),
+            // Session Card Skeletons
+            renderSkeleton({ style: 'height: 1.75rem; width: 30%; margin-bottom: 1.5rem; border-radius: 4px;' }),
+            '<div class="skeleton-list">' + cards + '</div>'
+        ]);
     }
 
     constructor(appContent, apiService) {
@@ -63,7 +61,11 @@ export default class SessionsPage {
             this.render(mappedSessions, upcomingEvents);
         } catch (error) {
             console.error('Error loading sessions:', error);
-            this.appContent.innerHTML = `<p>Error loading sessions: ${error.message}</p>`;
+            showPageError(this.appContent, {
+                message: 'Could not load the sessions list. ' + error.message,
+                actionLabel: 'Try Again',
+                onAction: () => this.load()
+            });
         }
     }
 
@@ -92,10 +94,10 @@ export default class SessionsPage {
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <div>
                                 <div style="font-weight: 600; color: inherit; margin-bottom: 0.25rem; font-size: 1.125rem;">
-                                    📅 ${this.formatDate(session.date)}
+                                    📅 ${formatDate(session.date)}
                                 </div>
                                 <div style="font-size: 0.875rem; color: inherit; font-weight: 600; opacity: 0.8;">
-                                    Buy-in: $${session.buyin ? session.buyin.toFixed(2) : '0.00'} | Total: $${session.totalValue ? session.totalValue.toFixed(2) : '0.00'}
+                                    Buy-in: ${formatCurrency(session.buyin)} | Total: ${formatCurrency(session.totalValue)}
                                 </div>
                             </div>
                             <div style="display: flex; align-items: center; gap: 0.5rem;">
@@ -126,10 +128,10 @@ export default class SessionsPage {
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <div>
                                 <div style="font-weight: 600; color: inherit; margin-bottom: 0.25rem; font-size: 1.125rem;">
-                                    ${this.escapeHtml(evt.title)} — ${this.formatDate(evt.date)}
+                                    ${this.escapeHtml(evt.title)} — ${formatDate(evt.date)}
                                 </div>
                                 <div style="font-size: 0.875rem; color: inherit; font-weight: 600; opacity: 0.8;">
-                                    Buy-in: $${evt.buyin.toFixed(2)}${playerCount > 0 ? ` | ${playerCount} player${playerCount !== 1 ? 's' : ''} responding` : ''}
+                                    Buy-in: ${formatCurrency(evt.buyin)}${playerCount > 0 ? ` | ${playerCount} player${playerCount !== 1 ? 's' : ''} responding` : ''}
                                 </div>
                             </div>
                             <div style="display: flex; align-items: center; gap: 0.5rem;">
@@ -165,10 +167,10 @@ export default class SessionsPage {
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <div>
                                 <div style="font-weight: 600; color: inherit; margin-bottom: 0.25rem; font-size: 1.125rem;">
-                                    📅 ${this.formatDate(session.date)}
+                                    📅 ${formatDate(session.date)}
                                 </div>
                                 <div style="font-size: 0.875rem; color: inherit; font-weight: 600; opacity: 0.8;">
-                                    Buy-in: $${session.buyin ? session.buyin.toFixed(2) : '0.00'} | Total: $${session.totalValue ? session.totalValue.toFixed(2) : '0.00'}
+                                    Buy-in: ${formatCurrency(session.buyin)} | Total: ${formatCurrency(session.totalValue)}
                                 </div>
                             </div>
                             <div style="display: flex; align-items: center; gap: 0.5rem;">
@@ -185,10 +187,7 @@ export default class SessionsPage {
             html += `</div>`;
         } else {
             html += `
-                <div class="neo-card empty-state">
-                    <div class="empty-state__icon">🎯</div>
-                    <p class="empty-state__message">No sessions found. Create your first session above!</p>
-                </div>
+                ${renderEmptyState({ icon: '🎯', message: 'No sessions found. Create your first session above!' })}
             `;
         }
 
@@ -202,13 +201,6 @@ export default class SessionsPage {
         this.setupEventListeners();
     }
 
-    // Helper to format date as 'MMM DD, YYYY' or fallback
-    formatDate(dateStr) {
-        if (!dateStr) return 'Unknown Date';
-        const date = new Date(dateStr);
-        if (isNaN(date.getTime())) return dateStr; // Return original if can't parse
-        return date.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
-    }
 
     escapeHtml(str) {
         if (!str) return '';

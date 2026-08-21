@@ -103,14 +103,14 @@ export default class ModalManager {
                 'display': 'flex',
                 'opacity': '1',
                 'visibility': 'visible',
-                'z-index': '1000',
+                'z-index': 'var(--z-modal)',
                 'pointer-events': 'auto',
                 'position': 'fixed',
                 'top': '0',
                 'left': '0',
                 'width': '100%',
                 'height': '100%',
-                'background-color': 'rgba(0, 0, 0, 0.6)',
+                'background-color': 'rgba(0, 0, 0, 0.5)',
                 'justify-content': 'center',
                 'align-items': shouldUseMobileSheet ? 'flex-start' : 'center'
             };

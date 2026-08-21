@@ -1,45 +1,52 @@
 // Event detail page module
 import Router from './router.js';
 import { staggerChildren } from './animations.js';
+import { formatCurrency, formatDate, formatDateLong } from './formatters.js';
 import EventBus from './event-bus.js';
+import { renderSkeleton, renderSkeletonPage, showPageError } from './ui.js';
 
 export default class EventDetailPage {
     static skeleton() {
-        return `
-            <div style="padding: 1.5rem; max-width: 800px; margin: 0 auto;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-                    <div class="skeleton skeleton-btn" style="width: 170px; height: 40px;"></div>
-                    <div class="skeleton skeleton-btn" style="width: 100px; height: 40px;"></div>
-                </div>
-                <div class="neo-card">
-                    <div class="skeleton skeleton-text" style="width: 60%; height: 1.5rem; margin-bottom: 0.75rem;"></div>
-                    <div class="skeleton skeleton-text" style="width: 45%; height: 1rem; margin-bottom: 1rem;"></div>
-                    <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
-                        <div class="skeleton" style="width: 60px; height: 28px; border-radius: 4px;"></div>
-                        <div class="skeleton" style="width: 70px; height: 28px; border-radius: 4px;"></div>
-                        <div class="skeleton" style="width: 55px; height: 28px; border-radius: 4px;"></div>
-                    </div>
-                    <div class="skeleton skeleton-text" style="width: 50%; height: 1rem;"></div>
-                </div>
-                <div class="neo-card" style="margin-top: 1rem;">
-                    <div class="skeleton skeleton-text" style="width: 25%; height: 1.25rem; margin-bottom: 0.75rem;"></div>
-                    <div class="skeleton" style="width: 100%; height: 40px; margin-bottom: 0.5rem;"></div>
-                    <div style="display: flex; gap: 0.5rem;">
-                        <div class="skeleton" style="flex: 1; height: 38px;"></div>
-                        <div class="skeleton" style="flex: 1; height: 38px;"></div>
-                        <div class="skeleton" style="flex: 1; height: 38px;"></div>
-                    </div>
-                </div>
-                <div class="neo-card" style="margin-top: 1rem;">
-                    <div class="skeleton skeleton-text" style="width: 30%; height: 1.25rem; margin-bottom: 0.75rem;"></div>
-                    ${Array(3).fill(`
-                        <div style="padding: 0.5rem 0;">
-                            <div class="skeleton skeleton-text" style="width: 70%; height: 1rem;"></div>
-                        </div>
-                    `).join('')}
-                </div>
-            </div>
-        `;
+        let attendees = '';
+        for (let i = 0; i < 3; i++) {
+            attendees +=
+                '<div style="padding: 0.5rem 0;">' +
+                    renderSkeleton({ classes: 'skeleton-text', style: 'width: 70%;' }) +
+                '</div>';
+        }
+        return renderSkeletonPage([
+            // Action bar (back + primary button)
+            '<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">' +
+                renderSkeleton({ classes: 'skeleton-btn', style: 'width: 170px;' }) +
+                renderSkeleton({ classes: 'skeleton-btn', style: 'width: 100px;' }) +
+            '</div>',
+            // Event header card
+            '<div class="neo-card">' +
+                renderSkeleton({ style: 'width: 60%; height: 1.5rem; margin-bottom: 0.75rem;' }) +
+                renderSkeleton({ style: 'width: 45%; height: 1rem; margin-bottom: 1rem;' }) +
+                '<div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">' +
+                    renderSkeleton({ classes: 'skeleton-badge' }) +
+                    renderSkeleton({ classes: 'skeleton-badge' }) +
+                    renderSkeleton({ classes: 'skeleton-badge' }) +
+                '</div>' +
+                renderSkeleton({ classes: 'skeleton-text', style: 'width: 50%;' }) +
+            '</div>',
+            // RSVP card
+            '<div class="neo-card" style="margin-top: 1rem;">' +
+                renderSkeleton({ style: 'width: 25%; height: 1.25rem; margin-bottom: 0.75rem;' }) +
+                renderSkeleton({ style: 'width: 100%; height: 40px; margin-bottom: 0.5rem;' }) +
+                '<div style="display: flex; gap: 0.5rem;">' +
+                    renderSkeleton({ style: 'flex: 1; height: 38px;' }) +
+                    renderSkeleton({ style: 'flex: 1; height: 38px;' }) +
+                    renderSkeleton({ style: 'flex: 1; height: 38px;' }) +
+                '</div>' +
+            '</div>',
+            // Attendee list card
+            '<div class="neo-card" style="margin-top: 1rem;">' +
+                renderSkeleton({ style: 'width: 30%; height: 1.25rem; margin-bottom: 0.75rem;' }) +
+                attendees +
+            '</div>'
+        ]);
     }
 
     constructor(appContent, apiService) {
@@ -58,27 +65,24 @@ export default class EventDetailPage {
             ]);
             this.event = event;
             this.players = players || [];
-            const titleDate = new Date(event.date + 'T00:00:00').toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+            const titleDate = formatDate(event.date);
             document.title = `${event.title || 'Poker Night'} - ${titleDate} - Gamble King`;
             this.editing = false;
             this.render();
         } catch (error) {
             console.error('Error loading event:', error);
-            this.appContent.innerHTML = `
-                <div class="fade-in" style="padding: 1.5rem; max-width: 800px; margin: 0 auto; text-align: center;">
-                    <p style="color: var(--text-secondary); font-weight: 600;">Error loading event: ${this.escapeHtml(error.message)}</p>
-                    <button id="event-detail-back-btn" type="button" class="neo-btn neo-btn-green" style="margin-top: 1rem; display: inline-block;">Back</button>
-                </div>`;
-            this.setupBackButton();
+            showPageError(this.appContent, {
+                message: 'Could not load this event. ' + error.message,
+                actionLabel: 'Back',
+                actionClass: 'neo-btn-green',
+                onAction: () => Router.navigateBack('calendar')
+            });
         }
     }
 
     render() {
         const event = this.event;
-        const dateObj = new Date(event.date + 'T00:00:00');
-        const dateFormatted = dateObj.toLocaleDateString(undefined, {
-            weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
-        });
+        const dateFormatted = formatDateLong(event.date);
         const timeFormatted = event.time ? this.formatTime(event.time) : '';
         const counts = event.rsvp_counts || { yes: 0, maybe: 0, no: 0 };
         const yesPlayers = (event.rsvps || []).filter(r => r.status === 'YES');
@@ -120,7 +124,7 @@ export default class EventDetailPage {
                     <h3 style="font-weight: 600; color: var(--text-primary); margin: 0 0 0.5rem 0;">Responses</h3>
                     ${yesPlayers.length > 0 ? `
                         <div style="margin-bottom: 0.5rem;">
-                            <span style="font-weight: 700; color: var(--casino-green);">Playing:</span>
+                            <span style="font-weight: 700; color: var(--casino-green-dark);">Playing:</span>
                             <span style="font-weight: 600; color: var(--text-primary);">${yesPlayers.map(r => this.escapeHtml(r.player_name)).join(', ')}</span>
                         </div>
                     ` : ''}
@@ -132,7 +136,7 @@ export default class EventDetailPage {
                     ` : ''}
                     ${noPlayers.length > 0 ? `
                         <div>
-                            <span style="font-weight: 700; color: var(--casino-red);">Out:</span>
+                            <span style="font-weight: 700; color: var(--casino-red-dark);">Out:</span>
                             <span style="font-weight: 600; color: var(--text-primary);">${noPlayers.map(r => this.escapeHtml(r.player_name)).join(', ')}</span>
                         </div>
                     ` : ''}
@@ -178,7 +182,7 @@ export default class EventDetailPage {
                 <div>
                     <h2 style="font-size: 1.75rem; font-weight: 600; color: var(--text-primary); margin: 0;">
                         ${this.escapeHtml(event.title || 'Poker Night')}
-                        ${isCancelled ? '<span style="color: var(--casino-red); font-size: 1rem; margin-left: 0.5rem;">CANCELLED</span>' : ''}
+                        ${isCancelled ? '<span style="color: var(--casino-red-dark); font-size: 1rem; margin-left: 0.5rem;">CANCELLED</span>' : ''}
                     </h2>
                     <div style="font-weight: 700; color: var(--text-secondary); margin-top: 0.25rem; font-size: 1.1rem;">
                         ${dateFormatted}${timeFormatted ? ' at ' + timeFormatted : ''}
@@ -192,7 +196,7 @@ export default class EventDetailPage {
             </div>
             ${event.location ? `<div style="font-weight: 600; color: var(--text-secondary); margin-bottom: 0.5rem;">&#128205; ${this.escapeHtml(event.location)}</div>` : ''}
             ${event.description ? `<div style="color: var(--text-secondary); margin-bottom: 0.5rem;">${this.escapeHtml(event.description)}</div>` : ''}
-            <div style="font-weight: 600; color: var(--text-secondary);">&#128176; Buy-in: $${(event.default_buy_in_value || 20).toFixed(2)}${event.max_players ? ' | Max: ' + event.max_players + ' players' : ''}</div>
+            <div style="font-weight: 600; color: var(--text-secondary);">&#128176; Buy-in: ${formatCurrency(event.default_buy_in_value || 20)}${event.max_players ? ' | Max: ' + event.max_players + ' players' : ''}</div>
         `;
     }
 
@@ -463,34 +467,43 @@ export default class EventDetailPage {
     }
 
     handleAddToCalendar(event, btn) {
-        const existing = document.querySelector('.cal-popover');
+        const existing = document.querySelector('.modal-overlay.cal-popover');
         if (existing) existing.remove();
-        const existingBackdrop = document.querySelector('.cal-popover-backdrop');
-        if (existingBackdrop) existingBackdrop.remove();
 
-        const backdrop = document.createElement('div');
-        backdrop.className = 'cal-popover-backdrop';
-        backdrop.style.cssText = 'position: fixed; inset: 0; z-index: 999; background: rgba(0,0,0,0.3);';
+        const overlay = document.createElement('div');
+        overlay.className = 'modal-overlay cal-popover';
 
         const popover = document.createElement('div');
-        popover.className = 'cal-popover';
-        popover.style.cssText = 'position: fixed; z-index: 1000; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--card-bg); border: 3px solid var(--border-color); box-shadow: 6px 6px 0px var(--border-color); padding: 1.25rem; display: flex; flex-direction: column; gap: 0.75rem; min-width: 220px; max-width: 90vw;';
+        popover.className = 'modal-content modal-content--compact';
 
         popover.innerHTML = `
-            <div style="font-weight: 600; color: var(--text-primary); text-align: center; font-size: 0.875rem;">Add to Calendar</div>
+            <h3>Add to Calendar</h3>
             <button class="neo-btn neo-btn-green neo-btn-sm cal-popover-google" style="width: 100%; text-align: center;">Google Calendar</button>
             <button class="neo-btn neo-btn-gold neo-btn-sm cal-popover-ics" style="width: 100%; text-align: center;">Download .ics</button>
         `;
 
-        document.body.appendChild(backdrop);
-        document.body.appendChild(popover);
+        overlay.appendChild(popover);
+        document.body.appendChild(overlay);
 
         const closePopover = () => {
-            popover.remove();
-            backdrop.remove();
+            document.removeEventListener('keydown', handleEscape);
+            overlay.remove();
         };
+        const handleEscape = (e) => {
+            if (e.key === 'Escape') closePopover();
+        };
+        document.addEventListener('keydown', handleEscape);
 
-        backdrop.addEventListener('click', closePopover);
+        // Play the canonical fade + rise entrance: paint one hidden frame first.
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+            overlay.classList.add('active');
+        }));
+
+        // Close on backdrop click (buttons live inside .modal-content, so their
+        // bubbled clicks never hit the overlay itself)
+        overlay.addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) closePopover();
+        });
 
         popover.querySelector('.cal-popover-google').addEventListener('click', (e) => {
             e.stopPropagation();
@@ -516,7 +529,7 @@ export default class EventDetailPage {
         const endDate = new Date(startDate.getTime() + 6 * 60 * 60 * 1000);
         const endDT = `${endDate.getFullYear()}${String(endDate.getMonth() + 1).padStart(2, '0')}${String(endDate.getDate()).padStart(2, '0')}T${String(endDate.getHours()).padStart(2, '0')}${String(endDate.getMinutes()).padStart(2, '0')}${String(endDate.getSeconds()).padStart(2, '0')}`;
 
-        const details = `Buy-in: $${(event.default_buy_in_value || 20).toFixed(2)}${event.description ? '\n' + event.description : ''}`;
+        const details = `Buy-in: ${formatCurrency(event.default_buy_in_value || 20)}${event.description ? '\n' + event.description : ''}`;
 
         const params = new URLSearchParams({
             action: 'TEMPLATE',
@@ -546,7 +559,7 @@ export default class EventDetailPage {
 
         const escICS = (str) => (str || '').replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\n/g, '\\n');
 
-        const description = `Buy-in: $${(event.default_buy_in_value || 20).toFixed(2)}${event.description ? '\\n' + escICS(event.description) : ''}`;
+        const description = `Buy-in: ${formatCurrency(event.default_buy_in_value || 20)}${event.description ? '\\n' + escICS(event.description) : ''}`;
 
         const ics = [
             'BEGIN:VCALENDAR',

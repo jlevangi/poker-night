@@ -1,6 +1,8 @@
 // Players page module
 import { staggerChildren } from './animations.js';
+import { formatCurrency } from './formatters.js';
 import EventBus from './event-bus.js';
+import { renderEmptyState, renderSkeleton, renderSkeletonPage, renderSkeletonRows, showPageError } from './ui.js';
 
 export default class PlayersPage {
     constructor(appContent, apiService) {
@@ -14,25 +16,16 @@ export default class PlayersPage {
     }
 
     static skeleton() {
-        return `
-            <div style="padding: 1.5rem; max-width: 1200px; margin: 0 auto;">
-                <div class="skeleton-text" style="width: 200px; height: 2.5rem; margin-bottom: 2rem;"></div>
-                <div class="neo-card" style="margin-bottom: 2rem;">
-                    <div class="skeleton-text" style="width: 100%; height: 48px; border-radius: 4px;"></div>
-                </div>
-                ${Array.from({length: 6}, () => `
-                    <div class="neo-card" style="margin-bottom: 1rem;">
-                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0;">
-                            <div>
-                                <div class="skeleton-text" style="width: 160px; height: 1.5rem; margin-bottom: 0.5rem;"></div>
-                                <div class="skeleton-text" style="width: 100px; height: 1rem;"></div>
-                            </div>
-                            <div class="skeleton-text" style="width: 80px; height: 2rem;"></div>
-                        </div>
-                    </div>
-                `).join('')}
-            </div>
-        `;
+        return renderSkeletonPage([
+            // Title
+            renderSkeleton({ style: 'width: 50%; height: 2.5rem; margin-bottom: 2rem;' }),
+            // Search bar
+            '<div class="neo-card" style="margin-bottom: 2rem;">' +
+                renderSkeleton({ style: 'width: 100%; height: 48px; border-radius: 4px;' }) +
+            '</div>',
+            // Player list rows
+            renderSkeletonRows({ count: 6, height: '72px' })
+        ]);
     }
     
     // Load the players page
@@ -48,7 +41,11 @@ export default class PlayersPage {
             this.render();
         } catch (error) {
             console.error('Error loading players:', error);
-            this.appContent.innerHTML = `<p>Error loading players: ${error.message}</p>`;
+            showPageError(this.appContent, {
+                message: 'Could not load the players list. ' + error.message,
+                actionLabel: 'Try Again',
+                onAction: () => this.load()
+            });
         }
     }
 
@@ -181,7 +178,7 @@ export default class PlayersPage {
                             </div>
                             <div style="display: flex; align-items: center; gap: 0.5rem;">
                                 <span class="${player.net_profit >= 0 ? 'profit-positive' : 'profit-negative'}" style="font-size: 1rem; font-weight: 700;">
-                                    $${player.net_profit ? player.net_profit.toFixed(2) : '0.00'}
+                                    ${formatCurrency(player.net_profit)}
                                 </span>
                             </div>
                         </div>
@@ -192,10 +189,7 @@ export default class PlayersPage {
             html += `</div>`;
         } else {
             html += `
-                <div class="neo-card empty-state">
-                    <div class="empty-state__icon">🎲</div>
-                    <p class="empty-state__message">${this.searchQuery.length >= 2 ? 'No players match your search.' : 'No players found. Add your first player above!'}</p>
-                </div>
+                ${renderEmptyState({ icon: '🎲', message: this.searchQuery.length >= 2 ? 'No players match your search.' : 'No players found. Add your first player above!' })}
             `;
         }
 

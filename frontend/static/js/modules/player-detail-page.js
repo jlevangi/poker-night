@@ -1,41 +1,43 @@
 // Player detail page module
 import Router from './router.js';
 import { staggerChildren, animateAllValues } from './animations.js';
+import { formatCurrency, formatCurrencyWhole, formatDate } from './formatters.js';
+import { renderEmptyState, renderSkeleton, renderSkeletonPage, renderSkeletonStatGrid, showPageError } from './ui.js';
 
 export default class PlayerDetailPage {
     static skeleton() {
-        return `
-            <div style="padding: 1.5rem; max-width: 1200px; margin: 0 auto;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-                    <div class="skeleton skeleton-btn" style="width: 160px; height: 40px;"></div>
-                    <div class="skeleton skeleton-btn" style="width: 100px; height: 40px;"></div>
-                </div>
-                <div class="neo-card">
-                    <div class="skeleton skeleton-text" style="width: 50%; height: 2rem; margin-bottom: 1.5rem;"></div>
-                    <div class="neo-stats-grid" style="grid-template-columns: repeat(2, 1fr); margin-bottom: 1.5rem;">
-                        <div class="neo-stat-card"><div class="skeleton skeleton-text" style="width: 70%; height: 1.5rem; margin: 0 auto;"></div></div>
-                        <div class="neo-stat-card"><div class="skeleton skeleton-text" style="width: 70%; height: 1.5rem; margin: 0 auto;"></div></div>
-                        <div class="neo-stat-card"><div class="skeleton skeleton-text" style="width: 70%; height: 1.5rem; margin: 0 auto;"></div></div>
-                        <div class="neo-stat-card"><div class="skeleton skeleton-text" style="width: 70%; height: 1.5rem; margin: 0 auto;"></div></div>
-                    </div>
-                </div>
-                <div class="neo-card" style="margin-top: 1rem;">
-                    <div class="skeleton skeleton-text" style="width: 40%; height: 1.5rem; margin-bottom: 1rem;"></div>
-                    <div class="skeleton" style="width: 100%; height: 250px;"></div>
-                </div>
-                <div class="neo-card" style="margin-top: 1rem;">
-                    <div class="skeleton skeleton-text" style="width: 35%; height: 1.5rem; margin-bottom: 1rem;"></div>
-                    ${Array(4).fill(`
-                        <div style="display: flex; gap: 1rem; padding: 0.75rem 0; border-bottom: 1px solid var(--border-color);">
-                            <div class="skeleton skeleton-text" style="width: 25%; height: 1rem;"></div>
-                            <div class="skeleton skeleton-text" style="width: 20%; height: 1rem;"></div>
-                            <div class="skeleton skeleton-text" style="width: 20%; height: 1rem;"></div>
-                            <div class="skeleton skeleton-text" style="width: 20%; height: 1rem;"></div>
-                        </div>
-                    `).join('')}
-                </div>
-            </div>
-        `;
+        let rows = '';
+        for (let i = 0; i < 4; i++) {
+            rows +=
+                '<div style="display: flex; gap: 1rem; padding: 0.75rem 0; border-bottom: 1px solid var(--border-color);">' +
+                    renderSkeleton({ classes: 'skeleton-text', style: 'width: 25%;' }) +
+                    renderSkeleton({ classes: 'skeleton-text', style: 'width: 20%;' }) +
+                    renderSkeleton({ classes: 'skeleton-text', style: 'width: 20%;' }) +
+                    renderSkeleton({ classes: 'skeleton-text', style: 'width: 20%;' }) +
+                '</div>';
+        }
+        return renderSkeletonPage([
+            // Action bar
+            '<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">' +
+                renderSkeleton({ classes: 'skeleton-btn', style: 'width: 160px;' }) +
+                renderSkeleton({ classes: 'skeleton-btn', style: 'width: 100px;' }) +
+            '</div>',
+            // Header card
+            '<div class="neo-card">' +
+                renderSkeleton({ style: 'width: 50%; height: 2rem; margin-bottom: 1.5rem;' }) +
+                renderSkeletonStatGrid({ count: 4 }) +
+            '</div>',
+            // Profit chart card
+            '<div class="neo-card" style="margin-top: 1rem;">' +
+                renderSkeleton({ style: 'width: 40%; height: 1.5rem; margin-bottom: 1rem;' }) +
+                renderSkeleton({ style: 'width: 100%; height: 250px;' }) +
+            '</div>',
+            // Sessions table card
+            '<div class="neo-card" style="margin-top: 1rem;">' +
+                renderSkeleton({ style: 'width: 35%; height: 1.5rem; margin-bottom: 1rem;' }) +
+                rows +
+            '</div>'
+        ]);
     }
     constructor(appContent, apiService) {
         this.appContent = appContent;
@@ -70,7 +72,9 @@ export default class PlayerDetailPage {
             this.setupResizeListener();
         } catch (error) {
             console.error(`Error loading player details for ${playerId}:`, error);
-            this.appContent.innerHTML = `<p>Could not load details for player ${playerId}. ${error.message}</p>`;
+            showPageError(this.appContent, {
+                message: 'Could not load this player. ' + error.message
+            });
         }
     }
 
@@ -124,13 +128,6 @@ export default class PlayerDetailPage {
         });
     }
     
-    // Helper to format date as 'MMM DD, YYYY' or fallback
-    formatDate(dateStr) {
-        if (!dateStr) return 'Unknown Date';
-        const date = new Date(dateStr);
-        if (isNaN(date.getTime())) return dateStr; // Return original if can't parse
-        return date.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
-    }
     
     // Render player detail content
     render(player) {
@@ -152,19 +149,19 @@ export default class PlayerDetailPage {
                     
                     <!-- Main Stats Grid -->
                     <div class="neo-stats-grid" style="grid-template-columns: repeat(2, 1fr); margin-bottom: 1.5rem;">
-                        <div class="neo-stat-card" style="border-color: ${player.totalProfit >= 0 ? 'var(--casino-green)' : 'var(--casino-red)'};">
-                            <div class="neo-stat-value ${player.totalProfit >= 0 ? 'profit-positive' : 'profit-negative'}">$${player.totalProfit !== undefined ? player.totalProfit.toFixed(2) : '0.00'}</div>
+                        <div class="neo-stat-card" style="border-color: ${player.totalProfit >= 0 ? 'var(--casino-green-dark)' : 'var(--casino-red-dark)'};">
+                            <div class="neo-stat-value ${player.totalProfit >= 0 ? 'profit-positive' : 'profit-negative'}">${formatCurrency(player.totalProfit)}</div>
                             <div class="neo-stat-label">Total Profit</div>
                         </div>
-                        <div class="neo-stat-card" style="border-color: var(--casino-purple);">
+                        <div class="neo-stat-card" style="border-color: var(--casino-purple-dark);">
                             <div class="neo-stat-value">${player.sessionsPlayed || 0}</div>
                             <div class="neo-stat-label">Sessions Played</div>
                         </div>
-                        <div class="neo-stat-card" style="border-color: var(--casino-gold);">
+                        <div class="neo-stat-card" style="border-color: var(--casino-gold-dark);">
                             <div class="neo-stat-value">${player.winRate !== undefined ? (player.winRate * 100).toFixed(0) : '0'}%</div>
                             <div class="neo-stat-label">Win Rate</div>
                         </div>
-                        <div class="neo-stat-card" style="border-color: var(--casino-gold);">
+                        <div class="neo-stat-card" style="border-color: var(--casino-gold-dark);">
                             <div class="neo-stat-value">${player.seven_two_wins || 0}</div>
                             <div class="neo-stat-label">7-2 Wins Total</div>
                         </div>
@@ -207,10 +204,10 @@ export default class PlayerDetailPage {
                 
                 html += `
                     <tr>
-                        <td><a href="#session/${session.sessionId}" style="color: var(--primary-color); text-decoration: none; font-weight: 700;">${this.formatDate(session.date)}</a></td>
-                        <td style="font-weight: 700; color: var(--casino-red);">$${buyIn.toFixed(2)}</td>
-                        <td style="font-weight: 700; color: var(--casino-gold);">$${cashOut.toFixed(2)}</td>
-                        <td class="${profit >= 0 ? 'profit-positive' : 'profit-negative'}" style="font-weight: 700;">$${profit.toFixed(2)}</td>
+                        <td><a href="#session/${session.sessionId}" style="color: var(--link-color); text-decoration: none; font-weight: 700;">${formatDate(session.date)}</a></td>
+                        <td style="font-weight: 700; color: var(--casino-red-dark);">${formatCurrency(buyIn)}</td>
+                        <td style="font-weight: 700; color: var(--casino-gold-dark);">${formatCurrency(cashOut)}</td>
+                        <td class="${profit >= 0 ? 'profit-positive' : 'profit-negative'}" style="font-weight: 700;">${formatCurrency(profit)}</td>
                     </tr>
                 `;
             });
@@ -223,10 +220,7 @@ export default class PlayerDetailPage {
             `;
         } else {
             html += `
-                <div class="neo-card empty-state">
-                    <div class="empty-state__icon">📈</div>
-                    <p class="empty-state__message">No sessions found for this player.</p>
-                </div>
+                ${renderEmptyState({ icon: '📈', message: 'No sessions found for this player.' })}
             `;
         }
         
@@ -300,7 +294,7 @@ export default class PlayerDetailPage {
         const data = this.chartData.data;
 
         if (data.length === 0) {
-            chartContainer.innerHTML = '<div class="empty-state"><p class="empty-state__message">No data to display</p></div>';
+            chartContainer.innerHTML = renderEmptyState({ icon: '📈', message: 'No data to display', card: false });
             return;
         }
 
@@ -308,7 +302,7 @@ export default class PlayerDetailPage {
         if (subtitleElement && this.chartData.date_range) {
             const totalProfit = this.chartData.total_profit || 0;
             const profitClass = totalProfit >= 0 ? 'profit-positive' : 'profit-negative';
-            subtitleElement.innerHTML = `${this.formatDate(this.chartData.date_range.start)} - ${this.formatDate(this.chartData.date_range.end)} | Total: <span class="${profitClass}">$${totalProfit.toFixed(2)}</span>`;
+            subtitleElement.innerHTML = `${formatDate(this.chartData.date_range.start)} - ${formatDate(this.chartData.date_range.end)} | Total: <span class="${profitClass}">${formatCurrency(totalProfit)}</span>`;
         }
 
         // Get container dimensions
@@ -347,7 +341,7 @@ export default class PlayerDetailPage {
 
         // Determine line color based on final profit
         const finalProfit = data[data.length - 1].cumulative_profit;
-        const lineColor = finalProfit >= 0 ? 'var(--casino-green-dark)' : 'var(--casino-red)';
+        const lineColor = finalProfit >= 0 ? 'var(--casino-green-dark)' : 'var(--casino-red-dark)';
 
         // Responsive font sizes
         const labelFontSize = isMobile ? '0.65rem' : '0.75rem';
@@ -360,7 +354,7 @@ export default class PlayerDetailPage {
                 <div style="width: ${margin.left}px; position: relative; height: ${height + margin.top}px;">
                     ${[...yLabels].reverse().map(value => {
                         const y = margin.top + yScale(value);
-                        const displayValue = value >= 0 ? `$${value.toLocaleString()}` : `-$${Math.abs(value).toLocaleString()}`;
+                        const displayValue = formatCurrencyWhole(value);
                         return `<div style="position: absolute; top: ${y}px; right: ${labelRightMargin}; transform: translateY(-50%); font-size: ${labelFontSize}; font-weight: bold; color: var(--text-secondary);">${displayValue}</div>`;
                     }).join('')}
                 </div>
@@ -389,7 +383,7 @@ export default class PlayerDetailPage {
                         ${data.map((point, index) => {
                             const cx = xScale(index);
                             const cy = margin.top + yScale(point.cumulative_profit);
-                            const pointColor = point.cumulative_profit >= 0 ? 'var(--casino-gold)' : 'var(--casino-red)';
+                                const pointColor = point.cumulative_profit >= 0 ? 'var(--casino-gold-dark)' : 'var(--casino-red-dark)';
                             return `
                                 <circle cx="${cx}"
                                         cy="${cy}"
@@ -486,7 +480,7 @@ export default class PlayerDetailPage {
                 e.target.setAttribute('r', '8');
                 const originalFill = e.target.style.fill || e.target.getAttribute('fill');
                 e.target.setAttribute('data-original-fill', originalFill);
-                e.target.style.fill = 'var(--casino-purple)';
+                e.target.style.fill = 'var(--casino-purple-dark)';
 
                 // Show tooltip
                 const tooltip = document.createElement('div');
@@ -496,11 +490,11 @@ export default class PlayerDetailPage {
                 const cumulativeProfitClass = cumulativeProfit >= 0 ? 'profit-positive' : 'profit-negative';
 
                 tooltip.innerHTML = `
-                    <div><strong>${this.formatDate(date)}</strong></div>
-                    <div>Buy-In: $${buyIn.toFixed(2)}</div>
-                    <div>Cash Out: $${cashOut.toFixed(2)}</div>
-                    <div class="${sessionProfitClass}">Session: $${sessionProfit.toFixed(2)}</div>
-                    <div class="${cumulativeProfitClass}"><strong>Total: $${cumulativeProfit.toFixed(2)}</strong></div>
+                    <div><strong>${formatDate(date)}</strong></div>
+                    <div>Buy-In: ${formatCurrency(buyIn)}</div>
+                    <div>Cash Out: ${formatCurrency(cashOut)}</div>
+                    <div class="${sessionProfitClass}">Session: ${formatCurrency(sessionProfit)}</div>
+                    <div class="${cumulativeProfitClass}"><strong>Total: ${formatCurrency(cumulativeProfit)}</strong></div>
                     <div style="margin-top: 0.5rem; font-size: 0.7rem; opacity: 0.8;">Click for session details</div>
                 `;
 

@@ -180,11 +180,11 @@
 }
 
 .neo-insight-value.positive {
-    color: var(--casino-green);
+    color: var(--casino-green-dark);
 }
 
 .neo-insight-value.negative {
-    color: var(--casino-red);
+    color: var(--casino-red-dark);
 }
 
 /* Stats Page Specific Grid - Ensures 2x2 layout without affecting dashboard */

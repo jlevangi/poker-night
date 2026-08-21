@@ -1,6 +1,8 @@
 // Calendar page module
 import { staggerChildren } from './animations.js';
 import EventBus from './event-bus.js';
+import { formatDateLong } from './formatters.js';
+import { renderEmptyState, renderSkeleton, renderSkeletonPage, showPageError } from './ui.js';
 
 export default class CalendarPage {
     constructor(appContent, apiService) {
@@ -11,30 +13,34 @@ export default class CalendarPage {
     }
 
     static skeleton() {
-        return `
-            <div style="padding: 1.5rem; max-width: 1200px; margin: 0 auto;">
-                <div class="skeleton-text" style="width: 300px; height: 2.5rem; margin: 0 auto 2rem auto;"></div>
-                <div class="neo-card" style="margin-bottom: 2rem; text-align: center;">
-                    <div class="skeleton-text" style="width: 180px; height: 48px; margin: 0 auto; border-radius: 4px;"></div>
-                </div>
-                ${Array.from({length: 3}, () => `
-                    <div class="neo-card" style="margin-bottom: 1rem;">
-                        <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem;">
-                            <div>
-                                <div class="skeleton-text" style="width: 200px; height: 1.25rem; margin-bottom: 0.5rem;"></div>
-                                <div class="skeleton-text" style="width: 250px; height: 1rem; margin-bottom: 0.25rem;"></div>
-                                <div class="skeleton-text" style="width: 120px; height: 1rem;"></div>
-                            </div>
-                            <div style="display: flex; gap: 0.5rem;">
-                                <div class="skeleton-text" style="width: 50px; height: 1.5rem; border-radius: 4px;"></div>
-                                <div class="skeleton-text" style="width: 60px; height: 1.5rem; border-radius: 4px;"></div>
-                                <div class="skeleton-text" style="width: 50px; height: 1.5rem; border-radius: 4px;"></div>
-                            </div>
-                        </div>
-                    </div>
-                `).join('')}
-            </div>
-        `;
+        let events = '';
+        for (let i = 0; i < 3; i++) {
+            events +=
+                '<div class="neo-card" style="margin-bottom: 1rem;">' +
+                    '<div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem;">' +
+                        '<div>' +
+                            renderSkeleton({ classes: 'skeleton-text', style: 'width: 70%;' }) +
+                            renderSkeleton({ classes: 'skeleton-text', style: 'width: 100%;' }) +
+                            renderSkeleton({ classes: 'skeleton-text', style: 'width: 50%;' }) +
+                        '</div>' +
+                        '<div style="display: flex; gap: 0.5rem;">' +
+                            renderSkeleton({ classes: 'skeleton-badge' }) +
+                            renderSkeleton({ classes: 'skeleton-badge' }) +
+                            renderSkeleton({ classes: 'skeleton-badge' }) +
+                        '</div>' +
+                    '</div>' +
+                '</div>';
+        }
+        return renderSkeletonPage([
+            // Title
+            renderSkeleton({ style: 'width: 80%; height: 2.5rem; margin: 0 auto 2rem auto;' }),
+            // Month navigation
+            '<div class="neo-card" style="margin-bottom: 2rem; text-align: center;">' +
+                renderSkeleton({ style: 'width: 50%; height: 48px; margin: 0 auto; border-radius: 4px;' }) +
+            '</div>',
+            // Event cards
+            events
+        ]);
     }
 
     async load() {
@@ -49,7 +55,11 @@ export default class CalendarPage {
             this.render();
         } catch (error) {
             console.error('Error loading calendar:', error);
-            this.appContent.innerHTML = `<p>Error loading calendar: ${error.message}</p>`;
+            showPageError(this.appContent, {
+                message: 'Could not load the calendar. ' + error.message,
+                actionLabel: 'Try Again',
+                onAction: () => this.load()
+            });
         }
     }
 
@@ -68,7 +78,7 @@ export default class CalendarPage {
 
                 <div id="events-list">
                     ${this.events.length === 0
-                        ? '<div class="neo-card"><p style="font-weight: 600; color: var(--text-secondary); text-align: center;">No upcoming events scheduled. Click "Schedule Event" to plan the next poker night!</p></div>'
+                        ? renderEmptyState({ icon: '📅', message: 'No upcoming events scheduled. Click "Schedule Event" to plan the next poker night!' })
                         : this.events.map(evt => this.renderEventCard(evt)).join('')
                     }
                 </div>
@@ -126,10 +136,7 @@ export default class CalendarPage {
     }
 
     renderEventCard(event) {
-        const dateObj = new Date(event.date + 'T00:00:00');
-        const dateFormatted = dateObj.toLocaleDateString(undefined, {
-            weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
-        });
+        const dateFormatted = formatDateLong(event.date);
 
         const timeFormatted = event.time ? this.formatTime(event.time) : '';
         const counts = event.rsvp_counts || { yes: 0, maybe: 0, no: 0 };

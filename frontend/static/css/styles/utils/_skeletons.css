@@ -93,6 +93,10 @@
     display: inline-block;
 }
 
+.skeleton-btn {
+    height: 40px;
+}
+
 /* Skeleton page wrapper - matches page padding */
 .skeleton-page {
     padding: 1.5rem;

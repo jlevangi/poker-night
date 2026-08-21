@@ -4,37 +4,38 @@ import { NotificationManager } from './notification-manager.js';
 import { staggerChildren } from './animations.js';
 import Router from './router.js';
 import EventBus from './event-bus.js';
+import { formatCurrency, formatDate } from './formatters.js';
+import { renderEmptyState, renderSkeleton, renderSkeletonPage, renderSkeletonStatGrid, showPageError } from './ui.js';
 
 export default class SessionDetailPage {
     static skeleton() {
-        return `
-            <div style="padding: 1.5rem; max-width: 1200px; margin: 0 auto;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                    <div class="skeleton skeleton-btn" style="width: 160px; height: 40px;"></div>
-                    <div class="skeleton skeleton-btn" style="width: 100px; height: 40px;"></div>
-                </div>
-                <div class="neo-card">
-                    <div class="skeleton skeleton-text" style="width: 60%; height: 1.75rem; margin-bottom: 1.5rem;"></div>
-                    <div class="neo-stats-grid" style="margin-bottom: 1.5rem;">
-                        <div class="neo-stat-card"><div class="skeleton skeleton-text" style="width: 80%; height: 1.5rem; margin: 0 auto;"></div></div>
-                        <div class="neo-stat-card"><div class="skeleton skeleton-text" style="width: 80%; height: 1.5rem; margin: 0 auto;"></div></div>
-                        <div class="neo-stat-card"><div class="skeleton skeleton-text" style="width: 80%; height: 1.5rem; margin: 0 auto;"></div></div>
-                        <div class="neo-stat-card"><div class="skeleton skeleton-text" style="width: 80%; height: 1.5rem; margin: 0 auto;"></div></div>
-                    </div>
-                </div>
-                <div class="skeleton skeleton-text" style="width: 30%; height: 1.5rem; margin: 2rem 0 1.5rem 0;"></div>
-                ${Array(5).fill(`
-                    <div class="neo-card" style="margin-bottom: 1rem;">
-                        <div class="skeleton skeleton-text" style="width: 40%; height: 1.25rem; margin-bottom: 1rem;"></div>
-                        <div style="display: flex; gap: 2rem;">
-                            <div class="skeleton skeleton-text" style="width: 80px; height: 1rem;"></div>
-                            <div class="skeleton skeleton-text" style="width: 80px; height: 1rem;"></div>
-                            <div class="skeleton skeleton-text" style="width: 80px; height: 1rem;"></div>
-                        </div>
-                    </div>
-                `).join('')}
-            </div>
-        `;
+        let players = '';
+        for (let i = 0; i < 5; i++) {
+            players +=
+                '<div class="neo-card" style="margin-bottom: 1rem;">' +
+                    renderSkeleton({ classes: 'skeleton-text', style: 'width: 40%;' }) +
+                    '<div style="display: flex; gap: 2rem;">' +
+                        renderSkeleton({ classes: 'skeleton-text', style: 'width: 80px;' }) +
+                        renderSkeleton({ classes: 'skeleton-text', style: 'width: 80px;' }) +
+                        renderSkeleton({ classes: 'skeleton-text', style: 'width: 80px;' }) +
+                    '</div>' +
+                '</div>';
+        }
+        return renderSkeletonPage([
+            // Action bar (back + primary button)
+            '<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">' +
+                renderSkeleton({ classes: 'skeleton-btn', style: 'width: 160px;' }) +
+                renderSkeleton({ classes: 'skeleton-btn', style: 'width: 100px;' }) +
+            '</div>',
+            // Session header card
+            '<div class="neo-card">' +
+                renderSkeleton({ style: 'width: 60%; height: 1.75rem; margin-bottom: 1.5rem;' }) +
+                renderSkeletonStatGrid({ count: 4 }) +
+            '</div>',
+            // Player table
+            renderSkeleton({ style: 'width: 30%; height: 1.5rem; margin: 2rem 0 1.5rem 0;' }),
+            players
+        ]);
     }
 
     constructor(appContent, apiService) {
@@ -47,13 +48,6 @@ export default class SessionDetailPage {
         this.boundHandleAddPlayersModalEscape = null;
     }
     
-    // Helper to format date as 'MMM DD, YYYY' or fallback
-    formatDate(dateStr) {
-        if (!dateStr) return 'Unknown Date';
-        const date = new Date(dateStr);
-        if (isNaN(date.getTime())) return 'Unknown Date';
-        return date.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
-    }
 
     escapeHtml(str) {
         if (!str) return '';
@@ -111,13 +105,15 @@ export default class SessionDetailPage {
             }
             
             const dateForTitle = (session.session_info || session).date;
-            document.title = `Session - ${this.formatDate(dateForTitle)} - Gamble King`;
+            document.title = `Session - ${formatDate(dateForTitle)} - Gamble King`;
 
             // Render session details
             this.render(session, sessionId);
         } catch (error) {
             console.error(`Error loading session details for ${sessionId}:`, error);
-            this.appContent.innerHTML = `<p>Could not load details for session ${sessionId}. ${error.message}</p>`;
+            showPageError(this.appContent, {
+                message: 'Could not load this session. ' + error.message
+            });
         }
     }
     
@@ -128,7 +124,7 @@ export default class SessionDetailPage {
         if (!session || !session.session_info || !session.session_info.chip_distribution) {
             return `<div class="neo-card" style="margin-bottom: 2rem;">
                 <h3 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem; color: var(--text-primary);">🎰 Chip Distribution</h3>
-                <p style="font-weight: 600; color: var(--text-secondary);">No chip distribution data available.</p>
+                ${renderEmptyState({ icon: '🎰', message: 'No chip distribution data available.', card: false })}
             </div>`;
         }
         
@@ -157,7 +153,7 @@ export default class SessionDetailPage {
             <div class="neo-card neo-card-purple" style="margin-bottom: 2rem;">
                 <h3 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem; color: var(--casino-purple-dark);">🎰 Chip Distribution</h3>
                 <p style="font-weight: 600; color: var(--casino-purple-dark); margin-bottom: 1.5rem;">
-                    For a buy-in of <span style="color: var(--casino-green); font-weight: 600;">$${buyInValue.toFixed(2)}</span>, 
+                    For a buy-in of <span style="color: var(--casino-green); font-weight: 600;">${formatCurrency(buyInValue)}</span>, 
                     use the following chip distribution (<span style="color: var(--casino-gold); font-weight: 600;">${totalChips} total chips</span>):
                 </p>
                 <div style="display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;">`;
@@ -230,18 +226,18 @@ export default class SessionDetailPage {
                             </span>
                         ` : ''}
                     </div>
-                    <span class="${profit >= 0 ? 'profit-positive' : 'profit-negative'}" style="font-size: 1.125rem; font-weight: 700;">$${profit.toFixed(2)}</span>
+                    <span class="${profit >= 0 ? 'profit-positive' : 'profit-negative'}" style="font-size: 1.125rem; font-weight: 700;">${formatCurrency(profit)}</span>
                 </div>
 
                 <!-- Stats grid: Buy-in, Cash-out, 7-2 Wins, Strikes -->
                 <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem; text-align: center;">
                     <div>
                         <div style="font-size: 0.7rem; font-weight: 600; opacity: 0.7; margin-bottom: 0.125rem;">Buy-in</div>
-                        <div style="font-size: 0.95rem; font-weight: 600; color: var(--casino-red);">$${buyIn.toFixed(2)}</div>
+                        <div style="font-size: 0.95rem; font-weight: 600; color: var(--casino-red);">${formatCurrency(buyIn)}</div>
                     </div>
                     <div>
                         <div style="font-size: 0.7rem; font-weight: 600; opacity: 0.7; margin-bottom: 0.125rem;">Cash-out</div>
-                        <div style="font-size: 0.95rem; font-weight: 600; color: var(--casino-gold);">$${cashOut.toFixed(2)}</div>
+                        <div style="font-size: 0.95rem; font-weight: 600; color: var(--casino-gold);">${formatCurrency(cashOut)}</div>
                     </div>
                     <div>
                         <div style="font-size: 0.7rem; font-weight: 600; opacity: 0.7; margin-bottom: 0.125rem;">7-2 Wins</div>
@@ -340,20 +336,16 @@ export default class SessionDetailPage {
     renderAddPlayersModal(sessionData, totalPlayers) {
         const filteredPlayers = this.getFilteredPlayerPickerPlayers();
         const selectedCount = this.selectedPlayerIds.size;
-        const defaultBuyin = sessionData?.default_buy_in_value ? sessionData.default_buy_in_value.toFixed(2) : '20.00';
+        const defaultBuyin = formatCurrency(sessionData?.default_buy_in_value || 20);
 
         return `
-            <div id="add-players-modal-overlay" class="session-player-picker-overlay">
-                <div class="session-player-picker-modal">
-                    <div class="session-player-picker-modal-header">
-                        <div>
-                            <h4 style="font-size: 1.2rem; font-weight: 700; margin: 0; color: var(--text-primary);">Add Players</h4>
-                            <p style="margin: 0.35rem 0 0; color: var(--text-secondary); font-weight: 600;">${totalPlayers} total players</p>
-                        </div>
-                        <button id="close-player-picker-btn" class="neo-btn" type="button" style="padding: 0.65rem 0.9rem;">Close</button>
-                    </div>
+            <div id="add-players-modal-overlay" class="modal-overlay">
+                <div class="modal-content">
+                    <button id="close-player-picker-btn" class="modal-close-btn" type="button" aria-label="Close add players">&times;</button>
+                    <h3>Add Players</h3>
+                    <p class="modal-subtitle">${totalPlayers} total players</p>
                     <div class="session-player-picker-toolbar">
-                        <input type="text" id="add-player-search" class="neo-input" placeholder="Search players..." value="${this.escapeHtml(this.addPlayerSearchQuery)}" style="margin: 0;">
+                        <input type="text" id="add-player-search" class="neo-input" placeholder="Search players..." value="${this.escapeHtml(this.addPlayerSearchQuery)}" style="margin-bottom: 0;">
                     </div>
                     <div class="session-player-picker-list">
                         ${filteredPlayers.length > 0 ? filteredPlayers.map(player => `
@@ -369,12 +361,12 @@ export default class SessionDetailPage {
                                 ${player.isInSession ? '<span class="session-player-picker-badge">In Session</span>' : ''}
                             </label>
                         `).join('') : `
-                            <div class="empty-state"><p class="empty-state__message">No players match your search.</p></div>
+                            ${renderEmptyState({ icon: '🔍', message: 'No players match your search.', card: false })}
                         `}
                     </div>
                     <div class="session-player-picker-footer">
                         <div class="session-player-picker-footer-summary">
-                            <strong>${selectedCount}</strong> player${selectedCount === 1 ? '' : 's'} selected · Default buy-in $${defaultBuyin}
+                            <strong>${selectedCount}</strong> player${selectedCount === 1 ? '' : 's'} selected · Default buy-in ${defaultBuyin}
                         </div>
                         <button id="add-player-to-session-btn" class="neo-btn neo-btn-green" type="button" ${selectedCount === 0 ? 'disabled' : ''}>
                             ${selectedCount === 0 ? 'Select Players to Add' : `Add ${selectedCount} Player${selectedCount === 1 ? '' : 's'}`}
@@ -390,7 +382,7 @@ export default class SessionDetailPage {
         if (!container) return;
 
         container.innerHTML = this.renderAddPlayersCard(sessionData);
-        this.setupAddPlayerPicker(sessionData, sessionId);
+        this.setupAddPlayerPicker(sessionData, sessionId, options);
 
         if (typeof options.listScrollTop === 'number') {
             const pickerList = document.querySelector('.session-player-picker-list');
@@ -424,10 +416,7 @@ export default class SessionDetailPage {
             html += `</div>`;
         } else {
             html += `
-                <div class="neo-card empty-state">
-                    <div class="empty-state__icon">👤</div>
-                    <p class="empty-state__message">No players in this session yet.</p>
-                </div>
+                ${renderEmptyState({ icon: '👤', message: 'No players in this session yet.' })}
             `;
         }
 
@@ -459,7 +448,7 @@ export default class SessionDetailPage {
 
         // Update totals in header card
         const totalValueEl = document.getElementById('session-total-value');
-        if (totalValueEl) totalValueEl.textContent = `$${session.totalValue.toFixed(2)}`;
+        if (totalValueEl) totalValueEl.textContent = formatCurrency(session.totalValue);
 
         const unpaidLabelEl = document.getElementById('session-unpaid-label');
         const unpaidValueEl = document.getElementById('session-unpaid-value');
@@ -469,11 +458,11 @@ export default class SessionDetailPage {
         if (unpaidValueEl) {
             unpaidValueEl.className = session.unpaidValue > 0.01 || session.unpaidValue < -0.01 ? 'profit-negative' : 'profit-positive';
             if (session.unpaidValue > 0.01) {
-                unpaidValueEl.textContent = `$${session.unpaidValue.toFixed(2)}`;
+                unpaidValueEl.textContent = formatCurrency(session.unpaidValue);
             } else if (session.unpaidValue < -0.01) {
-                unpaidValueEl.textContent = `-$${Math.abs(session.unpaidValue).toFixed(2)}`;
+                unpaidValueEl.textContent = formatCurrency(session.unpaidValue);
             } else {
-                unpaidValueEl.textContent = !isActive ? 'PAID OUT' : '$0.00';
+                unpaidValueEl.textContent = !isActive ? 'PAID OUT' : formatCurrency(0);
             }
         }
 
@@ -552,7 +541,7 @@ export default class SessionDetailPage {
                 <!-- Session Info Card -->
                 <div class="neo-card ${isActive ? 'neo-card-gold' : 'neo-card-primary'}">
                     <h2 style="font-size: 2rem; font-weight: 600; margin-bottom: 1.5rem; color: var(--text-primary);">
-                        🎯 ${this.formatDate(sessionData.date)}
+                        🎯 ${formatDate(sessionData.date)}
                     </h2>
                     
                     <div style="display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-bottom: 1.25rem;">
@@ -563,22 +552,22 @@ export default class SessionDetailPage {
                     <div style="display: flex; justify-content: space-around; text-align: center; margin-bottom: 0.5rem;">
                         <div>
                             <div style="font-size: 0.75rem; font-weight: 600; opacity: 0.7; margin-bottom: 0.25rem;">Buy-in</div>
-                            <div style="font-size: 1.125rem; font-weight: 700;">$${sessionData.default_buy_in_value ? sessionData.default_buy_in_value.toFixed(2) : '0.00'}</div>
+                            <div style="font-size: 1.125rem; font-weight: 700;">${formatCurrency(sessionData.default_buy_in_value || 0)}</div>
                         </div>
                         <div style="width: 1px; background: var(--border-light, #E2E8F0);"></div>
                         <div>
                             <div style="font-size: 0.75rem; font-weight: 600; opacity: 0.7; margin-bottom: 0.25rem;">Total Value</div>
-                            <div id="session-total-value" style="font-size: 1.125rem; font-weight: 700;">$${session.totalValue ? session.totalValue.toFixed(2) : '0.00'}</div>
+                            <div id="session-total-value" style="font-size: 1.125rem; font-weight: 700;">${formatCurrency(session.totalValue || 0)}</div>
                         </div>
                         <div style="width: 1px; background: var(--border-light, #E2E8F0);"></div>
                         <div>
                             <div id="session-unpaid-label" style="font-size: 0.75rem; font-weight: 600; opacity: 0.7; margin-bottom: 0.25rem;">${session.unpaidValue > 0.01 ? 'Unpaid' : session.unpaidValue < -0.01 ? 'House Loss' : 'Payout'}</div>
                             <div id="session-unpaid-value" class="${session.unpaidValue > 0.01 || session.unpaidValue < -0.01 ? 'profit-negative' : 'profit-positive'}" style="font-size: 1.125rem; font-weight: 700;">
                                 ${session.unpaidValue > 0.01 ?
-                                    `$${session.unpaidValue.toFixed(2)}` :
+                                    formatCurrency(session.unpaidValue) :
                                     session.unpaidValue < -0.01 ?
-                                    `-$${Math.abs(session.unpaidValue).toFixed(2)}` :
-                                    (!isActive ? 'PAID OUT' : '$0.00')}
+                                    formatCurrency(session.unpaidValue) :
+                                    (!isActive ? 'PAID OUT' : formatCurrency(0))}
                             </div>
                         </div>
                     </div>
@@ -679,6 +668,7 @@ export default class SessionDetailPage {
 
         // Add styling for the session bottom controls
         const styleElement = document.createElement('style');
+        styleElement.id = 'session-detail-page-styles';
         styleElement.textContent = `
             .session-bottom-controls {
                 margin: 20px 0;
@@ -791,48 +781,6 @@ export default class SessionDetailPage {
                 flex: 1;
             }
 
-            .session-player-picker-empty {
-                grid-column: 1 / -1;
-                padding: 1rem;
-                border-radius: 14px;
-                border: 1px dashed var(--border-light, #E2E8F0);
-                color: var(--text-secondary);
-                font-weight: 600;
-                text-align: center;
-            }
-
-            .session-player-picker-overlay {
-                position: fixed;
-                inset: 0;
-                background: rgba(15, 23, 42, 0.48);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                padding: 1.5rem;
-                z-index: 10001;
-            }
-
-            .session-player-picker-modal {
-                width: min(860px, 100%);
-                max-height: min(80vh, 760px);
-                overflow: hidden;
-                display: flex;
-                flex-direction: column;
-                padding: 1.25rem;
-                border-radius: 20px;
-                background: var(--bg-content);
-                border: 1px solid var(--border-light, #E2E8F0);
-                box-shadow: var(--neo-shadow-xl, 0 20px 25px -5px rgba(0,0,0,0.08));
-            }
-
-            .session-player-picker-modal-header {
-                display: flex;
-                align-items: flex-start;
-                justify-content: space-between;
-                gap: 1rem;
-                margin-bottom: 1rem;
-            }
-
             .session-player-picker-toolbar {
                 display: grid;
                 grid-template-columns: minmax(0, 1fr);
@@ -868,7 +816,13 @@ export default class SessionDetailPage {
                 }
             }
         `;
-        document.head.appendChild(styleElement);
+        // Idempotent: full re-renders re-create this block; swap instead of stacking copies in <head>
+        const previousStyles = document.getElementById('session-detail-page-styles');
+        if (previousStyles) {
+            previousStyles.replaceWith(styleElement);
+        } else {
+            document.head.appendChild(styleElement);
+        }
         
         // Enhanced button debugging
         setTimeout(() => {
@@ -1066,17 +1020,22 @@ export default class SessionDetailPage {
 
     }
 
-    setupAddPlayerPicker(sessionData, sessionId) {
+    setupAddPlayerPicker(sessionData, sessionId, options = {}) {
+        // An open overlay is promoted to document.body (see below); on every
+        // re-render, drop the stale body-level copy before the new markup lands.
+        const staleOverlay = document.getElementById('add-players-modal-overlay');
+        if (staleOverlay && staleOverlay.parentNode === document.body) staleOverlay.remove();
+
         const searchInput = document.getElementById('add-player-search');
         const openPickerBtn = document.getElementById('open-player-picker-btn');
         const closePickerBtn = document.getElementById('close-player-picker-btn');
         const modalOverlay = document.getElementById('add-players-modal-overlay');
         const addPlayersBtn = document.getElementById('add-player-to-session-btn');
-
+        
         if (openPickerBtn) {
             openPickerBtn.addEventListener('click', () => {
                 this.isAddPlayersModalOpen = true;
-                this.refreshAddPlayersCard(sessionData, sessionId);
+                this.refreshAddPlayersCard(sessionData, sessionId, { animateOpen: true });
             });
         }
 
@@ -1172,13 +1131,42 @@ export default class SessionDetailPage {
             };
             document.addEventListener('keydown', this.boundHandleAddPlayersModalEscape);
         }
+
+        // Mount the overlay at body level: the page container keeps a transform
+        // from its enter animation (fill-mode: forwards), which would trap
+        // position:fixed inside it. Then reveal it and move focus into the dialog.
+        if (this.isAddPlayersModalOpen) {
+            const openOverlay = document.getElementById('add-players-modal-overlay');
+            if (openOverlay) {
+                if (openOverlay.parentNode !== document.body) {
+                    document.body.appendChild(openOverlay);
+                }
+                if (options.animateOpen) {
+                    // Play the canonical fade + rise entrance: paint one hidden frame first.
+                    openOverlay.classList.remove('active');
+                    requestAnimationFrame(() => requestAnimationFrame(() => openOverlay.classList.add('active')));
+                } else {
+                    openOverlay.classList.add('active');
+                }
+            }
+            const activeSearch = document.getElementById('add-player-search');
+            if (activeSearch) {
+                activeSearch.focus();
+                activeSearch.setSelectionRange(activeSearch.value.length, activeSearch.value.length);
+            }
+        }
     }
 
     // Show an inline edit popup for a player in an active session
     showPlayerEditModal(player, sessionData, sessionId) {
-        const defaultBuyin = sessionData.default_buy_in_value || 20;
+        // Remove a stale copy before mounting a new one (same as the add-players picker).
+        const stale = document.getElementById('player-edit-modal-wrapper');
+        if (stale && stale.parentNode) stale.parentNode.removeChild(stale);
         const modalElement = document.createElement('div');
         modalElement.id = 'player-edit-modal-wrapper';
+        // True once the entrance has played; re-renders after API actions must
+        // restore .active synchronously or the modal flashes closed.
+        let opened = false;
 
         const renderModal = () => {
             const p = this.currentSession.players.find(pp => pp.id === player.id) || player;
@@ -1187,12 +1175,10 @@ export default class SessionDetailPage {
             const cashOut = p.cashOut || 0;
 
             modalElement.innerHTML = `
-                <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; display: flex; align-items: flex-start; justify-content: center; padding: 1rem; overflow-y: auto;">
-                    <div style="background: var(--bg-card, white); padding: 1.5rem; border-radius: 12px; max-width: 400px; width: 100%; margin-top: 2rem; margin-bottom: 2rem;">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
-                            <h3 style="margin: 0; font-size: 1.25rem; font-weight: 700;">${this.escapeHtml(p.name)}</h3>
-                            <button id="edit-modal-close" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; padding: 0.25rem; color: var(--text-secondary);">×</button>
-                        </div>
+                <div class="modal-overlay">
+                    <div class="modal-content">
+                        <button id="edit-modal-close" class="modal-close-btn" type="button" aria-label="Close player edit">&times;</button>
+                        <h3>${this.escapeHtml(p.name)}</h3>
 
                         <!-- Buy-ins -->
                         <div style="margin-bottom: 1.25rem;">
@@ -1201,7 +1187,7 @@ export default class SessionDetailPage {
                                 <button id="edit-buyin-minus" class="neo-btn" style="width: 36px; height: 36px; padding: 0; font-size: 1.25rem; font-weight: 700; display: flex; align-items: center; justify-content: center; border-radius: 50%;${buyInCount <= 1 ? ' opacity: 0.4;' : ''}" ${buyInCount <= 1 ? 'disabled' : ''}>−</button>
                                 <span style="font-size: 1.25rem; font-weight: 700; min-width: 2rem; text-align: center;">${buyInCount}</span>
                                 <button id="edit-buyin-plus" class="neo-btn" style="width: 36px; height: 36px; padding: 0; font-size: 1.25rem; font-weight: 700; display: flex; align-items: center; justify-content: center; border-radius: 50%;">+</button>
-                                <span style="font-size: 0.85rem; color: var(--text-secondary); margin-left: 0.25rem;">($${totalBuyIn.toFixed(2)} total)</span>
+                                <span style="font-size: 0.85rem; color: var(--text-secondary); margin-left: 0.25rem;">(${formatCurrency(totalBuyIn)} total)</span>
                             </div>
                         </div>
 
@@ -1238,15 +1224,30 @@ export default class SessionDetailPage {
                     </div>
                 </div>
             `;
+            if (opened) modalElement.querySelector('.modal-overlay').classList.add('active');
         };
-
         renderModal();
         document.body.appendChild(modalElement);
 
+        const handleEscape = (event) => {
+            if (event.key === 'Escape') closeModal();
+        };
         const closeModal = () => {
+            document.removeEventListener('keydown', handleEscape);
             if (modalElement.parentNode) document.body.removeChild(modalElement);
         };
+        document.addEventListener('keydown', handleEscape);
 
+        // Play the canonical fade + rise entrance: paint one hidden frame first,
+        // then reveal and focus the first field.
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+            const overlay = modalElement.querySelector('.modal-overlay');
+            if (!overlay) return;
+            overlay.classList.add('active');
+            opened = true;
+            const cashoutInput = modalElement.querySelector('#edit-cashout-input');
+            if (cashoutInput) cashoutInput.focus();
+        }));
         const apiAction = async (fn) => {
             try {
                 const newEntries = await fn();
@@ -1263,7 +1264,7 @@ export default class SessionDetailPage {
             modalElement.querySelector('#edit-modal-close')?.addEventListener('click', closeModal);
             modalElement.querySelector('#edit-modal-profile-link')?.addEventListener('click', closeModal);
             // Close on overlay click
-            modalElement.querySelector(':scope > div')?.addEventListener('click', (e) => {
+            modalElement.querySelector(':scope > .modal-overlay')?.addEventListener('click', (e) => {
                 if (e.target === e.currentTarget) closeModal();
             });
 
@@ -1321,11 +1322,60 @@ export default class SessionDetailPage {
 
         attachListeners();
 
-        // Focus the cash-out input if it's empty (likely what they want to edit)
-        const cashoutInput = modalElement.querySelector('#edit-cashout-input');
-        if (cashoutInput && !cashoutInput.value) {
-            setTimeout(() => cashoutInput.focus(), 100);
-        }
+    }
+
+    // Canonical dialog chrome for the per-player confirmation dialogs (Cash Out /
+    // Buy In): shared modal-overlay + modal-content--compact, double-rAF entrance,
+    // Escape and backdrop click to dismiss.
+    _showConfirmDialog({ title, labelFor, inputId, inputAttrs, inputValue, actionLabel, confirmClass }) {
+        const overlay = document.createElement('div');
+        overlay.className = 'modal-overlay';
+
+        const content = document.createElement('div');
+        content.className = 'modal-content modal-content--compact';
+        content.innerHTML = `
+            <h3>${title}</h3>
+            <label for="${inputId}">${labelFor}</label>
+            <input ${inputAttrs}>
+            <div class="modal-actions">
+                <button type="button" class="neo-btn neo-btn-sm" data-action="cancel">Cancel</button>
+                <button type="button" class="neo-btn ${confirmClass} neo-btn-sm" data-action="confirm">${actionLabel}</button>
+            </div>
+        `;
+        overlay.appendChild(content);
+        document.body.appendChild(overlay);
+
+        const input = content.querySelector('#' + inputId);
+        if (inputValue !== null && inputValue !== undefined) input.value = inputValue;
+        const cancelBtn = content.querySelector('[data-action="cancel"]');
+        const confirmBtn = content.querySelector('[data-action="confirm"]');
+
+        const close = () => {
+            document.removeEventListener('keydown', handleEscape);
+            overlay.remove();
+        };
+        const handleEscape = (e) => {
+            if (e.key === 'Escape') close();
+        };
+        document.addEventListener('keydown', handleEscape);
+        overlay.addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) close();
+        });
+        cancelBtn.addEventListener('click', close);
+
+        // Play the canonical fade + rise entrance: paint one hidden frame first,
+        // then reveal and focus the field (visible from the first frame of the
+        // transition, so focus lands once .active is applied).
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+            overlay.classList.add('active');
+            input.focus();
+            if (input.select) input.select();
+        }));
+
+        return {
+            input, confirmBtn, close,
+            onConfirm: (fn) => confirmBtn.addEventListener('click', fn)
+        };
     }
 
     setupPlayerEventListeners(sessionData, sessionId) {
@@ -1356,29 +1406,16 @@ export default class SessionDetailPage {
             button.addEventListener('click', async (e) => {
                 const playerId = e.target.dataset.playerId;
 
-                const modalHtml = `
-                    <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; display: flex; align-items: flex-start; justify-content: center; overflow-y: auto; padding: 1rem;">
-                        <div style="background: white; padding: 20px; border-radius: 8px; max-width: 400px; width: 90%; margin-top: 3rem;">
-                            <h3>Cash Out Player</h3>
-                            <label for="cashout-amount">Enter cash-out amount ($):</label>
-                            <input type="text" id="cashout-amount" inputmode="decimal" pattern="[0-9]*\.?[0-9]*" style="width: 100%; padding: 10px; margin: 10px 0; font-size: 16px; border: 2px solid #ddd; border-radius: 4px;">
-                            <div style="text-align: right; margin-top: 15px;">
-                                <button id="cancel-cashout" style="margin-right: 10px; padding: 8px 16px; background: #ccc; border: none; border-radius: 4px; cursor: pointer;">Cancel</button>
-                                <button id="confirm-cashout" style="padding: 8px 16px; background: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer;">Cash Out</button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-
-                const modalElement = document.createElement('div');
-                modalElement.innerHTML = modalHtml;
-                document.body.appendChild(modalElement);
-
-                const cashoutInput = document.getElementById('cashout-amount');
-                const cancelBtn = document.getElementById('cancel-cashout');
-                const confirmBtn = document.getElementById('confirm-cashout');
-
-                setTimeout(() => cashoutInput.focus(), 100);
+                const dialog = this._showConfirmDialog({
+                    title: 'Cash Out Player',
+                    labelFor: 'Enter cash-out amount ($):',
+                    inputId: 'cashout-amount',
+                    inputAttrs: 'type="text" id="cashout-amount" inputmode="decimal" pattern="[0-9]*\\.?[0-9]*"',
+                    inputValue: '',
+                    actionLabel: 'Cash Out',
+                    confirmClass: 'neo-btn-red'
+                });
+                const { input: cashoutInput, confirmBtn } = dialog;
 
                 cashoutInput.addEventListener('input', (event) => {
                     let value = event.target.value;
@@ -1390,11 +1427,7 @@ export default class SessionDetailPage {
                     event.target.value = value;
                 });
 
-                cancelBtn.addEventListener('click', () => {
-                    document.body.removeChild(modalElement);
-                });
-
-                confirmBtn.addEventListener('click', async () => {
+                dialog.onConfirm(async () => {
                     const cashOutValue = parseFloat(cashoutInput.value);
 
                     if (isNaN(cashOutValue) || cashOutValue < 0 || cashoutInput.value === '') {
@@ -1412,13 +1445,13 @@ export default class SessionDetailPage {
                             payout_amount: cashOutValue
                         });
 
-                        document.body.removeChild(modalElement);
+                        dialog.close();
                         this.refreshEntries(newEntries, sessionId);
 
                     } catch (error) {
                         console.error('Error processing cash-out:', error);
                         alert(`Error: ${error.message}`);
-                        document.body.removeChild(modalElement);
+                        dialog.close();
                         button.disabled = false;
                         button.textContent = 'Cash Out';
                     }
@@ -1437,32 +1470,18 @@ export default class SessionDetailPage {
             button.addEventListener('click', async (e) => {
                 const playerId = e.target.dataset.playerId;
 
-                const modalHtml = `
-                    <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; display: flex; align-items: flex-start; justify-content: center; overflow-y: auto; padding: 1rem;">
-                        <div style="background: white; padding: 20px; border-radius: 8px; max-width: 400px; width: 90%; margin-top: 3rem;">
-                            <h3>Buy In Player</h3>
-                            <label for="buyin-amount">Enter buy-in amount ($):</label>
-                            <input type="number" id="buyin-amount" inputmode="decimal" step="0.01" min="0" value="${sessionData.default_buy_in_value ? sessionData.default_buy_in_value.toFixed(2) : '20.00'}" style="width: 100%; padding: 10px; margin: 10px 0; font-size: 16px; border: 2px solid #ddd; border-radius: 4px;">
-                            <div style="text-align: right; margin-top: 15px;">
-                                <button id="cancel-buyin" style="margin-right: 10px; padding: 8px 16px; background: #ccc; border: none; border-radius: 4px; cursor: pointer;">Cancel</button>
-                                <button id="confirm-buyin" style="padding: 8px 16px; background: #2196F3; color: white; border: none; border-radius: 4px; cursor: pointer;">Buy In</button>
-                            </div>
-                        </div>
-                    </div>
-                `;
+                const defaultBuyin = sessionData.default_buy_in_value || 20;
 
-                const modalElement = document.createElement('div');
-                modalElement.innerHTML = modalHtml;
-                document.body.appendChild(modalElement);
-
-                const buyinInput = document.getElementById('buyin-amount');
-                const cancelBtn = document.getElementById('cancel-buyin');
-                const confirmBtn = document.getElementById('confirm-buyin');
-
-                setTimeout(() => {
-                    buyinInput.focus();
-                    buyinInput.select();
-                }, 100);
+                const dialog = this._showConfirmDialog({
+                    title: 'Buy In Player',
+                    labelFor: 'Enter buy-in amount ($):',
+                    inputId: 'buyin-amount',
+                    inputAttrs: 'type="number" id="buyin-amount" inputmode="decimal" step="0.01" min="0"',
+                    inputValue: sessionData.default_buy_in_value ? sessionData.default_buy_in_value.toFixed(2) : '20.00',
+                    actionLabel: 'Buy In',
+                    confirmClass: 'neo-btn-green'
+                });
+                const { input: buyinInput, confirmBtn } = dialog;
 
                 buyinInput.addEventListener('input', (event) => {
                     let value = event.target.value;
@@ -1474,11 +1493,7 @@ export default class SessionDetailPage {
                     event.target.value = value;
                 });
 
-                cancelBtn.addEventListener('click', () => {
-                    document.body.removeChild(modalElement);
-                });
-
-                confirmBtn.addEventListener('click', async () => {
+                dialog.onConfirm(async () => {
                     const buyinValue = parseFloat(buyinInput.value);
 
                     if (isNaN(buyinValue) || buyinValue <= 0 || buyinInput.value === '') {
@@ -1492,20 +1507,19 @@ export default class SessionDetailPage {
                         confirmBtn.disabled = true;
                         confirmBtn.textContent = 'Processing...';
 
-                        const defaultBuyin = sessionData.default_buy_in_value || 20;
                         const numBuyIns = Math.round(buyinValue / defaultBuyin);
 
                         const newEntries = await this.api.post(`sessions/${sessionId}/entries/${playerId}/buy-in`, {
                             num_buy_ins: numBuyIns
                         });
 
-                        document.body.removeChild(modalElement);
+                        dialog.close();
                         this.refreshEntries(newEntries, sessionId);
 
                     } catch (error) {
                         console.error('Error processing buy-in:', error);
                         alert(`Error: ${error.message}`);
-                        document.body.removeChild(modalElement);
+                        dialog.close();
                         button.disabled = false;
                         button.textContent = 'Buy In';
                     }
@@ -1524,7 +1538,7 @@ export default class SessionDetailPage {
             button.addEventListener('click', async (e) => {
                 const playerId = e.target.dataset.playerId;
                 const defaultBuyin = sessionData.default_buy_in_value || 20;
-                if (!confirm(`Add a re-buy of $${defaultBuyin.toFixed(2)}?`)) return;
+                if (!confirm(`Add a re-buy of ${formatCurrency(defaultBuyin)}?`)) return;
                 try {
                     button.disabled = true;
                     button.textContent = 'Processing...';
@@ -1733,7 +1747,7 @@ export default class SessionDetailPage {
      */
     showDiscrepancyModal(unpaidValue, sessionId, endSessionBtn) {
         const discrepancyType = unpaidValue > 0 ? 'Unpaid' : 'House Loss';
-        const discrepancyAmount = Math.abs(unpaidValue).toFixed(2);
+        const discrepancyAmount = formatCurrency(Math.abs(unpaidValue));
         const discrepancyColor = unpaidValue > 0 ? '#991B1B' : '#EA580C';
 
         const modalHtml = `
@@ -1790,7 +1804,7 @@ export default class SessionDetailPage {
                             color: ${discrepancyColor};
                             margin: 0;
                         ">
-                            ${discrepancyType}: $${discrepancyAmount}
+                            ${discrepancyType}: ${discrepancyAmount}
                         </p>
                     </div>
 

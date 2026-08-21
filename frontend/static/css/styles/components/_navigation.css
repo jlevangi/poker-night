@@ -47,14 +47,6 @@ nav a:hover {
     box-shadow: none;
 }
 
-/* Quick Actions Navigation */
-.quick-actions {
-    display: flex;
-    justify-content: center;
-    gap: var(--spacing-md);
-    margin: var(--spacing-lg) 0 var(--spacing-md);
-    flex-wrap: wrap;
-}
 
 /* Sessions Actions */
 .sessions-actions {
@@ -153,26 +145,6 @@ nav a:hover {
 
 .bottom-nav .nav-label {
     display: none;
-}
-
-/* Session Status */
-.session-status {
-    padding: 0.4rem 0.8rem;
-    border-radius: var(--radius-pill);
-    font-size: 0.85rem;
-    font-weight: bold;
-    color: var(--text-white);
-    min-width: 70px;
-    text-align: center;
-    margin-left: var(--spacing-sm);
-}
-
-.session-status.status-active {
-    background-color: var(--color-success);
-}
-
-.session-status.status-ended {
-    background-color: var(--color-danger);
 }
 
 /* Back Navigation Buttons */
@@ -417,17 +389,6 @@ nav a:hover {
     }
 }
 
-@media (max-width: 400px) {
-    .quick-actions {
-        flex-direction: column;
-    }
-    
-    .session-status {
-        margin-top: var(--spacing-sm);
-        margin-left: 0;
-    }
-}
-
 @media (max-width: 700px) {
     .bottom-nav {
         display: flex;
@@ -473,4 +434,39 @@ nav a:hover {
     .neo-more-icon {
         font-size: 1.1rem;
     }
+    font-size: 1.1rem;
+}
+
+/* Navigation Interaction States — touch targets + pressed feedback
+   (placed after _modern-theme.css on purpose so these win the cascade) */
+
+/* Real hit areas: 44px minimum (48px on coarse pointers) */
+.neo-nav-btn {
+    min-height: 44px;
+}
+
+.neo-nav-mobile-btn {
+    min-height: 44px;
+}
+
+@media (pointer: coarse) {
+    .neo-nav-btn,
+    .neo-nav-mobile-btn {
+        min-height: 48px;
+    }
+}
+
+/* Visible pressed state */
+.neo-nav-mobile-btn:active {
+    background: var(--bg-shell-active);
+    color: var(--text-header);
+    transform: scale(0.95);
+    filter: brightness(0.92);
+}
+
+.neo-nav-btn:active {
+    background: var(--bg-shell-active);
+    color: var(--text-header);
+    transform: scale(0.97);
+    filter: brightness(0.92);
 }
