@@ -65,17 +65,17 @@ li a:hover {
 
 .session-date {
     font-weight: 700;
-    font-size: 1.1rem;
+    font-size: 1.125rem;
 }
 
 .session-buyin {
-    font-size: 0.9rem;
+    font-size: 0.875rem;
     color: var(--text-muted);
 }
 
 .session-buyin, .session-total-value, .session-unpaid-value {
     color: var(--text-secondary);
-    font-size: 0.9rem;
+    font-size: 0.875rem;
 }
 
 /* Player Lists */
@@ -149,7 +149,7 @@ li a:hover {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 0.9rem;
+    font-size: 0.875rem;
     gap: var(--spacing-md);
 }
 
@@ -162,7 +162,7 @@ li a:hover {
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    font-size: 0.9rem;
+    font-size: 0.875rem;
     gap: var(--spacing-sm);
     margin-left: auto;
 }
@@ -285,7 +285,7 @@ li a:hover {
         flex-direction: column !important;
         align-items: flex-start !important;
         gap: var(--spacing-xs) !important;
-        font-size: 0.8rem !important;
+        font-size: 0.75rem !important;
     }
 
     /* Seven-two-counter mobile overrides (consolidated from player-stats-restructure.css) */
@@ -295,7 +295,7 @@ li a:hover {
         align-items: center !important;
         justify-content: flex-end !important;
         gap: var(--spacing-xs) !important;
-        font-size: 0.8rem !important;
+        font-size: 0.75rem !important;
         margin-left: auto !important;
     }
 

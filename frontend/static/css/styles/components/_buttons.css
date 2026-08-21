@@ -12,7 +12,7 @@ button,
     border: none;
     border-radius: var(--radius-md);
     cursor: pointer;
-    font-size: 0.9375rem;
+    font-size: 0.875rem;
     font-weight: 500;
     transition: all 0.2s ease;
     text-decoration: none;
@@ -151,7 +151,7 @@ button:disabled,
     color: var(--text-white);
     padding: 0.625rem 1.125rem;
     border-radius: var(--radius-md);
-    font-size: 0.9375rem;
+    font-size: 0.875rem;
 }
 
 .sessions-actions .action-btn:hover {
@@ -188,7 +188,7 @@ button:disabled,
     border-radius: var(--radius-md);
     background: var(--bg-card);
     color: var(--text-secondary);
-    font-size: 0.95rem;
+    font-size: 1rem;
     font-weight: 700;
     cursor: pointer;
     transition: all var(--transition-fast);
@@ -250,7 +250,7 @@ button:disabled,
     border-radius: 8px;
     border: none;
     color: var(--text-white);
-    font-size: 16px;
+    font-size: 1rem;
     font-weight: 600;
     display: flex;
     align-items: center;
@@ -308,7 +308,7 @@ button:disabled,
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-size: 16px;
+    font-size: 1rem;
     line-height: 1;
     color: var(--text-white);
 }

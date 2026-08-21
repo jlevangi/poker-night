@@ -2,7 +2,7 @@
 /* Poker chip display for the chip calculator page */
 
 .chip-description {
-    font-size: 0.95rem;
+    font-size: 1rem;
     margin-bottom: var(--spacing-md);
     color: var(--text-secondary);
 }
@@ -35,7 +35,7 @@
 }
 
 .chip-name {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     margin-top: var(--spacing-xs);
 }
 
@@ -75,7 +75,7 @@
     }
 
     .chip-count {
-        font-size: 1.1rem;
+        font-size: 1.125rem;
     }
 
     .chip-name {
@@ -115,7 +115,7 @@
     }
 
     .chip-count {
-        font-size: 0.9rem;
+        font-size: 0.875rem;
     }
 
     .chip-name {

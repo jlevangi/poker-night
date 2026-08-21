@@ -126,7 +126,7 @@
     border: 1px solid var(--border-color);
     border-radius: var(--radius-md);
     padding: 0.75rem;
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     font-weight: var(--font-weight-bold);
     box-shadow: var(--neo-shadow-md);
     z-index: var(--z-modal, 2000);
@@ -168,13 +168,13 @@
 }
 
 .neo-insight-label {
-    font-size: 0.9rem;
+    font-size: 0.875rem;
     font-weight: var(--font-weight-bold);
     color: var(--text-secondary);
 }
 
 .neo-insight-value {
-    font-size: 1.1rem;
+    font-size: 1.125rem;
     font-weight: var(--font-weight-black);
     color: var(--text-primary);
 }
@@ -288,7 +288,7 @@
 }
 
 .neo-session-info-label {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     font-weight: var(--font-weight-bold);
     text-transform: uppercase;
     letter-spacing: 0.02em;
@@ -297,7 +297,7 @@
 }
 
 .neo-session-info-value {
-    font-size: 1.1rem;
+    font-size: 1.125rem;
     font-weight: var(--font-weight-black);
     color: var(--text-primary);
 }
@@ -381,7 +381,7 @@
     }
 
     .neo-chart-subtitle {
-        font-size: 0.9rem;
+        font-size: 0.875rem;
     }
 
     .stats-page .neo-stats-grid {
@@ -404,7 +404,7 @@
     }
 
     .neo-session-modal-header h3 {
-        font-size: 1.1rem;
+        font-size: 1.125rem;
     }
 
     .neo-session-actions {

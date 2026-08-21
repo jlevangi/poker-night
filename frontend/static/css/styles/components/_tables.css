@@ -28,7 +28,7 @@
     background-color: var(--bg-body);
     font-weight: 600;
     color: var(--text-secondary);
-    font-size: 0.8125rem;
+    font-size: 0.75rem;
     border-bottom: 1px solid var(--border-color);
 }
 
@@ -89,7 +89,7 @@
     background-color: var(--bg-body);
     font-weight: 600;
     color: var(--text-secondary);
-    font-size: 0.8125rem;
+    font-size: 0.75rem;
     border-bottom: 1px solid var(--border-color);
 }
 
@@ -223,7 +223,7 @@
         padding: 0.35rem 0.2rem;
     }
     .dashboard-content .players-stats-table td {
-        font-size: 0.9375rem;
+        font-size: 0.875rem;
     }
     .dashboard-content .gamble-king-label {
         font-size: 0.7rem;

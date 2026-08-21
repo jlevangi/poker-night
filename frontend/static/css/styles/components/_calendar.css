@@ -93,7 +93,7 @@
 .rsvp-player-select {
     border: 1px solid var(--border-color, #E2E8F0) !important;
     font-weight: 600 !important;
-    font-size: 0.9375rem !important;
+    font-size: 0.875rem !important;
     background: var(--bg-card, #fff) !important;
     color: var(--text-primary, #222) !important;
     border-radius: var(--radius-md) !important;
