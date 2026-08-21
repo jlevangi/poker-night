@@ -412,6 +412,19 @@
     }
 }
 
+/* Collapse the stats summary grid to 1 column at ≤360px, matching the
+   dashboard's ≤360 treatment. The top-level .stats-page override above
+   (2-col, !important, higher specificity than the generic ≤360 rule in
+   _modern-theme.css) would otherwise keep 2 columns here, where the
+   longest tile value (~9ch currency at 2rem) no longer fits. Placed after
+   the 768px block so this later, same-specificity rule wins inside the
+   360px media query. */
+@media (max-width: 360px) {
+    .stats-page .neo-stats-grid {
+        grid-template-columns: 1fr !important;
+    }
+}
+
 /* Touch improvements */
 @media (hover: none) and (pointer: coarse) {
     .neo-data-point:hover {
@@ -502,6 +515,7 @@
     margin-bottom: 0.25rem;
     line-height: 1.2;
     color: inherit;
+    overflow-wrap: anywhere;
 }
 
 .neo-leaderboard-stat-subtitle {
