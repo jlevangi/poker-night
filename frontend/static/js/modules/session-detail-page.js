@@ -1159,9 +1159,14 @@ export default class SessionDetailPage {
 
     // Show an inline edit popup for a player in an active session
     showPlayerEditModal(player, sessionData, sessionId) {
-        const defaultBuyin = sessionData.default_buy_in_value || 20;
+        // Remove a stale copy before mounting a new one (same as the add-players picker).
+        const stale = document.getElementById('player-edit-modal-wrapper');
+        if (stale && stale.parentNode) stale.parentNode.removeChild(stale);
         const modalElement = document.createElement('div');
         modalElement.id = 'player-edit-modal-wrapper';
+        // True once the entrance has played; re-renders after API actions must
+        // restore .active synchronously or the modal flashes closed.
+        let opened = false;
 
         const renderModal = () => {
             const p = this.currentSession.players.find(pp => pp.id === player.id) || player;
@@ -1170,12 +1175,10 @@ export default class SessionDetailPage {
             const cashOut = p.cashOut || 0;
 
             modalElement.innerHTML = `
-                <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; display: flex; align-items: flex-start; justify-content: center; padding: 1rem; overflow-y: auto;">
-                    <div style="background: var(--bg-card, white); padding: 1.5rem; border-radius: 12px; max-width: 400px; width: 100%; margin-top: 2rem; margin-bottom: 2rem;">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
-                            <h3 style="margin: 0; font-size: 1.25rem; font-weight: 700;">${this.escapeHtml(p.name)}</h3>
-                            <button id="edit-modal-close" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; padding: 0.25rem; color: var(--text-secondary);">×</button>
-                        </div>
+                <div class="modal-overlay">
+                    <div class="modal-content">
+                        <button id="edit-modal-close" class="modal-close-btn" type="button" aria-label="Close player edit">&times;</button>
+                        <h3>${this.escapeHtml(p.name)}</h3>
 
                         <!-- Buy-ins -->
                         <div style="margin-bottom: 1.25rem;">
@@ -1221,15 +1224,30 @@ export default class SessionDetailPage {
                     </div>
                 </div>
             `;
+            if (opened) modalElement.querySelector('.modal-overlay').classList.add('active');
         };
-
         renderModal();
         document.body.appendChild(modalElement);
 
+        const handleEscape = (event) => {
+            if (event.key === 'Escape') closeModal();
+        };
         const closeModal = () => {
+            document.removeEventListener('keydown', handleEscape);
             if (modalElement.parentNode) document.body.removeChild(modalElement);
         };
+        document.addEventListener('keydown', handleEscape);
 
+        // Play the canonical fade + rise entrance: paint one hidden frame first,
+        // then reveal and focus the first field.
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+            const overlay = modalElement.querySelector('.modal-overlay');
+            if (!overlay) return;
+            overlay.classList.add('active');
+            opened = true;
+            const cashoutInput = modalElement.querySelector('#edit-cashout-input');
+            if (cashoutInput) cashoutInput.focus();
+        }));
         const apiAction = async (fn) => {
             try {
                 const newEntries = await fn();
@@ -1246,7 +1264,7 @@ export default class SessionDetailPage {
             modalElement.querySelector('#edit-modal-close')?.addEventListener('click', closeModal);
             modalElement.querySelector('#edit-modal-profile-link')?.addEventListener('click', closeModal);
             // Close on overlay click
-            modalElement.querySelector(':scope > div')?.addEventListener('click', (e) => {
+            modalElement.querySelector(':scope > .modal-overlay')?.addEventListener('click', (e) => {
                 if (e.target === e.currentTarget) closeModal();
             });
 
@@ -1304,11 +1322,6 @@ export default class SessionDetailPage {
 
         attachListeners();
 
-        // Focus the cash-out input if it's empty (likely what they want to edit)
-        const cashoutInput = modalElement.querySelector('#edit-cashout-input');
-        if (cashoutInput && !cashoutInput.value) {
-            setTimeout(() => cashoutInput.focus(), 100);
-        }
     }
 
     setupPlayerEventListeners(sessionData, sessionId) {
