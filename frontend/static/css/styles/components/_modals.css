@@ -1,14 +1,16 @@
-/* Modal Component Styles */
+/* Modal Component Styles
+   One pattern for every dialog in the app (create-session modal, add-players
+   picker, and anything added later): same backdrop, same card surface, same
+   close affordance, same entrance. Dark mode comes free from the theme vars. */
 
+/* Backdrop — identical on every dialog */
 .modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
+    background-color: rgba(0, 0, 0, 0.5);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -26,13 +28,18 @@
     display: flex !important;
 }
 
+/* Modal content — the app's card surface (same values as .neo-card) */
 .modal-content {
-    background-color: var(--bg-content);
-    padding: 1.75rem;
-    border-radius: 20px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+    background: var(--bg-card);
+    border: var(--neo-border-thin);
+    box-shadow: var(--neo-shadow-lg);
+    border-radius: 16px;
+    padding: var(--spacing-neo);
     width: 90%;
     max-width: 450px;
+    max-height: calc(100dvh - 2rem);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
     position: relative;
     transform: translateY(20px);
     opacity: 0;
@@ -44,29 +51,35 @@
     opacity: 1;
 }
 
+/* Close affordance — top-right X, real hit area, visible pressed state */
 .modal-close-btn {
     position: absolute;
-    top: 12px;
-    right: 16px;
-    font-size: 1.5rem;
-    font-weight: 400;
-    color: var(--text-muted);
-    cursor: pointer;
-    line-height: 1;
-    background: none;
-    border: none;
-    border-radius: 8px;
-    width: 36px;
-    height: 36px;
+    top: 8px;
+    right: 8px;
+    z-index: 1;
+    width: 44px;
+    height: 44px;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.15s ease;
+    font-size: 1.375rem;
+    font-weight: 400;
+    line-height: 1;
+    color: var(--text-muted);
+    background: none;
+    border: none;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: color 0.15s ease, background 0.15s ease, transform 0.15s ease;
 }
 
 .modal-close-btn:hover {
     color: var(--text-primary);
     background: var(--bg-body);
+}
+
+.modal-close-btn:active {
+    transform: scale(0.92);
 }
 
 .modal-content h3 {
@@ -78,6 +91,14 @@
     font-size: 1.25rem;
 }
 
+.modal-subtitle {
+    margin: -0.75rem 0 0;
+    text-align: center;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
 .modal-actions {
     margin-top: var(--spacing-lg);
     display: flex;
@@ -85,23 +106,16 @@
     gap: 0.75rem;
 }
 
-/* Dark mode */
-[data-theme="dark"] .modal-content {
-    background-color: var(--bg-content);
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
-}
-
+/* Mobile: every dialog is a top-anchored sheet with safe-area padding */
 @media (max-width: 700px) {
-    #new-session-modal {
+    .modal-overlay {
         align-items: flex-start;
         padding: max(1rem, env(safe-area-inset-top)) 1rem max(1rem, env(safe-area-inset-bottom));
     }
 
-    #new-session-modal .modal-content {
+    .modal-content {
         width: min(100%, 32rem);
         max-height: calc(100dvh - max(2rem, env(safe-area-inset-top)) - max(1rem, env(safe-area-inset-bottom)));
         margin-top: clamp(0rem, 7vh, 4rem);
-        overflow-y: auto;
-        -webkit-overflow-scrolling: touch;
     }
 }

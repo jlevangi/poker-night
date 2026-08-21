@@ -339,15 +339,11 @@ export default class SessionDetailPage {
         const defaultBuyin = formatCurrency(sessionData?.default_buy_in_value || 20);
 
         return `
-            <div id="add-players-modal-overlay" class="session-player-picker-overlay">
-                <div class="session-player-picker-modal">
-                    <div class="session-player-picker-modal-header">
-                        <div>
-                            <h4 style="font-size: 1.2rem; font-weight: 700; margin: 0; color: var(--text-primary);">Add Players</h4>
-                            <p style="margin: 0.35rem 0 0; color: var(--text-secondary); font-weight: 600;">${totalPlayers} total players</p>
-                        </div>
-                        <button id="close-player-picker-btn" class="neo-btn" type="button" style="padding: 0.65rem 0.9rem;">Close</button>
-                    </div>
+            <div id="add-players-modal-overlay" class="modal-overlay">
+                <div class="modal-content">
+                    <button id="close-player-picker-btn" class="modal-close-btn" type="button" aria-label="Close add players">&times;</button>
+                    <h3>Add Players</h3>
+                    <p class="modal-subtitle">${totalPlayers} total players</p>
                     <div class="session-player-picker-toolbar">
                         <input type="text" id="add-player-search" class="neo-input" placeholder="Search players..." value="${this.escapeHtml(this.addPlayerSearchQuery)}" style="margin: 0;">
                     </div>
@@ -386,7 +382,7 @@ export default class SessionDetailPage {
         if (!container) return;
 
         container.innerHTML = this.renderAddPlayersCard(sessionData);
-        this.setupAddPlayerPicker(sessionData, sessionId);
+        this.setupAddPlayerPicker(sessionData, sessionId, options);
 
         if (typeof options.listScrollTop === 'number') {
             const pickerList = document.querySelector('.session-player-picker-list');
@@ -672,6 +668,7 @@ export default class SessionDetailPage {
 
         // Add styling for the session bottom controls
         const styleElement = document.createElement('style');
+        styleElement.id = 'session-detail-page-styles';
         styleElement.textContent = `
             .session-bottom-controls {
                 margin: 20px 0;
@@ -784,48 +781,6 @@ export default class SessionDetailPage {
                 flex: 1;
             }
 
-            .session-player-picker-empty {
-                grid-column: 1 / -1;
-                padding: 1rem;
-                border-radius: 14px;
-                border: 1px dashed var(--border-light, #E2E8F0);
-                color: var(--text-secondary);
-                font-weight: 600;
-                text-align: center;
-            }
-
-            .session-player-picker-overlay {
-                position: fixed;
-                inset: 0;
-                background: rgba(15, 23, 42, 0.48);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                padding: 1.5rem;
-                z-index: 10001;
-            }
-
-            .session-player-picker-modal {
-                width: min(860px, 100%);
-                max-height: min(80vh, 760px);
-                overflow: hidden;
-                display: flex;
-                flex-direction: column;
-                padding: 1.25rem;
-                border-radius: 20px;
-                background: var(--bg-content);
-                border: 1px solid var(--border-light, #E2E8F0);
-                box-shadow: var(--neo-shadow-xl, 0 20px 25px -5px rgba(0,0,0,0.08));
-            }
-
-            .session-player-picker-modal-header {
-                display: flex;
-                align-items: flex-start;
-                justify-content: space-between;
-                gap: 1rem;
-                margin-bottom: 1rem;
-            }
-
             .session-player-picker-toolbar {
                 display: grid;
                 grid-template-columns: minmax(0, 1fr);
@@ -861,7 +816,13 @@ export default class SessionDetailPage {
                 }
             }
         `;
-        document.head.appendChild(styleElement);
+        // Idempotent: full re-renders re-create this block; swap instead of stacking copies in <head>
+        const previousStyles = document.getElementById('session-detail-page-styles');
+        if (previousStyles) {
+            previousStyles.replaceWith(styleElement);
+        } else {
+            document.head.appendChild(styleElement);
+        }
         
         // Enhanced button debugging
         setTimeout(() => {
@@ -1059,17 +1020,22 @@ export default class SessionDetailPage {
 
     }
 
-    setupAddPlayerPicker(sessionData, sessionId) {
+    setupAddPlayerPicker(sessionData, sessionId, options = {}) {
+        // An open overlay is promoted to document.body (see below); on every
+        // re-render, drop the stale body-level copy before the new markup lands.
+        const staleOverlay = document.getElementById('add-players-modal-overlay');
+        if (staleOverlay && staleOverlay.parentNode === document.body) staleOverlay.remove();
+
         const searchInput = document.getElementById('add-player-search');
         const openPickerBtn = document.getElementById('open-player-picker-btn');
         const closePickerBtn = document.getElementById('close-player-picker-btn');
         const modalOverlay = document.getElementById('add-players-modal-overlay');
         const addPlayersBtn = document.getElementById('add-player-to-session-btn');
-
+        
         if (openPickerBtn) {
             openPickerBtn.addEventListener('click', () => {
                 this.isAddPlayersModalOpen = true;
-                this.refreshAddPlayersCard(sessionData, sessionId);
+                this.refreshAddPlayersCard(sessionData, sessionId, { animateOpen: true });
             });
         }
 
@@ -1164,6 +1130,30 @@ export default class SessionDetailPage {
                 }
             };
             document.addEventListener('keydown', this.boundHandleAddPlayersModalEscape);
+        }
+
+        // Mount the overlay at body level: the page container keeps a transform
+        // from its enter animation (fill-mode: forwards), which would trap
+        // position:fixed inside it. Then reveal it and move focus into the dialog.
+        if (this.isAddPlayersModalOpen) {
+            const openOverlay = document.getElementById('add-players-modal-overlay');
+            if (openOverlay) {
+                if (openOverlay.parentNode !== document.body) {
+                    document.body.appendChild(openOverlay);
+                }
+                if (options.animateOpen) {
+                    // Play the canonical fade + rise entrance: paint one hidden frame first.
+                    openOverlay.classList.remove('active');
+                    requestAnimationFrame(() => requestAnimationFrame(() => openOverlay.classList.add('active')));
+                } else {
+                    openOverlay.classList.add('active');
+                }
+            }
+            const activeSearch = document.getElementById('add-player-search');
+            if (activeSearch) {
+                activeSearch.focus();
+                activeSearch.setSelectionRange(activeSearch.value.length, activeSearch.value.length);
+            }
         }
     }
 
