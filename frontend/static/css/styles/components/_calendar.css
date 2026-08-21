@@ -2,6 +2,7 @@
 
 .neo-event-card {
     transition: all var(--transition-neo, 0.2s ease);
+    overflow-wrap: anywhere; /* break long free-text titles/locations inside the card, not past it */
 }
 
 .neo-event-card:hover {

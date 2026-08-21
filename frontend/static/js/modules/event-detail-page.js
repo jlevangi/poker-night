@@ -180,7 +180,7 @@ export default class EventDetailPage {
         return `
             <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem;">
                 <div>
-                    <h2 style="font-size: 1.75rem; font-weight: 600; color: var(--text-primary); margin: 0;">
+                    <h2 style="font-size: 1.75rem; font-weight: 600; color: var(--text-primary); margin: 0; overflow-wrap: anywhere;">
                         ${this.escapeHtml(event.title || 'Poker Night')}
                         ${isCancelled ? '<span style="color: var(--casino-red-dark); font-size: 1rem; margin-left: 0.5rem;">CANCELLED</span>' : ''}
                     </h2>
@@ -194,8 +194,8 @@ export default class EventDetailPage {
                     <span class="neo-rsvp-badge neo-rsvp-badge-no">${counts.no} Out</span>
                 </div>
             </div>
-            ${event.location ? `<div style="font-weight: 600; color: var(--text-secondary); margin-bottom: 0.5rem;">&#128205; ${this.escapeHtml(event.location)}</div>` : ''}
-            ${event.description ? `<div style="color: var(--text-secondary); margin-bottom: 0.5rem;">${this.escapeHtml(event.description)}</div>` : ''}
+            ${event.location ? `<div style="font-weight: 600; color: var(--text-secondary); margin-bottom: 0.5rem; overflow-wrap: anywhere;">&#128205; ${this.escapeHtml(event.location)}</div>` : ''}
+            ${event.description ? `<div style="color: var(--text-secondary); margin-bottom: 0.5rem; overflow-wrap: anywhere;">${this.escapeHtml(event.description)}</div>` : ''}
             <div style="font-weight: 600; color: var(--text-secondary);">&#128176; Buy-in: ${formatCurrency(event.default_buy_in_value || 20)}${event.max_players ? ' | Max: ' + event.max_players + ' players' : ''}</div>
         `;
     }
