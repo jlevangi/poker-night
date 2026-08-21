@@ -1,7 +1,7 @@
 // Player detail page module
 import Router from './router.js';
 import { staggerChildren, animateAllValues } from './animations.js';
-import { formatCurrency, formatCurrencyWhole } from './formatters.js';
+import { formatCurrency, formatCurrencyWhole, formatDate } from './formatters.js';
 
 export default class PlayerDetailPage {
     static skeleton() {
@@ -125,13 +125,6 @@ export default class PlayerDetailPage {
         });
     }
     
-    // Helper to format date as 'MMM DD, YYYY' or fallback
-    formatDate(dateStr) {
-        if (!dateStr) return 'Unknown Date';
-        const date = new Date(dateStr);
-        if (isNaN(date.getTime())) return dateStr; // Return original if can't parse
-        return date.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
-    }
     
     // Render player detail content
     render(player) {
@@ -208,7 +201,7 @@ export default class PlayerDetailPage {
                 
                 html += `
                     <tr>
-                        <td><a href="#session/${session.sessionId}" style="color: var(--primary-color); text-decoration: none; font-weight: 700;">${this.formatDate(session.date)}</a></td>
+                        <td><a href="#session/${session.sessionId}" style="color: var(--primary-color); text-decoration: none; font-weight: 700;">${formatDate(session.date)}</a></td>
                         <td style="font-weight: 700; color: var(--casino-red);">${formatCurrency(buyIn)}</td>
                         <td style="font-weight: 700; color: var(--casino-gold);">${formatCurrency(cashOut)}</td>
                         <td class="${profit >= 0 ? 'profit-positive' : 'profit-negative'}" style="font-weight: 700;">${formatCurrency(profit)}</td>
@@ -309,7 +302,7 @@ export default class PlayerDetailPage {
         if (subtitleElement && this.chartData.date_range) {
             const totalProfit = this.chartData.total_profit || 0;
             const profitClass = totalProfit >= 0 ? 'profit-positive' : 'profit-negative';
-            subtitleElement.innerHTML = `${this.formatDate(this.chartData.date_range.start)} - ${this.formatDate(this.chartData.date_range.end)} | Total: <span class="${profitClass}">${formatCurrency(totalProfit)}</span>`;
+            subtitleElement.innerHTML = `${formatDate(this.chartData.date_range.start)} - ${formatDate(this.chartData.date_range.end)} | Total: <span class="${profitClass}">${formatCurrency(totalProfit)}</span>`;
         }
 
         // Get container dimensions
@@ -497,7 +490,7 @@ export default class PlayerDetailPage {
                 const cumulativeProfitClass = cumulativeProfit >= 0 ? 'profit-positive' : 'profit-negative';
 
                 tooltip.innerHTML = `
-                    <div><strong>${this.formatDate(date)}</strong></div>
+                    <div><strong>${formatDate(date)}</strong></div>
                     <div>Buy-In: ${formatCurrency(buyIn)}</div>
                     <div>Cash Out: ${formatCurrency(cashOut)}</div>
                     <div class="${sessionProfitClass}">Session: ${formatCurrency(sessionProfit)}</div>

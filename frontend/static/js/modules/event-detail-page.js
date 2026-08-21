@@ -1,7 +1,7 @@
 // Event detail page module
 import Router from './router.js';
 import { staggerChildren } from './animations.js';
-import { formatCurrency } from './formatters.js';
+import { formatCurrency, formatDate, formatDateLong } from './formatters.js';
 import EventBus from './event-bus.js';
 
 export default class EventDetailPage {
@@ -59,7 +59,7 @@ export default class EventDetailPage {
             ]);
             this.event = event;
             this.players = players || [];
-            const titleDate = new Date(event.date + 'T00:00:00').toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+            const titleDate = formatDate(event.date);
             document.title = `${event.title || 'Poker Night'} - ${titleDate} - Gamble King`;
             this.editing = false;
             this.render();
@@ -76,10 +76,7 @@ export default class EventDetailPage {
 
     render() {
         const event = this.event;
-        const dateObj = new Date(event.date + 'T00:00:00');
-        const dateFormatted = dateObj.toLocaleDateString(undefined, {
-            weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
-        });
+        const dateFormatted = formatDateLong(event.date);
         const timeFormatted = event.time ? this.formatTime(event.time) : '';
         const counts = event.rsvp_counts || { yes: 0, maybe: 0, no: 0 };
         const yesPlayers = (event.rsvps || []).filter(r => r.status === 'YES');

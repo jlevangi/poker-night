@@ -1,6 +1,6 @@
 // Dashboard page module
 import { staggerChildren, animateAllValues } from './animations.js';
-import { formatCurrency, formatPercent } from './formatters.js';
+import { formatCurrency, formatPercent, formatDate } from './formatters.js';
 
 export default class DashboardPage {
     static skeleton() {
@@ -119,7 +119,7 @@ export default class DashboardPage {
                             Active Session
                         </div>
                         <div class="card-subtitle" style="margin-top: 0.25rem;">
-                            ${this.formatDate(session.date)}
+                            ${formatDate(session.date)}
                         </div>
                     </div>
                     <div style="text-align: right;">
@@ -133,10 +133,7 @@ export default class DashboardPage {
 
     // Render next upcoming event card
     renderNextEventCard(event) {
-        const dateObj = new Date(event.date + 'T00:00:00');
-        const dateFormatted = dateObj.toLocaleDateString(undefined, {
-            weekday: 'short', month: 'short', day: 'numeric'
-        });
+        const dateFormatted = formatDate(event.date);
         let timeFormatted = '';
         if (event.time) {
             const [hours, minutes] = event.time.split(':');
@@ -303,13 +300,6 @@ export default class DashboardPage {
         return html;
     }
     
-    // Helper to format date as 'MMM DD, YYYY' or fallback
-    formatDate(dateStr) {
-        if (!dateStr) return 'Unknown Date';
-        const date = new Date(dateStr);
-        if (isNaN(date.getTime())) return 'Unknown Date';
-        return date.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
-    }
     
     // Render recent sessions section
     renderRecentSessionsSection(sessions) {
@@ -343,7 +333,7 @@ export default class DashboardPage {
                     <div style="display: flex; justify-content: space-between; align-items: center;">
                         <div>
                             <div style="font-weight: 600; color: inherit; margin-bottom: 0.25rem; font-size: 1.125rem;">
-                                📅 ${this.formatDate(session.date)}
+                                📅 ${formatDate(session.date)}
                             </div>
                             <div style="font-size: 0.875rem; color: inherit; font-weight: 600; opacity: 0.8;">
                                 Buy-in: ${formatCurrency(session.default_buy_in_value || 0)}

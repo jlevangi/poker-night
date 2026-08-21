@@ -1,6 +1,6 @@
 // Sessions page module
 import { staggerChildren } from './animations.js';
-import { formatCurrency } from './formatters.js';
+import { formatCurrency, formatDate } from './formatters.js';
 
 export default class SessionsPage {
     static skeleton() {
@@ -93,7 +93,7 @@ export default class SessionsPage {
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <div>
                                 <div style="font-weight: 600; color: inherit; margin-bottom: 0.25rem; font-size: 1.125rem;">
-                                    📅 ${this.formatDate(session.date)}
+                                    📅 ${formatDate(session.date)}
                                 </div>
                                 <div style="font-size: 0.875rem; color: inherit; font-weight: 600; opacity: 0.8;">
                                     Buy-in: ${formatCurrency(session.buyin)} | Total: ${formatCurrency(session.totalValue)}
@@ -127,7 +127,7 @@ export default class SessionsPage {
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <div>
                                 <div style="font-weight: 600; color: inherit; margin-bottom: 0.25rem; font-size: 1.125rem;">
-                                    ${this.escapeHtml(evt.title)} — ${this.formatDate(evt.date)}
+                                    ${this.escapeHtml(evt.title)} — ${formatDate(evt.date)}
                                 </div>
                                 <div style="font-size: 0.875rem; color: inherit; font-weight: 600; opacity: 0.8;">
                                     Buy-in: ${formatCurrency(evt.buyin)}${playerCount > 0 ? ` | ${playerCount} player${playerCount !== 1 ? 's' : ''} responding` : ''}
@@ -166,7 +166,7 @@ export default class SessionsPage {
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <div>
                                 <div style="font-weight: 600; color: inherit; margin-bottom: 0.25rem; font-size: 1.125rem;">
-                                    📅 ${this.formatDate(session.date)}
+                                    📅 ${formatDate(session.date)}
                                 </div>
                                 <div style="font-size: 0.875rem; color: inherit; font-weight: 600; opacity: 0.8;">
                                     Buy-in: ${formatCurrency(session.buyin)} | Total: ${formatCurrency(session.totalValue)}
@@ -203,13 +203,6 @@ export default class SessionsPage {
         this.setupEventListeners();
     }
 
-    // Helper to format date as 'MMM DD, YYYY' or fallback
-    formatDate(dateStr) {
-        if (!dateStr) return 'Unknown Date';
-        const date = new Date(dateStr);
-        if (isNaN(date.getTime())) return dateStr; // Return original if can't parse
-        return date.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
-    }
 
     escapeHtml(str) {
         if (!str) return '';

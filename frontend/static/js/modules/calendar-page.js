@@ -1,6 +1,7 @@
 // Calendar page module
 import { staggerChildren } from './animations.js';
 import EventBus from './event-bus.js';
+import { formatDateLong } from './formatters.js';
 
 export default class CalendarPage {
     constructor(appContent, apiService) {
@@ -126,10 +127,7 @@ export default class CalendarPage {
     }
 
     renderEventCard(event) {
-        const dateObj = new Date(event.date + 'T00:00:00');
-        const dateFormatted = dateObj.toLocaleDateString(undefined, {
-            weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
-        });
+        const dateFormatted = formatDateLong(event.date);
 
         const timeFormatted = event.time ? this.formatTime(event.time) : '';
         const counts = event.rsvp_counts || { yes: 0, maybe: 0, no: 0 };

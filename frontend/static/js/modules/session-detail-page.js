@@ -4,7 +4,7 @@ import { NotificationManager } from './notification-manager.js';
 import { staggerChildren } from './animations.js';
 import Router from './router.js';
 import EventBus from './event-bus.js';
-import { formatCurrency } from './formatters.js';
+import { formatCurrency, formatDate } from './formatters.js';
 
 export default class SessionDetailPage {
     static skeleton() {
@@ -48,13 +48,6 @@ export default class SessionDetailPage {
         this.boundHandleAddPlayersModalEscape = null;
     }
     
-    // Helper to format date as 'MMM DD, YYYY' or fallback
-    formatDate(dateStr) {
-        if (!dateStr) return 'Unknown Date';
-        const date = new Date(dateStr);
-        if (isNaN(date.getTime())) return 'Unknown Date';
-        return date.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
-    }
 
     escapeHtml(str) {
         if (!str) return '';
@@ -112,7 +105,7 @@ export default class SessionDetailPage {
             }
             
             const dateForTitle = (session.session_info || session).date;
-            document.title = `Session - ${this.formatDate(dateForTitle)} - Gamble King`;
+            document.title = `Session - ${formatDate(dateForTitle)} - Gamble King`;
 
             // Render session details
             this.render(session, sessionId);
@@ -553,7 +546,7 @@ export default class SessionDetailPage {
                 <!-- Session Info Card -->
                 <div class="neo-card ${isActive ? 'neo-card-gold' : 'neo-card-primary'}">
                     <h2 style="font-size: 2rem; font-weight: 600; margin-bottom: 1.5rem; color: var(--text-primary);">
-                        🎯 ${this.formatDate(sessionData.date)}
+                        🎯 ${formatDate(sessionData.date)}
                     </h2>
                     
                     <div style="display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-bottom: 1.25rem;">
