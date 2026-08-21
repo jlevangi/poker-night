@@ -467,34 +467,43 @@ export default class EventDetailPage {
     }
 
     handleAddToCalendar(event, btn) {
-        const existing = document.querySelector('.cal-popover');
+        const existing = document.querySelector('.modal-overlay.cal-popover');
         if (existing) existing.remove();
-        const existingBackdrop = document.querySelector('.cal-popover-backdrop');
-        if (existingBackdrop) existingBackdrop.remove();
 
-        const backdrop = document.createElement('div');
-        backdrop.className = 'cal-popover-backdrop';
-        backdrop.style.cssText = 'position: fixed; inset: 0; z-index: 999; background: rgba(0,0,0,0.3);';
+        const overlay = document.createElement('div');
+        overlay.className = 'modal-overlay cal-popover';
 
         const popover = document.createElement('div');
-        popover.className = 'cal-popover';
-        popover.style.cssText = 'position: fixed; z-index: 1000; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--card-bg); border: 3px solid var(--border-color); box-shadow: 6px 6px 0px var(--border-color); padding: 1.25rem; display: flex; flex-direction: column; gap: 0.75rem; min-width: 220px; max-width: 90vw;';
+        popover.className = 'modal-content modal-content--compact';
 
         popover.innerHTML = `
-            <div style="font-weight: 600; color: var(--text-primary); text-align: center; font-size: 0.875rem;">Add to Calendar</div>
+            <h3>Add to Calendar</h3>
             <button class="neo-btn neo-btn-green neo-btn-sm cal-popover-google" style="width: 100%; text-align: center;">Google Calendar</button>
             <button class="neo-btn neo-btn-gold neo-btn-sm cal-popover-ics" style="width: 100%; text-align: center;">Download .ics</button>
         `;
 
-        document.body.appendChild(backdrop);
-        document.body.appendChild(popover);
+        overlay.appendChild(popover);
+        document.body.appendChild(overlay);
 
         const closePopover = () => {
-            popover.remove();
-            backdrop.remove();
+            document.removeEventListener('keydown', handleEscape);
+            overlay.remove();
         };
+        const handleEscape = (e) => {
+            if (e.key === 'Escape') closePopover();
+        };
+        document.addEventListener('keydown', handleEscape);
 
-        backdrop.addEventListener('click', closePopover);
+        // Play the canonical fade + rise entrance: paint one hidden frame first.
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+            overlay.classList.add('active');
+        }));
+
+        // Close on backdrop click (buttons live inside .modal-content, so their
+        // bubbled clicks never hit the overlay itself)
+        overlay.addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) closePopover();
+        });
 
         popover.querySelector('.cal-popover-google').addEventListener('click', (e) => {
             e.stopPropagation();

@@ -119,3 +119,9 @@
         margin-top: clamp(0rem, 7vh, 4rem);
     }
 }
+
+/* Compact modifier — small confirmation popovers (event-detail add-to-calendar)
+   keep the centered column narrow instead of the 450px dialog width. */
+.modal-content--compact {
+    max-width: 260px;
+}
