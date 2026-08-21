@@ -1,7 +1,7 @@
 // Stats page module
 import { staggerChildren } from './animations.js';
 import { formatCurrency, formatCurrencyWhole, formatPercent } from './formatters.js';
-import { renderEmptyState, renderSkeleton, renderSkeletonPage, renderSkeletonStatGrid } from './ui.js';
+import { renderEmptyState, renderSkeleton, renderSkeletonPage, renderSkeletonStatGrid, showPageError } from './ui.js';
 
 export default class StatsPage {
     static skeleton() {
@@ -60,17 +60,11 @@ export default class StatsPage {
             this.render();
         } catch (error) {
             console.error('Error loading stats:', error);
-            this.appContent.innerHTML = `
-                <div class="fade-in" style="padding: 1.5rem;">
-                    <div class="neo-card neo-card-red">
-                        <h2>Error Loading Statistics</h2>
-                        <p>${error.message}</p>
-                        <button class="neo-btn neo-btn-red" onclick="window.location.reload()">
-                            Retry
-                        </button>
-                    </div>
-                </div>
-            `;
+            showPageError(this.appContent, {
+                message: 'Could not load the statistics. ' + error.message,
+                actionLabel: 'Try Again',
+                onAction: () => this.load()
+            });
         }
     }
     

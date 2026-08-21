@@ -1,7 +1,7 @@
 // Dashboard page module
 import { staggerChildren, animateAllValues } from './animations.js';
 import { formatCurrency, formatPercent, formatDate } from './formatters.js';
-import { renderEmptyState, renderSkeleton, renderSkeletonPage, renderSkeletonRows, renderSkeletonStatGrid } from './ui.js';
+import { renderEmptyState, renderSkeleton, renderSkeletonPage, renderSkeletonRows, renderSkeletonStatGrid, showPageError } from './ui.js';
 
 export default class DashboardPage {
     static skeleton() {
@@ -60,7 +60,11 @@ export default class DashboardPage {
             this.render(data);
         } catch (error) {
             console.error('Error loading dashboard:', error);
-            this.appContent.innerHTML = `<p>Error loading dashboard: ${error.message}</p>`;
+            showPageError(this.appContent, {
+                message: 'Could not load the dashboard. ' + error.message,
+                actionLabel: 'Try Again',
+                onAction: () => this.load()
+            });
         }
     }
     

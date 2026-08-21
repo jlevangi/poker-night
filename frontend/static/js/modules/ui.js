@@ -10,6 +10,17 @@
  *   empty states that fill an existing card or fixed-height container (chart
  *   areas, a card's body) so the card is not nested inside another card.
  *
+ * showPageError(container, { icon, message, actionLabel, actionClass, onAction })
+ *   The app's single error-state shape: the same neo-card + icon + message
+ *   family as renderEmptyState, plus one optional action button. Sets
+ *   container.innerHTML and binds the button itself, so a failed load is a
+ *   single call. Options: icon (default '⚠️'), message — ESCAPED, so passing
+ *   error.message is safe (renderEmptyState is static-copy only; do not mix
+ *   the two), actionLabel + onAction (pass both to render and wire the
+ *   button, or neither for a message-only error), actionClass (default
+ *   'neo-btn-red' for a "Try Again" retry; use 'neo-btn-green' for
+ *   navigation actions like Back).
+ *
  * renderSkeletonPage(blocks)
  *   The standard page-level loading wrapper (.skeleton-page: max-width
  *   1200px, centered, mobile-aware padding). `blocks` is an array of HTML
@@ -30,8 +41,9 @@
  *   ends) — the app's standard list loading shape. Pass a larger `height`
  *   (e.g. '4rem') when the real list renders taller cards.
  *
- * Pass static copy (icon, message) — these strings are not escaped, so never
- * pass user input through this helper.
+ * renderEmptyState takes static copy — its strings are not escaped.
+ * showPageError escapes the message (dynamic error text); its actionLabel
+ * is still static copy.
  *
  * Styling lives in css/styles/utils/_skeletons.css (skeletons) and
  * css/styles/components/_lists.css (.empty-state*); both use theme variables,
@@ -73,4 +85,40 @@ export function renderSkeletonRows(options) {
         html += renderSkeleton({ classes: 'skeleton-row', style: height ? 'height: ' + height + ';' : '' });
     }
     return html + '</div>';
+}
+
+/**
+ * Escape HTML special characters so dynamic text (e.g. error.message) is
+ * safe to inject via innerHTML. Uses the same textContent round-trip
+ * pattern as the escapeHtml helpers in the page modules.
+ */
+function escapeHtml(value) {
+    const node = document.createElement('div');
+    node.textContent = value === null || value === undefined ? '' : String(value);
+    return node.innerHTML;
+}
+
+/**
+ * Render the standard page-level error state into the given container and,
+ * when actionLabel and onAction are both provided, bind the action button.
+ * See the module header for the full options list.
+ */
+export function showPageError(container, options) {
+    const opts = options || {};
+    const icon = opts.icon || '⚠️';
+    const actionLabel = opts.actionLabel;
+    const actionClass = opts.actionClass || 'neo-btn-red';
+    const onAction = opts.onAction;
+    let html = '<div class="neo-card empty-state">' +
+        '<div class="empty-state__icon">' + icon + '</div>' +
+        '<p class="empty-state__message">' + escapeHtml(opts.message || 'Something went wrong.') + '</p>';
+    const hasAction = typeof onAction === 'function' && !!actionLabel;
+    if (hasAction) {
+        html += '<button type="button" class="neo-btn ' + actionClass + ' empty-state__action">' + actionLabel + '</button>';
+    }
+    container.innerHTML = html + '</div>';
+    if (hasAction) {
+        const button = container.querySelector('.empty-state__action');
+        if (button) button.addEventListener('click', onAction);
+    }
 }

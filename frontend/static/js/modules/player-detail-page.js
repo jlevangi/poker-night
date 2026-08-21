@@ -2,7 +2,7 @@
 import Router from './router.js';
 import { staggerChildren, animateAllValues } from './animations.js';
 import { formatCurrency, formatCurrencyWhole, formatDate } from './formatters.js';
-import { renderEmptyState, renderSkeleton, renderSkeletonPage, renderSkeletonStatGrid } from './ui.js';
+import { renderEmptyState, renderSkeleton, renderSkeletonPage, renderSkeletonStatGrid, showPageError } from './ui.js';
 
 export default class PlayerDetailPage {
     static skeleton() {
@@ -72,7 +72,9 @@ export default class PlayerDetailPage {
             this.setupResizeListener();
         } catch (error) {
             console.error(`Error loading player details for ${playerId}:`, error);
-            this.appContent.innerHTML = `<p>Could not load details for player ${playerId}. ${error.message}</p>`;
+            showPageError(this.appContent, {
+                message: 'Could not load this player. ' + error.message
+            });
         }
     }
 

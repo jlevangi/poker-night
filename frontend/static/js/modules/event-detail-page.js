@@ -3,7 +3,7 @@ import Router from './router.js';
 import { staggerChildren } from './animations.js';
 import { formatCurrency, formatDate, formatDateLong } from './formatters.js';
 import EventBus from './event-bus.js';
-import { renderSkeleton, renderSkeletonPage } from './ui.js';
+import { renderSkeleton, renderSkeletonPage, showPageError } from './ui.js';
 
 export default class EventDetailPage {
     static skeleton() {
@@ -71,12 +71,12 @@ export default class EventDetailPage {
             this.render();
         } catch (error) {
             console.error('Error loading event:', error);
-            this.appContent.innerHTML = `
-                <div class="fade-in" style="padding: 1.5rem; max-width: 800px; margin: 0 auto; text-align: center;">
-                    <p style="color: var(--text-secondary); font-weight: 600;">Error loading event: ${this.escapeHtml(error.message)}</p>
-                    <button id="event-detail-back-btn" type="button" class="neo-btn neo-btn-green" style="margin-top: 1rem; display: inline-block;">Back</button>
-                </div>`;
-            this.setupBackButton();
+            showPageError(this.appContent, {
+                message: 'Could not load this event. ' + error.message,
+                actionLabel: 'Back',
+                actionClass: 'neo-btn-green',
+                onAction: () => Router.navigateBack('calendar')
+            });
         }
     }
 

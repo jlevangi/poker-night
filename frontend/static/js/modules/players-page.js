@@ -2,7 +2,7 @@
 import { staggerChildren } from './animations.js';
 import { formatCurrency } from './formatters.js';
 import EventBus from './event-bus.js';
-import { renderEmptyState, renderSkeleton, renderSkeletonPage, renderSkeletonRows } from './ui.js';
+import { renderEmptyState, renderSkeleton, renderSkeletonPage, renderSkeletonRows, showPageError } from './ui.js';
 
 export default class PlayersPage {
     constructor(appContent, apiService) {
@@ -41,7 +41,11 @@ export default class PlayersPage {
             this.render();
         } catch (error) {
             console.error('Error loading players:', error);
-            this.appContent.innerHTML = `<p>Error loading players: ${error.message}</p>`;
+            showPageError(this.appContent, {
+                message: 'Could not load the players list. ' + error.message,
+                actionLabel: 'Try Again',
+                onAction: () => this.load()
+            });
         }
     }
 

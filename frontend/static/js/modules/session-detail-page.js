@@ -5,7 +5,7 @@ import { staggerChildren } from './animations.js';
 import Router from './router.js';
 import EventBus from './event-bus.js';
 import { formatCurrency, formatDate } from './formatters.js';
-import { renderEmptyState, renderSkeleton, renderSkeletonPage, renderSkeletonStatGrid } from './ui.js';
+import { renderEmptyState, renderSkeleton, renderSkeletonPage, renderSkeletonStatGrid, showPageError } from './ui.js';
 
 export default class SessionDetailPage {
     static skeleton() {
@@ -111,7 +111,9 @@ export default class SessionDetailPage {
             this.render(session, sessionId);
         } catch (error) {
             console.error(`Error loading session details for ${sessionId}:`, error);
-            this.appContent.innerHTML = `<p>Could not load details for session ${sessionId}. ${error.message}</p>`;
+            showPageError(this.appContent, {
+                message: 'Could not load this session. ' + error.message
+            });
         }
     }
     

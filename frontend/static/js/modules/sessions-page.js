@@ -1,7 +1,7 @@
 // Sessions page module
 import { staggerChildren } from './animations.js';
 import { formatCurrency, formatDate } from './formatters.js';
-import { renderEmptyState, renderSkeleton, renderSkeletonPage } from './ui.js';
+import { renderEmptyState, renderSkeleton, renderSkeletonPage, showPageError } from './ui.js';
 
 export default class SessionsPage {
     static skeleton() {
@@ -61,7 +61,11 @@ export default class SessionsPage {
             this.render(mappedSessions, upcomingEvents);
         } catch (error) {
             console.error('Error loading sessions:', error);
-            this.appContent.innerHTML = `<p>Error loading sessions: ${error.message}</p>`;
+            showPageError(this.appContent, {
+                message: 'Could not load the sessions list. ' + error.message,
+                actionLabel: 'Try Again',
+                onAction: () => this.load()
+            });
         }
     }
 

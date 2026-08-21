@@ -2,7 +2,7 @@
 import { staggerChildren } from './animations.js';
 import EventBus from './event-bus.js';
 import { formatDateLong } from './formatters.js';
-import { renderEmptyState, renderSkeleton, renderSkeletonPage } from './ui.js';
+import { renderEmptyState, renderSkeleton, renderSkeletonPage, showPageError } from './ui.js';
 
 export default class CalendarPage {
     constructor(appContent, apiService) {
@@ -55,7 +55,11 @@ export default class CalendarPage {
             this.render();
         } catch (error) {
             console.error('Error loading calendar:', error);
-            this.appContent.innerHTML = `<p>Error loading calendar: ${error.message}</p>`;
+            showPageError(this.appContent, {
+                message: 'Could not load the calendar. ' + error.message,
+                actionLabel: 'Try Again',
+                onAction: () => this.load()
+            });
         }
     }
 
