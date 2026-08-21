@@ -1438,11 +1438,6 @@ div .neo-btn.neo-btn-green:hover,
 /* ANIMATIONS */
 /* ============================================================================ */
 
-@keyframes shine {
-    0% { transform: translateX(-100%) translateY(-100%); }
-    100% { transform: translateX(100%) translateY(100%); }
-}
-
 .neo-bounce {
     transition: transform 0.2s ease;
 }
