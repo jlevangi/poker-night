@@ -150,45 +150,6 @@ a:hover {
     border-bottom-color: var(--border-light);
 }
 
-/* Session value summary */
-.session-value-summary {
-    background-color: var(--bg-card);
-    border-left-color: var(--primary-color);
-}
-
-[data-theme="dark"] .session-value-summary {
-    background-color: var(--bg-secondary);
-}
-
-/* Seven-two value */
-[data-theme="dark"] .seven-two-value {
-    background-color: var(--bg-tertiary);
-    border-color: #475569;
-    color: var(--text-primary);
-}
-
-[data-theme="dark"] .strikes-value {
-    background-color: var(--bg-tertiary);
-    border-color: #475569;
-    color: var(--text-primary);
-}
-
-/* Chip distribution */
-.chip-distribution {
-    background-color: var(--bg-card);
-}
-
-[data-theme="dark"] .chip-distribution {
-    background-color: var(--bg-secondary);
-}
-
-/* Add player form */
-.add-player-form {
-    background-color: var(--bg-card);
-    border: 1px solid var(--border-color);
-    border-radius: 14px;
-}
-
 /* Footer */
 footer {
     background-color: var(--bg-body);
@@ -200,12 +161,6 @@ footer {
 [data-theme="dark"] header h1,
 [data-theme="dark"] header nav a {
     color: #FFFFFF !important;
-}
-
-/* Session status always white text */
-.session-status.status-active,
-.session-status.status-ended {
-    color: white !important;
 }
 
 /* Profit colors in dark mode (handled by _modern-theme.css but kept for legacy) */
@@ -237,17 +192,6 @@ footer {
 [data-theme="dark"] .btn-primary {
     background-color: var(--primary-color);
     color: white;
-}
-
-/* Gamble King dark mode */
-[data-theme="dark"] .gamble-king-card {
-    background: rgba(245, 158, 11, 0.1);
-    border-color: rgba(245, 158, 11, 0.3);
-}
-
-[data-theme="dark"] .gamble-king-stats > div {
-    background: var(--bg-card);
-    border-color: rgba(245, 158, 11, 0.2);
 }
 
 /* White background overrides */
