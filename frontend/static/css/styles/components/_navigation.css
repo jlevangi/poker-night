@@ -155,26 +155,6 @@ nav a:hover {
     display: none;
 }
 
-/* Session Status */
-.session-status {
-    padding: 0.4rem 0.8rem;
-    border-radius: var(--radius-pill);
-    font-size: 0.85rem;
-    font-weight: bold;
-    color: var(--text-white);
-    min-width: 70px;
-    text-align: center;
-    margin-left: var(--spacing-sm);
-}
-
-.session-status.status-active {
-    background-color: var(--color-success);
-}
-
-.session-status.status-ended {
-    background-color: var(--color-danger);
-}
-
 /* Back Navigation Buttons */
 .back-nav-btn {
     display: inline-flex !important;
@@ -421,11 +401,7 @@ nav a:hover {
     .quick-actions {
         flex-direction: column;
     }
-    
-    .session-status {
-        margin-top: var(--spacing-sm);
-        margin-left: 0;
-    }
+
 }
 
 @media (max-width: 700px) {
