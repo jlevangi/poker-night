@@ -270,7 +270,7 @@ export default class DashboardPage {
                     <td>
                         <a href="#player/${player.player_id}" style="color: var(--link-color); text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 0.5rem;">
                             ${player.name}
-                            ${isGambleKing ? '<span style="font-size: 1.2rem;">👑</span>' : ''}
+                            ${isGambleKing ? '<span style="font-size: 1.25rem;">👑</span>' : ''}
                         </a>
                     </td>
                     <td class="${player.net_profit >= 0 ? 'profit-positive' : 'profit-negative'}" style="font-weight: 600;">

@@ -104,7 +104,7 @@ function showUpdateNotification(serverVersion, installedVersion) {
             <div style="margin-bottom: 10px; font-weight: 600;">
                 Update Available
             </div>
-            <div style="margin-bottom: 15px; font-size: 14px; opacity: 0.9;">
+            <div style="margin-bottom: 15px; font-size: 0.875rem; opacity: 0.9;">
                 Version ${serverVersion} is ready. Refresh to get new features and fixes.
             </div>
             <div>
