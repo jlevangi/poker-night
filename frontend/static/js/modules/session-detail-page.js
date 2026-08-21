@@ -1324,6 +1324,60 @@ export default class SessionDetailPage {
 
     }
 
+    // Canonical dialog chrome for the per-player confirmation dialogs (Cash Out /
+    // Buy In): shared modal-overlay + modal-content--compact, double-rAF entrance,
+    // Escape and backdrop click to dismiss.
+    _showConfirmDialog({ title, labelFor, inputId, inputAttrs, inputValue, actionLabel, confirmClass }) {
+        const overlay = document.createElement('div');
+        overlay.className = 'modal-overlay';
+
+        const content = document.createElement('div');
+        content.className = 'modal-content modal-content--compact';
+        content.innerHTML = `
+            <h3>${title}</h3>
+            <label for="${inputId}">${labelFor}</label>
+            <input ${inputAttrs}>
+            <div class="modal-actions">
+                <button type="button" class="neo-btn neo-btn-sm" data-action="cancel">Cancel</button>
+                <button type="button" class="neo-btn ${confirmClass} neo-btn-sm" data-action="confirm">${actionLabel}</button>
+            </div>
+        `;
+        overlay.appendChild(content);
+        document.body.appendChild(overlay);
+
+        const input = content.querySelector('#' + inputId);
+        if (inputValue !== null && inputValue !== undefined) input.value = inputValue;
+        const cancelBtn = content.querySelector('[data-action="cancel"]');
+        const confirmBtn = content.querySelector('[data-action="confirm"]');
+
+        const close = () => {
+            document.removeEventListener('keydown', handleEscape);
+            overlay.remove();
+        };
+        const handleEscape = (e) => {
+            if (e.key === 'Escape') close();
+        };
+        document.addEventListener('keydown', handleEscape);
+        overlay.addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) close();
+        });
+        cancelBtn.addEventListener('click', close);
+
+        // Play the canonical fade + rise entrance: paint one hidden frame first,
+        // then reveal and focus the field (visible from the first frame of the
+        // transition, so focus lands once .active is applied).
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+            overlay.classList.add('active');
+            input.focus();
+            if (input.select) input.select();
+        }));
+
+        return {
+            input, confirmBtn, close,
+            onConfirm: (fn) => confirmBtn.addEventListener('click', fn)
+        };
+    }
+
     setupPlayerEventListeners(sessionData, sessionId) {
         const isActive = sessionData.is_active === true;
 
@@ -1352,29 +1406,16 @@ export default class SessionDetailPage {
             button.addEventListener('click', async (e) => {
                 const playerId = e.target.dataset.playerId;
 
-                const modalHtml = `
-                    <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; display: flex; align-items: flex-start; justify-content: center; overflow-y: auto; padding: 1rem;">
-                        <div style="background: white; padding: 20px; border-radius: 8px; max-width: 400px; width: 90%; margin-top: 3rem;">
-                            <h3>Cash Out Player</h3>
-                            <label for="cashout-amount">Enter cash-out amount ($):</label>
-                            <input type="text" id="cashout-amount" inputmode="decimal" pattern="[0-9]*\.?[0-9]*" style="width: 100%; padding: 10px; margin: 10px 0; font-size: 16px; border: 2px solid var(--border-light, #ddd); border-radius: 4px;">
-                            <div style="text-align: right; margin-top: 15px;">
-                                <button id="cancel-cashout" style="margin-right: 10px; padding: 8px 16px; background: var(--bg-tertiary); border: none; border-radius: 4px; cursor: pointer;">Cancel</button>
-                                <button id="confirm-cashout" style="padding: 8px 16px; background: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer;">Cash Out</button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-
-                const modalElement = document.createElement('div');
-                modalElement.innerHTML = modalHtml;
-                document.body.appendChild(modalElement);
-
-                const cashoutInput = document.getElementById('cashout-amount');
-                const cancelBtn = document.getElementById('cancel-cashout');
-                const confirmBtn = document.getElementById('confirm-cashout');
-
-                setTimeout(() => cashoutInput.focus(), 100);
+                const dialog = this._showConfirmDialog({
+                    title: 'Cash Out Player',
+                    labelFor: 'Enter cash-out amount ($):',
+                    inputId: 'cashout-amount',
+                    inputAttrs: 'type="text" id="cashout-amount" inputmode="decimal" pattern="[0-9]*\\.?[0-9]*"',
+                    inputValue: '',
+                    actionLabel: 'Cash Out',
+                    confirmClass: 'neo-btn-red'
+                });
+                const { input: cashoutInput, confirmBtn } = dialog;
 
                 cashoutInput.addEventListener('input', (event) => {
                     let value = event.target.value;
@@ -1386,11 +1427,7 @@ export default class SessionDetailPage {
                     event.target.value = value;
                 });
 
-                cancelBtn.addEventListener('click', () => {
-                    document.body.removeChild(modalElement);
-                });
-
-                confirmBtn.addEventListener('click', async () => {
+                dialog.onConfirm(async () => {
                     const cashOutValue = parseFloat(cashoutInput.value);
 
                     if (isNaN(cashOutValue) || cashOutValue < 0 || cashoutInput.value === '') {
@@ -1408,13 +1445,13 @@ export default class SessionDetailPage {
                             payout_amount: cashOutValue
                         });
 
-                        document.body.removeChild(modalElement);
+                        dialog.close();
                         this.refreshEntries(newEntries, sessionId);
 
                     } catch (error) {
                         console.error('Error processing cash-out:', error);
                         alert(`Error: ${error.message}`);
-                        document.body.removeChild(modalElement);
+                        dialog.close();
                         button.disabled = false;
                         button.textContent = 'Cash Out';
                     }
@@ -1433,32 +1470,18 @@ export default class SessionDetailPage {
             button.addEventListener('click', async (e) => {
                 const playerId = e.target.dataset.playerId;
 
-                const modalHtml = `
-                    <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; display: flex; align-items: flex-start; justify-content: center; overflow-y: auto; padding: 1rem;">
-                        <div style="background: white; padding: 20px; border-radius: 8px; max-width: 400px; width: 90%; margin-top: 3rem;">
-                            <h3>Buy In Player</h3>
-                            <label for="buyin-amount">Enter buy-in amount ($):</label>
-                            <input type="number" id="buyin-amount" inputmode="decimal" step="0.01" min="0" value="${sessionData.default_buy_in_value ? sessionData.default_buy_in_value.toFixed(2) : '20.00'}" style="width: 100%; padding: 10px; margin: 10px 0; font-size: 16px; border: 2px solid var(--border-light, #ddd); border-radius: 4px;">
-                            <div style="text-align: right; margin-top: 15px;">
-                                <button id="cancel-buyin" style="margin-right: 10px; padding: 8px 16px; background: var(--bg-tertiary); border: none; border-radius: 4px; cursor: pointer;">Cancel</button>
-                                <button id="confirm-buyin" style="padding: 8px 16px; background: #2196F3; color: white; border: none; border-radius: 4px; cursor: pointer;">Buy In</button>
-                            </div>
-                        </div>
-                    </div>
-                `;
+                const defaultBuyin = sessionData.default_buy_in_value || 20;
 
-                const modalElement = document.createElement('div');
-                modalElement.innerHTML = modalHtml;
-                document.body.appendChild(modalElement);
-
-                const buyinInput = document.getElementById('buyin-amount');
-                const cancelBtn = document.getElementById('cancel-buyin');
-                const confirmBtn = document.getElementById('confirm-buyin');
-
-                setTimeout(() => {
-                    buyinInput.focus();
-                    buyinInput.select();
-                }, 100);
+                const dialog = this._showConfirmDialog({
+                    title: 'Buy In Player',
+                    labelFor: 'Enter buy-in amount ($):',
+                    inputId: 'buyin-amount',
+                    inputAttrs: 'type="number" id="buyin-amount" inputmode="decimal" step="0.01" min="0"',
+                    inputValue: sessionData.default_buy_in_value ? sessionData.default_buy_in_value.toFixed(2) : '20.00',
+                    actionLabel: 'Buy In',
+                    confirmClass: 'neo-btn-green'
+                });
+                const { input: buyinInput, confirmBtn } = dialog;
 
                 buyinInput.addEventListener('input', (event) => {
                     let value = event.target.value;
@@ -1470,11 +1493,7 @@ export default class SessionDetailPage {
                     event.target.value = value;
                 });
 
-                cancelBtn.addEventListener('click', () => {
-                    document.body.removeChild(modalElement);
-                });
-
-                confirmBtn.addEventListener('click', async () => {
+                dialog.onConfirm(async () => {
                     const buyinValue = parseFloat(buyinInput.value);
 
                     if (isNaN(buyinValue) || buyinValue <= 0 || buyinInput.value === '') {
@@ -1488,20 +1507,19 @@ export default class SessionDetailPage {
                         confirmBtn.disabled = true;
                         confirmBtn.textContent = 'Processing...';
 
-                        const defaultBuyin = sessionData.default_buy_in_value || 20;
                         const numBuyIns = Math.round(buyinValue / defaultBuyin);
 
                         const newEntries = await this.api.post(`sessions/${sessionId}/entries/${playerId}/buy-in`, {
                             num_buy_ins: numBuyIns
                         });
 
-                        document.body.removeChild(modalElement);
+                        dialog.close();
                         this.refreshEntries(newEntries, sessionId);
 
                     } catch (error) {
                         console.error('Error processing buy-in:', error);
                         alert(`Error: ${error.message}`);
-                        document.body.removeChild(modalElement);
+                        dialog.close();
                         button.disabled = false;
                         button.textContent = 'Buy In';
                     }
