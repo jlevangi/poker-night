@@ -214,7 +214,7 @@ export default class SessionDetailPage {
         return `
             <div class="neo-card ${profitColor} clickable-player-details" data-player-id="${player.id}" style="cursor: pointer; padding: 1rem;${isActive && !isCashedOut ? ' border-left: 3px solid var(--casino-gold); opacity: 0.85;' : ''}">
                 <!-- Name + Profit header row -->
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; row-gap: 0.25rem; margin-bottom: 0.75rem;">
                     <div style="display: flex; align-items: center; gap: 0.5rem;">
                         <h4 style="font-size: 1.125rem; font-weight: 600; margin: 0;">
                             <a href="#player/${player.id}" style="color: inherit; text-decoration: none;">${player.name}</a>
@@ -779,6 +779,10 @@ export default class SessionDetailPage {
                 font-weight: 700;
                 color: var(--text-primary);
                 flex: 1;
+                min-width: 0;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
             }
 
             .session-player-picker-toolbar {
