@@ -124,7 +124,7 @@ export default class EventDetailPage {
                     <h3 style="font-weight: 600; color: var(--text-primary); margin: 0 0 0.5rem 0;">Responses</h3>
                     ${yesPlayers.length > 0 ? `
                         <div style="margin-bottom: 0.5rem;">
-                            <span style="font-weight: 700; color: var(--casino-green);">Playing:</span>
+                            <span style="font-weight: 700; color: var(--casino-green-dark);">Playing:</span>
                             <span style="font-weight: 600; color: var(--text-primary);">${yesPlayers.map(r => this.escapeHtml(r.player_name)).join(', ')}</span>
                         </div>
                     ` : ''}
@@ -136,7 +136,7 @@ export default class EventDetailPage {
                     ` : ''}
                     ${noPlayers.length > 0 ? `
                         <div>
-                            <span style="font-weight: 700; color: var(--casino-red);">Out:</span>
+                            <span style="font-weight: 700; color: var(--casino-red-dark);">Out:</span>
                             <span style="font-weight: 600; color: var(--text-primary);">${noPlayers.map(r => this.escapeHtml(r.player_name)).join(', ')}</span>
                         </div>
                     ` : ''}
@@ -182,7 +182,7 @@ export default class EventDetailPage {
                 <div>
                     <h2 style="font-size: 1.75rem; font-weight: 600; color: var(--text-primary); margin: 0;">
                         ${this.escapeHtml(event.title || 'Poker Night')}
-                        ${isCancelled ? '<span style="color: var(--casino-red); font-size: 1rem; margin-left: 0.5rem;">CANCELLED</span>' : ''}
+                        ${isCancelled ? '<span style="color: var(--casino-red-dark); font-size: 1rem; margin-left: 0.5rem;">CANCELLED</span>' : ''}
                     </h2>
                     <div style="font-weight: 700; color: var(--text-secondary); margin-top: 0.25rem; font-size: 1.1rem;">
                         ${dateFormatted}${timeFormatted ? ' at ' + timeFormatted : ''}
