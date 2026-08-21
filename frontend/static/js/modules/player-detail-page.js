@@ -147,19 +147,19 @@ export default class PlayerDetailPage {
                     
                     <!-- Main Stats Grid -->
                     <div class="neo-stats-grid" style="grid-template-columns: repeat(2, 1fr); margin-bottom: 1.5rem;">
-                        <div class="neo-stat-card" style="border-color: ${player.totalProfit >= 0 ? 'var(--casino-green)' : 'var(--casino-red)'};">
+                        <div class="neo-stat-card" style="border-color: ${player.totalProfit >= 0 ? 'var(--casino-green-dark)' : 'var(--casino-red-dark)'};">
                             <div class="neo-stat-value ${player.totalProfit >= 0 ? 'profit-positive' : 'profit-negative'}">${formatCurrency(player.totalProfit)}</div>
                             <div class="neo-stat-label">Total Profit</div>
                         </div>
-                        <div class="neo-stat-card" style="border-color: var(--casino-purple);">
+                        <div class="neo-stat-card" style="border-color: var(--casino-purple-dark);">
                             <div class="neo-stat-value">${player.sessionsPlayed || 0}</div>
                             <div class="neo-stat-label">Sessions Played</div>
                         </div>
-                        <div class="neo-stat-card" style="border-color: var(--casino-gold);">
+                        <div class="neo-stat-card" style="border-color: var(--casino-gold-dark);">
                             <div class="neo-stat-value">${player.winRate !== undefined ? (player.winRate * 100).toFixed(0) : '0'}%</div>
                             <div class="neo-stat-label">Win Rate</div>
                         </div>
-                        <div class="neo-stat-card" style="border-color: var(--casino-gold);">
+                        <div class="neo-stat-card" style="border-color: var(--casino-gold-dark);">
                             <div class="neo-stat-value">${player.seven_two_wins || 0}</div>
                             <div class="neo-stat-label">7-2 Wins Total</div>
                         </div>
@@ -203,8 +203,8 @@ export default class PlayerDetailPage {
                 html += `
                     <tr>
                         <td><a href="#session/${session.sessionId}" style="color: var(--link-color); text-decoration: none; font-weight: 700;">${formatDate(session.date)}</a></td>
-                        <td style="font-weight: 700; color: var(--casino-red);">${formatCurrency(buyIn)}</td>
-                        <td style="font-weight: 700; color: var(--casino-gold);">${formatCurrency(cashOut)}</td>
+                        <td style="font-weight: 700; color: var(--casino-red-dark);">${formatCurrency(buyIn)}</td>
+                        <td style="font-weight: 700; color: var(--casino-gold-dark);">${formatCurrency(cashOut)}</td>
                         <td class="${profit >= 0 ? 'profit-positive' : 'profit-negative'}" style="font-weight: 700;">${formatCurrency(profit)}</td>
                     </tr>
                 `;
@@ -339,7 +339,7 @@ export default class PlayerDetailPage {
 
         // Determine line color based on final profit
         const finalProfit = data[data.length - 1].cumulative_profit;
-        const lineColor = finalProfit >= 0 ? 'var(--casino-green-dark)' : 'var(--casino-red)';
+        const lineColor = finalProfit >= 0 ? 'var(--casino-green-dark)' : 'var(--casino-red-dark)';
 
         // Responsive font sizes
         const labelFontSize = isMobile ? '0.65rem' : '0.75rem';
@@ -381,7 +381,7 @@ export default class PlayerDetailPage {
                         ${data.map((point, index) => {
                             const cx = xScale(index);
                             const cy = margin.top + yScale(point.cumulative_profit);
-                            const pointColor = point.cumulative_profit >= 0 ? 'var(--casino-gold)' : 'var(--casino-red)';
+                                const pointColor = point.cumulative_profit >= 0 ? 'var(--casino-gold-dark)' : 'var(--casino-red-dark)';
                             return `
                                 <circle cx="${cx}"
                                         cy="${cy}"
@@ -478,7 +478,7 @@ export default class PlayerDetailPage {
                 e.target.setAttribute('r', '8');
                 const originalFill = e.target.style.fill || e.target.getAttribute('fill');
                 e.target.setAttribute('data-original-fill', originalFill);
-                e.target.style.fill = 'var(--casino-purple)';
+                e.target.style.fill = 'var(--casino-purple-dark)';
 
                 // Show tooltip
                 const tooltip = document.createElement('div');
