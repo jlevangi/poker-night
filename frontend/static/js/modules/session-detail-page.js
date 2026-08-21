@@ -1182,7 +1182,7 @@ export default class SessionDetailPage {
 
                         <!-- Buy-ins -->
                         <div style="margin-bottom: 1.25rem;">
-                            <div style="font-size: 0.75rem; font-weight: 600; opacity: 0.7; margin-bottom: 0.5rem;">Buy-ins</div>
+                            <div class="modal-section-label">Buy-ins</div>
                             <div style="display: flex; align-items: center; gap: 0.75rem;">
                                 <button id="edit-buyin-minus" class="neo-btn" style="width: 36px; height: 36px; padding: 0; font-size: 1.25rem; font-weight: 700; display: flex; align-items: center; justify-content: center; border-radius: 50%;${buyInCount <= 1 ? ' opacity: 0.4;' : ''}" ${buyInCount <= 1 ? 'disabled' : ''}>−</button>
                                 <span style="font-size: 1.25rem; font-weight: 700; min-width: 2rem; text-align: center;">${buyInCount}</span>
@@ -1193,13 +1193,13 @@ export default class SessionDetailPage {
 
                         <!-- Cash-out amount -->
                         <div style="margin-bottom: 1.25rem;">
-                            <div style="font-size: 0.75rem; font-weight: 600; opacity: 0.7; margin-bottom: 0.5rem;">Cash-out Amount</div>
+                            <div class="modal-section-label">Cash-out Amount</div>
                             <input type="text" id="edit-cashout-input" inputmode="decimal" pattern="[0-9]*\\.?[0-9]*" value="${cashOut > 0 ? cashOut.toFixed(2) : ''}" placeholder="0.00" style="width: 100%; margin-bottom: 0;">
                         </div>
 
                         <!-- 7-2 Wins -->
                         <div style="margin-bottom: 1.25rem;">
-                            <div style="font-size: 0.75rem; font-weight: 600; opacity: 0.7; margin-bottom: 0.5rem;">7-2 Wins</div>
+                            <div class="modal-section-label">7-2 Wins</div>
                             <div style="display: flex; align-items: center; gap: 0.75rem;">
                                 <button id="edit-72-minus" class="neo-btn" style="width: 36px; height: 36px; padding: 0; font-size: 1.25rem; font-weight: 700; display: flex; align-items: center; justify-content: center; border-radius: 50%; border-color: var(--casino-gold); color: var(--casino-gold);${(p.sevenTwoWins || 0) <= 0 ? ' opacity: 0.4;' : ''}" ${(p.sevenTwoWins || 0) <= 0 ? 'disabled' : ''}>−</button>
                                 <span style="font-size: 1.25rem; font-weight: 700; min-width: 2rem; text-align: center; color: var(--casino-gold);">${p.sevenTwoWins || 0}</span>
@@ -1209,7 +1209,7 @@ export default class SessionDetailPage {
 
                         <!-- Strikes -->
                         <div style="margin-bottom: 1.25rem;">
-                            <div style="font-size: 0.75rem; font-weight: 600; opacity: 0.7; margin-bottom: 0.5rem;">Strikes</div>
+                            <div class="modal-section-label">Strikes</div>
                             <div style="display: flex; align-items: center; gap: 0.75rem;">
                                 <button id="edit-strikes-minus" class="neo-btn" style="width: 36px; height: 36px; padding: 0; font-size: 1.25rem; font-weight: 700; display: flex; align-items: center; justify-content: center; border-radius: 50%; border-color: var(--casino-red); color: var(--casino-red);${(p.strikes || 0) <= 0 ? ' opacity: 0.4;' : ''}" ${(p.strikes || 0) <= 0 ? 'disabled' : ''}>−</button>
                                 <span style="font-size: 1.25rem; font-weight: 700; min-width: 2rem; text-align: center; color: var(--casino-red);">${p.strikes || 0}</span>

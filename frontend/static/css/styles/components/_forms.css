@@ -29,6 +29,19 @@ select {
     color: var(--text-primary);
 }
 
+/* Modal section sub-header: a smaller, muted label that groups a set of
+   controls (e.g. Buy-ins / Cash-out / 7-2 / Strikes in the player-edit modal).
+   Distinct from .modal-form-label, which sits directly above a single input.
+   Uses the theme's --text-secondary color (not an opacity trick) so it reads
+   correctly in both light and dark. */
+.modal-section-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
 .modal-form-group input[type="date"],
 .modal-form-group input[type="number"] {
     width: 100%;
