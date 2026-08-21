@@ -584,7 +584,7 @@ export default class StatsPage {
             
             const strokeWidth = value === coords.chartMinValue ? "3" : "2";
             const opacity = value === coords.chartMinValue ? "1" : "0.3";
-            const stroke = value === coords.chartMinValue ? "var(--casino-black)" : "var(--text-muted)";
+            const stroke = value === coords.chartMinValue ? "var(--text-primary)" : "var(--text-muted)";
             
             gridHTML += `<line x1="0" y1="${y}" x2="${coords.chartWidth}" y2="${y}" stroke="${stroke}" stroke-width="${strokeWidth}" opacity="${opacity}"/>`;
         });
@@ -907,7 +907,7 @@ export default class StatsPage {
                     <div style="font-weight: 700; font-size: 0.8rem; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Everyone Else (${otherPlayers.length})</div>
                     <div class="neo-pie-legend-meta">${formatCurrency(otherPlayers.reduce((sum, p) => sum + p.total_buy_ins_value, 0))} • ${formatPercent((otherPlayers.reduce((sum, p) => sum + p.total_buy_ins_value, 0) / totalGambled) * 100)}</div>
                 </div>
-                <div class="everyone-else-arrow" style="font-weight: 600; color: var(--casino-purple); font-size: 1rem;">▼</div>
+                <div class="everyone-else-arrow" style="font-weight: 600; color: var(--casino-purple-dark); font-size: 1rem;">▼</div>
             </div>
         ` : '';
 
