@@ -47,14 +47,6 @@ nav a:hover {
     box-shadow: none;
 }
 
-/* Quick Actions Navigation */
-.quick-actions {
-    display: flex;
-    justify-content: center;
-    gap: var(--spacing-md);
-    margin: var(--spacing-lg) 0 var(--spacing-md);
-    flex-wrap: wrap;
-}
 
 /* Sessions Actions */
 .sessions-actions {
@@ -395,13 +387,6 @@ nav a:hover {
         align-self: flex-end !important;
         min-width: auto !important;
     }
-}
-
-@media (max-width: 400px) {
-    .quick-actions {
-        flex-direction: column;
-    }
-
 }
 
 @media (max-width: 700px) {
