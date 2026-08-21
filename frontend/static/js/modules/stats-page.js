@@ -412,7 +412,7 @@ export default class StatsPage {
                 <div style="width: ${margin.left}px; position: relative; height: ${height + margin.top}px;">
                     ${[...yLabels].reverse().map(value => {
                         const y = margin.top + yScale(value);
-                        return `<div style="position: absolute; top: ${y}px; right: ${labelRightMargin}; transform: translateY(-50%); font-size: ${labelFontSize}; font-weight: bold; color: var(--text-secondary);">${formatCurrencyWhole(value)}</div>`;
+                        return `<div style="position: absolute; top: ${y}px; right: ${labelRightMargin}; transform: translateY(-50%); font-size: ${labelFontSize}; font-weight: 700; color: var(--text-secondary);">${formatCurrencyWhole(value)}</div>`;
                     }).join('')}
                 </div>
 

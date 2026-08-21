@@ -355,7 +355,7 @@ export default class PlayerDetailPage {
                     ${[...yLabels].reverse().map(value => {
                         const y = margin.top + yScale(value);
                         const displayValue = formatCurrencyWhole(value);
-                        return `<div style="position: absolute; top: ${y}px; right: ${labelRightMargin}; transform: translateY(-50%); font-size: ${labelFontSize}; font-weight: bold; color: var(--text-secondary);">${displayValue}</div>`;
+                        return `<div style="position: absolute; top: ${y}px; right: ${labelRightMargin}; transform: translateY(-50%); font-size: ${labelFontSize}; font-weight: 700; color: var(--text-secondary);">${displayValue}</div>`;
                     }).join('')}
                 </div>
 

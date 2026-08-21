@@ -64,7 +64,7 @@ li a:hover {
 }
 
 .session-date {
-    font-weight: bold;
+    font-weight: 700;
     font-size: 1.1rem;
 }
 
@@ -241,7 +241,7 @@ li a:hover {
     color: var(--gamble-king-label-text);
     padding: 0.15rem 0.4rem;
     border-radius: var(--radius-xl);
-    font-weight: bold;
+    font-weight: 700;
     white-space: nowrap;
     display: inline-block;
 }

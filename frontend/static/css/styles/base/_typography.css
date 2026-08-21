@@ -1,4 +1,21 @@
-/* Typography Styles */
+/* Typography Styles
+ *
+ * Type scale — the only font-sizes the app uses (rem, root 16px).
+ * New or migrated declarations must land on one of these steps:
+ *   0.65  micro    chart axis labels only
+ *   0.7   xs       compact stat labels (.stat-label--sm)
+ *   0.75  sm       small labels / badges / table text (.stat-label, .modal-section-label)
+ *   0.875 md       secondary text, list sub-lines, button + legend text
+ *   1     base     body, inputs, card text
+ *   1.125 lg       emphasized text, card titles (h3)
+ *   1.25  xl       section headings (h2)
+ *   1.5   2xl      large titles
+ *   1.75  3xl      detail-page titles (event detail)
+ *   2     display  stat values (.neo-stat-value)
+ *   2.5   title    page titles (list pages, player-detail header)
+ * Weights: 400 body / 600 labels + headings / 700 emphasized values.
+ * Never use px font-sizes or the bold/normal keywords.
+ */
 
 h1, h2, h3, h4, h5, h6 {
     margin-top: 0;
