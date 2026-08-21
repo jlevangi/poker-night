@@ -1,6 +1,7 @@
 // Stats page module
 import { staggerChildren } from './animations.js';
 import { formatCurrency, formatCurrencyWhole, formatPercent } from './formatters.js';
+import { renderEmptyState } from './ui.js';
 
 export default class StatsPage {
     static skeleton() {
@@ -357,7 +358,7 @@ export default class StatsPage {
         const data = this.chartData.data;
         
         if (data.length === 0) {
-            chartContainer.innerHTML = '<div class="empty-state"><p class="empty-state__message">No data to display</p></div>';
+            chartContainer.innerHTML = renderEmptyState({ icon: '📊', message: 'No data to display', card: false });
             return;
         }
         
@@ -817,7 +818,7 @@ export default class StatsPage {
             .sort((a, b) => b.total_buy_ins_value - a.total_buy_ins_value);
 
         if (playersWithBuyIns.length === 0) {
-            pieContainer.innerHTML = '<div class="empty-state"><p class="empty-state__message">No data to display</p></div>';
+            pieContainer.innerHTML = renderEmptyState({ icon: '📊', message: 'No data to display', card: false });
             return;
         }
 

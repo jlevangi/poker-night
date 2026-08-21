@@ -5,6 +5,7 @@ import { staggerChildren } from './animations.js';
 import Router from './router.js';
 import EventBus from './event-bus.js';
 import { formatCurrency, formatDate } from './formatters.js';
+import { renderEmptyState } from './ui.js';
 
 export default class SessionDetailPage {
     static skeleton() {
@@ -122,7 +123,7 @@ export default class SessionDetailPage {
         if (!session || !session.session_info || !session.session_info.chip_distribution) {
             return `<div class="neo-card" style="margin-bottom: 2rem;">
                 <h3 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem; color: var(--text-primary);">🎰 Chip Distribution</h3>
-                <p style="font-weight: 600; color: var(--text-secondary);">No chip distribution data available.</p>
+                ${renderEmptyState({ icon: '🎰', message: 'No chip distribution data available.', card: false })}
             </div>`;
         }
         
@@ -363,7 +364,7 @@ export default class SessionDetailPage {
                                 ${player.isInSession ? '<span class="session-player-picker-badge">In Session</span>' : ''}
                             </label>
                         `).join('') : `
-                            <div class="empty-state"><p class="empty-state__message">No players match your search.</p></div>
+                            ${renderEmptyState({ icon: '🔍', message: 'No players match your search.', card: false })}
                         `}
                     </div>
                     <div class="session-player-picker-footer">
@@ -418,10 +419,7 @@ export default class SessionDetailPage {
             html += `</div>`;
         } else {
             html += `
-                <div class="neo-card empty-state">
-                    <div class="empty-state__icon">👤</div>
-                    <p class="empty-state__message">No players in this session yet.</p>
-                </div>
+                ${renderEmptyState({ icon: '👤', message: 'No players in this session yet.' })}
             `;
         }
 

@@ -1,6 +1,7 @@
 // Sessions page module
 import { staggerChildren } from './animations.js';
 import { formatCurrency, formatDate } from './formatters.js';
+import { renderEmptyState } from './ui.js';
 
 export default class SessionsPage {
     static skeleton() {
@@ -186,10 +187,7 @@ export default class SessionsPage {
             html += `</div>`;
         } else {
             html += `
-                <div class="neo-card empty-state">
-                    <div class="empty-state__icon">🎯</div>
-                    <p class="empty-state__message">No sessions found. Create your first session above!</p>
-                </div>
+                ${renderEmptyState({ icon: '🎯', message: 'No sessions found. Create your first session above!' })}
             `;
         }
 

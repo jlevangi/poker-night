@@ -1,6 +1,7 @@
 // Dashboard page module
 import { staggerChildren, animateAllValues } from './animations.js';
 import { formatCurrency, formatPercent, formatDate } from './formatters.js';
+import { renderEmptyState } from './ui.js';
 
 export default class DashboardPage {
     static skeleton() {
@@ -248,9 +249,7 @@ export default class DashboardPage {
             return `
                 <div class="neo-card">
                     <h3 class="section-title" style="margin-bottom: 1.5rem;">🏆 Player Standings</h3>
-                    <div class="empty-state">
-                        <p class="empty-state__message">No players found.</p>
-                    </div>
+                    ${renderEmptyState({ icon: '🏆', message: 'No players found.', card: false })}
                 </div>
             `;
         }
@@ -307,7 +306,7 @@ export default class DashboardPage {
             return `
                 <div class="neo-card">
                     <h3 class="section-title" style="margin-bottom: 1.5rem;">🃏 Recent Sessions</h3>
-                    <p class="card-subtitle">No recent sessions found.</p>
+                    ${renderEmptyState({ icon: '🃏', message: 'No recent sessions found.', card: false })}
                 </div>
             `;
         }

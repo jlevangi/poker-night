@@ -2,6 +2,7 @@
 import { staggerChildren } from './animations.js';
 import EventBus from './event-bus.js';
 import { formatDateLong } from './formatters.js';
+import { renderEmptyState } from './ui.js';
 
 export default class CalendarPage {
     constructor(appContent, apiService) {
@@ -69,7 +70,7 @@ export default class CalendarPage {
 
                 <div id="events-list">
                     ${this.events.length === 0
-                        ? '<div class="neo-card"><p style="font-weight: 600; color: var(--text-secondary); text-align: center;">No upcoming events scheduled. Click "Schedule Event" to plan the next poker night!</p></div>'
+                        ? renderEmptyState({ icon: '📅', message: 'No upcoming events scheduled. Click "Schedule Event" to plan the next poker night!' })
                         : this.events.map(evt => this.renderEventCard(evt)).join('')
                     }
                 </div>

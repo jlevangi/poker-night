@@ -33,6 +33,7 @@ const URLS_TO_CACHE = [
     '/static/js/modules/sessions-page.js',
     '/static/js/modules/settings-manager.js',
     '/static/js/modules/stats-page.js',
+    '/static/js/modules/ui.js',
     '/static/images/icon-192x192.png',
     '/static/images/icon-512x512.png',
     '/manifest.json',

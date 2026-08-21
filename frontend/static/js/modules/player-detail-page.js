@@ -2,6 +2,7 @@
 import Router from './router.js';
 import { staggerChildren, animateAllValues } from './animations.js';
 import { formatCurrency, formatCurrencyWhole, formatDate } from './formatters.js';
+import { renderEmptyState } from './ui.js';
 
 export default class PlayerDetailPage {
     static skeleton() {
@@ -217,10 +218,7 @@ export default class PlayerDetailPage {
             `;
         } else {
             html += `
-                <div class="neo-card empty-state">
-                    <div class="empty-state__icon">📈</div>
-                    <p class="empty-state__message">No sessions found for this player.</p>
-                </div>
+                ${renderEmptyState({ icon: '📈', message: 'No sessions found for this player.' })}
             `;
         }
         
@@ -294,7 +292,7 @@ export default class PlayerDetailPage {
         const data = this.chartData.data;
 
         if (data.length === 0) {
-            chartContainer.innerHTML = '<div class="empty-state"><p class="empty-state__message">No data to display</p></div>';
+            chartContainer.innerHTML = renderEmptyState({ icon: '📈', message: 'No data to display', card: false });
             return;
         }
 

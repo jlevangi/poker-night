@@ -2,6 +2,7 @@
 import { staggerChildren } from './animations.js';
 import { formatCurrency } from './formatters.js';
 import EventBus from './event-bus.js';
+import { renderEmptyState } from './ui.js';
 
 export default class PlayersPage {
     constructor(appContent, apiService) {
@@ -193,10 +194,7 @@ export default class PlayersPage {
             html += `</div>`;
         } else {
             html += `
-                <div class="neo-card empty-state">
-                    <div class="empty-state__icon">🎲</div>
-                    <p class="empty-state__message">${this.searchQuery.length >= 2 ? 'No players match your search.' : 'No players found. Add your first player above!'}</p>
-                </div>
+                ${renderEmptyState({ icon: '🎲', message: this.searchQuery.length >= 2 ? 'No players match your search.' : 'No players found. Add your first player above!' })}
             `;
         }
 
