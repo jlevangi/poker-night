@@ -230,7 +230,7 @@ export default class EventDetailPage {
                 </div>
                 <div style="grid-column: 1 / -1;">
                     <label class="modal-form-label">Description</label>
-                    <textarea id="edit-description" placeholder="Optional details..." class="neo-input" style="width: 100%; min-height: 60px; resize: vertical;">${this.escapeHtml(event.description || '')}</textarea>
+                    <textarea id="edit-description" placeholder="Optional details..." class="neo-input" style="width: 100%; min-height: 60px; resize: vertical; margin-bottom: 0;">${this.escapeHtml(event.description || '')}</textarea>
                 </div>
             </div>
             <div style="display: flex; gap: 1rem; margin-top: 1rem;">

@@ -4,7 +4,8 @@ input[type="text"],
 input[type="number"],
 input[type="date"],
 input[type="time"],
-select {
+select,
+textarea {
     padding: 0.75rem;
     margin-bottom: var(--spacing-sm);
     border: 1px solid var(--border-color);

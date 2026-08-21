@@ -124,7 +124,7 @@ export default class CalendarPage {
                     </div>
                     <div style="grid-column: 1 / -1;">
                         <label class="modal-form-label">Description</label>
-                        <textarea id="event-description" placeholder="Optional details..." class="neo-input" style="width: 100%; min-height: 60px; resize: vertical;"></textarea>
+                        <textarea id="event-description" placeholder="Optional details..." class="neo-input" style="width: 100%; min-height: 60px; resize: vertical; margin-bottom: 0;"></textarea>
                     </div>
                 </div>
                 <div style="display: flex; gap: 1rem; margin-top: 1rem;">

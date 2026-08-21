@@ -593,9 +593,9 @@ export default class SessionDetailPage {
                         ${isActive ? `
                         <div style="display: flex; flex-direction: column; gap: 1rem;">
                             <h4 style="font-size: 1.1rem; font-weight: 600; margin: 0; color: var(--text-primary);">${sessionData.wisdom_quote ? 'Edit Quote' : 'Add Quote'}</h4>
-                            <textarea id="wisdom-quote-input" placeholder="Enter the quote..." style="padding: 0.875rem 1rem; border: var(--neo-border); font-size: 1rem; font-weight: 600; background: var(--bg-card); min-height: 80px; resize: vertical;">${sessionData.wisdom_quote || ''}</textarea>
+                            <textarea id="wisdom-quote-input" placeholder="Enter the quote..." style="min-height: 80px; resize: vertical; margin-bottom: 0;">${sessionData.wisdom_quote || ''}</textarea>
                             <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
-                                <select id="wisdom-player-select" style="flex: 1; min-width: 200px; padding: 0.875rem 1rem; border: var(--neo-border); font-size: 1rem; font-weight: 600; background: var(--bg-card);">
+                                <select id="wisdom-player-select" style="flex: 1; min-width: 200px;">
                                     <option value="">-- Who said it? --</option>
                                     ${(session.players || []).map(player =>
                                         `<option value="${player.id}" ${player.id === sessionData.wisdom_player_id ? 'selected' : ''}>${player.name}</option>`
