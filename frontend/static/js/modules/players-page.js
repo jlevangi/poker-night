@@ -90,7 +90,7 @@ export default class PlayersPage {
                 <div class="neo-card neo-card-purple" style="margin-bottom: 2rem; padding-top: 1rem;">
                     <h3 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem; margin-top: 0; color: var(--casino-purple-dark);">➕ Add New Player</h3>
                     <div style="display: flex; gap: 1rem; align-items: baseline; flex-wrap: wrap;">
-                        <input type="text" id="new-player-name" placeholder="Enter player name..." style="flex: 1; min-width: 200px; padding: 0.875rem 1rem; border: var(--neo-border); font-size: 1rem; font-weight: 600; background: var(--bg-card);">
+                        <input type="text" id="new-player-name" placeholder="Enter player name..." style="flex: 1; min-width: 200px;">
                         <button id="add-player-btn" class="neo-btn neo-btn-purple neo-btn-lg">Add Player</button>
                     </div>
                 </div>
@@ -98,7 +98,7 @@ export default class PlayersPage {
                 <div class="neo-card" style="margin-bottom: 2rem;">
                     <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
                         <div style="flex: 1; min-width: 200px; position: relative;">
-                            <input type="text" id="player-search" placeholder="Search players..." value="${this.searchQuery}" style="width: 100%; padding: 0.875rem 1rem; border: var(--neo-border); font-size: 1rem; font-weight: 600; background: var(--bg-card);">
+                            <input type="text" id="player-search" placeholder="Search players..." value="${this.searchQuery}" style="width: 100%;">
                             <div id="search-suggestions" style="position: absolute; top: 100%; left: 0; right: 0; background: var(--bg-card); border: var(--neo-border); border-top: none; display: none; z-index: 100; max-height: 200px; overflow-y: auto;"></div>
                         </div>
                         <div style="display: flex; gap: 0.5rem; align-items: center;">
