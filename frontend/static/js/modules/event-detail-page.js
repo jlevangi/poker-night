@@ -184,7 +184,7 @@ export default class EventDetailPage {
                         ${this.escapeHtml(event.title || 'Poker Night')}
                         ${isCancelled ? '<span style="color: var(--casino-red-dark); font-size: 1rem; margin-left: 0.5rem;">CANCELLED</span>' : ''}
                     </h2>
-                    <div style="font-weight: 700; color: var(--text-secondary); margin-top: 0.25rem; font-size: 1.1rem;">
+                    <div style="font-weight: 700; color: var(--text-secondary); margin-top: 0.25rem; font-size: 1.125rem;">
                         ${dateFormatted}${timeFormatted ? ' at ' + timeFormatted : ''}
                     </div>
                 </div>
