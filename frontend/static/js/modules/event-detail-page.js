@@ -205,31 +205,31 @@ export default class EventDetailPage {
             <h3 style="font-weight: 600; color: var(--text-primary); margin-bottom: 1rem;">Edit Event</h3>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
                 <div>
-                    <label style="font-weight: 700; display: block; margin-bottom: 0.25rem; color: var(--text-primary);">Title</label>
+                    <label class="modal-form-label">Title</label>
                     <input type="text" id="edit-title" value="${this.escapeHtml(event.title || 'Poker Night')}" class="neo-input" style="width: 100%;">
                 </div>
                 <div>
-                    <label style="font-weight: 700; display: block; margin-bottom: 0.25rem; color: var(--text-primary);">Location</label>
+                    <label class="modal-form-label">Location</label>
                     <input type="text" id="edit-location" value="${this.escapeHtml(event.location || '')}" placeholder="Location" class="neo-input" style="width: 100%;">
                 </div>
                 <div>
-                    <label style="font-weight: 700; display: block; margin-bottom: 0.25rem; color: var(--text-primary);">Date</label>
+                    <label class="modal-form-label">Date</label>
                     <input type="date" id="edit-date" value="${event.date}" class="neo-input" style="width: 100%;">
                 </div>
                 <div>
-                    <label style="font-weight: 700; display: block; margin-bottom: 0.25rem; color: var(--text-primary);">Time</label>
+                    <label class="modal-form-label">Time</label>
                     <input type="time" id="edit-time" value="${event.time || '19:00'}" class="neo-input" style="width: 100%;">
                 </div>
                 <div>
-                    <label style="font-weight: 700; display: block; margin-bottom: 0.25rem; color: var(--text-primary);">Buy-in ($)</label>
-                    <input type="number" id="edit-buyin" value="${event.default_buy_in_value || 20}" min="0" step="0.01" class="neo-input" style="width: 100%;">
+                    <label class="modal-form-label">Buy-in ($)</label>
+                    <input type="number" id="edit-buyin" value="${event.default_buyin_value || 20}" min="0" step="0.01" class="neo-input" style="width: 100%;">
                 </div>
                 <div>
-                    <label style="font-weight: 700; display: block; margin-bottom: 0.25rem; color: var(--text-primary);">Max Players</label>
+                    <label class="modal-form-label">Max Players</label>
                     <input type="number" id="edit-max-players" value="${event.max_players || ''}" placeholder="No limit" min="2" max="50" class="neo-input" style="width: 100%;">
                 </div>
                 <div style="grid-column: 1 / -1;">
-                    <label style="font-weight: 700; display: block; margin-bottom: 0.25rem; color: var(--text-primary);">Description</label>
+                    <label class="modal-form-label">Description</label>
                     <textarea id="edit-description" placeholder="Optional details..." class="neo-input" style="width: 100%; min-height: 60px; resize: vertical;">${this.escapeHtml(event.description || '')}</textarea>
                 </div>
             </div>
