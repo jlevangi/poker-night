@@ -79,6 +79,16 @@ li a:hover {
 }
 
 /* Player Lists */
+
+/* Roster count chip: the muted "(N players)" count that trails the roster
+   title. Inline within the title (unlike block form labels) and smaller than
+   the 1.75rem title; colored with --text-secondary (not an opacity trick) so
+   it reads correctly in both light and dark. */
+.roster-count {
+    font-size: 1rem;
+    color: var(--text-secondary);
+}
+
 .players-list {
     margin-bottom: var(--spacing-xl);
     padding: 0;

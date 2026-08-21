@@ -138,7 +138,7 @@ export default class PlayersPage {
 
         // Update title with count
         if (rosterTitle) {
-            rosterTitle.innerHTML = `🏆 Player Roster <span style="font-size: 1rem; opacity: 0.7;">(${this.searchQuery.length >= 2 ? `${players.length} found` : `${this.players.length} players`})</span>`;
+            rosterTitle.innerHTML = `🏆 Player Roster <span class="roster-count">(${this.searchQuery.length >= 2 ? `${players.length} found` : `${this.players.length} players`})</span>`;
         }
 
         // Update sort buttons
