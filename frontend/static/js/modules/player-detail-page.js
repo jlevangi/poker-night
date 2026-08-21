@@ -202,7 +202,7 @@ export default class PlayerDetailPage {
                 
                 html += `
                     <tr>
-                        <td><a href="#session/${session.sessionId}" style="color: var(--primary-color); text-decoration: none; font-weight: 700;">${formatDate(session.date)}</a></td>
+                        <td><a href="#session/${session.sessionId}" style="color: var(--link-color); text-decoration: none; font-weight: 700;">${formatDate(session.date)}</a></td>
                         <td style="font-weight: 700; color: var(--casino-red);">${formatCurrency(buyIn)}</td>
                         <td style="font-weight: 700; color: var(--casino-gold);">${formatCurrency(cashOut)}</td>
                         <td class="${profit >= 0 ? 'profit-positive' : 'profit-negative'}" style="font-weight: 700;">${formatCurrency(profit)}</td>
