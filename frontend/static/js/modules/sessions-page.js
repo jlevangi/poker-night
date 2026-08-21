@@ -1,5 +1,6 @@
 // Sessions page module
 import { staggerChildren } from './animations.js';
+import { formatCurrency } from './formatters.js';
 
 export default class SessionsPage {
     static skeleton() {
@@ -95,7 +96,7 @@ export default class SessionsPage {
                                     📅 ${this.formatDate(session.date)}
                                 </div>
                                 <div style="font-size: 0.875rem; color: inherit; font-weight: 600; opacity: 0.8;">
-                                    Buy-in: $${session.buyin ? session.buyin.toFixed(2) : '0.00'} | Total: $${session.totalValue ? session.totalValue.toFixed(2) : '0.00'}
+                                    Buy-in: ${formatCurrency(session.buyin)} | Total: ${formatCurrency(session.totalValue)}
                                 </div>
                             </div>
                             <div style="display: flex; align-items: center; gap: 0.5rem;">
@@ -129,7 +130,7 @@ export default class SessionsPage {
                                     ${this.escapeHtml(evt.title)} — ${this.formatDate(evt.date)}
                                 </div>
                                 <div style="font-size: 0.875rem; color: inherit; font-weight: 600; opacity: 0.8;">
-                                    Buy-in: $${evt.buyin.toFixed(2)}${playerCount > 0 ? ` | ${playerCount} player${playerCount !== 1 ? 's' : ''} responding` : ''}
+                                    Buy-in: ${formatCurrency(evt.buyin)}${playerCount > 0 ? ` | ${playerCount} player${playerCount !== 1 ? 's' : ''} responding` : ''}
                                 </div>
                             </div>
                             <div style="display: flex; align-items: center; gap: 0.5rem;">
@@ -168,7 +169,7 @@ export default class SessionsPage {
                                     📅 ${this.formatDate(session.date)}
                                 </div>
                                 <div style="font-size: 0.875rem; color: inherit; font-weight: 600; opacity: 0.8;">
-                                    Buy-in: $${session.buyin ? session.buyin.toFixed(2) : '0.00'} | Total: $${session.totalValue ? session.totalValue.toFixed(2) : '0.00'}
+                                    Buy-in: ${formatCurrency(session.buyin)} | Total: ${formatCurrency(session.totalValue)}
                                 </div>
                             </div>
                             <div style="display: flex; align-items: center; gap: 0.5rem;">

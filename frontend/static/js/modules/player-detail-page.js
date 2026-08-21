@@ -1,6 +1,7 @@
 // Player detail page module
 import Router from './router.js';
 import { staggerChildren, animateAllValues } from './animations.js';
+import { formatCurrency, formatCurrencyWhole } from './formatters.js';
 
 export default class PlayerDetailPage {
     static skeleton() {
@@ -153,7 +154,7 @@ export default class PlayerDetailPage {
                     <!-- Main Stats Grid -->
                     <div class="neo-stats-grid" style="grid-template-columns: repeat(2, 1fr); margin-bottom: 1.5rem;">
                         <div class="neo-stat-card" style="border-color: ${player.totalProfit >= 0 ? 'var(--casino-green)' : 'var(--casino-red)'};">
-                            <div class="neo-stat-value ${player.totalProfit >= 0 ? 'profit-positive' : 'profit-negative'}">$${player.totalProfit !== undefined ? player.totalProfit.toFixed(2) : '0.00'}</div>
+                            <div class="neo-stat-value ${player.totalProfit >= 0 ? 'profit-positive' : 'profit-negative'}">${formatCurrency(player.totalProfit)}</div>
                             <div class="neo-stat-label">Total Profit</div>
                         </div>
                         <div class="neo-stat-card" style="border-color: var(--casino-purple);">
@@ -208,9 +209,9 @@ export default class PlayerDetailPage {
                 html += `
                     <tr>
                         <td><a href="#session/${session.sessionId}" style="color: var(--primary-color); text-decoration: none; font-weight: 700;">${this.formatDate(session.date)}</a></td>
-                        <td style="font-weight: 700; color: var(--casino-red);">$${buyIn.toFixed(2)}</td>
-                        <td style="font-weight: 700; color: var(--casino-gold);">$${cashOut.toFixed(2)}</td>
-                        <td class="${profit >= 0 ? 'profit-positive' : 'profit-negative'}" style="font-weight: 700;">$${profit.toFixed(2)}</td>
+                        <td style="font-weight: 700; color: var(--casino-red);">${formatCurrency(buyIn)}</td>
+                        <td style="font-weight: 700; color: var(--casino-gold);">${formatCurrency(cashOut)}</td>
+                        <td class="${profit >= 0 ? 'profit-positive' : 'profit-negative'}" style="font-weight: 700;">${formatCurrency(profit)}</td>
                     </tr>
                 `;
             });
@@ -308,7 +309,7 @@ export default class PlayerDetailPage {
         if (subtitleElement && this.chartData.date_range) {
             const totalProfit = this.chartData.total_profit || 0;
             const profitClass = totalProfit >= 0 ? 'profit-positive' : 'profit-negative';
-            subtitleElement.innerHTML = `${this.formatDate(this.chartData.date_range.start)} - ${this.formatDate(this.chartData.date_range.end)} | Total: <span class="${profitClass}">$${totalProfit.toFixed(2)}</span>`;
+            subtitleElement.innerHTML = `${this.formatDate(this.chartData.date_range.start)} - ${this.formatDate(this.chartData.date_range.end)} | Total: <span class="${profitClass}">${formatCurrency(totalProfit)}</span>`;
         }
 
         // Get container dimensions
@@ -360,7 +361,7 @@ export default class PlayerDetailPage {
                 <div style="width: ${margin.left}px; position: relative; height: ${height + margin.top}px;">
                     ${[...yLabels].reverse().map(value => {
                         const y = margin.top + yScale(value);
-                        const displayValue = value >= 0 ? `$${value.toLocaleString()}` : `-$${Math.abs(value).toLocaleString()}`;
+                        const displayValue = formatCurrencyWhole(value);
                         return `<div style="position: absolute; top: ${y}px; right: ${labelRightMargin}; transform: translateY(-50%); font-size: ${labelFontSize}; font-weight: bold; color: var(--text-secondary);">${displayValue}</div>`;
                     }).join('')}
                 </div>
@@ -497,10 +498,10 @@ export default class PlayerDetailPage {
 
                 tooltip.innerHTML = `
                     <div><strong>${this.formatDate(date)}</strong></div>
-                    <div>Buy-In: $${buyIn.toFixed(2)}</div>
-                    <div>Cash Out: $${cashOut.toFixed(2)}</div>
-                    <div class="${sessionProfitClass}">Session: $${sessionProfit.toFixed(2)}</div>
-                    <div class="${cumulativeProfitClass}"><strong>Total: $${cumulativeProfit.toFixed(2)}</strong></div>
+                    <div>Buy-In: ${formatCurrency(buyIn)}</div>
+                    <div>Cash Out: ${formatCurrency(cashOut)}</div>
+                    <div class="${sessionProfitClass}">Session: ${formatCurrency(sessionProfit)}</div>
+                    <div class="${cumulativeProfitClass}"><strong>Total: ${formatCurrency(cumulativeProfit)}</strong></div>
                     <div style="margin-top: 0.5rem; font-size: 0.7rem; opacity: 0.8;">Click for session details</div>
                 `;
 

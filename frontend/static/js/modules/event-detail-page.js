@@ -1,6 +1,7 @@
 // Event detail page module
 import Router from './router.js';
 import { staggerChildren } from './animations.js';
+import { formatCurrency } from './formatters.js';
 import EventBus from './event-bus.js';
 
 export default class EventDetailPage {
@@ -192,7 +193,7 @@ export default class EventDetailPage {
             </div>
             ${event.location ? `<div style="font-weight: 600; color: var(--text-secondary); margin-bottom: 0.5rem;">&#128205; ${this.escapeHtml(event.location)}</div>` : ''}
             ${event.description ? `<div style="color: var(--text-secondary); margin-bottom: 0.5rem;">${this.escapeHtml(event.description)}</div>` : ''}
-            <div style="font-weight: 600; color: var(--text-secondary);">&#128176; Buy-in: $${(event.default_buy_in_value || 20).toFixed(2)}${event.max_players ? ' | Max: ' + event.max_players + ' players' : ''}</div>
+            <div style="font-weight: 600; color: var(--text-secondary);">&#128176; Buy-in: ${formatCurrency(event.default_buy_in_value || 20)}${event.max_players ? ' | Max: ' + event.max_players + ' players' : ''}</div>
         `;
     }
 
@@ -516,7 +517,7 @@ export default class EventDetailPage {
         const endDate = new Date(startDate.getTime() + 6 * 60 * 60 * 1000);
         const endDT = `${endDate.getFullYear()}${String(endDate.getMonth() + 1).padStart(2, '0')}${String(endDate.getDate()).padStart(2, '0')}T${String(endDate.getHours()).padStart(2, '0')}${String(endDate.getMinutes()).padStart(2, '0')}${String(endDate.getSeconds()).padStart(2, '0')}`;
 
-        const details = `Buy-in: $${(event.default_buy_in_value || 20).toFixed(2)}${event.description ? '\n' + event.description : ''}`;
+        const details = `Buy-in: ${formatCurrency(event.default_buy_in_value || 20)}${event.description ? '\n' + event.description : ''}`;
 
         const params = new URLSearchParams({
             action: 'TEMPLATE',
@@ -546,7 +547,7 @@ export default class EventDetailPage {
 
         const escICS = (str) => (str || '').replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\n/g, '\\n');
 
-        const description = `Buy-in: $${(event.default_buy_in_value || 20).toFixed(2)}${event.description ? '\\n' + escICS(event.description) : ''}`;
+        const description = `Buy-in: ${formatCurrency(event.default_buy_in_value || 20)}${event.description ? '\\n' + escICS(event.description) : ''}`;
 
         const ics = [
             'BEGIN:VCALENDAR',

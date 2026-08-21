@@ -1,5 +1,6 @@
 // Players page module
 import { staggerChildren } from './animations.js';
+import { formatCurrency } from './formatters.js';
 import EventBus from './event-bus.js';
 
 export default class PlayersPage {
@@ -181,7 +182,7 @@ export default class PlayersPage {
                             </div>
                             <div style="display: flex; align-items: center; gap: 0.5rem;">
                                 <span class="${player.net_profit >= 0 ? 'profit-positive' : 'profit-negative'}" style="font-size: 1rem; font-weight: 700;">
-                                    $${player.net_profit ? player.net_profit.toFixed(2) : '0.00'}
+                                    ${formatCurrency(player.net_profit)}
                                 </span>
                             </div>
                         </div>
