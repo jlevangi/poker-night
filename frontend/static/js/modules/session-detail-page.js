@@ -4,6 +4,7 @@ import { NotificationManager } from './notification-manager.js';
 import { staggerChildren } from './animations.js';
 import Router from './router.js';
 import EventBus from './event-bus.js';
+import { formatCurrency } from './formatters.js';
 
 export default class SessionDetailPage {
     static skeleton() {
@@ -157,7 +158,7 @@ export default class SessionDetailPage {
             <div class="neo-card neo-card-purple" style="margin-bottom: 2rem;">
                 <h3 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem; color: var(--casino-purple-dark);">🎰 Chip Distribution</h3>
                 <p style="font-weight: 600; color: var(--casino-purple-dark); margin-bottom: 1.5rem;">
-                    For a buy-in of <span style="color: var(--casino-green); font-weight: 600;">$${buyInValue.toFixed(2)}</span>, 
+                    For a buy-in of <span style="color: var(--casino-green); font-weight: 600;">${formatCurrency(buyInValue)}</span>, 
                     use the following chip distribution (<span style="color: var(--casino-gold); font-weight: 600;">${totalChips} total chips</span>):
                 </p>
                 <div style="display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;">`;
@@ -230,18 +231,18 @@ export default class SessionDetailPage {
                             </span>
                         ` : ''}
                     </div>
-                    <span class="${profit >= 0 ? 'profit-positive' : 'profit-negative'}" style="font-size: 1.125rem; font-weight: 700;">$${profit.toFixed(2)}</span>
+                    <span class="${profit >= 0 ? 'profit-positive' : 'profit-negative'}" style="font-size: 1.125rem; font-weight: 700;">${formatCurrency(profit)}</span>
                 </div>
 
                 <!-- Stats grid: Buy-in, Cash-out, 7-2 Wins, Strikes -->
                 <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem; text-align: center;">
                     <div>
                         <div style="font-size: 0.7rem; font-weight: 600; opacity: 0.7; margin-bottom: 0.125rem;">Buy-in</div>
-                        <div style="font-size: 0.95rem; font-weight: 600; color: var(--casino-red);">$${buyIn.toFixed(2)}</div>
+                        <div style="font-size: 0.95rem; font-weight: 600; color: var(--casino-red);">${formatCurrency(buyIn)}</div>
                     </div>
                     <div>
                         <div style="font-size: 0.7rem; font-weight: 600; opacity: 0.7; margin-bottom: 0.125rem;">Cash-out</div>
-                        <div style="font-size: 0.95rem; font-weight: 600; color: var(--casino-gold);">$${cashOut.toFixed(2)}</div>
+                        <div style="font-size: 0.95rem; font-weight: 600; color: var(--casino-gold);">${formatCurrency(cashOut)}</div>
                     </div>
                     <div>
                         <div style="font-size: 0.7rem; font-weight: 600; opacity: 0.7; margin-bottom: 0.125rem;">7-2 Wins</div>
@@ -340,7 +341,7 @@ export default class SessionDetailPage {
     renderAddPlayersModal(sessionData, totalPlayers) {
         const filteredPlayers = this.getFilteredPlayerPickerPlayers();
         const selectedCount = this.selectedPlayerIds.size;
-        const defaultBuyin = sessionData?.default_buy_in_value ? sessionData.default_buy_in_value.toFixed(2) : '20.00';
+        const defaultBuyin = formatCurrency(sessionData?.default_buy_in_value || 20);
 
         return `
             <div id="add-players-modal-overlay" class="session-player-picker-overlay">
@@ -374,7 +375,7 @@ export default class SessionDetailPage {
                     </div>
                     <div class="session-player-picker-footer">
                         <div class="session-player-picker-footer-summary">
-                            <strong>${selectedCount}</strong> player${selectedCount === 1 ? '' : 's'} selected · Default buy-in $${defaultBuyin}
+                            <strong>${selectedCount}</strong> player${selectedCount === 1 ? '' : 's'} selected · Default buy-in ${defaultBuyin}
                         </div>
                         <button id="add-player-to-session-btn" class="neo-btn neo-btn-green" type="button" ${selectedCount === 0 ? 'disabled' : ''}>
                             ${selectedCount === 0 ? 'Select Players to Add' : `Add ${selectedCount} Player${selectedCount === 1 ? '' : 's'}`}
@@ -459,7 +460,7 @@ export default class SessionDetailPage {
 
         // Update totals in header card
         const totalValueEl = document.getElementById('session-total-value');
-        if (totalValueEl) totalValueEl.textContent = `$${session.totalValue.toFixed(2)}`;
+        if (totalValueEl) totalValueEl.textContent = formatCurrency(session.totalValue);
 
         const unpaidLabelEl = document.getElementById('session-unpaid-label');
         const unpaidValueEl = document.getElementById('session-unpaid-value');
@@ -469,11 +470,11 @@ export default class SessionDetailPage {
         if (unpaidValueEl) {
             unpaidValueEl.className = session.unpaidValue > 0.01 || session.unpaidValue < -0.01 ? 'profit-negative' : 'profit-positive';
             if (session.unpaidValue > 0.01) {
-                unpaidValueEl.textContent = `$${session.unpaidValue.toFixed(2)}`;
+                unpaidValueEl.textContent = formatCurrency(session.unpaidValue);
             } else if (session.unpaidValue < -0.01) {
-                unpaidValueEl.textContent = `-$${Math.abs(session.unpaidValue).toFixed(2)}`;
+                unpaidValueEl.textContent = formatCurrency(session.unpaidValue);
             } else {
-                unpaidValueEl.textContent = !isActive ? 'PAID OUT' : '$0.00';
+                unpaidValueEl.textContent = !isActive ? 'PAID OUT' : formatCurrency(0);
             }
         }
 
@@ -563,22 +564,22 @@ export default class SessionDetailPage {
                     <div style="display: flex; justify-content: space-around; text-align: center; margin-bottom: 0.5rem;">
                         <div>
                             <div style="font-size: 0.75rem; font-weight: 600; opacity: 0.7; margin-bottom: 0.25rem;">Buy-in</div>
-                            <div style="font-size: 1.125rem; font-weight: 700;">$${sessionData.default_buy_in_value ? sessionData.default_buy_in_value.toFixed(2) : '0.00'}</div>
+                            <div style="font-size: 1.125rem; font-weight: 700;">${formatCurrency(sessionData.default_buy_in_value || 0)}</div>
                         </div>
                         <div style="width: 1px; background: var(--border-light, #E2E8F0);"></div>
                         <div>
                             <div style="font-size: 0.75rem; font-weight: 600; opacity: 0.7; margin-bottom: 0.25rem;">Total Value</div>
-                            <div id="session-total-value" style="font-size: 1.125rem; font-weight: 700;">$${session.totalValue ? session.totalValue.toFixed(2) : '0.00'}</div>
+                            <div id="session-total-value" style="font-size: 1.125rem; font-weight: 700;">${formatCurrency(session.totalValue || 0)}</div>
                         </div>
                         <div style="width: 1px; background: var(--border-light, #E2E8F0);"></div>
                         <div>
                             <div id="session-unpaid-label" style="font-size: 0.75rem; font-weight: 600; opacity: 0.7; margin-bottom: 0.25rem;">${session.unpaidValue > 0.01 ? 'Unpaid' : session.unpaidValue < -0.01 ? 'House Loss' : 'Payout'}</div>
                             <div id="session-unpaid-value" class="${session.unpaidValue > 0.01 || session.unpaidValue < -0.01 ? 'profit-negative' : 'profit-positive'}" style="font-size: 1.125rem; font-weight: 700;">
                                 ${session.unpaidValue > 0.01 ?
-                                    `$${session.unpaidValue.toFixed(2)}` :
+                                    formatCurrency(session.unpaidValue) :
                                     session.unpaidValue < -0.01 ?
-                                    `-$${Math.abs(session.unpaidValue).toFixed(2)}` :
-                                    (!isActive ? 'PAID OUT' : '$0.00')}
+                                    formatCurrency(session.unpaidValue) :
+                                    (!isActive ? 'PAID OUT' : formatCurrency(0))}
                             </div>
                         </div>
                     </div>
@@ -1201,7 +1202,7 @@ export default class SessionDetailPage {
                                 <button id="edit-buyin-minus" class="neo-btn" style="width: 36px; height: 36px; padding: 0; font-size: 1.25rem; font-weight: 700; display: flex; align-items: center; justify-content: center; border-radius: 50%;${buyInCount <= 1 ? ' opacity: 0.4;' : ''}" ${buyInCount <= 1 ? 'disabled' : ''}>−</button>
                                 <span style="font-size: 1.25rem; font-weight: 700; min-width: 2rem; text-align: center;">${buyInCount}</span>
                                 <button id="edit-buyin-plus" class="neo-btn" style="width: 36px; height: 36px; padding: 0; font-size: 1.25rem; font-weight: 700; display: flex; align-items: center; justify-content: center; border-radius: 50%;">+</button>
-                                <span style="font-size: 0.85rem; color: var(--text-secondary); margin-left: 0.25rem;">($${totalBuyIn.toFixed(2)} total)</span>
+                                <span style="font-size: 0.85rem; color: var(--text-secondary); margin-left: 0.25rem;">(${formatCurrency(totalBuyIn)} total)</span>
                             </div>
                         </div>
 
@@ -1524,7 +1525,7 @@ export default class SessionDetailPage {
             button.addEventListener('click', async (e) => {
                 const playerId = e.target.dataset.playerId;
                 const defaultBuyin = sessionData.default_buy_in_value || 20;
-                if (!confirm(`Add a re-buy of $${defaultBuyin.toFixed(2)}?`)) return;
+                if (!confirm(`Add a re-buy of ${formatCurrency(defaultBuyin)}?`)) return;
                 try {
                     button.disabled = true;
                     button.textContent = 'Processing...';
@@ -1733,7 +1734,7 @@ export default class SessionDetailPage {
      */
     showDiscrepancyModal(unpaidValue, sessionId, endSessionBtn) {
         const discrepancyType = unpaidValue > 0 ? 'Unpaid' : 'House Loss';
-        const discrepancyAmount = Math.abs(unpaidValue).toFixed(2);
+        const discrepancyAmount = formatCurrency(Math.abs(unpaidValue));
         const discrepancyColor = unpaidValue > 0 ? '#991B1B' : '#EA580C';
 
         const modalHtml = `
@@ -1790,7 +1791,7 @@ export default class SessionDetailPage {
                             color: ${discrepancyColor};
                             margin: 0;
                         ">
-                            ${discrepancyType}: $${discrepancyAmount}
+                            ${discrepancyType}: ${discrepancyAmount}
                         </p>
                     </div>
 
