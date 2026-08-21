@@ -168,7 +168,7 @@ export default class PlayersPage {
                 html += `
                     <div class="neo-card ${cardColor} clickable-player-stats" data-player-id="${player.player_id}" style="text-decoration: none; color: inherit; cursor: pointer; padding: 1rem; margin: 0;">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <div>
+                            <div style="overflow-wrap: anywhere;">
                                 <div style="font-weight: 600; color: inherit; margin-bottom: 0.25rem; font-size: 1.125rem;">
                                     ${isGambleKing ? '👑 ' : ''}<a href="#player/${player.player_id}" style="color: inherit; text-decoration: none;">${player.name}</a>
                                 </div>
