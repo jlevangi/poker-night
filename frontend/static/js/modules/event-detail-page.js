@@ -3,44 +3,50 @@ import Router from './router.js';
 import { staggerChildren } from './animations.js';
 import { formatCurrency, formatDate, formatDateLong } from './formatters.js';
 import EventBus from './event-bus.js';
+import { renderSkeleton, renderSkeletonPage } from './ui.js';
 
 export default class EventDetailPage {
     static skeleton() {
-        return `
-            <div style="padding: 1.5rem; max-width: 800px; margin: 0 auto;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-                    <div class="skeleton skeleton-btn" style="width: 170px; height: 40px;"></div>
-                    <div class="skeleton skeleton-btn" style="width: 100px; height: 40px;"></div>
-                </div>
-                <div class="neo-card">
-                    <div class="skeleton skeleton-text" style="width: 60%; height: 1.5rem; margin-bottom: 0.75rem;"></div>
-                    <div class="skeleton skeleton-text" style="width: 45%; height: 1rem; margin-bottom: 1rem;"></div>
-                    <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
-                        <div class="skeleton" style="width: 60px; height: 28px; border-radius: 4px;"></div>
-                        <div class="skeleton" style="width: 70px; height: 28px; border-radius: 4px;"></div>
-                        <div class="skeleton" style="width: 55px; height: 28px; border-radius: 4px;"></div>
-                    </div>
-                    <div class="skeleton skeleton-text" style="width: 50%; height: 1rem;"></div>
-                </div>
-                <div class="neo-card" style="margin-top: 1rem;">
-                    <div class="skeleton skeleton-text" style="width: 25%; height: 1.25rem; margin-bottom: 0.75rem;"></div>
-                    <div class="skeleton" style="width: 100%; height: 40px; margin-bottom: 0.5rem;"></div>
-                    <div style="display: flex; gap: 0.5rem;">
-                        <div class="skeleton" style="flex: 1; height: 38px;"></div>
-                        <div class="skeleton" style="flex: 1; height: 38px;"></div>
-                        <div class="skeleton" style="flex: 1; height: 38px;"></div>
-                    </div>
-                </div>
-                <div class="neo-card" style="margin-top: 1rem;">
-                    <div class="skeleton skeleton-text" style="width: 30%; height: 1.25rem; margin-bottom: 0.75rem;"></div>
-                    ${Array(3).fill(`
-                        <div style="padding: 0.5rem 0;">
-                            <div class="skeleton skeleton-text" style="width: 70%; height: 1rem;"></div>
-                        </div>
-                    `).join('')}
-                </div>
-            </div>
-        `;
+        let attendees = '';
+        for (let i = 0; i < 3; i++) {
+            attendees +=
+                '<div style="padding: 0.5rem 0;">' +
+                    renderSkeleton({ classes: 'skeleton-text', style: 'width: 70%;' }) +
+                '</div>';
+        }
+        return renderSkeletonPage([
+            // Action bar (back + primary button)
+            '<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">' +
+                renderSkeleton({ classes: 'skeleton-btn', style: 'width: 170px;' }) +
+                renderSkeleton({ classes: 'skeleton-btn', style: 'width: 100px;' }) +
+            '</div>',
+            // Event header card
+            '<div class="neo-card">' +
+                renderSkeleton({ style: 'width: 60%; height: 1.5rem; margin-bottom: 0.75rem;' }) +
+                renderSkeleton({ style: 'width: 45%; height: 1rem; margin-bottom: 1rem;' }) +
+                '<div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">' +
+                    renderSkeleton({ classes: 'skeleton-badge' }) +
+                    renderSkeleton({ classes: 'skeleton-badge' }) +
+                    renderSkeleton({ classes: 'skeleton-badge' }) +
+                '</div>' +
+                renderSkeleton({ classes: 'skeleton-text', style: 'width: 50%;' }) +
+            '</div>',
+            // RSVP card
+            '<div class="neo-card" style="margin-top: 1rem;">' +
+                renderSkeleton({ style: 'width: 25%; height: 1.25rem; margin-bottom: 0.75rem;' }) +
+                renderSkeleton({ style: 'width: 100%; height: 40px; margin-bottom: 0.5rem;' }) +
+                '<div style="display: flex; gap: 0.5rem;">' +
+                    renderSkeleton({ style: 'flex: 1; height: 38px;' }) +
+                    renderSkeleton({ style: 'flex: 1; height: 38px;' }) +
+                    renderSkeleton({ style: 'flex: 1; height: 38px;' }) +
+                '</div>' +
+            '</div>',
+            // Attendee list card
+            '<div class="neo-card" style="margin-top: 1rem;">' +
+                renderSkeleton({ style: 'width: 30%; height: 1.25rem; margin-bottom: 0.75rem;' }) +
+                attendees +
+            '</div>'
+        ]);
     }
 
     constructor(appContent, apiService) {

@@ -1,40 +1,28 @@
 // Dashboard page module
 import { staggerChildren, animateAllValues } from './animations.js';
 import { formatCurrency, formatPercent, formatDate } from './formatters.js';
-import { renderEmptyState } from './ui.js';
+import { renderEmptyState, renderSkeleton, renderSkeletonPage, renderSkeletonRows, renderSkeletonStatGrid } from './ui.js';
 
 export default class DashboardPage {
     static skeleton() {
-        return `
-            <div style="padding: 1.5rem; max-width: 1200px; margin: 0 auto;">
-                <!-- Gamble King Banner Skeleton -->
-                <div class="neo-card skeleton" style="height: 140px; margin-bottom: 1rem;"></div>
-                <!-- Active Session Hero Skeleton -->
-                <div class="neo-card skeleton" style="height: 96px; margin-bottom: 1rem;"></div>
-                <!-- Stats Grid Skeleton (2x2) -->
-                <div class="neo-stats-grid" style="margin-bottom: 1rem;">
-                    <div class="neo-stat-card skeleton" style="height: 90px;"></div>
-                    <div class="neo-stat-card skeleton" style="height: 90px;"></div>
-                    <div class="neo-stat-card skeleton" style="height: 90px;"></div>
-                    <div class="neo-stat-card skeleton" style="height: 90px;"></div>
-                </div>
-                <!-- Standings Table Skeleton -->
-                <div class="neo-card" style="margin-bottom: 1rem;">
-                    <div class="skeleton" style="height: 1.25rem; width: 50%; margin-bottom: 1.5rem; border-radius: 4px;"></div>
-                    <div class="skeleton" style="height: 2rem; width: 100%; margin-bottom: 0.75rem; border-radius: 4px;"></div>
-                    <div class="skeleton" style="height: 2rem; width: 100%; margin-bottom: 0.75rem; border-radius: 4px;"></div>
-                    <div class="skeleton" style="height: 2rem; width: 100%; margin-bottom: 0.75rem; border-radius: 4px;"></div>
-                    <div class="skeleton" style="height: 2rem; width: 100%; border-radius: 4px;"></div>
-                </div>
-                <!-- Recent Sessions Skeleton -->
-                <div class="neo-card">
-                    <div class="skeleton" style="height: 1.25rem; width: 50%; margin-bottom: 1.5rem; border-radius: 4px;"></div>
-                    <div class="skeleton" style="height: 4rem; width: 100%; margin-bottom: 0.75rem; border-radius: 4px;"></div>
-                    <div class="skeleton" style="height: 4rem; width: 100%; margin-bottom: 0.75rem; border-radius: 4px;"></div>
-                    <div class="skeleton" style="height: 4rem; width: 100%; border-radius: 4px;"></div>
-                </div>
-            </div>
-        `;
+        return renderSkeletonPage([
+            // Gamble King Banner Skeleton
+            renderSkeleton({ classes: 'neo-card', style: 'height: 140px; margin-bottom: 1rem;' }),
+            // Active Session Hero Skeleton
+            renderSkeleton({ classes: 'neo-card', style: 'height: 96px; margin-bottom: 1rem;' }),
+            // Stats Grid Skeleton (2x2)
+            renderSkeletonStatGrid({ count: 4 }),
+            // Standings Table Skeleton
+            '<div class="neo-card" style="margin-bottom: 1rem;">' +
+                renderSkeleton({ style: 'height: 1.25rem; width: 50%; margin-bottom: 1.5rem; border-radius: 4px;' }) +
+                renderSkeletonRows({ count: 3 }) +
+            '</div>',
+            // Recent Sessions Skeleton
+            '<div class="neo-card">' +
+                renderSkeleton({ style: 'height: 1.25rem; width: 50%; margin-bottom: 1.5rem; border-radius: 4px;' }) +
+                renderSkeletonRows({ count: 3, height: '4rem' }) +
+            '</div>'
+        ]);
     }
 
     constructor(appContent, apiService) {

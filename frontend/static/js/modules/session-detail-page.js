@@ -5,38 +5,37 @@ import { staggerChildren } from './animations.js';
 import Router from './router.js';
 import EventBus from './event-bus.js';
 import { formatCurrency, formatDate } from './formatters.js';
-import { renderEmptyState } from './ui.js';
+import { renderEmptyState, renderSkeleton, renderSkeletonPage, renderSkeletonStatGrid } from './ui.js';
 
 export default class SessionDetailPage {
     static skeleton() {
-        return `
-            <div style="padding: 1.5rem; max-width: 1200px; margin: 0 auto;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                    <div class="skeleton skeleton-btn" style="width: 160px; height: 40px;"></div>
-                    <div class="skeleton skeleton-btn" style="width: 100px; height: 40px;"></div>
-                </div>
-                <div class="neo-card">
-                    <div class="skeleton skeleton-text" style="width: 60%; height: 1.75rem; margin-bottom: 1.5rem;"></div>
-                    <div class="neo-stats-grid" style="margin-bottom: 1.5rem;">
-                        <div class="neo-stat-card"><div class="skeleton skeleton-text" style="width: 80%; height: 1.5rem; margin: 0 auto;"></div></div>
-                        <div class="neo-stat-card"><div class="skeleton skeleton-text" style="width: 80%; height: 1.5rem; margin: 0 auto;"></div></div>
-                        <div class="neo-stat-card"><div class="skeleton skeleton-text" style="width: 80%; height: 1.5rem; margin: 0 auto;"></div></div>
-                        <div class="neo-stat-card"><div class="skeleton skeleton-text" style="width: 80%; height: 1.5rem; margin: 0 auto;"></div></div>
-                    </div>
-                </div>
-                <div class="skeleton skeleton-text" style="width: 30%; height: 1.5rem; margin: 2rem 0 1.5rem 0;"></div>
-                ${Array(5).fill(`
-                    <div class="neo-card" style="margin-bottom: 1rem;">
-                        <div class="skeleton skeleton-text" style="width: 40%; height: 1.25rem; margin-bottom: 1rem;"></div>
-                        <div style="display: flex; gap: 2rem;">
-                            <div class="skeleton skeleton-text" style="width: 80px; height: 1rem;"></div>
-                            <div class="skeleton skeleton-text" style="width: 80px; height: 1rem;"></div>
-                            <div class="skeleton skeleton-text" style="width: 80px; height: 1rem;"></div>
-                        </div>
-                    </div>
-                `).join('')}
-            </div>
-        `;
+        let players = '';
+        for (let i = 0; i < 5; i++) {
+            players +=
+                '<div class="neo-card" style="margin-bottom: 1rem;">' +
+                    renderSkeleton({ classes: 'skeleton-text', style: 'width: 40%;' }) +
+                    '<div style="display: flex; gap: 2rem;">' +
+                        renderSkeleton({ classes: 'skeleton-text', style: 'width: 80px;' }) +
+                        renderSkeleton({ classes: 'skeleton-text', style: 'width: 80px;' }) +
+                        renderSkeleton({ classes: 'skeleton-text', style: 'width: 80px;' }) +
+                    '</div>' +
+                '</div>';
+        }
+        return renderSkeletonPage([
+            // Action bar (back + primary button)
+            '<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">' +
+                renderSkeleton({ classes: 'skeleton-btn', style: 'width: 160px;' }) +
+                renderSkeleton({ classes: 'skeleton-btn', style: 'width: 100px;' }) +
+            '</div>',
+            // Session header card
+            '<div class="neo-card">' +
+                renderSkeleton({ style: 'width: 60%; height: 1.75rem; margin-bottom: 1.5rem;' }) +
+                renderSkeletonStatGrid({ count: 4 }) +
+            '</div>',
+            // Player table
+            renderSkeleton({ style: 'width: 30%; height: 1.5rem; margin: 2rem 0 1.5rem 0;' }),
+            players
+        ]);
     }
 
     constructor(appContent, apiService) {

@@ -1,27 +1,23 @@
 // Sessions page module
 import { staggerChildren } from './animations.js';
 import { formatCurrency, formatDate } from './formatters.js';
-import { renderEmptyState } from './ui.js';
+import { renderEmptyState, renderSkeleton, renderSkeletonPage } from './ui.js';
 
 export default class SessionsPage {
     static skeleton() {
-        return `
-            <div style="padding: 1.5rem; max-width: 1200px; margin: 0 auto;">
-                <!-- Title Skeleton -->
-                <div class="skeleton" style="height: 2.5rem; width: 40%; margin-bottom: 2rem; border-radius: 4px;"></div>
-                <!-- Create Button Skeleton -->
-                <div class="neo-card skeleton" style="height: 4rem; margin-bottom: 2rem;"></div>
-                <!-- Session Card Skeletons -->
-                <div class="skeleton" style="height: 1.75rem; width: 30%; margin-bottom: 1.5rem; border-radius: 4px;"></div>
-                <div style="display: grid; gap: 1rem;">
-                    <div class="neo-card skeleton" style="height: 4.5rem;"></div>
-                    <div class="neo-card skeleton" style="height: 4.5rem;"></div>
-                    <div class="neo-card skeleton" style="height: 4.5rem;"></div>
-                    <div class="neo-card skeleton" style="height: 4.5rem;"></div>
-                    <div class="neo-card skeleton" style="height: 4.5rem;"></div>
-                </div>
-            </div>
-        `;
+        let cards = '';
+        for (let i = 0; i < 5; i++) {
+            cards += renderSkeleton({ classes: 'neo-card', style: 'height: 4.5rem;' });
+        }
+        return renderSkeletonPage([
+            // Title Skeleton
+            renderSkeleton({ style: 'height: 2.5rem; width: 40%; margin-bottom: 2rem; border-radius: 4px;' }),
+            // Create Button Skeleton
+            renderSkeleton({ classes: 'neo-card', style: 'height: 4rem; margin-bottom: 2rem;' }),
+            // Session Card Skeletons
+            renderSkeleton({ style: 'height: 1.75rem; width: 30%; margin-bottom: 1.5rem; border-radius: 4px;' }),
+            '<div class="skeleton-list">' + cards + '</div>'
+        ]);
     }
 
     constructor(appContent, apiService) {

@@ -1,35 +1,33 @@
 // Stats page module
 import { staggerChildren } from './animations.js';
 import { formatCurrency, formatCurrencyWhole, formatPercent } from './formatters.js';
-import { renderEmptyState } from './ui.js';
+import { renderEmptyState, renderSkeleton, renderSkeletonPage, renderSkeletonStatGrid } from './ui.js';
 
 export default class StatsPage {
     static skeleton() {
-        return `
-            <div style="padding: 1.5rem; max-width: 1200px; margin: 0 auto;">
-                <div class="skeleton skeleton-text" style="width: 40%; height: 2rem; margin-bottom: 2rem;"></div>
-                <div class="neo-stats-grid" style="margin-bottom: 2rem;">
-                    <div class="neo-stat-card"><div class="skeleton skeleton-text" style="width: 80%; height: 1.5rem; margin: 0 auto;"></div></div>
-                    <div class="neo-stat-card"><div class="skeleton skeleton-text" style="width: 80%; height: 1.5rem; margin: 0 auto;"></div></div>
-                    <div class="neo-stat-card"><div class="skeleton skeleton-text" style="width: 80%; height: 1.5rem; margin: 0 auto;"></div></div>
-                    <div class="neo-stat-card"><div class="skeleton skeleton-text" style="width: 80%; height: 1.5rem; margin: 0 auto;"></div></div>
-                </div>
-                <div class="neo-card" style="margin-bottom: 2rem;">
-                    <div class="skeleton skeleton-text" style="width: 50%; height: 1.5rem; margin-bottom: 1rem;"></div>
-                    <div class="skeleton" style="width: 100%; height: 300px;"></div>
-                </div>
-                <div class="skeleton skeleton-text" style="width: 30%; height: 1.75rem; margin-bottom: 1.5rem;"></div>
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
-                    ${Array(6).fill(`
-                        <div class="neo-card">
-                            <div class="skeleton skeleton-text" style="width: 60%; height: 1rem; margin-bottom: 0.75rem;"></div>
-                            <div class="skeleton skeleton-text" style="width: 80%; height: 1.25rem; margin-bottom: 0.5rem;"></div>
-                            <div class="skeleton skeleton-text" style="width: 40%; height: 0.875rem;"></div>
-                        </div>
-                    `).join('')}
-                </div>
-            </div>
-        `;
+        let players = '';
+        for (let i = 0; i < 6; i++) {
+            players +=
+                '<div class="neo-card">' +
+                    renderSkeleton({ classes: 'skeleton-text', style: 'width: 60%;' }) +
+                    renderSkeleton({ classes: 'skeleton-text', style: 'width: 80%;' }) +
+                    renderSkeleton({ classes: 'skeleton-text', style: 'width: 40%;' }) +
+                '</div>';
+        }
+        return renderSkeletonPage([
+            // Title
+            renderSkeleton({ style: 'width: 40%; height: 2rem; margin-bottom: 2rem;' }),
+            // Stats grid (2x2)
+            renderSkeletonStatGrid({ count: 4 }),
+            // Chart card
+            '<div class="neo-card" style="margin-bottom: 2rem;">' +
+                renderSkeleton({ style: 'width: 50%; height: 1.5rem; margin-bottom: 1rem;' }) +
+                renderSkeleton({ style: 'width: 100%; height: 300px;' }) +
+            '</div>',
+            // Leaderboard
+            renderSkeleton({ style: 'width: 30%; height: 1.75rem; margin-bottom: 1.5rem;' }),
+            '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin-bottom: 2rem;">' + players + '</div>'
+        ]);
     }
 
     constructor(appContent, apiService) {
