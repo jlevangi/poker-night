@@ -1,20 +1,6 @@
 /* Chip Component Styles */
 /* Poker chip display for the chip calculator page */
 
-.chip-distribution {
-    background-color: var(--bg-content);
-    border-radius: var(--radius-md);
-    padding: var(--spacing-md);
-    margin: var(--spacing-xl) 0;
-    box-shadow: var(--shadow-card);
-}
-
-.chip-distribution h3 {
-    margin-top: 0;
-    color: var(--text-primary);
-    font-size: 1.3rem;
-}
-
 .chip-description {
     font-size: 0.95rem;
     margin-bottom: var(--spacing-md);
