@@ -884,7 +884,7 @@ export default class StatsPage {
 
         // Create legend items in a responsive grid
         const topLegendItems = slices.filter(s => s.isTopPlayer).map((slice, index) => `
-            <div class="neo-pie-legend-item" style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; border: var(--neo-border); background: var(--bg-card);">
+            <div class="neo-pie-legend-item" style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; border: 1px solid var(--border-color); background: var(--bg-card);">
                 <div class="neo-pie-legend-swatch" style="background: ${slice.color}; flex-shrink: 0;"></div>
                 <div style="flex: 1; min-width: 0;">
                     <div style="font-weight: 700; font-size: 0.8rem; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${slice.name}</div>
@@ -895,7 +895,7 @@ export default class StatsPage {
 
         // Create "Everyone Else" section if applicable
         const everyoneElseItem = otherPlayers.length > 0 ? `
-            <div class="neo-pie-legend-item" style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; border: var(--neo-border); background: var(--bg-card); cursor: pointer;" id="everyone-else-item">
+            <div class="neo-pie-legend-item" style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; border: 1px solid var(--border-color); background: var(--bg-card); cursor: pointer;" id="everyone-else-item">
                 <div class="neo-pie-legend-swatch" style="background: #6B7280; flex-shrink: 0;"></div>
                 <div style="flex: 1; min-width: 0;">
                     <div style="font-weight: 700; font-size: 0.8rem; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Everyone Else (${otherPlayers.length})</div>
@@ -907,7 +907,7 @@ export default class StatsPage {
 
         const everyoneElseExpanded = otherPlayers.length > 0 ? `
             <!-- Expandable list of everyone else -->
-            <div id="everyone-else-expanded" style="display: none; margin-top: 0.5rem; padding: 0.75rem; border: var(--neo-border); background: var(--bg-content); border-radius: var(--radius-lg); grid-column: 1 / -1;">
+            <div id="everyone-else-expanded" style="display: none; margin-top: 0.5rem; padding: 0.75rem; border: 1px solid var(--border-color); background: var(--bg-content); border-radius: var(--radius-lg); grid-column: 1 / -1;">
                 ${otherPlayers.map((player, idx) => `
                     <div class="neo-pie-expanded-row" style="display: flex; justify-content: space-between; gap: 1rem; padding: 0.625rem 0.5rem; border-bottom: ${idx < otherPlayers.length - 1 ? '1px solid var(--border-light)' : 'none'};">
                         <span style="font-weight: 700; font-size: 0.8rem; color: var(--text-primary);">${player.name}</span>

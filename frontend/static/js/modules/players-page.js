@@ -99,7 +99,7 @@ export default class PlayersPage {
                     <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
                         <div style="flex: 1; min-width: 200px; position: relative;">
                             <input type="text" id="player-search" placeholder="Search players..." value="${this.searchQuery}" style="width: 100%;">
-                            <div id="search-suggestions" style="position: absolute; top: 100%; left: 0; right: 0; background: var(--bg-card); border: var(--neo-border); border-top: none; display: none; z-index: 100; max-height: 200px; overflow-y: auto;"></div>
+                            <div id="search-suggestions" style="position: absolute; top: 100%; left: 0; right: 0; background: var(--bg-card); border: 1px solid var(--border-color); border-top: none; display: none; z-index: 100; max-height: 200px; overflow-y: auto;"></div>
                         </div>
                         <div style="display: flex; gap: 0.5rem; align-items: center;">
                             <span style="font-weight: 600; font-size: 0.875rem;">Sort:</span>

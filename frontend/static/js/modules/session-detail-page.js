@@ -171,7 +171,7 @@ export default class SessionDetailPage {
                         border-radius: 50%; 
                         background-color: ${backgroundColor}; 
                         color: ${textColor}; 
-                        border: var(--neo-border-thick);
+                        border: 1px solid var(--border-color);
                         display: flex; 
                         flex-direction: column; 
                         align-items: center; 
@@ -1767,7 +1767,7 @@ export default class SessionDetailPage {
                 <div style="
                     background: var(--bg-card);
                     padding: 2rem;
-                    border: var(--neo-border-thick);
+                    border: 1px solid var(--border-color);
                     box-shadow: var(--neo-shadow-lg);
                     max-width: 500px;
                     width: 100%;

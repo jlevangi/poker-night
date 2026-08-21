@@ -171,7 +171,7 @@ export default class DashboardPage {
                         <div class="neo-stat-label">Players</div>
                     </div>
                 ` : `
-                    <button id="quick-start-session-btn" class="neo-stat-card neo-card-primary" style="background: var(--bg-card); border: var(--neo-border); cursor: pointer; color: inherit; padding: var(--spacing-neo); text-align: center; position: relative; width: 100%; font-family: inherit;">
+                    <button id="quick-start-session-btn" class="neo-stat-card neo-card-primary" style="background: var(--bg-card); border: 1px solid var(--border-color); cursor: pointer; color: inherit; padding: var(--spacing-neo); text-align: center; position: relative; width: 100%; font-family: inherit;">
                         <div class="neo-stat-value">🃏</div>
                         <div class="neo-stat-label">Start New Session</div>
                     </button>

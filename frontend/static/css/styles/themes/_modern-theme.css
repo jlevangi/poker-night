@@ -51,11 +51,6 @@ textarea,
     --neo-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
     --neo-shadow-static: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
 
-    /* Modern Borders */
-    --neo-border: 1px solid #E2E8F0;
-    --neo-border-thin: 1px solid #E2E8F0;
-    --neo-border-thick: 1px solid #E2E8F0;
-
     /* Updated Primary Colors */
     --primary-color: #2563EB;
     --primary-hover: #1D4ED8;
@@ -156,9 +151,6 @@ textarea,
     --neo-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 8px 10px -6px rgba(0, 0, 0, 0.2);
     --neo-shadow-static: 0 1px 3px rgba(0, 0, 0, 0.2), 0 1px 2px rgba(0, 0, 0, 0.15);
 
-    --neo-border: 1px solid #334155;
-    --neo-border-thin: 1px solid #334155;
-    --neo-border-thick: 1px solid #334155;
 
     /* Dark mode card accent colors */
     --casino-red-light: rgba(239, 68, 68, 0.1);
@@ -440,7 +432,7 @@ textarea,
     width: 320px;
     height: 100vh;
     background: var(--bg-content);
-    border-right: 1px solid var(--neo-border);
+    border-right: 1px solid var(--border-color);
     box-shadow: var(--neo-shadow-xl);
     z-index: calc(var(--z-modal) + 100);
     transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
