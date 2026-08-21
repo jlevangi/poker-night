@@ -60,6 +60,7 @@ textarea,
     --primary-color: #2563EB;
     --primary-hover: #1D4ED8;
     --primary-light: #EFF6FF;
+    --link-color: var(--primary-color);
 
     /* Background Updates */
     --bg-body: #F8FAFC;
@@ -143,6 +144,8 @@ textarea,
     --text-muted: #64748B;
     --text-header: #F8FAFC;
     --text-header-muted: rgba(255, 255, 255, 0.6);
+    /* Matches [data-theme="dark"] a in dark-mode.css so inline-styled links flip too */
+    --link-color: #93C5FD;
 
     --casino-cream: #1E293B;
 

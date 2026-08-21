@@ -264,7 +264,7 @@ export default class DashboardPage {
                 <tr${isGambleKing ? ' style="background: var(--casino-gold-light);"' : ''}>
                     <td style="font-weight: 600;">${index + 1}</td>
                     <td>
-                        <a href="#player/${player.player_id}" style="color: var(--primary-color); text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 0.5rem;">
+                        <a href="#player/${player.player_id}" style="color: var(--link-color); text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 0.5rem;">
                             ${player.name}
                             ${isGambleKing ? '<span style="font-size: 1.2rem;">👑</span>' : ''}
                         </a>
