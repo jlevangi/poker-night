@@ -233,28 +233,28 @@ export default class SessionDetailPage {
                 <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem; text-align: center;">
                     <div>
                         <div class="stat-label stat-label--sm">Buy-in</div>
-                        <div style="font-size: 0.95rem; font-weight: 600; color: var(--casino-red);">${formatCurrency(buyIn)}</div>
+                        <div style="font-size: 1rem; font-weight: 600; color: var(--casino-red);">${formatCurrency(buyIn)}</div>
                     </div>
                     <div>
                         <div class="stat-label stat-label--sm">Cash-out</div>
-                        <div style="font-size: 0.95rem; font-weight: 600; color: var(--casino-gold);">${formatCurrency(cashOut)}</div>
+                        <div style="font-size: 1rem; font-weight: 600; color: var(--casino-gold);">${formatCurrency(cashOut)}</div>
                     </div>
                     <div>
                         <div class="stat-label stat-label--sm">7-2 Wins</div>
                         <div style="display: flex; align-items: center; justify-content: center; gap: 0.25rem;">
                             ${isActive ? `
                                 <button class="neo-btn neo-btn-sm seven-two-decrement-btn" data-player-id="${player.id}" style="
-                                    width: 22px; height: 22px; padding: 0; font-size: 13px; font-weight: 700;
+                                    width: 22px; height: 22px; padding: 0; font-size: 0.75rem; font-weight: 700;
                                     display: inline-flex; align-items: center; justify-content: center;
                                     border: 1px solid var(--casino-gold); border-radius: 50%;
                                     background: transparent; color: var(--casino-gold);
                                     cursor: pointer; line-height: 1;
                                 ">−</button>
                             ` : ''}
-                            <span style="font-size: 0.95rem; font-weight: 600; color: var(--casino-gold); min-width: 1.25rem;">${player.sevenTwoWins || 0}</span>
+                            <span style="font-size: 1rem; font-weight: 600; color: var(--casino-gold); min-width: 1.25rem;">${player.sevenTwoWins || 0}</span>
                             ${isActive ? `
                                 <button class="neo-btn neo-btn-sm seven-two-increment-btn" data-player-id="${player.id}" style="
-                                    width: 22px; height: 22px; padding: 0; font-size: 13px; font-weight: 700;
+                                    width: 22px; height: 22px; padding: 0; font-size: 0.75rem; font-weight: 700;
                                     display: inline-flex; align-items: center; justify-content: center;
                                     border: 1px solid var(--casino-gold); border-radius: 50%;
                                     background: var(--casino-gold); color: var(--text-white);
@@ -268,17 +268,17 @@ export default class SessionDetailPage {
                         <div style="display: flex; align-items: center; justify-content: center; gap: 0.25rem;">
                             ${isActive ? `
                                 <button class="neo-btn neo-btn-sm strikes-decrement-btn" data-player-id="${player.id}" style="
-                                    width: 22px; height: 22px; padding: 0; font-size: 13px; font-weight: 700;
+                                    width: 22px; height: 22px; padding: 0; font-size: 0.75rem; font-weight: 700;
                                     display: inline-flex; align-items: center; justify-content: center;
                                     border: 1px solid var(--casino-red); border-radius: 50%;
                                     background: transparent; color: var(--casino-red);
                                     cursor: pointer; line-height: 1;
                                 ">−</button>
                             ` : ''}
-                            <span style="font-size: 0.95rem; font-weight: 600; color: var(--casino-red); min-width: 1.25rem;">${player.strikes || 0}</span>
+                            <span style="font-size: 1rem; font-weight: 600; color: var(--casino-red); min-width: 1.25rem;">${player.strikes || 0}</span>
                             ${isActive ? `
                                 <button class="neo-btn neo-btn-sm strikes-increment-btn" data-player-id="${player.id}" style="
-                                    width: 22px; height: 22px; padding: 0; font-size: 13px; font-weight: 700;
+                                    width: 22px; height: 22px; padding: 0; font-size: 0.75rem; font-weight: 700;
                                     display: inline-flex; align-items: center; justify-content: center;
                                     border: 1px solid var(--casino-red); border-radius: 50%;
                                     background: var(--casino-red); color: var(--text-white);
@@ -545,7 +545,7 @@ export default class SessionDetailPage {
                     </h2>
                     
                     <div style="display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-bottom: 1.25rem;">
-                        <span style="display: inline-block; padding: 0.25rem 0.75rem; border-radius: 999px; font-size: 0.8rem; font-weight: 700; letter-spacing: 0.05em; ${isActive ? 'background: rgba(245, 158, 11, 0.15); color: var(--casino-gold-dark);' : 'background: rgba(22, 163, 74, 0.15); color: var(--casino-green-dark);'}">
+                        <span style="display: inline-block; padding: 0.25rem 0.75rem; border-radius: 999px; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.05em; ${isActive ? 'background: rgba(245, 158, 11, 0.15); color: var(--casino-gold-dark);' : 'background: rgba(22, 163, 74, 0.15); color: var(--casino-green-dark);'}">
                             ${isActive ? '● ACTIVE' : '● ENDED'}
                         </span>
                     </div>
@@ -592,7 +592,7 @@ export default class SessionDetailPage {
                         ` : ''}
                         ${isActive ? `
                         <div style="display: flex; flex-direction: column; gap: 1rem;">
-                            <h4 style="font-size: 1.1rem; font-weight: 600; margin: 0; color: var(--text-primary);">${sessionData.wisdom_quote ? 'Edit Quote' : 'Add Quote'}</h4>
+                            <h4 style="font-size: 1.125rem; font-weight: 600; margin: 0; color: var(--text-primary);">${sessionData.wisdom_quote ? 'Edit Quote' : 'Add Quote'}</h4>
                             <textarea id="wisdom-quote-input" placeholder="Enter the quote..." style="min-height: 80px; resize: vertical; margin-bottom: 0;">${sessionData.wisdom_quote || ''}</textarea>
                             <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
                                 <select id="wisdom-player-select" style="flex: 1; min-width: 200px;">
@@ -645,7 +645,7 @@ export default class SessionDetailPage {
                 <!-- Session Controls -->
                 <div style="margin-top: 2rem; text-align: center;">
                     ${isActive ?
-                        `${!allCashedOut ? `<p id="end-session-note" style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.75rem;">Cash out all players before ending the session</p>` : ''}
+                        `${!allCashedOut ? `<p id="end-session-note" style="font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 0.75rem;">Cash out all players before ending the session</p>` : ''}
                         <button id="end-session-btn" class="neo-btn neo-btn-red neo-btn-lg" ${!allCashedOut ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : ''}>
                             End Session
                         </button>` :
@@ -795,7 +795,7 @@ export default class SessionDetailPage {
             .session-player-picker-badge {
                 padding: 0.2rem 0.55rem;
                 border-radius: 999px;
-                font-size: 0.72rem;
+                font-size: 0.75rem;
                 font-weight: 700;
                 color: var(--text-secondary);
                 background: rgba(148, 163, 184, 0.14);
@@ -1191,7 +1191,7 @@ export default class SessionDetailPage {
                                 <button id="edit-buyin-minus" class="neo-btn" style="width: 36px; height: 36px; padding: 0; font-size: 1.25rem; font-weight: 700; display: flex; align-items: center; justify-content: center; border-radius: 50%;${buyInCount <= 1 ? ' opacity: 0.4;' : ''}" ${buyInCount <= 1 ? 'disabled' : ''}>−</button>
                                 <span style="font-size: 1.25rem; font-weight: 700; min-width: 2rem; text-align: center;">${buyInCount}</span>
                                 <button id="edit-buyin-plus" class="neo-btn" style="width: 36px; height: 36px; padding: 0; font-size: 1.25rem; font-weight: 700; display: flex; align-items: center; justify-content: center; border-radius: 50%;">+</button>
-                                <span style="font-size: 0.85rem; color: var(--text-secondary); margin-left: 0.25rem;">(${formatCurrency(totalBuyIn)} total)</span>
+                                <span style="font-size: 0.875rem; color: var(--text-secondary); margin-left: 0.25rem;">(${formatCurrency(totalBuyIn)} total)</span>
                             </div>
                         </div>
 
@@ -1223,7 +1223,7 @@ export default class SessionDetailPage {
 
                         <!-- Footer -->
                         <div style="border-top: 1px solid var(--border-light, #eee); padding-top: 1rem; text-align: center;">
-                            <a href="#player/${p.id}" id="edit-modal-profile-link" style="font-size: 0.9rem; font-weight: 600; color: var(--casino-gold);">View Player Profile →</a>
+                            <a href="#player/${p.id}" id="edit-modal-profile-link" style="font-size: 0.875rem; font-weight: 600; color: var(--casino-gold);">View Player Profile →</a>
                         </div>
                     </div>
                 </div>
