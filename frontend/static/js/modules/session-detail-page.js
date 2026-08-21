@@ -1194,7 +1194,7 @@ export default class SessionDetailPage {
                         <!-- Cash-out amount -->
                         <div style="margin-bottom: 1.25rem;">
                             <div style="font-size: 0.75rem; font-weight: 600; opacity: 0.7; margin-bottom: 0.5rem;">Cash-out Amount</div>
-                            <input type="text" id="edit-cashout-input" inputmode="decimal" pattern="[0-9]*\\.?[0-9]*" value="${cashOut > 0 ? cashOut.toFixed(2) : ''}" placeholder="0.00" style="width: 100%; padding: 0.6rem 0.75rem; font-size: 1rem; border: 2px solid var(--border-light, #ddd); border-radius: 6px; box-sizing: border-box;">
+                            <input type="text" id="edit-cashout-input" inputmode="decimal" pattern="[0-9]*\\.?[0-9]*" value="${cashOut > 0 ? cashOut.toFixed(2) : ''}" placeholder="0.00" style="width: 100%; margin-bottom: 0;">
                         </div>
 
                         <!-- 7-2 Wins -->
