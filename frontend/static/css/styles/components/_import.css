@@ -3,7 +3,7 @@
 .import-dropzone {
     border: 2px dashed var(--border-color);
     border-radius: 14px;
-    padding: 2.5rem 1.5rem;
+    padding: 2rem 1.5rem;
     text-align: center;
     cursor: pointer;
     background: var(--bg-card);
@@ -152,7 +152,7 @@
     align-items: center;
     gap: 0.75rem;
     margin-top: 1rem;
-    padding: 0.875rem 1rem;
+    padding: 0.75rem 1rem;
     border-radius: 12px;
     font-weight: 600;
     background: var(--bg-card);
@@ -182,7 +182,7 @@
     display: flex;
     gap: 0.75rem;
     align-items: flex-start;
-    padding: 0.875rem;
+    padding: 0.75rem;
     border-radius: 12px;
     background: var(--bg-card);
     border: 1px solid var(--border-light);
@@ -226,7 +226,7 @@
 
 .log-stats-table th,
 .log-stats-table td {
-    padding: 0.5rem 0.625rem;
+    padding: 0.5rem;
     text-align: right;
     white-space: nowrap;
     border-bottom: 1px solid var(--border-light);
