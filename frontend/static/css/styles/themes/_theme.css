@@ -17,8 +17,8 @@
     /* Text Colors */
     --text-primary: #0F172A;
     --text-secondary: #475569;
-    --text-muted: #94A3B8;
-    --text-light: #94A3B8;
+    --text-muted: #4F7289;
+    --text-light: #4F7289;
     --text-white: #FFFFFF;
 
     /* Success/Error Colors */
@@ -32,9 +32,9 @@
     --color-info-hover: #4F46E5;
 
     /* Profit Colors */
-    --profit-positive: #10B981;
-    --profit-negative: #EF4444;
-    --profit-unpaid: #F59E0B;
+    --profit-positive: #047857;
+    --profit-negative: #DC2626;
+    --profit-unpaid: #92400E;
 
     /* Border Colors */
     --border-color: #E2E8F0;

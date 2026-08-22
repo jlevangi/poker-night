@@ -164,7 +164,7 @@ button:disabled,
     font-size: 0.875rem;
     margin-left: var(--spacing-sm);
     vertical-align: baseline;
-    background-color: #64748B;
+    background-color: var(--text-secondary);
     border-radius: var(--radius-sm);
 }
 
@@ -231,7 +231,7 @@ button:disabled,
 }
 
 .modal-actions .secondary-btn:hover {
-    background-color: #64748B;
+    background-color: var(--text-secondary);
 }
 
 .modal-actions .secondary-btn:focus-visible {
