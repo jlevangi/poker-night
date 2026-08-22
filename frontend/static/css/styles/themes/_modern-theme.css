@@ -863,8 +863,8 @@ button.neo-more-item {
 }
 
 #more-trigger.active {
-    background: rgba(255, 255, 255, 0.15);
-    color: #FFFFFF;
+    background: var(--bg-shell-active);
+    color: var(--text-header);
 }
 
 @media (min-width: 769px) {
