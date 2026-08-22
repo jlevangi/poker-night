@@ -166,13 +166,13 @@ export default class PlayersPage {
                                  player.net_profit < 0 ? 'neo-card-primary' : '';
 
                 html += `
-                    <div class="neo-card ${cardColor} clickable-player-stats" data-player-id="${player.player_id}" style="text-decoration: none; color: inherit; cursor: pointer; padding: 1rem; margin: 0;">
+                    <div class="neo-card ${cardColor} clickable-player-stats list-card-row" data-player-id="${player.player_id}">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <div style="overflow-wrap: anywhere;">
-                                <div style="font-weight: 600; color: inherit; margin-bottom: 0.25rem; font-size: 1.125rem;">
+                                <div class="list-card-text">
                                     ${isGambleKing ? '👑 ' : ''}<a href="#player/${player.player_id}" style="color: inherit; text-decoration: none;">${player.name}</a>
                                 </div>
-                                <div style="font-size: 0.875rem; color: inherit; font-weight: 600; opacity: 0.8;">
+                                <div class="list-card-subtitle">
                                     Sessions: ${player.games_played || 0} · 7-2: ${player.seven_two_wins || 0} · Strikes: ${player.strikes || 0}
                                 </div>
                             </div>

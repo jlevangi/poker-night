@@ -5,6 +5,10 @@
     text-align: center;
 }
 
+.text-right {
+    text-align: right;
+}
+
 /* Margin utilities could be added here in the future */
 .mb-4 {
     margin-bottom: var(--spacing-md);

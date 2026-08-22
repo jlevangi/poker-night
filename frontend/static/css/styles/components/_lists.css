@@ -45,6 +45,32 @@ li a:hover {
     text-decoration: underline;
 }
 
+/* List card rows — generic class for card-based list items (sessions, players).
+   Replaces repeated inline padding/margin/text-decoration on <a> card links. */
+.list-card-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-neo);
+    margin: 0;
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+}
+
+.list-card-text {
+    font-weight: 600;
+    color: inherit;
+    margin-bottom: 0.25rem;
+    font-size: 1.125rem;
+}
+
+.list-card-subtitle {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
 /* Session Lists */
 .sessions-list {
     list-style: none;

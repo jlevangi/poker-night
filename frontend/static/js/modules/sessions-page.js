@@ -73,7 +73,7 @@ export default class SessionsPage {
     render(sessions, upcomingEvents = []) {
         let html = `
             <div class="fade-in" style="padding: 1.5rem; max-width: 1200px; margin: 0 auto;">
-                <h2 class="section-title" style="font-size: 2rem; margin-bottom: 2rem;">🃏 Sessions</h2>
+                <h2 class="section-title" style="font-size: 2.5rem; margin-bottom: 2rem;">🃏 Sessions</h2>
 
                 <div class="neo-card neo-card-green" style="margin-bottom: 2rem; text-align: center;">
                     <button id="create-session-btn" class="neo-btn neo-btn-green neo-btn-lg">+ Create Session</button>
@@ -90,22 +90,20 @@ export default class SessionsPage {
 
             activeSessions.forEach(session => {
                 html += `
-                    <a href="#session/${session.session_id}" class="neo-card neo-card-gold" style="text-decoration: none; color: inherit; padding: 1rem; margin: 0;">
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <div>
-                                <div style="font-weight: 600; color: inherit; margin-bottom: 0.25rem; font-size: 1.125rem;">
-                                    📅 ${formatDate(session.date)}
-                                </div>
-                                <div style="font-size: 0.875rem; color: inherit; font-weight: 600; opacity: 0.8;">
-                                    Buy-in: ${formatCurrency(session.buyin)} | Total: ${formatCurrency(session.totalValue)}
-                                </div>
+                    <a href="#session/${session.session_id}" class="neo-card neo-card-gold list-card-row" style="text-decoration: none; color: inherit;">
+                        <div>
+                            <div class="list-card-text">
+                                📅 ${formatDate(session.date)}
                             </div>
-                            <div style="display: flex; align-items: center; gap: 0.5rem;">
-                                <span style="color: var(--casino-gold); font-size: 1.25rem;">🟡</span>
-                                <span style="font-size: 0.875rem; font-weight: 600; color: var(--casino-gold);">
-                                    ACTIVE
-                                </span>
+                            <div class="list-card-subtitle">
+                                Buy-in: ${formatCurrency(session.buyin)} | Total: ${formatCurrency(session.totalValue)}
                             </div>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                            <span style="color: var(--casino-gold); font-size: 1.25rem;">🟡</span>
+                            <span style="font-size: 0.875rem; font-weight: 600; color: var(--casino-gold);">
+                                ACTIVE
+                            </span>
                         </div>
                     </a>
                 `;
@@ -124,13 +122,13 @@ export default class SessionsPage {
             upcomingEvents.forEach(evt => {
                 const playerCount = evt.rsvp_counts.yes + evt.rsvp_counts.maybe + evt.rsvp_counts.no;
                 html += `
-                    <a href="#event/${evt.event_id}" class="neo-card neo-card-purple" style="text-decoration: none; color: inherit; padding: 1rem; margin: 0;">
+                    <a href="#event/${evt.event_id}" class="neo-card neo-card-purple list-card-row" style="text-decoration: none; color: inherit;">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <div>
-                                <div style="font-weight: 600; color: inherit; margin-bottom: 0.25rem; font-size: 1.125rem;">
+                                <div class="list-card-text">
                                     ${this.escapeHtml(evt.title)} — ${formatDate(evt.date)}
                                 </div>
-                                <div style="font-size: 0.875rem; color: inherit; font-weight: 600; opacity: 0.8;">
+                                <div class="list-card-subtitle">
                                     Buy-in: ${formatCurrency(evt.buyin)}${playerCount > 0 ? ` | ${playerCount} player${playerCount !== 1 ? 's' : ''} responding` : ''}
                                 </div>
                             </div>
@@ -163,13 +161,13 @@ export default class SessionsPage {
                 const statusIcon = isActive ? '🟡' : '⚪';
 
                 html += `
-                    <a href="#session/${session.session_id}" class="neo-card ${cardColor}" style="text-decoration: none; color: inherit; padding: 1rem; margin: 0;">
+                    <a href="#session/${session.session_id}" class="neo-card ${cardColor} list-card-row" style="text-decoration: none; color: inherit;">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <div>
-                                <div style="font-weight: 600; color: inherit; margin-bottom: 0.25rem; font-size: 1.125rem;">
+                                <div class="list-card-text">
                                     📅 ${formatDate(session.date)}
                                 </div>
-                                <div style="font-size: 0.875rem; color: inherit; font-weight: 600; opacity: 0.8;">
+                                <div class="list-card-subtitle">
                                     Buy-in: ${formatCurrency(session.buyin)} | Total: ${formatCurrency(session.totalValue)}
                                 </div>
                             </div>
