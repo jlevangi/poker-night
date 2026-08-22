@@ -38,6 +38,7 @@ const URLS_TO_CACHE = [
     '/static/js/modules/event-bus.js',
     '/static/js/modules/event-detail-page.js',
     '/static/js/modules/formatters.js',
+    '/static/js/modules/import-page.js',
     '/static/js/modules/page-manager.js',
     '/static/images/icon-192x192.png',
     '/static/images/icon-512x512.png',

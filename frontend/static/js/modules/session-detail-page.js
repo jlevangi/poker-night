@@ -5,7 +5,7 @@ import { staggerChildren } from './animations.js';
 import Router from './router.js';
 import EventBus from './event-bus.js';
 import { formatCurrency, formatDate } from './formatters.js';
-import { renderEmptyState, renderSkeleton, renderSkeletonPage, renderSkeletonStatGrid, showPageError } from './ui.js';
+import { renderAwardCard, renderEmptyState, renderSkeleton, renderSkeletonPage, renderSkeletonStatGrid, showPageError } from './ui.js';
 
 export default class SessionDetailPage {
     static skeleton() {
@@ -64,6 +64,10 @@ export default class SessionDetailPage {
             
             // Fetch player directory for the add-players picker
             const availablePlayers = await this.api.get('players/details');
+
+            // Hand statistics, when this session was imported from a PokerNow
+            // log. Most sessions have none, so a 404 here is the normal case.
+            session.logStats = await this.api.getSessionImport(sessionId).catch(() => null);
 
             // Calculate total value and unpaid value
             if (session.entries) {
@@ -204,6 +208,96 @@ export default class SessionDetailPage {
     }
 
     // Render a single player card
+    /**
+     * Hand statistics from an imported PokerNow log.
+     *
+     * Only sessions created through the import flow have these; everything
+     * else renders nothing at all rather than an empty shell.
+     */
+    renderLogStats(session) {
+        const stats = session.logStats;
+        if (!stats || !stats.summary) return '';
+
+        const summary = stats.summary;
+        const players = (stats.players || []).filter(p => p.hands_dealt > 0);
+        const awards = stats.awards || [];
+        const minutes = summary.duration_minutes || 0;
+        const duration = minutes >= 60
+            ? `${Math.floor(minutes / 60)}h ${minutes % 60}m`
+            : `${minutes}m`;
+
+        const headline = [
+            ['🃏', summary.hands_played || 0, 'Hands'],
+            ['⏱️', duration, 'Played'],
+            ['💰', formatCurrency(summary.biggest_pot || 0), 'Biggest Pot'],
+            ['🤝', summary.showdowns || 0, 'Showdowns']
+        ].map(([icon, value, label]) => `
+            <div class="neo-stat-card">
+                <div style="font-size: 1.25rem;">${icon}</div>
+                <div class="neo-stat-value" style="font-size: 1.375rem;">${value}</div>
+                <div class="neo-stat-label">${label}</div>
+            </div>
+        `).join('');
+
+        const rows = players.map(player => {
+            const biggest = player.biggest_pot;
+            const name = player.player_id
+                ? `<a href="#player/${this.escapeHtml(player.player_id)}" class="player-name-link">${this.escapeHtml(player.player_name || player.name)}</a>`
+                : this.escapeHtml(player.player_name || player.name);
+            return `
+                <tr>
+                    <td>${name}</td>
+                    <td>${player.hands_dealt}</td>
+                    <td>${player.hands_won}</td>
+                    <td>${player.vpip}%</td>
+                    <td>${player.pfr}%</td>
+                    <td>${player.aggression_factor === null ? '—' : player.aggression_factor}</td>
+                    <td>${player.showdowns_won}/${player.showdowns}</td>
+                    <td>${biggest ? formatCurrency(biggest.amount) : '—'}</td>
+                </tr>
+            `;
+        }).join('');
+
+        return `
+            <div style="margin-top: 2.5rem;">
+                <h3 style="font-size: 1.75rem; font-weight: 600; margin: 0 0 1.5rem 0; color: var(--text-primary);">
+                    📊 From the Log
+                </h3>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 0.75rem; margin-bottom: 1.5rem;">
+                    ${headline}
+                </div>
+
+                ${awards.length ? `
+                    <div class="neo-card" style="margin-bottom: 1.5rem;">
+                        <h4 class="section-title">🏅 Awards</h4>
+                        <div class="award-grid">${awards.map(a => renderAwardCard(a)).join('')}</div>
+                    </div>` : ''}
+
+                ${rows ? `
+                    <div class="neo-card">
+                        <h4 class="section-title">Player Breakdown</h4>
+                        <div class="table-responsive">
+                            <table class="log-stats-table">
+                                <thead>
+                                    <tr>
+                                        <th>Player</th><th>Hands</th><th>Won</th><th>VPIP</th>
+                                        <th>PFR</th><th>Aggr.</th><th>Showdowns</th><th>Big Pot</th>
+                                    </tr>
+                                </thead>
+                                <tbody>${rows}</tbody>
+                            </table>
+                        </div>
+                        <p class="log-stat-help">
+                            <strong>VPIP</strong> is how often they put money in before the flop,
+                            <strong>PFR</strong> how often they raised it, and <strong>Aggr.</strong>
+                            is bets and raises per call — above 1 is aggressive, below is passive.
+                        </p>
+                    </div>` : ''}
+            </div>
+        `;
+    }
+
     renderPlayerCard(player, sessionData, isActive) {
         const buyIn = player.buyIn || 0;
         const cashOut = player.cashOut || 0;
@@ -629,6 +723,8 @@ export default class SessionDetailPage {
         html += this.renderPlayersListHTML(session, isActive);
         html += `</div>`;
         
+        html += this.renderLogStats(session);
+
         // Add chip distribution section after players (only for active sessions)
         if (isActive) {
             html += `

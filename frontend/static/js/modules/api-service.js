@@ -146,6 +146,31 @@ export default class ApiService {
         return this.put(`sessions/${sessionId}/entries/${playerId}`, data);
     }
 
+    // --- PokerNow import API ---
+
+    /**
+     * Parse an uploaded PokerNow export without writing anything.
+     * Takes a FormData (the browser sets the multipart boundary itself, so
+     * this one call cannot go through post()).
+     */
+    async analyzePokerNowUpload(formData) {
+        const response = await fetch(`${this.baseUrl}/imports/pokernow/analyze`, {
+            method: 'POST',
+            body: formData
+        });
+        return this.handleResponse(response);
+    }
+
+    /** Create a session from a reviewed import preview. */
+    async commitPokerNowImport(data) {
+        return this.post('imports/pokernow/commit', data);
+    }
+
+    /** Stored PokerNow stats for a session; rejects with a 404 when unimported. */
+    async getSessionImport(sessionId) {
+        return this.get(`sessions/${sessionId}/import`);
+    }
+
     // --- Calendar/Events API ---
     async getEvents(upcoming = false) {
         return this.get(`events${upcoming ? '?upcoming=true' : ''}`);

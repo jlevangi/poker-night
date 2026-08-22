@@ -433,6 +433,52 @@ class CalendarEvent(db.Model):
         }
 
 
+class SessionImport(db.Model):
+    """
+    A PokerNow log imported into a session.
+
+    Holds the parsed hand statistics (summary, per-player numbers, and awards)
+    as a JSON blob keyed to the session, so an import can be re-rendered or
+    replaced without keeping the original CSV around. One import per session:
+    re-importing overwrites the row.
+    """
+
+    __tablename__ = 'session_imports'
+
+    id = Column(Integer, primary_key=True)
+    session_id = Column(String(30), ForeignKey('sessions.session_id'),
+                        unique=True, nullable=False, index=True)
+    source = Column(String(20), default='pokernow', nullable=False)
+    filename = Column(String(255), nullable=True)
+    hands_played = Column(Integer, default=0, nullable=False)
+    stats = Column(Text, nullable=False)  # JSON string
+    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow,
+                        nullable=False)
+
+    # Relationships
+    session = relationship("Session")
+
+    def __repr__(self) -> str:
+        return f'<SessionImport {self.session_id}: {self.hands_played} hands>'
+
+    def to_dict(self) -> Dict[str, Any]:
+        import json
+        try:
+            payload = json.loads(self.stats) if self.stats else {}
+        except json.JSONDecodeError:
+            payload = {}
+        return {
+            'session_id': self.session_id,
+            'source': self.source,
+            'filename': self.filename,
+            'hands_played': self.hands_played,
+            'created_at': self.created_at.isoformat() if self.created_at else None,
+            'updated_at': self.updated_at.isoformat() if self.updated_at else None,
+            **payload,
+        }
+
+
 class EventRSVP(db.Model):
     """Model representing a player's RSVP to a calendar event."""
 

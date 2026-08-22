@@ -21,6 +21,7 @@ from .routes.notifications import notifications_bp
 from .routes.config import config_bp
 from .routes.stats import stats_bp
 from .routes.calendar import calendar_bp
+from .routes.imports import imports_bp
 from .database.models import db
 from .database.migrations import AutoMigration
 
@@ -74,6 +75,7 @@ def create_app(config_class: type = Config) -> Flask:
     app.register_blueprint(config_bp, url_prefix='/api')
     app.register_blueprint(stats_bp)
     app.register_blueprint(calendar_bp, url_prefix='/api')
+    app.register_blueprint(imports_bp, url_prefix='/api')
     app.register_blueprint(admin_bp, url_prefix='/admin')
     app.register_blueprint(frontend_bp)
     

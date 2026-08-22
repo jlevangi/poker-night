@@ -32,6 +32,7 @@
 @import 'components/_charts.css';
 @import 'components/_chips.css';
 @import 'components/_tables.css';
+@import 'components/_import.css';
 
 /* 5. Utility styles */
 @import 'utils/_animations.css';

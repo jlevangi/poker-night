@@ -133,7 +133,9 @@ def get_session_details_api(session_id: str) -> Dict[str, Any]:
     if session.chip_distribution is None:
         chip_distribution = calculate_chip_distribution(session.default_buy_in_value)
         if chip_distribution:
-            session.chip_distribution = chip_distribution
+            # chip_distribution is a Text column: SQLite cannot bind a dict.
+            import json
+            session.chip_distribution = json.dumps(chip_distribution)
             session.total_chips = sum(chip_distribution.values())
             
             # Save the updated session with chip distribution

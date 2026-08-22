@@ -13,6 +13,7 @@ import PlayerDetailPage from './modules/player-detail-page.js';
 import StatsPage from './modules/stats-page.js';
 import CalendarPage from './modules/calendar-page.js';
 import EventDetailPage from './modules/event-detail-page.js';
+import ImportPage from './modules/import-page.js';
 import ServiceWorkerManager from './modules/service-worker-manager.js';
 import DarkModeManager from './modules/dark-mode-manager.js';
 import SettingsManager from './modules/settings-manager.js';
@@ -231,6 +232,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const sessionDetailPage = new SessionDetailPage(pageManager.getContainer('detail'), apiService);
     const playerDetailPage = new PlayerDetailPage(pageManager.getContainer('detail'), apiService);
     const eventDetailPage = new EventDetailPage(pageManager.getContainer('detail'), apiService);
+    const importPage = new ImportPage(pageManager.getContainer('detail'), apiService);
 
     // Setup new session modal
     setupNewSessionModal();
@@ -464,6 +466,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         })
         .register('event/:id', (id) => {
             return eventDetailPage.load(id);
+        })
+        .register('import', () => {
+            return importPage.load();
         });
 
     router.onRouteChange(() => {

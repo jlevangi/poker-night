@@ -76,7 +76,10 @@ export default class SessionsPage {
                 <h2 class="section-title" style="font-size: 2rem; margin-bottom: 2rem;">🃏 Sessions</h2>
 
                 <div class="neo-card neo-card-green" style="margin-bottom: 2rem; text-align: center;">
-                    <button id="create-session-btn" class="neo-btn neo-btn-green neo-btn-lg">+ Create Session</button>
+                    <div class="modal-actions">
+                        <button id="create-session-btn" class="neo-btn neo-btn-green neo-btn-lg">+ Create Session</button>
+                        <a href="#import" id="import-session-btn" class="neo-btn neo-btn-lg">📥 Import Log</a>
+                    </div>
                 </div>
         `;
 
