@@ -243,7 +243,7 @@ export default class SessionDetailPage {
                         <div class="stat-label stat-label--sm">7-2 Wins</div>
                         <div style="display: flex; align-items: center; justify-content: center; gap: 0.25rem;">
                             ${isActive ? `
-                                <button class="neo-btn neo-btn-sm seven-two-decrement-btn" data-player-id="${player.id}" style="
+                                <button class="neo-btn neo-btn-sm seven-two-decrement-btn" data-player-id="${player.id}" aria-label="Decrease 7-2 wins" style="
                                     width: 22px; height: 22px; padding: 0; font-size: 0.75rem; font-weight: 700;
                                     display: inline-flex; align-items: center; justify-content: center;
                                     border: 1px solid var(--casino-gold); border-radius: 50%;
@@ -253,7 +253,7 @@ export default class SessionDetailPage {
                             ` : ''}
                             <span style="font-size: 1rem; font-weight: 600; color: var(--casino-gold); min-width: 1.25rem;">${player.sevenTwoWins || 0}</span>
                             ${isActive ? `
-                                <button class="neo-btn neo-btn-sm seven-two-increment-btn" data-player-id="${player.id}" style="
+                                <button class="neo-btn neo-btn-sm seven-two-increment-btn" data-player-id="${player.id}" aria-label="Increase 7-2 wins" style="
                                     width: 22px; height: 22px; padding: 0; font-size: 0.75rem; font-weight: 700;
                                     display: inline-flex; align-items: center; justify-content: center;
                                     border: 1px solid var(--casino-gold); border-radius: 50%;
@@ -267,7 +267,7 @@ export default class SessionDetailPage {
                         <div class="stat-label stat-label--sm">Strikes</div>
                         <div style="display: flex; align-items: center; justify-content: center; gap: 0.25rem;">
                             ${isActive ? `
-                                <button class="neo-btn neo-btn-sm strikes-decrement-btn" data-player-id="${player.id}" style="
+                                <button class="neo-btn neo-btn-sm strikes-decrement-btn" data-player-id="${player.id}" aria-label="Decrease strikes" style="
                                     width: 22px; height: 22px; padding: 0; font-size: 0.75rem; font-weight: 700;
                                     display: inline-flex; align-items: center; justify-content: center;
                                     border: 1px solid var(--casino-red); border-radius: 50%;
@@ -277,7 +277,7 @@ export default class SessionDetailPage {
                             ` : ''}
                             <span style="font-size: 1rem; font-weight: 600; color: var(--casino-red); min-width: 1.25rem;">${player.strikes || 0}</span>
                             ${isActive ? `
-                                <button class="neo-btn neo-btn-sm strikes-increment-btn" data-player-id="${player.id}" style="
+                                <button class="neo-btn neo-btn-sm strikes-increment-btn" data-player-id="${player.id}" aria-label="Increase strikes" style="
                                     width: 22px; height: 22px; padding: 0; font-size: 0.75rem; font-weight: 700;
                                     display: inline-flex; align-items: center; justify-content: center;
                                     border: 1px solid var(--casino-red); border-radius: 50%;

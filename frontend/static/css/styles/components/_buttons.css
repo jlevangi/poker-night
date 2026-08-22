@@ -48,7 +48,7 @@ button:focus-visible,
 .quick-action-btn:focus-visible,
 .danger-btn:focus-visible,
 .reactivate-session-btn:focus-visible {
-    outline: 2px solid var(--primary-color);
+    outline: 2px solid var(--focus-ring-color);
     outline-offset: 2px;
 }
 
@@ -276,7 +276,7 @@ button:disabled,
 .seven-two-decrement-btn:focus-visible,
 .strikes-increment-btn:focus-visible,
 .strikes-decrement-btn:focus-visible {
-    outline: 2px solid var(--primary-color);
+    outline: 2px solid var(--focus-ring-color);
     outline-offset: 2px;
 }
 

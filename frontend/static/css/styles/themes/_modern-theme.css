@@ -115,6 +115,9 @@ textarea,
     --radius-lg: 14px;
     --radius-xl: 18px;
     --radius-pill: 50px;
+
+    /* Focus ring — brightened in dark mode for contrast on dark surfaces */
+    --focus-ring-color: var(--primary-color);
 }
 
 /* ============================================================================ */
@@ -162,6 +165,9 @@ textarea,
     --casino-gold-dark: #FCD34D;
     --casino-green-dark: #6EE7B7;
     --casino-purple-dark: #A5B4FC;
+
+    /* Brighter focus ring for dark backgrounds (nav, menus) */
+    --focus-ring-color: #60A5FA;
 }
 
 /* Dark mode card variant overrides */
@@ -311,6 +317,11 @@ textarea,
     outline: none !important;
 }
 
+.neo-nav-btn:focus-visible {
+    outline: 2px solid var(--focus-ring-color);
+    outline-offset: 2px;
+}
+
 /* Header Controls */
 .neo-header-controls {
     position: fixed;
@@ -409,6 +420,11 @@ textarea,
 
 .neo-nav-mobile-btn:focus {
     outline: none !important;
+}
+
+.neo-nav-mobile-btn:focus-visible {
+    outline: 2px solid var(--focus-ring-color);
+    outline-offset: 2px;
 }
 
 .neo-nav-mobile-btn .nav-icon {
@@ -814,6 +830,11 @@ button.neo-more-item {
     outline: none !important;
 }
 
+.neo-more-item:focus-visible {
+    outline: 2px solid var(--focus-ring-color);
+    outline-offset: 2px;
+}
+
 .neo-more-item.active {
     background: var(--primary-light);
     color: var(--primary-color);
@@ -1074,7 +1095,7 @@ button.neo-stat-card:active {
 }
 
 .neo-btn:focus-visible {
-    outline: 2px solid var(--primary-color) !important;
+    outline: 2px solid var(--focus-ring-color) !important;
     outline-offset: 2px;
 }
 
