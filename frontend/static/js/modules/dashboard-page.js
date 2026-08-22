@@ -149,9 +149,9 @@ export default class DashboardPage {
                         </div>
                     </div>
                     <div style="display: flex; gap: 0.5rem;">
-                        <span style="background: var(--casino-green); color: #fff; padding: 0.25rem 0.625rem; border-radius: 50px; font-weight: 600; font-size: 0.75rem;">${counts.yes} In</span>
-                        <span style="background: var(--casino-gold); color: #222; padding: 0.25rem 0.625rem; border-radius: 50px; font-weight: 600; font-size: 0.75rem;">${counts.maybe} Maybe</span>
-                        <span style="background: var(--casino-red); color: #fff; padding: 0.25rem 0.625rem; border-radius: 50px; font-weight: 600; font-size: 0.75rem;">${counts.no} Out</span>
+                        <span style="background: var(--casino-green); color: #fff; padding: 0.25rem 0.5rem; border-radius: 50px; font-weight: 600; font-size: 0.75rem;">${counts.yes} In</span>
+                        <span style="background: var(--casino-gold); color: #222; padding: 0.25rem 0.5rem; border-radius: 50px; font-weight: 600; font-size: 0.75rem;">${counts.maybe} Maybe</span>
+                        <span style="background: var(--casino-red); color: #fff; padding: 0.25rem 0.5rem; border-radius: 50px; font-weight: 600; font-size: 0.75rem;">${counts.no} Out</span>
                     </div>
                 </div>
             </a>

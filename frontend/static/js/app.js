@@ -94,17 +94,17 @@ function showUpdateNotification(serverVersion, installedVersion) {
             right: 20px;
             background: #3367D6;
             color: white;
-            padding: 15px 20px;
+            padding: 1rem 1.25rem;
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
             z-index: 10000;
             max-width: 300px;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         ">
-            <div style="margin-bottom: 10px; font-weight: 600;">
+            <div style="margin-bottom: 0.5rem; font-weight: 600;">
                 Update Available
             </div>
-            <div style="margin-bottom: 15px; font-size: 0.875rem; opacity: 0.9;">
+            <div style="margin-bottom: 1rem; font-size: 0.875rem; opacity: 0.9;">
                 Version ${serverVersion} is ready. Refresh to get new features and fixes.
             </div>
             <div>
@@ -112,17 +112,17 @@ function showUpdateNotification(serverVersion, installedVersion) {
                     background: white;
                     color: #3367D6;
                     border: none;
-                    padding: 8px 16px;
+                    padding: 0.5rem 1rem;
                     border-radius: 4px;
                     font-weight: 600;
                     cursor: pointer;
-                    margin-right: 10px;
+                    margin-right: 0.5rem;
                 ">Update Now</button>
                 <button id="dismiss-update-btn" style="
                     background: transparent;
                     color: white;
                     border: 1px solid rgba(255,255,255,0.3);
-                    padding: 8px 16px;
+                    padding: 0.5rem 1rem;
                     border-radius: 4px;
                     cursor: pointer;
                 ">Later</button>
