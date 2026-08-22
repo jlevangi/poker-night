@@ -175,7 +175,7 @@ export default class SessionDetailPage {
                         border-radius: 50%; 
                         background-color: ${backgroundColor}; 
                         color: ${textColor}; 
-                        border: var(--neo-border-thick);
+                        border: 1px solid var(--border-color);
                         display: flex; 
                         flex-direction: column; 
                         align-items: center; 
@@ -187,7 +187,7 @@ export default class SessionDetailPage {
                         overflow: hidden;
                     ">
                         <div style="font-size: 1rem; line-height: 1;">${chipDistribution[chipColor]}</div>
-                        <div style="font-size: 0.65rem; margin-top: 2px;">${chipColor}</div>
+                        <div style="font-size: 0.65rem; margin-top: 0.125rem;">${chipColor}</div>
                         
                         <!-- Chip texture lines -->
                         <div style="
@@ -308,7 +308,7 @@ export default class SessionDetailPage {
         return `
             <div class="neo-card ${profitColor} clickable-player-details" data-player-id="${player.id}" style="cursor: pointer; padding: 1rem;${isActive && !isCashedOut ? ' border-left: 3px solid var(--casino-gold); opacity: 0.85;' : ''}">
                 <!-- Name + Profit header row -->
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; row-gap: 0.25rem; margin-bottom: 0.75rem;">
                     <div style="display: flex; align-items: center; gap: 0.5rem;">
                         <h4 style="font-size: 1.125rem; font-weight: 600; margin: 0;">
                             <a href="#player/${player.id}" style="color: inherit; text-decoration: none;">${player.name}</a>
@@ -326,29 +326,29 @@ export default class SessionDetailPage {
                 <!-- Stats grid: Buy-in, Cash-out, 7-2 Wins, Strikes -->
                 <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem; text-align: center;">
                     <div>
-                        <div style="font-size: 0.7rem; font-weight: 600; opacity: 0.7; margin-bottom: 0.125rem;">Buy-in</div>
-                        <div style="font-size: 0.95rem; font-weight: 600; color: var(--casino-red);">${formatCurrency(buyIn)}</div>
+                        <div class="stat-label stat-label--sm">Buy-in</div>
+                        <div style="font-size: 1rem; font-weight: 600; color: var(--casino-red);">${formatCurrency(buyIn)}</div>
                     </div>
                     <div>
-                        <div style="font-size: 0.7rem; font-weight: 600; opacity: 0.7; margin-bottom: 0.125rem;">Cash-out</div>
-                        <div style="font-size: 0.95rem; font-weight: 600; color: var(--casino-gold);">${formatCurrency(cashOut)}</div>
+                        <div class="stat-label stat-label--sm">Cash-out</div>
+                        <div style="font-size: 1rem; font-weight: 600; color: var(--casino-gold);">${formatCurrency(cashOut)}</div>
                     </div>
                     <div>
-                        <div style="font-size: 0.7rem; font-weight: 600; opacity: 0.7; margin-bottom: 0.125rem;">7-2 Wins</div>
+                        <div class="stat-label stat-label--sm">7-2 Wins</div>
                         <div style="display: flex; align-items: center; justify-content: center; gap: 0.25rem;">
                             ${isActive ? `
-                                <button class="neo-btn neo-btn-sm seven-two-decrement-btn" data-player-id="${player.id}" style="
-                                    width: 22px; height: 22px; padding: 0; font-size: 13px; font-weight: 700;
+                                <button class="neo-btn neo-btn-sm seven-two-decrement-btn" data-player-id="${player.id}" aria-label="Decrease 7-2 wins" style="
+                                    width: 22px; height: 22px; padding: 0; font-size: 0.75rem; font-weight: 700;
                                     display: inline-flex; align-items: center; justify-content: center;
                                     border: 1px solid var(--casino-gold); border-radius: 50%;
                                     background: transparent; color: var(--casino-gold);
                                     cursor: pointer; line-height: 1;
                                 ">−</button>
                             ` : ''}
-                            <span style="font-size: 0.95rem; font-weight: 600; color: var(--casino-gold); min-width: 1.25rem;">${player.sevenTwoWins || 0}</span>
+                            <span style="font-size: 1rem; font-weight: 600; color: var(--casino-gold); min-width: 1.25rem;">${player.sevenTwoWins || 0}</span>
                             ${isActive ? `
-                                <button class="neo-btn neo-btn-sm seven-two-increment-btn" data-player-id="${player.id}" style="
-                                    width: 22px; height: 22px; padding: 0; font-size: 13px; font-weight: 700;
+                                <button class="neo-btn neo-btn-sm seven-two-increment-btn" data-player-id="${player.id}" aria-label="Increase 7-2 wins" style="
+                                    width: 22px; height: 22px; padding: 0; font-size: 0.75rem; font-weight: 700;
                                     display: inline-flex; align-items: center; justify-content: center;
                                     border: 1px solid var(--casino-gold); border-radius: 50%;
                                     background: var(--casino-gold); color: var(--text-white);
@@ -358,21 +358,21 @@ export default class SessionDetailPage {
                         </div>
                     </div>
                     <div>
-                        <div style="font-size: 0.7rem; font-weight: 600; opacity: 0.7; margin-bottom: 0.125rem;">Strikes</div>
+                        <div class="stat-label stat-label--sm">Strikes</div>
                         <div style="display: flex; align-items: center; justify-content: center; gap: 0.25rem;">
                             ${isActive ? `
-                                <button class="neo-btn neo-btn-sm strikes-decrement-btn" data-player-id="${player.id}" style="
-                                    width: 22px; height: 22px; padding: 0; font-size: 13px; font-weight: 700;
+                                <button class="neo-btn neo-btn-sm strikes-decrement-btn" data-player-id="${player.id}" aria-label="Decrease strikes" style="
+                                    width: 22px; height: 22px; padding: 0; font-size: 0.75rem; font-weight: 700;
                                     display: inline-flex; align-items: center; justify-content: center;
                                     border: 1px solid var(--casino-red); border-radius: 50%;
                                     background: transparent; color: var(--casino-red);
                                     cursor: pointer; line-height: 1;
                                 ">−</button>
                             ` : ''}
-                            <span style="font-size: 0.95rem; font-weight: 600; color: var(--casino-red); min-width: 1.25rem;">${player.strikes || 0}</span>
+                            <span style="font-size: 1rem; font-weight: 600; color: var(--casino-red); min-width: 1.25rem;">${player.strikes || 0}</span>
                             ${isActive ? `
-                                <button class="neo-btn neo-btn-sm strikes-increment-btn" data-player-id="${player.id}" style="
-                                    width: 22px; height: 22px; padding: 0; font-size: 13px; font-weight: 700;
+                                <button class="neo-btn neo-btn-sm strikes-increment-btn" data-player-id="${player.id}" aria-label="Increase strikes" style="
+                                    width: 22px; height: 22px; padding: 0; font-size: 0.75rem; font-weight: 700;
                                     display: inline-flex; align-items: center; justify-content: center;
                                     border: 1px solid var(--casino-red); border-radius: 50%;
                                     background: var(--casino-red); color: var(--text-white);
@@ -421,7 +421,7 @@ export default class SessionDetailPage {
 
         return `
             <div class="session-player-picker-card">
-                <button id="open-player-picker-btn" class="neo-btn neo-btn-green" type="button" style="padding: 0.8rem 1.1rem;">Add Players</button>
+                <button id="open-player-picker-btn" class="neo-btn neo-btn-green" type="button" style="padding: 0.75rem 1rem;">Add Players</button>
                 ${this.isAddPlayersModalOpen ? this.renderAddPlayersModal(sessionData, totalPlayers) : ''}
             </div>
         `;
@@ -634,28 +634,28 @@ export default class SessionDetailPage {
                 
                 <!-- Session Info Card -->
                 <div class="neo-card ${isActive ? 'neo-card-gold' : 'neo-card-primary'}">
-                    <h2 style="font-size: 2rem; font-weight: 600; margin-bottom: 1.5rem; color: var(--text-primary);">
+                    <h2 style="font-size: 1.75rem; font-weight: 600; margin-bottom: 1.5rem; color: var(--text-primary);">
                         🎯 ${formatDate(sessionData.date)}
                     </h2>
                     
                     <div style="display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-bottom: 1.25rem;">
-                        <span style="display: inline-block; padding: 0.25rem 0.75rem; border-radius: 999px; font-size: 0.8rem; font-weight: 700; letter-spacing: 0.05em; ${isActive ? 'background: rgba(245, 158, 11, 0.15); color: var(--casino-gold-dark);' : 'background: rgba(22, 163, 74, 0.15); color: var(--casino-green-dark);'}">
+                        <span style="display: inline-block; padding: 0.25rem 0.75rem; border-radius: 999px; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.05em; ${isActive ? 'background: rgba(245, 158, 11, 0.15); color: var(--casino-gold-dark);' : 'background: rgba(22, 163, 74, 0.15); color: var(--casino-green-dark);'}">
                             ${isActive ? '● ACTIVE' : '● ENDED'}
                         </span>
                     </div>
                     <div style="display: flex; justify-content: space-around; text-align: center; margin-bottom: 0.5rem;">
                         <div>
-                            <div style="font-size: 0.75rem; font-weight: 600; opacity: 0.7; margin-bottom: 0.25rem;">Buy-in</div>
+                            <div class="stat-label">Buy-in</div>
                             <div style="font-size: 1.125rem; font-weight: 700;">${formatCurrency(sessionData.default_buy_in_value || 0)}</div>
                         </div>
                         <div style="width: 1px; background: var(--border-light, #E2E8F0);"></div>
                         <div>
-                            <div style="font-size: 0.75rem; font-weight: 600; opacity: 0.7; margin-bottom: 0.25rem;">Total Value</div>
+                            <div class="stat-label">Total Value</div>
                             <div id="session-total-value" style="font-size: 1.125rem; font-weight: 700;">${formatCurrency(session.totalValue || 0)}</div>
                         </div>
                         <div style="width: 1px; background: var(--border-light, #E2E8F0);"></div>
                         <div>
-                            <div id="session-unpaid-label" style="font-size: 0.75rem; font-weight: 600; opacity: 0.7; margin-bottom: 0.25rem;">${session.unpaidValue > 0.01 ? 'Unpaid' : session.unpaidValue < -0.01 ? 'House Loss' : 'Payout'}</div>
+                            <div id="session-unpaid-label" class="stat-label">${session.unpaidValue > 0.01 ? 'Unpaid' : session.unpaidValue < -0.01 ? 'House Loss' : 'Payout'}</div>
                             <div id="session-unpaid-value" class="${session.unpaidValue > 0.01 || session.unpaidValue < -0.01 ? 'profit-negative' : 'profit-positive'}" style="font-size: 1.125rem; font-weight: 700;">
                                 ${session.unpaidValue > 0.01 ?
                                     formatCurrency(session.unpaidValue) :
@@ -686,10 +686,10 @@ export default class SessionDetailPage {
                         ` : ''}
                         ${isActive ? `
                         <div style="display: flex; flex-direction: column; gap: 1rem;">
-                            <h4 style="font-size: 1.1rem; font-weight: 600; margin: 0; color: var(--text-primary);">${sessionData.wisdom_quote ? 'Edit Quote' : 'Add Quote'}</h4>
-                            <textarea id="wisdom-quote-input" placeholder="Enter the quote..." style="padding: 0.875rem 1rem; border: var(--neo-border); font-size: 1rem; font-weight: 600; background: var(--bg-card); min-height: 80px; resize: vertical;">${sessionData.wisdom_quote || ''}</textarea>
+                            <h4 style="font-size: 1.125rem; font-weight: 600; margin: 0; color: var(--text-primary);">${sessionData.wisdom_quote ? 'Edit Quote' : 'Add Quote'}</h4>
+                            <textarea id="wisdom-quote-input" placeholder="Enter the quote..." style="min-height: 80px; resize: vertical; margin-bottom: 0;">${sessionData.wisdom_quote || ''}</textarea>
                             <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
-                                <select id="wisdom-player-select" style="flex: 1; min-width: 200px; padding: 0.875rem 1rem; border: var(--neo-border); font-size: 1rem; font-weight: 600; background: var(--bg-card);">
+                                <select id="wisdom-player-select" style="flex: 1; min-width: 200px;">
                                     <option value="">-- Who said it? --</option>
                                     ${(session.players || []).map(player =>
                                         `<option value="${player.id}" ${player.id === sessionData.wisdom_player_id ? 'selected' : ''}>${player.name}</option>`
@@ -741,7 +741,7 @@ export default class SessionDetailPage {
                 <!-- Session Controls -->
                 <div style="margin-top: 2rem; text-align: center;">
                     ${isActive ?
-                        `${!allCashedOut ? `<p id="end-session-note" style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.75rem;">Cash out all players before ending the session</p>` : ''}
+                        `${!allCashedOut ? `<p id="end-session-note" style="font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 0.75rem;">Cash out all players before ending the session</p>` : ''}
                         <button id="end-session-btn" class="neo-btn neo-btn-red neo-btn-lg" ${!allCashedOut ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : ''}>
                             End Session
                         </button>` :
@@ -767,8 +767,8 @@ export default class SessionDetailPage {
         styleElement.id = 'session-detail-page-styles';
         styleElement.textContent = `
             .session-bottom-controls {
-                margin: 20px 0;
-                padding: 15px;
+                margin: 1.25rem 0;
+                padding: 1rem;
                 border-top: 1px solid #ddd;
                 text-align: center;
             }
@@ -778,7 +778,7 @@ export default class SessionDetailPage {
             /* Ensure proper spacing for session reactivate button */
             .session-reactivate-container {
                 text-align: center;
-                margin: 20px 0;
+                margin: 1.25rem 0;
             }
             
             /* Cash Out and Buy In buttons now use neobrutalist styling */
@@ -833,7 +833,7 @@ export default class SessionDetailPage {
                 display: flex;
                 align-items: center;
                 gap: 0.75rem;
-                padding: 0.85rem 0.95rem;
+                padding: 0.75rem 1rem;
                 border-radius: 14px;
                 border: 1px solid var(--border-light, #E2E8F0);
                 background: var(--bg-card);
@@ -875,6 +875,10 @@ export default class SessionDetailPage {
                 font-weight: 700;
                 color: var(--text-primary);
                 flex: 1;
+                min-width: 0;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
             }
 
             .session-player-picker-toolbar {
@@ -885,9 +889,9 @@ export default class SessionDetailPage {
             }
 
             .session-player-picker-badge {
-                padding: 0.2rem 0.55rem;
+                padding: 0.25rem 0.5rem;
                 border-radius: 999px;
-                font-size: 0.72rem;
+                font-size: 0.75rem;
                 font-weight: 700;
                 color: var(--text-secondary);
                 background: rgba(148, 163, 184, 0.14);
@@ -1278,24 +1282,24 @@ export default class SessionDetailPage {
 
                         <!-- Buy-ins -->
                         <div style="margin-bottom: 1.25rem;">
-                            <div style="font-size: 0.75rem; font-weight: 600; opacity: 0.7; margin-bottom: 0.5rem;">Buy-ins</div>
+                            <div class="modal-section-label">Buy-ins</div>
                             <div style="display: flex; align-items: center; gap: 0.75rem;">
                                 <button id="edit-buyin-minus" class="neo-btn" style="width: 36px; height: 36px; padding: 0; font-size: 1.25rem; font-weight: 700; display: flex; align-items: center; justify-content: center; border-radius: 50%;${buyInCount <= 1 ? ' opacity: 0.4;' : ''}" ${buyInCount <= 1 ? 'disabled' : ''}>−</button>
                                 <span style="font-size: 1.25rem; font-weight: 700; min-width: 2rem; text-align: center;">${buyInCount}</span>
                                 <button id="edit-buyin-plus" class="neo-btn" style="width: 36px; height: 36px; padding: 0; font-size: 1.25rem; font-weight: 700; display: flex; align-items: center; justify-content: center; border-radius: 50%;">+</button>
-                                <span style="font-size: 0.85rem; color: var(--text-secondary); margin-left: 0.25rem;">(${formatCurrency(totalBuyIn)} total)</span>
+                                <span style="font-size: 0.875rem; color: var(--text-secondary); margin-left: 0.25rem;">(${formatCurrency(totalBuyIn)} total)</span>
                             </div>
                         </div>
 
                         <!-- Cash-out amount -->
                         <div style="margin-bottom: 1.25rem;">
-                            <div style="font-size: 0.75rem; font-weight: 600; opacity: 0.7; margin-bottom: 0.5rem;">Cash-out Amount</div>
-                            <input type="text" id="edit-cashout-input" inputmode="decimal" pattern="[0-9]*\\.?[0-9]*" value="${cashOut > 0 ? cashOut.toFixed(2) : ''}" placeholder="0.00" style="width: 100%; padding: 0.6rem 0.75rem; font-size: 1rem; border: 2px solid var(--border-light, #ddd); border-radius: 6px; box-sizing: border-box;">
+                            <div class="modal-section-label">Cash-out Amount</div>
+                            <input type="text" id="edit-cashout-input" inputmode="decimal" pattern="[0-9]*\\.?[0-9]*" value="${cashOut > 0 ? cashOut.toFixed(2) : ''}" placeholder="0.00" style="width: 100%; margin-bottom: 0;">
                         </div>
 
                         <!-- 7-2 Wins -->
                         <div style="margin-bottom: 1.25rem;">
-                            <div style="font-size: 0.75rem; font-weight: 600; opacity: 0.7; margin-bottom: 0.5rem;">7-2 Wins</div>
+                            <div class="modal-section-label">7-2 Wins</div>
                             <div style="display: flex; align-items: center; gap: 0.75rem;">
                                 <button id="edit-72-minus" class="neo-btn" style="width: 36px; height: 36px; padding: 0; font-size: 1.25rem; font-weight: 700; display: flex; align-items: center; justify-content: center; border-radius: 50%; border-color: var(--casino-gold); color: var(--casino-gold);${(p.sevenTwoWins || 0) <= 0 ? ' opacity: 0.4;' : ''}" ${(p.sevenTwoWins || 0) <= 0 ? 'disabled' : ''}>−</button>
                                 <span style="font-size: 1.25rem; font-weight: 700; min-width: 2rem; text-align: center; color: var(--casino-gold);">${p.sevenTwoWins || 0}</span>
@@ -1305,7 +1309,7 @@ export default class SessionDetailPage {
 
                         <!-- Strikes -->
                         <div style="margin-bottom: 1.25rem;">
-                            <div style="font-size: 0.75rem; font-weight: 600; opacity: 0.7; margin-bottom: 0.5rem;">Strikes</div>
+                            <div class="modal-section-label">Strikes</div>
                             <div style="display: flex; align-items: center; gap: 0.75rem;">
                                 <button id="edit-strikes-minus" class="neo-btn" style="width: 36px; height: 36px; padding: 0; font-size: 1.25rem; font-weight: 700; display: flex; align-items: center; justify-content: center; border-radius: 50%; border-color: var(--casino-red); color: var(--casino-red);${(p.strikes || 0) <= 0 ? ' opacity: 0.4;' : ''}" ${(p.strikes || 0) <= 0 ? 'disabled' : ''}>−</button>
                                 <span style="font-size: 1.25rem; font-weight: 700; min-width: 2rem; text-align: center; color: var(--casino-red);">${p.strikes || 0}</span>
@@ -1315,7 +1319,7 @@ export default class SessionDetailPage {
 
                         <!-- Footer -->
                         <div style="border-top: 1px solid var(--border-light, #eee); padding-top: 1rem; text-align: center;">
-                            <a href="#player/${p.id}" id="edit-modal-profile-link" style="font-size: 0.9rem; font-weight: 600; color: var(--casino-gold);">View Player Profile →</a>
+                            <a href="#player/${p.id}" id="edit-modal-profile-link" style="font-size: 0.875rem; font-weight: 600; color: var(--casino-gold);">View Player Profile →</a>
                         </div>
                     </div>
                 </div>
@@ -1863,7 +1867,7 @@ export default class SessionDetailPage {
                 <div style="
                     background: var(--bg-card);
                     padding: 2rem;
-                    border: var(--neo-border-thick);
+                    border: 1px solid var(--border-color);
                     box-shadow: var(--neo-shadow-lg);
                     max-width: 500px;
                     width: 100%;

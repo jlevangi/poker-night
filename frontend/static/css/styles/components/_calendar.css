@@ -2,6 +2,7 @@
 
 .neo-event-card {
     transition: all var(--transition-neo, 0.2s ease);
+    overflow-wrap: anywhere; /* break long free-text titles/locations inside the card, not past it */
 }
 
 .neo-event-card:hover {
@@ -22,7 +23,7 @@
 .neo-rsvp-badge {
     display: inline-flex;
     align-items: center;
-    padding: 0.35rem 0.75rem;
+    padding: 0.25rem 0.75rem;
     border-radius: var(--radius-pill);
     font-weight: 700;
     font-size: 0.875rem;
@@ -92,7 +93,7 @@
 .rsvp-player-select {
     border: 1px solid var(--border-color, #E2E8F0) !important;
     font-weight: 600 !important;
-    font-size: 0.9375rem !important;
+    font-size: 0.875rem !important;
     background: var(--bg-card, #fff) !important;
     color: var(--text-primary, #222) !important;
     border-radius: var(--radius-md) !important;

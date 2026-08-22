@@ -4,7 +4,8 @@ input[type="text"],
 input[type="number"],
 input[type="date"],
 input[type="time"],
-select {
+select,
+textarea {
     padding: 0.75rem;
     margin-bottom: var(--spacing-sm);
     border: 1px solid var(--border-color);
@@ -21,12 +22,44 @@ select {
     margin-bottom: var(--spacing-md);
 }
 
+.modal-form-label,
 .modal-form-group label {
     display: block;
-    margin-bottom: 0.375rem;
-    font-weight: 500;
+    margin-bottom: 0.25rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+/* Modal section sub-header: a smaller, muted label that groups a set of
+   controls (e.g. Buy-ins / Cash-out / 7-2 / Strikes in the player-edit modal).
+   Distinct from .modal-form-label, which sits directly above a single input.
+   Uses the theme's --text-secondary color (not an opacity trick) so it reads
+   correctly in both light and dark. */
+.modal-section-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 600;
     color: var(--text-secondary);
-    font-size: 0.875rem;
+}
+
+/* Muted value labels on the main session-detail page: a small secondary-color
+   label sitting above a value figure (session info card value summary, and the
+   4-column per-player stat rows). Main-page counterpart of .modal-section-label.
+   Uses the theme's --text-secondary color (not an opacity trick) so it reads
+   correctly in both light and dark. --sm is the compact step for the tight
+   per-player stat rows. */
+.stat-label {
+    display: block;
+    margin-bottom: 0.25rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.stat-label--sm {
+    margin-bottom: 0.125rem;
+    font-size: 0.7rem;
 }
 
 .modal-form-group input[type="date"],

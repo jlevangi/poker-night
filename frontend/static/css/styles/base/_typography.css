@@ -1,4 +1,44 @@
-/* Typography Styles */
+/* Typography Styles
+ *
+ * Type scale — the only font-sizes the app uses (rem, root 16px).
+ * New or migrated declarations must land on one of these steps:
+ *   0.65  micro    chart axis labels only
+ *   0.7   xs       compact stat labels (.stat-label--sm)
+ *   0.75  sm       small labels / badges / table text (.stat-label, .modal-section-label)
+ *   0.875 md       secondary text, list sub-lines, button + legend text
+ *   1     base     body, inputs, card text
+ *   1.125 lg       emphasized text, card titles (h3)
+ *   1.25  xl       section headings (h2)
+ *   1.5   2xl      large titles
+ *   1.75  3xl      detail-page titles (player + event detail, reached from a list row)
+ *   2     display  stat values (.neo-stat-value)
+ *   2.5   title    page titles (list pages: players, calendar; stats clamps 1.5-2.5)
+ * Weights: 400 body / 600 labels + headings / 700 emphasized values.
+ * Never use px font-sizes or the bold/normal keywords.
+ */
+/*
+ * Spacing scale — the only margin/padding values the app uses (rem, root 16px).
+ * Ladder (8 steps): 0.125 / 0.25 / 0.5 / 0.75 / 1 / 1.25 / 1.5 / 2
+ * Variables: --spacing-xs/.sm/.md/.lg/.xl = .25/.5/1/1.5/2 (_theme.css);
+ *   --spacing-neo = 1.25, shrinks to 1rem at <=768 (_modern-theme.css).
+ *   In CSS, prefer the variable when it matches the ladder value; 0.75 and 0.125
+ *   have no variable and stay literals. JS inline styles use ladder literals
+ *   (or var(--spacing-*) where the app already does).
+ *   Multi-value shorthands are fine when every token is on the ladder;
+ *   negative margins may use ladder values. Never use px for grid spacing.
+ * Migration mapping for existing one-off values (nearest step, tie -> down):
+ *   0.1/0.15 -> 0.125; 0.2/0.3/0.35/0.375 -> 0.25; 0.4/0.55/0.6/0.625 -> 0.5;
+ *   0.65/0.78/0.8/0.85/0.875/0.9 -> 0.75; 0.95/1.1/1.125 -> 1; 1.75/3 -> 2;
+ *   px: 2/3 -> 0.125, 8/10 -> 0.5, 15/16/18 -> 1, 20 -> 1.25, 24 -> 1.5.
+ * Deliberate exclusions (not grid spacing): env(safe-area-inset-*) and vh/clamp
+ *   screen-filling values; _layout.css 90px bottom + _footer.css 60px bottom
+ *   clearances (paired with the fixed bottom-nav height — do not map to the
+ *   ladder without re-checking nav height).
+ * Legacy: --spacing-mobile (0.75, <=700px in _theme.css) is defined but never
+ *   consumed; --space-2/--space-4 (_legacy-vars.css) are now 0 consumers (migrated to --spacing-*)
+ *   _navigation.css with fallbacks equal to their values -> migrate those to
+ *   --spacing-sm/--spacing-md and drop the legacy defs (sub-step 3/5).
+ */
 
 h1, h2, h3, h4, h5, h6 {
     margin-top: 0;

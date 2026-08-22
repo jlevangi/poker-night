@@ -17,7 +17,7 @@ header {
 
 .royal-crown {
     font-size: 1.25rem;
-    margin: 0 8px;
+    margin: 0 0.5rem;
     flex-shrink: 0;
 }
 
@@ -53,7 +53,7 @@ header h1 {
     }
 
     header {
-        padding: 0.625rem 0.25rem;
+        padding: 0.5rem 0.25rem;
     }
 }
 

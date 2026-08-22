@@ -126,12 +126,12 @@
     border: 1px solid var(--border-color);
     border-radius: var(--radius-md);
     padding: 0.75rem;
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     font-weight: var(--font-weight-bold);
     box-shadow: var(--neo-shadow-md);
     z-index: var(--z-modal, 2000);
     transform: translate(-50%, -100%);
-    margin-top: -10px;
+    margin-top: -0.5rem;
     pointer-events: none;
     animation: neo-tooltip-appear 0.2s ease-out;
 }
@@ -168,13 +168,13 @@
 }
 
 .neo-insight-label {
-    font-size: 0.9rem;
+    font-size: 0.875rem;
     font-weight: var(--font-weight-bold);
     color: var(--text-secondary);
 }
 
 .neo-insight-value {
-    font-size: 1.1rem;
+    font-size: 1.125rem;
     font-weight: var(--font-weight-black);
     color: var(--text-primary);
 }
@@ -234,7 +234,7 @@
 
 .neo-session-modal-header h3 {
     margin: 0;
-    font-size: 1.3rem;
+    font-size: 1.5rem;
     font-weight: var(--font-weight-bold);
     color: var(--text-primary);
 }
@@ -288,7 +288,7 @@
 }
 
 .neo-session-info-label {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     font-weight: var(--font-weight-bold);
     text-transform: uppercase;
     letter-spacing: 0.02em;
@@ -297,7 +297,7 @@
 }
 
 .neo-session-info-value {
-    font-size: 1.1rem;
+    font-size: 1.125rem;
     font-weight: var(--font-weight-black);
     color: var(--text-primary);
 }
@@ -381,7 +381,7 @@
     }
 
     .neo-chart-subtitle {
-        font-size: 0.9rem;
+        font-size: 0.875rem;
     }
 
     .stats-page .neo-stats-grid {
@@ -404,11 +404,24 @@
     }
 
     .neo-session-modal-header h3 {
-        font-size: 1.1rem;
+        font-size: 1.125rem;
     }
 
     .neo-session-actions {
         flex-direction: column;
+    }
+}
+
+/* Collapse the stats summary grid to 1 column at ≤360px, matching the
+   dashboard's ≤360 treatment. The top-level .stats-page override above
+   (2-col, !important, higher specificity than the generic ≤360 rule in
+   _modern-theme.css) would otherwise keep 2 columns here, where the
+   longest tile value (~9ch currency at 2rem) no longer fits. Placed after
+   the 768px block so this later, same-specificity rule wins inside the
+   360px media query. */
+@media (max-width: 360px) {
+    .stats-page .neo-stats-grid {
+        grid-template-columns: 1fr !important;
     }
 }
 
@@ -502,6 +515,7 @@
     margin-bottom: 0.25rem;
     line-height: 1.2;
     color: inherit;
+    overflow-wrap: anywhere;
 }
 
 .neo-leaderboard-stat-subtitle {

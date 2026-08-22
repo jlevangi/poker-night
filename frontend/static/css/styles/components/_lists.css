@@ -45,6 +45,32 @@ li a:hover {
     text-decoration: underline;
 }
 
+/* List card rows — generic class for card-based list items (sessions, players).
+   Replaces repeated inline padding/margin/text-decoration on <a> card links. */
+.list-card-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-neo);
+    margin: 0;
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+}
+
+.list-card-text {
+    font-weight: 600;
+    color: inherit;
+    margin-bottom: 0.25rem;
+    font-size: 1.125rem;
+}
+
+.list-card-subtitle {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
 /* Session Lists */
 .sessions-list {
     list-style: none;
@@ -64,21 +90,31 @@ li a:hover {
 }
 
 .session-date {
-    font-weight: bold;
-    font-size: 1.1rem;
+    font-weight: 700;
+    font-size: 1.125rem;
 }
 
 .session-buyin {
-    font-size: 0.9rem;
+    font-size: 0.875rem;
     color: var(--text-muted);
 }
 
 .session-buyin, .session-total-value, .session-unpaid-value {
     color: var(--text-secondary);
-    font-size: 0.9rem;
+    font-size: 0.875rem;
 }
 
 /* Player Lists */
+
+/* Roster count chip: the muted "(N players)" count that trails the roster
+   title. Inline within the title (unlike block form labels) and smaller than
+   the 1.75rem title; colored with --text-secondary (not an opacity trick) so
+   it reads correctly in both light and dark. */
+.roster-count {
+    font-size: 1rem;
+    color: var(--text-secondary);
+}
+
 .players-list {
     margin-bottom: var(--spacing-xl);
     padding: 0;
@@ -139,7 +175,7 @@ li a:hover {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 0.9rem;
+    font-size: 0.875rem;
     gap: var(--spacing-md);
 }
 
@@ -152,7 +188,7 @@ li a:hover {
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    font-size: 0.9rem;
+    font-size: 0.875rem;
     gap: var(--spacing-sm);
     margin-left: auto;
 }
@@ -162,7 +198,7 @@ li a:hover {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.8rem var(--spacing-sm);
+    padding: 0.75rem var(--spacing-sm);
 }
 
 .player-standings-list strong {
@@ -229,9 +265,9 @@ li a:hover {
     font-size: 0.75rem;
     background-color: var(--gamble-king-label-bg);
     color: var(--gamble-king-label-text);
-    padding: 0.15rem 0.4rem;
+    padding: 0.125rem 0.5rem;
     border-radius: var(--radius-xl);
-    font-weight: bold;
+    font-weight: 700;
     white-space: nowrap;
     display: inline-block;
 }
@@ -275,7 +311,7 @@ li a:hover {
         flex-direction: column !important;
         align-items: flex-start !important;
         gap: var(--spacing-xs) !important;
-        font-size: 0.8rem !important;
+        font-size: 0.75rem !important;
     }
 
     /* Seven-two-counter mobile overrides (consolidated from player-stats-restructure.css) */
@@ -285,7 +321,7 @@ li a:hover {
         align-items: center !important;
         justify-content: flex-end !important;
         gap: var(--spacing-xs) !important;
-        font-size: 0.8rem !important;
+        font-size: 0.75rem !important;
         margin-left: auto !important;
     }
 

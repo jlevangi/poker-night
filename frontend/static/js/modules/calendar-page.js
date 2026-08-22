@@ -99,32 +99,32 @@ export default class CalendarPage {
                 <h3 style="font-size: 1.125rem; font-weight: 600; margin-bottom: 1rem; color: var(--text-primary);">Schedule a Poker Night</h3>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
                     <div>
-                        <label style="font-weight: 700; display: block; margin-bottom: 0.25rem; color: var(--text-primary);">Date *</label>
+                        <label class="modal-form-label">Date *</label>
                         <input type="date" id="event-date" value="${today}" class="neo-input" style="width: 100%;">
                     </div>
                     <div>
-                        <label style="font-weight: 700; display: block; margin-bottom: 0.25rem; color: var(--text-primary);">Time</label>
+                        <label class="modal-form-label">Time</label>
                         <input type="time" id="event-time" value="19:00" class="neo-input" style="width: 100%;">
                     </div>
                     <div>
-                        <label style="font-weight: 700; display: block; margin-bottom: 0.25rem; color: var(--text-primary);">Title</label>
+                        <label class="modal-form-label">Title</label>
                         <input type="text" id="event-title" placeholder="Poker Night" class="neo-input" style="width: 100%;">
                     </div>
                     <div>
-                        <label style="font-weight: 700; display: block; margin-bottom: 0.25rem; color: var(--text-primary);">Location</label>
+                        <label class="modal-form-label">Location</label>
                         <input type="text" id="event-location" placeholder="Location" class="neo-input" style="width: 100%;">
                     </div>
                     <div>
-                        <label style="font-weight: 700; display: block; margin-bottom: 0.25rem; color: var(--text-primary);">Buy-in ($)</label>
+                        <label class="modal-form-label">Buy-in ($)</label>
                         <input type="number" id="event-buyin" value="20" min="0" step="0.01" class="neo-input" style="width: 100%;">
                     </div>
                     <div>
-                        <label style="font-weight: 700; display: block; margin-bottom: 0.25rem; color: var(--text-primary);">Max Players</label>
+                        <label class="modal-form-label">Max Players</label>
                         <input type="number" id="event-max-players" placeholder="No limit" min="2" max="50" class="neo-input" style="width: 100%;">
                     </div>
                     <div style="grid-column: 1 / -1;">
-                        <label style="font-weight: 700; display: block; margin-bottom: 0.25rem; color: var(--text-primary);">Description</label>
-                        <textarea id="event-description" placeholder="Optional details..." class="neo-input" style="width: 100%; min-height: 60px; resize: vertical;"></textarea>
+                        <label class="modal-form-label">Description</label>
+                        <textarea id="event-description" placeholder="Optional details..." class="neo-input" style="width: 100%; min-height: 60px; resize: vertical; margin-bottom: 0;"></textarea>
                     </div>
                 </div>
                 <div style="display: flex; gap: 1rem; margin-top: 1rem;">
@@ -144,8 +144,8 @@ export default class CalendarPage {
         const isCancelled = event.is_cancelled;
 
         const statusBadge = isCancelled
-            ? '<span style="display: inline-block; background: var(--casino-red); color: #fff; font-size: 0.7rem; font-weight: 600; padding: 0.15rem 0.5rem; border: 1px solid var(--border-color); border-radius: var(--radius-md);">Cancelled</span>'
-            : '<span style="display: inline-block; background: var(--casino-green); color: #fff; font-size: 0.7rem; font-weight: 600; padding: 0.15rem 0.5rem; border: 1px solid var(--border-color); border-radius: var(--radius-md);">Upcoming</span>';
+            ? '<span style="display: inline-block; background: var(--casino-red); color: #fff; font-size: 0.7rem; font-weight: 600; padding: 0.125rem 0.5rem; border: 1px solid var(--border-color); border-radius: var(--radius-md);">Cancelled</span>'
+            : '<span style="display: inline-block; background: var(--casino-green); color: #fff; font-size: 0.7rem; font-weight: 600; padding: 0.125rem 0.5rem; border: 1px solid var(--border-color); border-radius: var(--radius-md);">Upcoming</span>';
 
         return `
             <a href="#event/${event.event_id}" class="neo-event-card-link" style="text-decoration: none; color: inherit; display: block; margin-bottom: 1rem;">

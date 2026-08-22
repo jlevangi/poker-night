@@ -90,7 +90,7 @@ export default class PlayersPage {
                 <div class="neo-card neo-card-purple" style="margin-bottom: 2rem; padding-top: 1rem;">
                     <h3 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem; margin-top: 0; color: var(--casino-purple-dark);">➕ Add New Player</h3>
                     <div style="display: flex; gap: 1rem; align-items: baseline; flex-wrap: wrap;">
-                        <input type="text" id="new-player-name" placeholder="Enter player name..." style="flex: 1; min-width: 200px; padding: 0.875rem 1rem; border: var(--neo-border); font-size: 1rem; font-weight: 600; background: var(--bg-card);">
+                        <input type="text" id="new-player-name" placeholder="Enter player name..." style="flex: 1; min-width: 200px;">
                         <button id="add-player-btn" class="neo-btn neo-btn-purple neo-btn-lg">Add Player</button>
                     </div>
                 </div>
@@ -98,8 +98,8 @@ export default class PlayersPage {
                 <div class="neo-card" style="margin-bottom: 2rem;">
                     <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
                         <div style="flex: 1; min-width: 200px; position: relative;">
-                            <input type="text" id="player-search" placeholder="Search players..." value="${this.searchQuery}" style="width: 100%; padding: 0.875rem 1rem; border: var(--neo-border); font-size: 1rem; font-weight: 600; background: var(--bg-card);">
-                            <div id="search-suggestions" style="position: absolute; top: 100%; left: 0; right: 0; background: var(--bg-card); border: var(--neo-border); border-top: none; display: none; z-index: 100; max-height: 200px; overflow-y: auto;"></div>
+                            <input type="text" id="player-search" placeholder="Search players..." value="${this.searchQuery}" style="width: 100%;">
+                            <div id="search-suggestions" style="position: absolute; top: 100%; left: 0; right: 0; background: var(--bg-card); border: 1px solid var(--border-color); border-top: none; display: none; z-index: 100; max-height: 200px; overflow-y: auto;"></div>
                         </div>
                         <div style="display: flex; gap: 0.5rem; align-items: center;">
                             <span style="font-weight: 600; font-size: 0.875rem;">Sort:</span>
@@ -138,7 +138,7 @@ export default class PlayersPage {
 
         // Update title with count
         if (rosterTitle) {
-            rosterTitle.innerHTML = `🏆 Player Roster <span style="font-size: 1rem; opacity: 0.7;">(${this.searchQuery.length >= 2 ? `${players.length} found` : `${this.players.length} players`})</span>`;
+            rosterTitle.innerHTML = `🏆 Player Roster <span class="roster-count">(${this.searchQuery.length >= 2 ? `${players.length} found` : `${this.players.length} players`})</span>`;
         }
 
         // Update sort buttons
@@ -166,13 +166,13 @@ export default class PlayersPage {
                                  player.net_profit < 0 ? 'neo-card-primary' : '';
 
                 html += `
-                    <div class="neo-card ${cardColor} clickable-player-stats" data-player-id="${player.player_id}" style="text-decoration: none; color: inherit; cursor: pointer; padding: 1rem; margin: 0;">
+                    <div class="neo-card ${cardColor} clickable-player-stats list-card-row" data-player-id="${player.player_id}">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <div>
-                                <div style="font-weight: 600; color: inherit; margin-bottom: 0.25rem; font-size: 1.125rem;">
+                            <div style="overflow-wrap: anywhere;">
+                                <div class="list-card-text">
                                     ${isGambleKing ? '👑 ' : ''}<a href="#player/${player.player_id}" style="color: inherit; text-decoration: none;">${player.name}</a>
                                 </div>
-                                <div style="font-size: 0.875rem; color: inherit; font-weight: 600; opacity: 0.8;">
+                                <div class="list-card-subtitle">
                                     Sessions: ${player.games_played || 0} · 7-2: ${player.seven_two_wins || 0} · Strikes: ${player.strikes || 0}
                                 </div>
                             </div>

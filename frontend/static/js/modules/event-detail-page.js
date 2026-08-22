@@ -180,11 +180,11 @@ export default class EventDetailPage {
         return `
             <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem;">
                 <div>
-                    <h2 style="font-size: 1.75rem; font-weight: 600; color: var(--text-primary); margin: 0;">
+                    <h2 style="font-size: 1.75rem; font-weight: 600; color: var(--text-primary); margin: 0; overflow-wrap: anywhere;">
                         ${this.escapeHtml(event.title || 'Poker Night')}
                         ${isCancelled ? '<span style="color: var(--casino-red-dark); font-size: 1rem; margin-left: 0.5rem;">CANCELLED</span>' : ''}
                     </h2>
-                    <div style="font-weight: 700; color: var(--text-secondary); margin-top: 0.25rem; font-size: 1.1rem;">
+                    <div style="font-weight: 700; color: var(--text-secondary); margin-top: 0.25rem; font-size: 1.125rem;">
                         ${dateFormatted}${timeFormatted ? ' at ' + timeFormatted : ''}
                     </div>
                 </div>
@@ -194,8 +194,8 @@ export default class EventDetailPage {
                     <span class="neo-rsvp-badge neo-rsvp-badge-no">${counts.no} Out</span>
                 </div>
             </div>
-            ${event.location ? `<div style="font-weight: 600; color: var(--text-secondary); margin-bottom: 0.5rem;">&#128205; ${this.escapeHtml(event.location)}</div>` : ''}
-            ${event.description ? `<div style="color: var(--text-secondary); margin-bottom: 0.5rem;">${this.escapeHtml(event.description)}</div>` : ''}
+            ${event.location ? `<div style="font-weight: 600; color: var(--text-secondary); margin-bottom: 0.5rem; overflow-wrap: anywhere;">&#128205; ${this.escapeHtml(event.location)}</div>` : ''}
+            ${event.description ? `<div style="color: var(--text-secondary); margin-bottom: 0.5rem; overflow-wrap: anywhere;">${this.escapeHtml(event.description)}</div>` : ''}
             <div style="font-weight: 600; color: var(--text-secondary);">&#128176; Buy-in: ${formatCurrency(event.default_buy_in_value || 20)}${event.max_players ? ' | Max: ' + event.max_players + ' players' : ''}</div>
         `;
     }
@@ -205,32 +205,32 @@ export default class EventDetailPage {
             <h3 style="font-weight: 600; color: var(--text-primary); margin-bottom: 1rem;">Edit Event</h3>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
                 <div>
-                    <label style="font-weight: 700; display: block; margin-bottom: 0.25rem; color: var(--text-primary);">Title</label>
+                    <label class="modal-form-label">Title</label>
                     <input type="text" id="edit-title" value="${this.escapeHtml(event.title || 'Poker Night')}" class="neo-input" style="width: 100%;">
                 </div>
                 <div>
-                    <label style="font-weight: 700; display: block; margin-bottom: 0.25rem; color: var(--text-primary);">Location</label>
+                    <label class="modal-form-label">Location</label>
                     <input type="text" id="edit-location" value="${this.escapeHtml(event.location || '')}" placeholder="Location" class="neo-input" style="width: 100%;">
                 </div>
                 <div>
-                    <label style="font-weight: 700; display: block; margin-bottom: 0.25rem; color: var(--text-primary);">Date</label>
+                    <label class="modal-form-label">Date</label>
                     <input type="date" id="edit-date" value="${event.date}" class="neo-input" style="width: 100%;">
                 </div>
                 <div>
-                    <label style="font-weight: 700; display: block; margin-bottom: 0.25rem; color: var(--text-primary);">Time</label>
+                    <label class="modal-form-label">Time</label>
                     <input type="time" id="edit-time" value="${event.time || '19:00'}" class="neo-input" style="width: 100%;">
                 </div>
                 <div>
-                    <label style="font-weight: 700; display: block; margin-bottom: 0.25rem; color: var(--text-primary);">Buy-in ($)</label>
-                    <input type="number" id="edit-buyin" value="${event.default_buy_in_value || 20}" min="0" step="0.01" class="neo-input" style="width: 100%;">
+                    <label class="modal-form-label">Buy-in ($)</label>
+                    <input type="number" id="edit-buyin" value="${event.default_buyin_value || 20}" min="0" step="0.01" class="neo-input" style="width: 100%;">
                 </div>
                 <div>
-                    <label style="font-weight: 700; display: block; margin-bottom: 0.25rem; color: var(--text-primary);">Max Players</label>
+                    <label class="modal-form-label">Max Players</label>
                     <input type="number" id="edit-max-players" value="${event.max_players || ''}" placeholder="No limit" min="2" max="50" class="neo-input" style="width: 100%;">
                 </div>
                 <div style="grid-column: 1 / -1;">
-                    <label style="font-weight: 700; display: block; margin-bottom: 0.25rem; color: var(--text-primary);">Description</label>
-                    <textarea id="edit-description" placeholder="Optional details..." class="neo-input" style="width: 100%; min-height: 60px; resize: vertical;">${this.escapeHtml(event.description || '')}</textarea>
+                    <label class="modal-form-label">Description</label>
+                    <textarea id="edit-description" placeholder="Optional details..." class="neo-input" style="width: 100%; min-height: 60px; resize: vertical; margin-bottom: 0;">${this.escapeHtml(event.description || '')}</textarea>
                 </div>
             </div>
             <div style="display: flex; gap: 1rem; margin-top: 1rem;">

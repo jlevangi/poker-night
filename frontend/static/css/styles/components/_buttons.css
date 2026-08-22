@@ -6,13 +6,13 @@ button,
 .quick-action-btn,
 .danger-btn,
 .reactivate-session-btn {
-    padding: 0.625rem 1.125rem;
+    padding: 0.5rem 1rem;
     background-color: var(--primary-color);
     color: var(--text-white);
     border: none;
     border-radius: var(--radius-md);
     cursor: pointer;
-    font-size: 0.9375rem;
+    font-size: 0.875rem;
     font-weight: 500;
     transition: all 0.2s ease;
     text-decoration: none;
@@ -48,7 +48,7 @@ button:focus-visible,
 .quick-action-btn:focus-visible,
 .danger-btn:focus-visible,
 .reactivate-session-btn:focus-visible {
-    outline: 2px solid var(--primary-color);
+    outline: 2px solid var(--focus-ring-color);
     outline-offset: 2px;
 }
 
@@ -104,7 +104,7 @@ button:disabled,
 /* Danger Button */
 .danger-btn {
     background-color: var(--color-danger);
-    margin: 0.625rem 0;
+    margin: 0.5rem 0;
     border-radius: var(--radius-md);
 }
 
@@ -149,9 +149,9 @@ button:disabled,
 .sessions-actions .action-btn {
     background-color: var(--primary-color);
     color: var(--text-white);
-    padding: 0.625rem 1.125rem;
+    padding: 0.5rem 1rem;
     border-radius: var(--radius-md);
-    font-size: 0.9375rem;
+    font-size: 0.875rem;
 }
 
 .sessions-actions .action-btn:hover {
@@ -164,7 +164,7 @@ button:disabled,
     font-size: 0.875rem;
     margin-left: var(--spacing-sm);
     vertical-align: baseline;
-    background-color: #64748B;
+    background-color: var(--text-secondary);
     border-radius: var(--radius-sm);
 }
 
@@ -175,7 +175,7 @@ button:disabled,
 .modal-date-shortcut {
     margin-left: 0;
     min-height: 46px;
-    padding: 0.35rem 0.9rem;
+    padding: 0.25rem 0.75rem;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -183,12 +183,12 @@ button:disabled,
 
 .modal-buyin-chip {
     min-height: 42px;
-    padding: 0.65rem var(--spacing-sm);
+    padding: 0.75rem var(--spacing-sm);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-md);
     background: var(--bg-card);
     color: var(--text-secondary);
-    font-size: 0.95rem;
+    font-size: 1rem;
     font-weight: 700;
     cursor: pointer;
     transition: all var(--transition-fast);
@@ -231,7 +231,7 @@ button:disabled,
 }
 
 .modal-actions .secondary-btn:hover {
-    background-color: #64748B;
+    background-color: var(--text-secondary);
 }
 
 .modal-actions .secondary-btn:focus-visible {
@@ -250,13 +250,13 @@ button:disabled,
     border-radius: 8px;
     border: none;
     color: var(--text-white);
-    font-size: 16px;
+    font-size: 1rem;
     font-weight: 600;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    margin: 0 3px;
+    margin: 0 0.125rem;
     transition: all var(--transition-fast);
     padding: 0;
     text-align: center;
@@ -276,7 +276,7 @@ button:disabled,
 .seven-two-decrement-btn:focus-visible,
 .strikes-increment-btn:focus-visible,
 .strikes-decrement-btn:focus-visible {
-    outline: 2px solid var(--primary-color);
+    outline: 2px solid var(--focus-ring-color);
     outline-offset: 2px;
 }
 
@@ -308,7 +308,7 @@ button:disabled,
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-size: 16px;
+    font-size: 1rem;
     line-height: 1;
     color: var(--text-white);
 }

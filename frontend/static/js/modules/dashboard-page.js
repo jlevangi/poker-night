@@ -138,7 +138,7 @@ export default class DashboardPage {
         const counts = event.rsvp_counts || { yes: 0, maybe: 0, no: 0 };
 
         return `
-            <a href="#calendar" class="neo-card neo-next-event-card neo-card-primary" style="text-decoration: none; color: inherit; display: block; margin-bottom: 1rem;">
+            <a href="#calendar" class="neo-card neo-next-event-card neo-card-primary list-card-row" style="text-decoration: none; color: inherit;">
                 <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
                     <div>
                         <div class="section-title" style="color: var(--text-primary);">
@@ -149,9 +149,9 @@ export default class DashboardPage {
                         </div>
                     </div>
                     <div style="display: flex; gap: 0.5rem;">
-                        <span style="background: var(--casino-green); color: #fff; padding: 0.25rem 0.625rem; border-radius: 50px; font-weight: 600; font-size: 0.75rem;">${counts.yes} In</span>
-                        <span style="background: var(--casino-gold); color: #222; padding: 0.25rem 0.625rem; border-radius: 50px; font-weight: 600; font-size: 0.75rem;">${counts.maybe} Maybe</span>
-                        <span style="background: var(--casino-red); color: #fff; padding: 0.25rem 0.625rem; border-radius: 50px; font-weight: 600; font-size: 0.75rem;">${counts.no} Out</span>
+                        <span style="background: var(--casino-green); color: #fff; padding: 0.25rem 0.5rem; border-radius: 50px; font-weight: 600; font-size: 0.75rem;">${counts.yes} In</span>
+                        <span style="background: var(--casino-gold); color: #222; padding: 0.25rem 0.5rem; border-radius: 50px; font-weight: 600; font-size: 0.75rem;">${counts.maybe} Maybe</span>
+                        <span style="background: var(--casino-red); color: #fff; padding: 0.25rem 0.5rem; border-radius: 50px; font-weight: 600; font-size: 0.75rem;">${counts.no} Out</span>
                     </div>
                 </div>
             </a>
@@ -171,7 +171,7 @@ export default class DashboardPage {
                         <div class="neo-stat-label">Players</div>
                     </div>
                 ` : `
-                    <button id="quick-start-session-btn" class="neo-stat-card neo-card-primary" style="background: var(--bg-card); border: var(--neo-border); cursor: pointer; color: inherit; padding: var(--spacing-neo); text-align: center; position: relative; width: 100%; font-family: inherit;">
+                    <button id="quick-start-session-btn" class="neo-stat-card neo-card-primary" style="background: var(--bg-card); border: 1px solid var(--border-color); cursor: pointer; color: inherit; padding: var(--spacing-neo); text-align: center; position: relative; width: 100%; font-family: inherit;">
                         <div class="neo-stat-value">🃏</div>
                         <div class="neo-stat-label">Start New Session</div>
                     </button>
@@ -255,9 +255,8 @@ export default class DashboardPage {
                             <tr>
                                 <th>Rank</th>
                                 <th>Player</th>
-                                <th>Net Profit</th>
-                                <th>Win Rate</th>
-                            </tr>
+                                <th class="text-right">Net Profit</th>
+                                <th class="text-right">Win Rate</th>
                         </thead>
                         <tbody>
         `;
@@ -270,13 +269,13 @@ export default class DashboardPage {
                     <td>
                         <a href="#player/${player.player_id}" style="color: var(--link-color); text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 0.5rem;">
                             ${player.name}
-                            ${isGambleKing ? '<span style="font-size: 1.2rem;">👑</span>' : ''}
+                            ${isGambleKing ? '<span style="font-size: 1.25rem;">👑</span>' : ''}
                         </a>
                     </td>
-                    <td class="${player.net_profit >= 0 ? 'profit-positive' : 'profit-negative'}" style="font-weight: 600;">
+                    <td class="text-right ${player.net_profit >= 0 ? 'profit-positive' : 'profit-negative'}" style="font-weight: 600;">
                         ${formatCurrency(player.net_profit || 0)}
                     </td>
-                    <td style="font-weight: 600;">${formatPercent(player.win_percentage || 0)}</td>
+                    <td class="text-right" style="font-weight: 600;">${formatPercent(player.win_percentage || 0)}</td>
                 </tr>
             `;
         });
@@ -320,13 +319,13 @@ export default class DashboardPage {
             const cardColor = session.is_active ? 'neo-card-gold' : '';
             
             html += `
-                <a href="#session/${session.session_id}" class="neo-card ${cardColor}" style="text-decoration: none; color: inherit; padding: 1rem; margin: 0;">
+                <a href="#session/${session.session_id}" class="neo-card ${cardColor} list-card-row" style="text-decoration: none; color: inherit;">
                     <div style="display: flex; justify-content: space-between; align-items: center;">
                         <div>
-                            <div style="font-weight: 600; color: inherit; margin-bottom: 0.25rem; font-size: 1.125rem;">
+                            <div class="list-card-text">
                                 📅 ${formatDate(session.date)}
                             </div>
-                            <div style="font-size: 0.875rem; color: inherit; font-weight: 600; opacity: 0.8;">
+                            <div class="list-card-subtitle">
                                 Buy-in: ${formatCurrency(session.default_buy_in_value || 0)}
                             </div>
                         </div>

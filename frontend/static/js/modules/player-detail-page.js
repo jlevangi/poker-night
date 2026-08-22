@@ -143,7 +143,7 @@ export default class PlayerDetailPage {
                 
                 <!-- Player Header Card -->
                 <div class="neo-card ${isTopPerformer ? 'neo-card-gold' : 'neo-card-primary'}">
-                    <h2 style="font-size: 2.5rem; font-weight: 600; margin-bottom: 1.5rem; color: inherit; display: flex; align-items: center; gap: 1rem;">
+                    <h2 style="font-size: 1.75rem; font-weight: 600; margin-bottom: 1.5rem; color: inherit; display: flex; align-items: center; gap: 1rem; overflow-wrap: anywhere;">
                         ${player.name}
                     </h2>
                     
@@ -355,7 +355,7 @@ export default class PlayerDetailPage {
                     ${[...yLabels].reverse().map(value => {
                         const y = margin.top + yScale(value);
                         const displayValue = formatCurrencyWhole(value);
-                        return `<div style="position: absolute; top: ${y}px; right: ${labelRightMargin}; transform: translateY(-50%); font-size: ${labelFontSize}; font-weight: bold; color: var(--text-secondary);">${displayValue}</div>`;
+                        return `<div style="position: absolute; top: ${y}px; right: ${labelRightMargin}; transform: translateY(-50%); font-size: ${labelFontSize}; font-weight: 700; color: var(--text-secondary);">${displayValue}</div>`;
                     }).join('')}
                 </div>
 

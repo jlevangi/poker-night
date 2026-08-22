@@ -51,11 +51,6 @@ textarea,
     --neo-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
     --neo-shadow-static: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
 
-    /* Modern Borders */
-    --neo-border: 1px solid #E2E8F0;
-    --neo-border-thin: 1px solid #E2E8F0;
-    --neo-border-thick: 1px solid #E2E8F0;
-
     /* Updated Primary Colors */
     --primary-color: #2563EB;
     --primary-hover: #1D4ED8;
@@ -76,7 +71,7 @@ textarea,
     /* Text Updates */
     --text-primary: #0F172A;
     --text-secondary: #475569;
-    --text-muted: #94A3B8;
+    --text-muted: #4F7289;
     --text-white: #FFFFFF;
     --text-header: #0F172A;
     --text-header-muted: #475569;
@@ -96,9 +91,9 @@ textarea,
     --color-info-hover: #4F46E5;
 
     /* Profit Colors */
-    --profit-positive: #10B981;
-    --profit-negative: #EF4444;
-    --profit-unpaid: #F59E0B;
+    --profit-positive: #047857;
+    --profit-negative: #DC2626;
+    --profit-unpaid: #92400E;
 
     /* Typography */
     --font-weight-bold: 600;
@@ -120,6 +115,9 @@ textarea,
     --radius-lg: 14px;
     --radius-xl: 18px;
     --radius-pill: 50px;
+
+    /* Focus ring — brightened in dark mode for contrast on dark surfaces */
+    --focus-ring-color: var(--primary-color);
 }
 
 /* ============================================================================ */
@@ -139,7 +137,7 @@ textarea,
 
     --text-primary: #F8FAFC;
     --text-secondary: #CBD5E1;
-    --text-muted: #64748B;
+    --text-muted: #8494A7;
     --text-header: #F8FAFC;
     --text-header-muted: rgba(255, 255, 255, 0.6);
     /* Matches [data-theme="dark"] a in dark-mode.css so inline-styled links flip too */
@@ -156,9 +154,6 @@ textarea,
     --neo-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 8px 10px -6px rgba(0, 0, 0, 0.2);
     --neo-shadow-static: 0 1px 3px rgba(0, 0, 0, 0.2), 0 1px 2px rgba(0, 0, 0, 0.15);
 
-    --neo-border: 1px solid #334155;
-    --neo-border-thin: 1px solid #334155;
-    --neo-border-thick: 1px solid #334155;
 
     /* Dark mode card accent colors */
     --casino-red-light: rgba(239, 68, 68, 0.1);
@@ -170,6 +165,9 @@ textarea,
     --casino-gold-dark: #FCD34D;
     --casino-green-dark: #6EE7B7;
     --casino-purple-dark: #A5B4FC;
+
+    /* Brighter focus ring for dark backgrounds (nav, menus) */
+    --focus-ring-color: #60A5FA;
 }
 
 /* Dark mode card variant overrides */
@@ -319,6 +317,11 @@ textarea,
     outline: none !important;
 }
 
+.neo-nav-btn:focus-visible {
+    outline: 2px solid var(--focus-ring-color);
+    outline-offset: 2px;
+}
+
 /* Header Controls */
 .neo-header-controls {
     position: fixed;
@@ -380,7 +383,7 @@ textarea,
     align-items: center;
     width: 75vw;
     max-width: 400px;
-    padding: 0.4rem;
+    padding: 0.5rem;
     gap: 0.25rem;
     border-radius: 20px;
 }
@@ -393,7 +396,7 @@ textarea,
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0.6rem 0.5rem;
+    padding: 0.5rem 0.5rem;
     cursor: pointer;
     transition: all 0.2s ease;
     height: 100%;
@@ -419,6 +422,11 @@ textarea,
     outline: none !important;
 }
 
+.neo-nav-mobile-btn:focus-visible {
+    outline: 2px solid var(--focus-ring-color);
+    outline-offset: 2px;
+}
+
 .neo-nav-mobile-btn .nav-icon {
     font-size: 1.25rem;
     filter: none;
@@ -440,7 +448,7 @@ textarea,
     width: 320px;
     height: 100vh;
     background: var(--bg-content);
-    border-right: 1px solid var(--neo-border);
+    border-right: 1px solid var(--border-color);
     box-shadow: var(--neo-shadow-xl);
     z-index: calc(var(--z-modal) + 100);
     transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -542,7 +550,7 @@ textarea,
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.875rem 1rem;
+    padding: 0.75rem 1rem;
     background: var(--bg-card);
     border: 1px solid var(--border-light, #E2E8F0);
     border-radius: 12px;
@@ -555,7 +563,7 @@ textarea,
     color: var(--text-primary);
     text-transform: none;
     letter-spacing: 0;
-    font-size: 0.9rem;
+    font-size: 0.875rem;
 }
 
 .neo-setting-btn {
@@ -588,7 +596,7 @@ textarea,
 
 .neo-setting-info p {
     margin: 0.25rem 0;
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     color: var(--text-muted);
 }
 
@@ -795,7 +803,7 @@ button.neo-more-item {
     transition: all 0.15s ease;
     text-decoration: none;
     color: var(--text-primary);
-    font-size: 0.95rem;
+    font-size: 1rem;
     font-weight: 500;
     text-transform: none;
     letter-spacing: 0;
@@ -820,6 +828,11 @@ button.neo-more-item {
 
 .neo-more-item:focus {
     outline: none !important;
+}
+
+.neo-more-item:focus-visible {
+    outline: 2px solid var(--focus-ring-color);
+    outline-offset: 2px;
 }
 
 .neo-more-item.active {
@@ -850,8 +863,8 @@ button.neo-more-item {
 }
 
 #more-trigger.active {
-    background: rgba(255, 255, 255, 0.15);
-    color: #FFFFFF;
+    background: var(--bg-shell-active);
+    color: var(--text-header);
 }
 
 @media (min-width: 769px) {
@@ -1048,7 +1061,7 @@ button.neo-stat-card:active {
     border-radius: 10px;
     padding: 0.75rem 1.25rem;
     font-weight: 500;
-    font-size: 0.9375rem;
+    font-size: 0.875rem;
     line-height: 1.5;
     text-transform: none;
     letter-spacing: 0;
@@ -1082,7 +1095,7 @@ button.neo-stat-card:active {
 }
 
 .neo-btn:focus-visible {
-    outline: 2px solid var(--primary-color) !important;
+    outline: 2px solid var(--focus-ring-color) !important;
     outline-offset: 2px;
 }
 
@@ -1145,7 +1158,7 @@ button.neo-stat-card:active {
 
 .neo-btn-sm {
     padding: 0.5rem 0.875rem;
-    font-size: 0.8125rem;
+    font-size: 0.75rem;
 }
 
 /* Force no gradients on all neo button variants */
@@ -1223,6 +1236,7 @@ div .neo-btn.neo-btn-green:hover,
     position: relative;
     transition: all 0.2s ease;
     border-radius: 14px;
+    min-width: 0;
 }
 
 .neo-stat-value {
@@ -1231,10 +1245,11 @@ div .neo-btn.neo-btn-green:hover,
     line-height: 1.3;
     margin-bottom: 0.25rem;
     color: inherit;
+    overflow-wrap: anywhere;
 }
 
 .neo-stat-label {
-    font-size: 0.8125rem;
+    font-size: 0.75rem;
     font-weight: 500;
     text-transform: none;
     letter-spacing: 0;
@@ -1301,11 +1316,11 @@ div .neo-btn.neo-btn-green:hover,
 .neo-table th {
     background: var(--bg-body);
     color: var(--text-secondary);
-    padding: 0.875rem 1rem;
+    padding: 0.75rem 1rem;
     font-weight: 600;
     text-transform: none;
     letter-spacing: 0;
-    font-size: 0.8125rem;
+    font-size: 0.75rem;
     border-right: none;
     border-bottom: 1px solid var(--border-light, #E2E8F0);
 }
@@ -1315,11 +1330,11 @@ div .neo-btn.neo-btn-green:hover,
 }
 
 .neo-table td {
-    padding: 0.875rem 1rem;
+    padding: 0.75rem 1rem;
     border-right: none;
     border-bottom: 1px solid var(--border-light, #E2E8F0);
     font-weight: 400;
-    font-size: 0.9375rem;
+    font-size: 0.875rem;
 }
 
 .neo-table td:last-child {
@@ -1474,7 +1489,7 @@ div .neo-btn.neo-btn-green:hover,
     -moz-appearance: none;
     cursor: pointer;
     width: 100%;
-    padding-right: 3rem;
+    padding-right: 2rem;
     border-radius: 14px;
     font-weight: 600;
     letter-spacing: 0.01em;
@@ -1526,7 +1541,7 @@ div .neo-btn.neo-btn-green:hover,
     border: none;
     background: var(--casino-green);
     color: var(--text-white);
-    font-size: 16px;
+    font-size: 1rem;
     font-weight: 600;
     display: flex;
     align-items: center;
@@ -1644,11 +1659,11 @@ div .neo-btn.neo-btn-green:hover,
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--text-muted);
-    margin-bottom: 0.35rem;
+    margin-bottom: 0.25rem;
 }
 
 .neo-pie-chart-center-value {
-    font-size: 1.15rem;
+    font-size: 1.125rem;
     font-weight: 700;
     color: var(--text-primary);
     line-height: 1.2;
@@ -1689,7 +1704,7 @@ div .neo-btn.neo-btn-green:hover,
 
 .neo-pie-legend-meta {
     font-weight: 600;
-    font-size: 0.72rem;
+    font-size: 0.75rem;
     color: var(--text-secondary);
 }
 
@@ -1833,12 +1848,12 @@ div .neo-btn.neo-btn-green:hover,
 
     .neo-table th,
     .neo-table td {
-        padding: 0.625rem 0.5rem;
+        padding: 0.5rem 0.5rem;
         font-size: 0.875rem;
     }
 
     .neo-btn {
-        padding: 0.625rem 1rem;
+        padding: 0.5rem 1rem;
         font-size: 0.875rem;
     }
 
@@ -1889,11 +1904,11 @@ div .neo-btn.neo-btn-green:hover,
     }
 
     .neo-gamble-king .neo-stat-label {
-        font-size: 0.625rem !important;
+        font-size: 0.65rem !important;
     }
 
     .neo-gamble-king-name {
-        font-size: 1.375rem !important;
+        font-size: 1.25rem !important;
     }
 
     .neo-gamble-king-title {
@@ -1924,8 +1939,8 @@ div .neo-btn.neo-btn-green:hover,
 
     .neo-btn-sm:not(.counter-btn):not(.seven-two-btn):not(.seven-two-increment-btn):not(.seven-two-decrement-btn):not(.strikes-increment-btn):not(.strikes-decrement-btn) {
         min-height: 44px;
-        padding-top: 0.78rem;
-        padding-bottom: 0.78rem;
+        padding-top: 0.75rem;
+        padding-bottom: 0.75rem;
     }
 }
 
@@ -1956,7 +1971,7 @@ div .neo-btn.neo-btn-green:hover,
 .badge {
     display: inline-flex;
     align-items: center;
-    padding: 0.25rem 0.625rem;
+    padding: 0.25rem 0.5rem;
     border-radius: 50px;
     font-size: 0.75rem;
     font-weight: 600;

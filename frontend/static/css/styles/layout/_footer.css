@@ -5,7 +5,7 @@ footer {
     padding: var(--spacing-lg);
     margin-top: var(--spacing-xl);
     color: var(--text-light);
-    font-size: 0.9rem;
+    font-size: 0.875rem;
 }
 
 @media (max-width: 400px) {
