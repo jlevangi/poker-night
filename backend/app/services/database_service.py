@@ -9,7 +9,8 @@ from typing import List, Dict, Any, Optional
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy import desc
 
-from ..database.models import db, Player, Session, Entry, CalendarEvent, EventRSVP, round_to_cents
+from ..database.models import (db, Player, Session, Entry, CalendarEvent, EventRSVP,
+                              SessionImport, round_to_cents)
 from ..models import PlayerStats, PlayerSessionHistory
 
 logger = logging.getLogger(__name__)
@@ -1245,3 +1246,132 @@ class DatabaseService:
             db.session.rollback()
             self.logger.error(f"Failed to add player {player_id} to session {session_id}: {str(e)}")
             return None
+
+    # --- PokerNow imports -------------------------------------------------
+
+    def _next_entry_id(self) -> str:
+        """Allocate the next eid_NNNN, continuing from the highest in use."""
+        existing_numbers = []
+        for (entry_id,) in db.session.query(Entry.entry_id).all():
+            if entry_id and entry_id.startswith('eid_'):
+                try:
+                    existing_numbers.append(int(entry_id.split('_')[1]))
+                except (ValueError, IndexError):
+                    pass
+        return f"eid_{(max(existing_numbers) if existing_numbers else 0) + 1:04d}"
+
+    def upsert_entry_with_amounts(self, session_id: str, player_id: str,
+                                  buy_in_count: int, total_buy_in_amount: float,
+                                  payout: float, seven_two_wins: int = 0
+                                  ) -> Optional[Entry]:
+        """
+        Create or overwrite an entry using exact money amounts.
+
+        record_player_entry() derives the buy-in from the session default times
+        a count, which cannot express an imported buy-in like $45.37. An import
+        knows the real figures, so it sets them directly and keeps the count
+        purely as a display of how many times the player rebought.
+
+        Args:
+            session_id: Session's unique identifier
+            player_id: Player's unique identifier
+            buy_in_count: How many times the player bought in
+            total_buy_in_amount: Exact total the player paid in
+            payout: Exact amount the player cashed out for
+            seven_two_wins: 7-2 wins detected for this session
+
+        Returns:
+            The saved Entry, or None on failure
+        """
+        try:
+            session = self.get_session_by_id(session_id)
+            player = self.get_player_by_id(player_id)
+            if not session or not player:
+                self.logger.error(
+                    f"Cannot import entry: session {session_id} or player {player_id} missing."
+                )
+                return None
+
+            entry = Entry.query.filter_by(
+                session_id=session_id, player_id=player_id
+            ).first()
+            if entry is None:
+                entry = Entry(
+                    entry_id=self._next_entry_id(),
+                    session_id=session_id,
+                    player_id=player_id,
+                )
+                db.session.add(entry)
+
+            entry.buy_in_count = max(int(buy_in_count), 0)
+            entry.total_buy_in_amount = round_to_cents(float(total_buy_in_amount))
+            entry.payout = round_to_cents(float(payout))
+            entry.is_cashed_out = True
+            entry.session_seven_two_wins = max(int(seven_two_wins), 0)
+            entry.calculate_profit()
+            db.session.commit()
+            return entry
+
+        except Exception as e:
+            db.session.rollback()
+            self.logger.error(f"Failed to import entry for {player_id}: {str(e)}")
+            return None
+
+    def get_session_import(self, session_id: str) -> Optional[SessionImport]:
+        """Get the stored import for a session, if one exists."""
+        return SessionImport.query.filter_by(session_id=session_id).first()
+
+    def save_session_import(self, session_id: str, stats: Dict[str, Any],
+                            source: str = 'pokernow', filename: Optional[str] = None
+                            ) -> Optional[SessionImport]:
+        """
+        Store (or replace) the parsed log statistics for a session.
+
+        Args:
+            session_id: Session's unique identifier
+            stats: Parsed summary/players/awards payload
+            source: Where the data came from
+            filename: Original upload name, for display
+
+        Returns:
+            The saved SessionImport, or None on failure
+        """
+        import json
+
+        try:
+            record = self.get_session_import(session_id)
+            if record is None:
+                record = SessionImport(session_id=session_id)
+                db.session.add(record)
+
+            record.source = source
+            record.filename = (filename or '')[:255] or None
+            record.hands_played = int((stats.get('summary') or {}).get('hands_played', 0))
+            record.stats = json.dumps(stats)
+            db.session.commit()
+
+            self.logger.info(
+                f"Stored {source} import for session {session_id} "
+                f"({record.hands_played} hands)."
+            )
+            return record
+
+        except Exception as e:
+            db.session.rollback()
+            self.logger.error(f"Failed to save import for session {session_id}: {str(e)}")
+            return None
+
+    def delete_session_import(self, session_id: str) -> bool:
+        """Remove a session's stored import. True when a row was deleted."""
+        try:
+            record = self.get_session_import(session_id)
+            if record is None:
+                return False
+            db.session.delete(record)
+            db.session.commit()
+            self.logger.info(f"Deleted import for session {session_id}.")
+            return True
+        except Exception as e:
+            db.session.rollback()
+            self.logger.error(f"Failed to delete import for session {session_id}: {str(e)}")
+            return False

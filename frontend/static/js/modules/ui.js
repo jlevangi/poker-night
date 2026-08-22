@@ -21,6 +21,12 @@
  *   'neo-btn-red' for a "Try Again" retry; use 'neo-btn-green' for
  *   navigation actions like Back).
  *
+ * renderAwardCard(award)
+ *   One award from an imported PokerNow log: icon, award name, the winner
+ *   (linked to their profile when the award carries a player_id), and the
+ *   one-line reason. Every field is escaped — award text is derived from
+ *   log data, not static copy.
+ *
  * renderSkeletonPage(blocks)
  *   The standard page-level loading wrapper (.skeleton-page: max-width
  *   1200px, centered, mobile-aware padding). `blocks` is an array of HTML
@@ -121,4 +127,25 @@ export function showPageError(container, options) {
         const button = container.querySelector('.empty-state__action');
         if (button) button.addEventListener('click', onAction);
     }
+}
+
+/**
+ * One award card: icon, award name, who won it, and why.
+ *
+ * Shared so a night's awards look the same being previewed on the import
+ * screen and read back later on the session page. Every field comes from
+ * parsed log data rather than static copy, so every field is escaped.
+ */
+export function renderAwardCard(award) {
+    const name = escapeHtml(award.player_name || award.name);
+    const who = award.player_id
+        ? '<a href="#player/' + escapeHtml(award.player_id) + '" style="color: inherit; text-decoration: none;">' + name + '</a>'
+        : name;
+    return '<div class="award-card">' +
+        '<div class="award-card__icon">' + escapeHtml(award.icon) + '</div>' +
+        '<div class="award-card__body">' +
+        '<div class="award-card__title">' + escapeHtml(award.title) + '</div>' +
+        '<div class="award-card__name">' + who + '</div>' +
+        '<div class="award-card__detail">' + escapeHtml(award.detail) + '</div>' +
+        '</div></div>';
 }
