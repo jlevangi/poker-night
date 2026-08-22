@@ -172,7 +172,7 @@ li a:hover {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.8rem var(--spacing-sm);
+    padding: 0.75rem var(--spacing-sm);
 }
 
 .player-standings-list strong {
@@ -239,7 +239,7 @@ li a:hover {
     font-size: 0.75rem;
     background-color: var(--gamble-king-label-bg);
     color: var(--gamble-king-label-text);
-    padding: 0.15rem 0.4rem;
+    padding: 0.125rem 0.5rem;
     border-radius: var(--radius-xl);
     font-weight: 700;
     white-space: nowrap;

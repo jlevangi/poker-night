@@ -132,7 +132,7 @@
    focus). Scoped to --compact so the picker search is untouched. */
 .modal-content--compact label {
     display: block;
-    margin-bottom: 0.375rem;
+    margin-bottom: 0.25rem;
     font-weight: 500;
     font-size: 0.875rem;
     color: var(--text-secondary);

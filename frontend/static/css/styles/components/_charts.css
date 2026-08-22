@@ -131,7 +131,7 @@
     box-shadow: var(--neo-shadow-md);
     z-index: var(--z-modal, 2000);
     transform: translate(-50%, -100%);
-    margin-top: -10px;
+    margin-top: -0.5rem;
     pointer-events: none;
     animation: neo-tooltip-appear 0.2s ease-out;
 }

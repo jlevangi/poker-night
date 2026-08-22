@@ -23,7 +23,7 @@
 .neo-rsvp-badge {
     display: inline-flex;
     align-items: center;
-    padding: 0.35rem 0.75rem;
+    padding: 0.25rem 0.75rem;
     border-radius: var(--radius-pill);
     font-weight: 700;
     font-size: 0.875rem;
