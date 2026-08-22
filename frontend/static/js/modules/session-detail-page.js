@@ -183,7 +183,7 @@ export default class SessionDetailPage {
                         overflow: hidden;
                     ">
                         <div style="font-size: 1rem; line-height: 1;">${chipDistribution[chipColor]}</div>
-                        <div style="font-size: 0.65rem; margin-top: 2px;">${chipColor}</div>
+                        <div style="font-size: 0.65rem; margin-top: 0.125rem;">${chipColor}</div>
                         
                         <!-- Chip texture lines -->
                         <div style="
@@ -327,7 +327,7 @@ export default class SessionDetailPage {
 
         return `
             <div class="session-player-picker-card">
-                <button id="open-player-picker-btn" class="neo-btn neo-btn-green" type="button" style="padding: 0.8rem 1.1rem;">Add Players</button>
+                <button id="open-player-picker-btn" class="neo-btn neo-btn-green" type="button" style="padding: 0.75rem 1rem;">Add Players</button>
                 ${this.isAddPlayersModalOpen ? this.renderAddPlayersModal(sessionData, totalPlayers) : ''}
             </div>
         `;
@@ -671,8 +671,8 @@ export default class SessionDetailPage {
         styleElement.id = 'session-detail-page-styles';
         styleElement.textContent = `
             .session-bottom-controls {
-                margin: 20px 0;
-                padding: 15px;
+                margin: 1.25rem 0;
+                padding: 1rem;
                 border-top: 1px solid #ddd;
                 text-align: center;
             }
@@ -682,7 +682,7 @@ export default class SessionDetailPage {
             /* Ensure proper spacing for session reactivate button */
             .session-reactivate-container {
                 text-align: center;
-                margin: 20px 0;
+                margin: 1.25rem 0;
             }
             
             /* Cash Out and Buy In buttons now use neobrutalist styling */
@@ -737,7 +737,7 @@ export default class SessionDetailPage {
                 display: flex;
                 align-items: center;
                 gap: 0.75rem;
-                padding: 0.85rem 0.95rem;
+                padding: 0.75rem 1rem;
                 border-radius: 14px;
                 border: 1px solid var(--border-light, #E2E8F0);
                 background: var(--bg-card);
@@ -793,7 +793,7 @@ export default class SessionDetailPage {
             }
 
             .session-player-picker-badge {
-                padding: 0.2rem 0.55rem;
+                padding: 0.25rem 0.5rem;
                 border-radius: 999px;
                 font-size: 0.75rem;
                 font-weight: 700;

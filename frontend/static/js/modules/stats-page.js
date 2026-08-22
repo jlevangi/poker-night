@@ -171,7 +171,7 @@ export default class StatsPage {
     renderChartSection() {
         if (!this.chartData || !this.chartData.data || this.chartData.data.length === 0) {
             return `
-                <div class="neo-card" style="margin-bottom: 2rem; text-align: center; padding: 3rem;">
+                <div class="neo-card" style="margin-bottom: 2rem; text-align: center; padding: 2rem;">
                     <h2>No Data Available</h2>
                     <p>Start playing some poker sessions to see your gambling trends!</p>
                     <a href="#sessions" class="neo-btn neo-btn-green neo-btn-lg">
@@ -909,7 +909,7 @@ export default class StatsPage {
             <!-- Expandable list of everyone else -->
             <div id="everyone-else-expanded" style="display: none; margin-top: 0.5rem; padding: 0.75rem; border: 1px solid var(--border-color); background: var(--bg-content); border-radius: var(--radius-lg); grid-column: 1 / -1;">
                 ${otherPlayers.map((player, idx) => `
-                    <div class="neo-pie-expanded-row" style="display: flex; justify-content: space-between; gap: 1rem; padding: 0.625rem 0.5rem; border-bottom: ${idx < otherPlayers.length - 1 ? '1px solid var(--border-light)' : 'none'};">
+                    <div class="neo-pie-expanded-row" style="display: flex; justify-content: space-between; gap: 1rem; padding: 0.5rem; border-bottom: ${idx < otherPlayers.length - 1 ? '1px solid var(--border-light)' : 'none'};">
                         <span style="font-weight: 700; font-size: 0.75rem; color: var(--text-primary);">${player.name}</span>
                         <span class="neo-pie-legend-meta">${formatCurrency(player.total_buy_ins_value)} • ${formatPercent((player.total_buy_ins_value / totalGambled) * 100)}</span>
                     </div>
