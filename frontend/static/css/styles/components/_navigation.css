@@ -161,7 +161,7 @@ nav a:hover {
     transition: all 0.2s ease !important;
     margin-bottom: var(--spacing-lg) !important;
     box-shadow: var(--shadow-light) !important;
-    font-size: 0.9375rem !important;
+    font-size: 0.875rem !important;
     border: none !important;
     letter-spacing: 0 !important;
 }
@@ -181,7 +181,7 @@ nav a:hover {
 
 .back-nav-btn::before {
     content: "←" !important;
-    font-size: 1.1rem !important;
+    font-size: 1rem !important;
     font-weight: 700 !important;
     margin-right: 0.25rem !important;
 }
@@ -217,7 +217,7 @@ nav a:hover {
     justify-content: center !important;
     gap: 0.5rem !important;
     padding: 0.75rem 1.25rem !important; /* Match back button */
-    font-size: 0.95rem !important; /* Match back button */
+    font-size: 0.875rem !important; /* Match back button */
     font-weight: 600 !important;
     border-radius: var(--radius-md) !important; /* Match back button */
     border: none !important; /* Match back button - no border */
@@ -358,7 +358,7 @@ nav a:hover {
     
     /* Make notification buttons smaller on mobile to fit better */
     .notification-btn {
-        font-size: 0.8125rem !important;
+        font-size: 0.75rem !important;
         min-width: 110px !important;
     }
 }
@@ -417,7 +417,7 @@ nav a:hover {
 
     .neo-more-item {
         padding: 0.75rem 0.875rem;
-        font-size: 0.9rem;
+        font-size: 0.875rem;
     }
 
     .neo-more-header {
@@ -428,13 +428,12 @@ nav a:hover {
 @media (max-width: 360px) {
     .neo-more-item {
         padding: 0.625rem 0.75rem;
-        font-size: 0.85rem;
+        font-size: 0.875rem;
     }
 
     .neo-more-icon {
-        font-size: 1.1rem;
+        font-size: 1.125rem;
     }
-    font-size: 1.1rem;
 }
 
 /* Navigation Interaction States — touch targets + pressed feedback
