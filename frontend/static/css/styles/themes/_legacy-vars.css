@@ -3,7 +3,7 @@
  * intentionally overrides the #EFF6FF value defined in _theme.css /
  * _modern-theme.css.  Several components consume the #93C5FD value.
  *
- * The remaining token names (--neutral-50, --space-2, --secondary-color,
+ * The remaining token names (--neutral-50, --secondary-color,
  * etc.) use legacy naming conventions not yet unified with the structured
  * token system and are still referenced by component CSS throughout the
  * stylesheets below.
@@ -31,6 +31,4 @@
     --neutral-800: #1E293B;
     --neutral-900: #0F172A;
 
-    --space-2: 0.5rem;
-    --space-4: 1rem;
 }

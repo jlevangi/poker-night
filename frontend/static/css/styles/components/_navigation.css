@@ -94,7 +94,7 @@ nav a:hover {
     width: 75vw;
     max-width: 400px;
     border-radius: 20px;
-    padding: 0.4rem;
+    padding: 0.5rem;
     transition: background var(--transition-medium);
 }
 
@@ -111,7 +111,7 @@ nav a:hover {
     cursor: pointer;
     padding: 0;
     border-radius: var(--radius-xl);
-    margin: 0 10px;
+    margin: 0 0.5rem;
     transition: background 0.18s, color 0.18s;
     min-width: 40px;
     /* Remove mobile tap highlights */
@@ -200,7 +200,7 @@ nav a:hover {
     display: flex !important;
     justify-content: space-between !important;
     align-items: flex-start !important; /* Align both buttons to the top */
-    gap: var(--space-4, 1rem) !important;
+    gap: var(--spacing-md) !important;
     flex-wrap: nowrap !important; /* Prevent wrapping to keep on same row */
 }
 
@@ -371,7 +371,7 @@ nav a:hover {
     }
     
     .session-header {
-        gap: var(--space-2, 0.5rem) !important;
+        gap: var(--spacing-sm) !important;
     }
 }
 
@@ -380,7 +380,7 @@ nav a:hover {
     .session-header {
         flex-direction: column !important;
         align-items: stretch !important;
-        gap: var(--space-2, 0.5rem) !important;
+        gap: var(--spacing-sm) !important;
     }
     
     .notification-btn {
@@ -416,7 +416,7 @@ nav a:hover {
     }
 
     .neo-more-item {
-        padding: 0.75rem 0.875rem;
+        padding: 0.75rem;
         font-size: 0.875rem;
     }
 
@@ -427,7 +427,7 @@ nav a:hover {
 
 @media (max-width: 360px) {
     .neo-more-item {
-        padding: 0.625rem 0.75rem;
+        padding: 0.5rem 0.75rem;
         font-size: 0.875rem;
     }
 

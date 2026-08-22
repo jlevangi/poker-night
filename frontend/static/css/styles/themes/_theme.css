@@ -103,7 +103,6 @@
 /* Media Query Variables for Mobile */
 @media (max-width: 700px) {
     :root {
-        --spacing-mobile: 0.75rem;
         --font-size-mobile: 0.875rem;
     }
 }

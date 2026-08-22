@@ -202,11 +202,11 @@
        (both selectors have equal specificity). */
     .players-stats-table td:not(:first-child),
     .players-dashboard-table td:not(:first-child) {
-        padding-left: 0.15rem;
-        padding-right: 0.15rem;
+        padding-left: 0.125rem;
+        padding-right: 0.125rem;
     }
     .dashboard-content .players-stats-table th, .dashboard-content .players-stats-table td {
-        padding: 0.4rem 0.2rem;
+        padding: 0.5rem 0.25rem;
     }
     .dashboard-content .players-stats-table td:first-child {
         width: 60%;
@@ -220,14 +220,14 @@
 @media (max-width: 400px) {
     .dashboard-content .players-stats-table th {
         font-size: 0.875rem;
-        padding: 0.35rem 0.2rem;
+        padding: 0.25rem;
     }
     .dashboard-content .players-stats-table td {
         font-size: 0.875rem;
     }
     .dashboard-content .gamble-king-label {
         font-size: 0.7rem;
-        padding: 0.1rem 0.3rem;
+        padding: 0.125rem 0.25rem;
     }
 }
 

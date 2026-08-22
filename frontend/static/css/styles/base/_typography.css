@@ -35,7 +35,7 @@
  *   clearances (paired with the fixed bottom-nav height — do not map to the
  *   ladder without re-checking nav height).
  * Legacy: --spacing-mobile (0.75, <=700px in _theme.css) is defined but never
- *   consumed; --space-2/--space-4 (_legacy-vars.css) are consumed 3x in
+ *   consumed; --space-2/--space-4 (_legacy-vars.css) are now 0 consumers (migrated to --spacing-*)
  *   _navigation.css with fallbacks equal to their values -> migrate those to
  *   --spacing-sm/--spacing-md and drop the legacy defs (sub-step 3/5).
  */
