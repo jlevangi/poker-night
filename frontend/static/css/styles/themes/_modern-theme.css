@@ -314,10 +314,12 @@ textarea,
     color: var(--text-header);
 }
 
+/* Active = pill + gold inset bar (Gamble King accent; --casino-gold-dark
+   swaps per theme: #D97706 light / #FCD34D dark). */
 .neo-nav-btn.active {
     background: var(--bg-shell-active);
     color: var(--text-header);
-    box-shadow: none;
+    box-shadow: inset 0 -2px 0 var(--casino-gold-dark);
 }
 
 .neo-nav-btn:focus {
@@ -421,7 +423,7 @@ textarea,
 
 .neo-nav-mobile-btn.active {
     background: var(--bg-shell-active);
-    color: var(--text-header);
+    color: var(--casino-gold-dark);
     border-radius: 14px;
 }
 
@@ -631,11 +633,6 @@ textarea,
     color: var(--text-header);
 }
 
-[data-theme="dark"] .neo-nav-btn.active {
-    background: var(--bg-shell-active);
-    color: var(--text-header);
-}
-
 [data-theme="dark"] .neo-header-btn {
     background: var(--primary-color);
 }
@@ -656,11 +653,6 @@ textarea,
 
 [data-theme="dark"] .neo-nav-mobile-btn:hover {
     background: var(--bg-shell-hover);
-    color: var(--text-header);
-}
-
-[data-theme="dark"] .neo-nav-mobile-btn.active {
-    background: var(--bg-shell-active);
     color: var(--text-header);
 }
 
@@ -840,8 +832,12 @@ button.neo-more-item {
 }
 
 .neo-more-item.active {
-    background: var(--primary-light);
-    color: var(--primary-color);
+    background: var(--casino-gold-light);
+    color: var(--text-primary);
+}
+
+.neo-more-item.active .neo-more-icon {
+    color: var(--casino-gold-dark);
 }
 
 .neo-more-icon {
@@ -864,11 +860,6 @@ button.neo-more-item {
     height: 1px;
     background: var(--border-light, #E2E8F0);
     margin: 0.25rem 0.5rem;
-}
-
-#more-trigger.active {
-    background: var(--bg-shell-active);
-    color: var(--text-header);
 }
 
 @media (min-width: 769px) {
@@ -909,11 +900,6 @@ button.neo-more-item {
 
 [data-theme="dark"] .neo-more-item:hover {
     background: rgba(255, 255, 255, 0.05);
-}
-
-[data-theme="dark"] .neo-more-item.active {
-    background: rgba(37, 99, 235, 0.1);
-    color: #93C5FD;
 }
 
 [data-theme="dark"] .neo-more-divider {
