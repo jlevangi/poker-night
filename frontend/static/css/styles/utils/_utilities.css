@@ -45,6 +45,12 @@ textarea:focus-visible,
     font-weight: 600;
     color: var(--text-primary);
     margin: 0 0 var(--spacing-md) 0;
+    /* No underline: the generic h2 rule in base/_typography.css adds a
+       border-bottom, which is wrong for section headings (iter 11 added
+       .section-heading to h2s on the stats page). Harmless on the existing
+       h3 uses (h3 has no border). */
+    border-bottom: none;
+    padding-bottom: 0;
 }
 
 .stat-value-lg {
