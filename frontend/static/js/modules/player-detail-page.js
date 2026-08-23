@@ -143,7 +143,7 @@ export default class PlayerDetailPage {
                 
                 <!-- Player Header Card -->
                 <div class="neo-card ${isTopPerformer ? 'neo-card-gold' : 'neo-card-primary'}">
-                    <h2 class="page-title--detail" style="margin-bottom: 1.5rem; display: flex; align-items: center; gap: 1rem;">
+                    <h2 class="page-title--detail" style="margin-bottom: 1.5rem;">
                         ${player.name}
                     </h2>
                     
@@ -171,7 +171,7 @@ export default class PlayerDetailPage {
                 <!-- Profit/Loss Over Time Chart -->
                 <div class="neo-card">
                     <div class="neo-chart-header">
-                        <h3 style="font-size: 1.75rem; font-weight: 600; margin: 0;">📈 Profit/Loss Over Time</h3>
+                        <h2 class="section-heading">📈 Profit/Loss Over Time</h2>
                         <div class="neo-chart-subtitle" id="profit-chart-subtitle"></div>
                     </div>
                     <div id="profit-chart" style="margin-top: 1.5rem;"></div>
@@ -183,7 +183,7 @@ export default class PlayerDetailPage {
             html += `
                 <!-- Sessions History -->
                 <div class="neo-card">
-                    <h3 style="font-size: 1.75rem; font-weight: 600; margin-bottom: 1.5rem;">📊 Session History</h3>
+                    <h3 class="section-heading">📊 Session History</h3>
                     <div class="table-responsive">
                         <table class="neo-table">
                             <thead>

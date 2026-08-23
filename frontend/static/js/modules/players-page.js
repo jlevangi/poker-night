@@ -88,7 +88,7 @@ export default class PlayersPage {
                 <h2 class="page-title">🎭 Players</h2>
 
                 <div class="neo-card neo-card-purple" style="margin-bottom: 2rem; padding-top: 1rem;">
-                    <h3 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem; margin-top: 0; color: var(--casino-purple-dark);">➕ Add New Player</h3>
+                    <h3 class="section-heading" style="color: var(--casino-purple-dark);">➕ Add New Player</h3>
                     <div style="display: flex; gap: 1rem; align-items: baseline; flex-wrap: wrap;">
                         <input type="text" id="new-player-name" placeholder="Enter player name..." style="flex: 1; min-width: 200px;">
                         <button id="add-player-btn" class="neo-btn neo-btn-purple neo-btn-lg">Add Player</button>
@@ -110,7 +110,7 @@ export default class PlayersPage {
                     </div>
                 </div>
 
-                <h3 id="roster-title" style="font-size: 1.75rem; font-weight: 600; margin-bottom: 1.5rem; color: var(--text-primary);">🏆 Player Roster</h3>
+                <h3 id="roster-title" class="section-heading">🏆 Player Roster</h3>
 
                 <div id="player-list-container"></div>
             </div>
@@ -169,21 +169,17 @@ export default class PlayersPage {
 
                 html += `
                     <div class="neo-card ${cardColor} clickable-player-stats list-card-row" data-player-id="${player.player_id}">
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <div style="overflow-wrap: anywhere;">
-                                <div class="list-card-text">
-                                    ${isGambleKing ? '👑 ' : ''}<a href="#player/${player.player_id}" style="color: inherit; text-decoration: none;">${player.name}</a>
-                                </div>
-                                <div class="list-card-subtitle">
-                                    Sessions: ${player.games_played || 0} · 7-2: ${player.seven_two_wins || 0} · Strikes: ${player.strikes || 0}
-                                </div>
+                        <div class="player-row-main">
+                            <div class="list-card-text">
+                                ${isGambleKing ? '👑 ' : ''}<a href="#player/${player.player_id}" style="color: inherit; text-decoration: none;">${player.name}</a>
                             </div>
-                            <div style="display: flex; align-items: center; gap: 0.5rem;">
-                                <span class="${player.net_profit >= 0 ? 'profit-positive' : 'profit-negative'}" style="font-size: 1rem; font-weight: 700;">
-                                    ${formatCurrency(player.net_profit)}
-                                </span>
+                            <div class="list-card-subtitle">
+                                Sessions: ${player.games_played || 0} · 7-2: ${player.seven_two_wins || 0} · Strikes: ${player.strikes || 0}
                             </div>
                         </div>
+                        <span class="player-row-pl ${player.net_profit >= 0 ? 'profit-positive' : 'profit-negative'}">
+                            ${formatCurrency(player.net_profit)}
+                        </span>
                     </div>
                 `;
             });
