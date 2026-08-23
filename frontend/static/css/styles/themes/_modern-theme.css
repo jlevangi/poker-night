@@ -303,7 +303,7 @@ textarea,
     transition: all 0.2s ease;
     border-radius: 8px;
     -webkit-tap-highlight-color: transparent !important;
-    outline: none !important;
+    outline: none;
     touch-action: manipulation;
 }
 
@@ -320,10 +320,6 @@ textarea,
     background: var(--bg-shell-active);
     color: var(--text-header);
     box-shadow: inset 0 -2px 0 var(--casino-gold-dark);
-}
-
-.neo-nav-btn:focus {
-    outline: none !important;
 }
 
 .neo-nav-btn:focus-visible {
@@ -411,7 +407,7 @@ textarea,
     height: 100%;
     border-radius: 14px;
     -webkit-tap-highlight-color: transparent !important;
-    outline: none !important;
+    outline: none;
     touch-action: manipulation;
 }
 
@@ -425,10 +421,6 @@ textarea,
     background: var(--bg-shell-active);
     color: var(--casino-gold-dark);
     border-radius: 14px;
-}
-
-.neo-nav-mobile-btn:focus {
-    outline: none !important;
 }
 
 .neo-nav-mobile-btn:focus-visible {
@@ -624,15 +616,6 @@ textarea,
 }
 
 
-[data-theme="dark"] .neo-nav-btn {
-    color: var(--text-header-muted);
-}
-
-[data-theme="dark"] .neo-nav-btn:hover {
-    background: var(--bg-shell-hover);
-    color: var(--text-header);
-}
-
 [data-theme="dark"] .neo-header-btn {
     background: var(--primary-color);
 }
@@ -645,15 +628,6 @@ textarea,
 [data-theme="dark"] .neo-bottom-nav {
     background: var(--bg-bottom-nav);
     border-color: var(--border-bottom-nav);
-}
-
-[data-theme="dark"] .neo-nav-mobile-btn {
-    color: var(--text-header-muted);
-}
-
-[data-theme="dark"] .neo-nav-mobile-btn:hover {
-    background: var(--bg-shell-hover);
-    color: var(--text-header);
 }
 
 [data-theme="dark"] .neo-settings-menu {
@@ -807,7 +781,7 @@ button.neo-more-item {
     width: 100%;
     text-align: left;
     -webkit-tap-highlight-color: transparent !important;
-    outline: none !important;
+    outline: none;
     touch-action: manipulation;
 }
 
@@ -820,10 +794,6 @@ button.neo-more-item {
 .neo-more-item:active {
     transform: scale(0.98);
     box-shadow: none;
-}
-
-.neo-more-item:focus {
-    outline: none !important;
 }
 
 .neo-more-item:focus-visible {
