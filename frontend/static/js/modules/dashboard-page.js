@@ -163,30 +163,30 @@ export default class DashboardPage {
         const { totalGambled, totalPlayers, totalSessions, activeSession } = data;
         
         return `
-            <div class="neo-stats-grid">
-                <!-- Quick Action / Players Tile (Top Left) -->
+            <div class="neo-stats-grid neo-stats-grid--quick">
+                <!-- Action tiles keep their accent tint; metric tiles go neutral -->
                 ${activeSession ? `
-                    <div class="neo-stat-card neo-card-primary">
+                    <div class="neo-stat-card neo-stat-card--metric">
                         <div class="neo-stat-value" data-animate-value="${totalPlayers || 0}">${totalPlayers || 0}</div>
                         <div class="neo-stat-label">Players</div>
                     </div>
                 ` : `
-                    <button id="quick-start-session-btn" class="neo-stat-card neo-card-primary" style="background: var(--bg-card); border: 1px solid var(--border-color); cursor: pointer; color: inherit; padding: var(--spacing-neo); text-align: center; position: relative; width: 100%; font-family: inherit;">
+                    <button id="quick-start-session-btn" class="neo-stat-card neo-stat-card--action neo-card-primary" style="position: relative; width: 100%; font-family: inherit;">
                         <div class="neo-stat-value">🃏</div>
                         <div class="neo-stat-label">Start New Session</div>
                     </button>
                 `}
-                <a href="#calendar" class="neo-stat-card neo-card-purple" style="text-decoration: none; cursor: pointer;">
+                <a href="#calendar" class="neo-stat-card neo-stat-card--action neo-card-primary" style="text-decoration: none;">
                     <div class="neo-stat-value">📅</div>
                     <div class="neo-stat-label">Schedule Session</div>
                 </a>
 
-                <div class="neo-stat-card neo-card-gold">
+                <div class="neo-stat-card neo-stat-card--metric">
                     <div class="neo-stat-value" data-animate-value="${totalGambled || 0}" data-animate-prefix="$" data-animate-decimals="2">${formatCurrency(totalGambled || 0)}</div>
                     <div class="neo-stat-label">Total Gambled</div>
                 </div>
 
-                <div class="neo-stat-card neo-card-green">
+                <div class="neo-stat-card neo-stat-card--metric">
                     <div class="neo-stat-value" data-animate-value="${totalSessions || 0}">${totalSessions || 0}</div>
                     <div class="neo-stat-label">Sessions Played</div>
                 </div>
@@ -200,35 +200,33 @@ export default class DashboardPage {
         if (!gambleKing || gambleKing.net_profit <= 0) {
             return `
                 <div class="neo-gamble-king">
-                    <div class="neo-gamble-king-title">👑 Gamble King 👑</div>
-                    <div style="text-align: center; font-size: 1.25rem; font-weight: 700; color: var(--casino-gold-dark);">
-                        <strong>No Gamble King crowned yet!</strong><br>
-                        <span style="font-size: 1rem; margin-top: 0.5rem; display: block;">Play some games to claim the throne!</span>
-                    </div>
+                    <div class="neo-gamble-king-title">👑 Current Gamble King</div>
+                    <div class="neo-gamble-king-name">No Gamble King crowned yet!</div>
+                    <div class="neo-gamble-king-empty">Play some games to claim the throne!</div>
                 </div>
             `;
         }
         
         return `
             <div class="neo-gamble-king neo-bounce">
-                <div class="neo-gamble-king-title">Current Gamble King</div>
+                <div class="neo-gamble-king-title">👑 Current Gamble King</div>
                 <div class="neo-gamble-king-name">${gambleKing.name}</div>
-                <div class="neo-stats-grid">
-                    <div class="neo-stat-card" style="background: var(--bg-card);">
-                        <div class="neo-stat-value profit-${gambleKing.net_profit >= 0 ? 'positive' : 'negative'}">${formatCurrency(gambleKing.net_profit || 0)}</div>
-                        <div class="neo-stat-label">Total Profit</div>
+                <div class="neo-gamble-king-lead">
+                    <div class="neo-gamble-king-lead-value profit-${gambleKing.net_profit >= 0 ? 'positive' : 'negative'}">${formatCurrency(gambleKing.net_profit || 0)}</div>
+                    <div class="neo-gamble-king-lead-label">Total Profit</div>
+                </div>
+                <div class="neo-gamble-king-metrics">
+                    <div class="neo-gamble-king-metric">
+                        <div class="neo-gamble-king-metric-value">${gambleKing.games_played || 0}</div>
+                        <div class="neo-gamble-king-metric-label">Sessions</div>
                     </div>
-                    <div class="neo-stat-card" style="background: var(--bg-card);">
-                        <div class="neo-stat-value">${gambleKing.games_played || 0}</div>
-                        <div class="neo-stat-label">Sessions</div>
+                    <div class="neo-gamble-king-metric">
+                        <div class="neo-gamble-king-metric-value">${formatPercent(gambleKing.win_percentage || 0)}</div>
+                        <div class="neo-gamble-king-metric-label">Win Rate</div>
                     </div>
-                    <div class="neo-stat-card" style="background: var(--bg-card);">
-                        <div class="neo-stat-value">${formatPercent(gambleKing.win_percentage || 0)}</div>
-                        <div class="neo-stat-label">Win Rate</div>
-                    </div>
-                    <div class="neo-stat-card" style="background: var(--bg-card);">
-                        <div class="neo-stat-value">${gambleKing.seven_two_wins || 0}</div>
-                        <div class="neo-stat-label">7-2 Wins</div>
+                    <div class="neo-gamble-king-metric">
+                        <div class="neo-gamble-king-metric-value">${gambleKing.seven_two_wins || 0}</div>
+                        <div class="neo-gamble-king-metric-label">7-2 Wins</div>
                     </div>
                 </div>
             </div>
