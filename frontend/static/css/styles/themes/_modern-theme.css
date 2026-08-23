@@ -40,6 +40,9 @@ textarea,
     --casino-purple-dark: #4F46E5;
     --casino-purple-light: #EEF2FF;
 
+    /* Neutral status pill background (session cards) */
+    --status-neutral-bg: rgba(100, 116, 139, 0.14);
+
     --casino-black: #0F172A;
     --casino-gray: #475569;
     --casino-cream: #F8FAFC;
@@ -164,6 +167,8 @@ textarea,
     --casino-gold-light: rgba(245, 158, 11, 0.1);
     --casino-green-light: rgba(16, 185, 129, 0.1);
     --casino-purple-light: rgba(99, 102, 241, 0.1);
+
+    --status-neutral-bg: rgba(148, 163, 184, 0.16);
 
     --casino-red-dark: #FCA5A5;
     --casino-gold-dark: #FCD34D;
