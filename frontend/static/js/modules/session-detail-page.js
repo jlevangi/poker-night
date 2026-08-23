@@ -127,7 +127,7 @@ export default class SessionDetailPage {
         // Check if session and chip_distribution exist
         if (!session || !session.session_info || !session.session_info.chip_distribution) {
             return `<div class="neo-card" style="margin-bottom: 2rem;">
-                <h3 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem; color: var(--text-primary);">🎰 Chip Distribution</h3>
+                <h3 class="section-heading">🎰 Chip Distribution</h3>
                 ${renderEmptyState({ icon: '🎰', message: 'No chip distribution data available.', card: false })}
             </div>`;
         }
@@ -155,7 +155,7 @@ export default class SessionDetailPage {
         
         let html = `
             <div class="neo-card neo-card-purple" style="margin-bottom: 2rem;">
-                <h3 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem; color: var(--casino-purple-dark);">🎰 Chip Distribution</h3>
+                <h3 class="section-heading" style="color: var(--casino-purple-dark);">🎰 Chip Distribution</h3>
                 <p style="font-weight: 600; color: var(--casino-purple-dark); margin-bottom: 1.5rem;">
                     For a buy-in of <span style="color: var(--casino-green); font-weight: 600;">${formatCurrency(buyInValue)}</span>, 
                     use the following chip distribution (<span style="color: var(--casino-gold); font-weight: 600;">${totalChips} total chips</span>):
@@ -234,7 +234,7 @@ export default class SessionDetailPage {
         ].map(([icon, value, label]) => `
             <div class="neo-stat-card">
                 <div style="font-size: 1.25rem;">${icon}</div>
-                <div class="neo-stat-value" style="font-size: 1.375rem;">${value}</div>
+                <div class="neo-stat-value" style="font-size: 1.25rem;">${value}</div>
                 <div class="neo-stat-label">${label}</div>
             </div>
         `).join('');
@@ -259,10 +259,8 @@ export default class SessionDetailPage {
         }).join('');
 
         return `
-            <div style="margin-top: 2.5rem;">
-                <h3 style="font-size: 1.75rem; font-weight: 600; margin: 0 0 1.5rem 0; color: var(--text-primary);">
-                    📊 From the Log
-                </h3>
+            <div style="margin-top: 2rem;">
+                <h3 class="section-heading">📊 From the Log</h3>
 
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 0.75rem; margin-bottom: 1.5rem;">
                     ${headline}
@@ -320,18 +318,18 @@ export default class SessionDetailPage {
                             </span>
                         ` : ''}
                     </div>
-                    <span class="${profit >= 0 ? 'profit-positive' : 'profit-negative'}" style="font-size: 1.125rem; font-weight: 700;">${formatCurrency(profit)}</span>
+                    <span class="stat-value-lg ${profit >= 0 ? 'profit-positive' : 'profit-negative'}">${formatCurrency(profit)}</span>
                 </div>
 
                 <!-- Stats grid: Buy-in, Cash-out, 7-2 Wins, Strikes -->
                 <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem; text-align: center;">
                     <div>
                         <div class="stat-label stat-label--sm">Buy-in</div>
-                        <div style="font-size: 1rem; font-weight: 600; color: var(--casino-red);">${formatCurrency(buyIn)}</div>
+                        <div class="player-card-value" style="color: var(--casino-red);">${formatCurrency(buyIn)}</div>
                     </div>
                     <div>
                         <div class="stat-label stat-label--sm">Cash-out</div>
-                        <div style="font-size: 1rem; font-weight: 600; color: var(--casino-gold);">${formatCurrency(cashOut)}</div>
+                        <div class="player-card-value" style="color: var(--casino-gold);">${formatCurrency(cashOut)}</div>
                     </div>
                     <div>
                         <div class="stat-label stat-label--sm">7-2 Wins</div>
@@ -345,7 +343,7 @@ export default class SessionDetailPage {
                                     cursor: pointer; line-height: 1;
                                 ">−</button>
                             ` : ''}
-                            <span style="font-size: 1rem; font-weight: 600; color: var(--casino-gold); min-width: 1.25rem;">${player.sevenTwoWins || 0}</span>
+                            <span class="player-card-value" style="color: var(--casino-gold); min-width: 1.25rem;">${player.sevenTwoWins || 0}</span>
                             ${isActive ? `
                                 <button class="neo-btn neo-btn-sm seven-two-increment-btn" data-player-id="${player.id}" aria-label="Increase 7-2 wins" style="
                                     width: 22px; height: 22px; padding: 0; font-size: 0.75rem; font-weight: 700;
@@ -369,7 +367,7 @@ export default class SessionDetailPage {
                                     cursor: pointer; line-height: 1;
                                 ">−</button>
                             ` : ''}
-                            <span style="font-size: 1rem; font-weight: 600; color: var(--casino-red); min-width: 1.25rem;">${player.strikes || 0}</span>
+                            <span class="player-card-value" style="color: var(--casino-red); min-width: 1.25rem;">${player.strikes || 0}</span>
                             ${isActive ? `
                                 <button class="neo-btn neo-btn-sm strikes-increment-btn" data-player-id="${player.id}" aria-label="Increase strikes" style="
                                     width: 22px; height: 22px; padding: 0; font-size: 0.75rem; font-weight: 700;
@@ -646,17 +644,17 @@ export default class SessionDetailPage {
                     <div style="display: flex; justify-content: space-around; text-align: center; margin-bottom: 0.5rem;">
                         <div>
                             <div class="stat-label">Buy-in</div>
-                            <div style="font-size: 1.125rem; font-weight: 700;">${formatCurrency(sessionData.default_buy_in_value || 0)}</div>
+                            <div class="stat-value-lg">${formatCurrency(sessionData.default_buy_in_value || 0)}</div>
                         </div>
                         <div style="width: 1px; background: var(--border-light, #E2E8F0);"></div>
                         <div>
                             <div class="stat-label">Total Value</div>
-                            <div id="session-total-value" style="font-size: 1.125rem; font-weight: 700;">${formatCurrency(session.totalValue || 0)}</div>
+                            <div id="session-total-value" class="stat-value-lg">${formatCurrency(session.totalValue || 0)}</div>
                         </div>
                         <div style="width: 1px; background: var(--border-light, #E2E8F0);"></div>
                         <div>
                             <div id="session-unpaid-label" class="stat-label">${session.unpaidValue > 0.01 ? 'Unpaid' : session.unpaidValue < -0.01 ? 'House Loss' : 'Payout'}</div>
-                            <div id="session-unpaid-value" class="${session.unpaidValue > 0.01 || session.unpaidValue < -0.01 ? 'profit-negative' : 'profit-positive'}" style="font-size: 1.125rem; font-weight: 700;">
+                            <div id="session-unpaid-value" class="stat-value-lg ${session.unpaidValue > 0.01 || session.unpaidValue < -0.01 ? 'profit-negative' : 'profit-positive'}">
                                 ${session.unpaidValue > 0.01 ?
                                     formatCurrency(session.unpaidValue) :
                                     session.unpaidValue < -0.01 ?
@@ -704,7 +702,7 @@ export default class SessionDetailPage {
                 ` : ''}
 
                 <div class="session-players-header">
-                    <h3 style="font-size: 1.75rem; font-weight: 600; margin: 0; color: var(--text-primary);">🎭 Players</h3>
+                    <h3 class="section-heading">🎭 Players</h3>
                     ${isActive ? `
                         <div id="add-players-card-container">
                             ${this.renderAddPlayersCard(sessionData)}
