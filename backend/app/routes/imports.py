@@ -53,6 +53,33 @@ def _normalize(name: str) -> str:
     return ''.join(ch for ch in (name or '').lower() if ch.isalnum())
 
 
+def _refresh_player_names(payload: Dict[str, Any], players: List[Any]) -> Dict[str, Any]:
+    """Re-resolve `player_name` from the roster every time stats are read.
+
+    The commit writes the roster name into the stored stats blob, which freezes
+    it: rename a player afterwards and the session page keeps showing whatever
+    they were called on import day.  That happened -- a player renamed in
+    /admin still read as their old name on the night they were imported.
+
+    `player_id` is the durable half of that mapping, so the name is derived
+    from it on the way out instead of trusted from the snapshot.  A rename now
+    shows up everywhere at once and no backfill is needed, which matters
+    because a backfill would go stale again on the next rename.
+
+    A player who has since been deleted keeps the stored name -- it is the only
+    record of who they were.
+    """
+    by_id = {p.player_id: p.name for p in players}
+    for section in ('players', 'awards'):
+        for row in payload.get(section) or []:
+            if not isinstance(row, dict):
+                continue
+            current = by_id.get(row.get('player_id'))
+            if current:
+                row['player_name'] = current
+    return payload
+
+
 def _match_players(parsed_players: List[Dict[str, Any]],
                    roster: List[Any]) -> None:
     """
@@ -286,7 +313,7 @@ def get_session_import_api(session_id: str) -> Any:
     record = db_service.get_session_import(session_id)
     if not record:
         return jsonify({"error": "No import found for this session"}), 404
-    return jsonify(record.to_dict())
+    return jsonify(_refresh_player_names(record.to_dict(), db_service.get_all_players()))
 
 
 @imports_bp.route('/sessions/<string:session_id>/import', methods=['DELETE'])

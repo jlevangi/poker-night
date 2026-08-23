@@ -87,6 +87,48 @@ class TestImportsAPI(unittest.TestCase):
         )
         return analysis, response
 
+    # -- renames -------------------------------------------------------------
+
+    def test_renaming_a_player_updates_an_already_imported_session(self):
+        """The stored stats blob freezes the name; the read path must not.
+
+        A player renamed in /admin still read as their old name on the session
+        they were imported into, because commit wrote player_name into the JSON
+        and nothing refreshed it.
+        """
+        analysis, response = self._import()
+        self.assertEqual(response.status_code, 201, response.get_json())
+        session_id = response.get_json()['session_id']
+
+        with self.app.app_context():
+            player = Player.query.first()
+            original = player.name
+            player.name = 'Renamed Entirely'
+            db.session.commit()
+
+        body = self.client.get(f'/api/sessions/{session_id}/import').get_json()
+        names = {row['player_name'] for row in body['players'] if row.get('player_id')}
+        self.assertIn('Renamed Entirely', names)
+        self.assertNotIn(original, names)
+
+        # Awards carry the same mapping and must agree with the breakdown.
+        for award in body['awards']:
+            if award.get('player_id'):
+                self.assertNotEqual(original, award['player_name'])
+
+    def test_a_deleted_player_keeps_the_name_the_log_recorded(self):
+        """Nothing else remembers who they were, so the snapshot stands."""
+        analysis, response = self._import()
+        session_id = response.get_json()['session_id']
+        with self.app.app_context():
+            stored = {p.player_id: p.name for p in Player.query.all()}
+            Player.query.delete()
+            db.session.commit()
+        body = self.client.get(f'/api/sessions/{session_id}/import').get_json()
+        for row in body['players']:
+            if row.get('player_id') in stored:
+                self.assertEqual(stored[row['player_id']], row['player_name'])
+
     # -- 7-2 wins ------------------------------------------------------------
 
     def test_import_carries_seven_two_wins_to_the_player_total(self):
