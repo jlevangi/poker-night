@@ -264,9 +264,12 @@ textarea,
     gap: 0.75rem;
 }
 
-.neo-royal-crown {
-    font-size: 1.5rem;
-    filter: none;
+.neo-brand-mark {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    flex-shrink: 0;
+    display: block;
 }
 
 .neo-header h1 {
@@ -618,9 +621,6 @@ textarea,
     text-shadow: none;
 }
 
-[data-theme="dark"] .neo-royal-crown {
-    filter: none;
-}
 
 [data-theme="dark"] .neo-nav-btn {
     color: var(--text-header-muted);
@@ -1828,10 +1828,6 @@ div .neo-btn.neo-btn-green:hover,
 /* ============================================================================ */
 
 @media (max-width: 768px) {
-    .neo-royal-crown {
-        font-size: 1.25rem;
-    }
-
     .neo-desktop-nav {
         display: none;
     }
@@ -1887,10 +1883,6 @@ div .neo-btn.neo-btn-green:hover,
 }
 
 @media (max-width: 480px) {
-    .neo-royal-crown {
-        font-size: 1.125rem;
-    }
-
     .neo-header-btn {
         width: 40px;
         height: 40px;
