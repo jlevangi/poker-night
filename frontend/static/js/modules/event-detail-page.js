@@ -180,7 +180,7 @@ export default class EventDetailPage {
         return `
             <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem;">
                 <div>
-                    <h2 style="font-size: 1.75rem; font-weight: 600; color: var(--text-primary); margin: 0; overflow-wrap: anywhere;">
+                    <h2 class="page-title--detail">
                         ${this.escapeHtml(event.title || 'Poker Night')}
                         ${isCancelled ? '<span style="color: var(--casino-red-dark); font-size: 1rem; margin-left: 0.5rem;">CANCELLED</span>' : ''}
                     </h2>

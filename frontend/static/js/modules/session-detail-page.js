@@ -634,7 +634,7 @@ export default class SessionDetailPage {
                 
                 <!-- Session Info Card -->
                 <div class="neo-card ${isActive ? 'neo-card-gold' : 'neo-card-primary'}">
-                    <h2 style="font-size: 1.75rem; font-weight: 600; margin-bottom: 1.5rem; color: var(--text-primary);">
+                    <h2 class="page-title--detail" style="margin-bottom: 1.5rem;">
                         🎯 ${formatDate(sessionData.date)}
                     </h2>
                     

@@ -73,7 +73,7 @@ export default class SessionsPage {
     render(sessions, upcomingEvents = []) {
         let html = `
             <div class="fade-in" style="padding: 1.5rem; max-width: 1200px; margin: 0 auto;">
-                <h2 class="section-title" style="font-size: 2.5rem; margin-bottom: 2rem;">🃏 Sessions</h2>
+                <h2 class="page-title">🃏 Sessions</h2>
 
                 <div class="neo-card neo-card-green" style="margin-bottom: 2rem; text-align: center;">
                     <div class="modal-actions">

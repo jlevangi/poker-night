@@ -2061,3 +2061,29 @@ div .neo-btn.neo-btn-green:hover,
     background: var(--casino-purple-light);
     color: var(--casino-purple-dark);
 }
+
+/* Page-title tier: one treatment for every top-level page heading so list
+   pages and detail pages read as the same product.
+   .page-title           — list pages (players, sessions, stats, calendar);
+                           clamps 1.5-2.5 (the "title" step) for mobile.
+   .page-title--detail   — detail pages reached from a list row (the "3xl"
+                           1.75 step per the _typography.css scale).
+   Both neutralize the base h2 border/padding from _typography.css. */
+.page-title {
+    font-size: clamp(1.5rem, 7vw, 2.5rem);
+    font-weight: 600;
+    color: var(--text-primary);
+    border-bottom: none;
+    padding-bottom: 0;
+    margin: 0 0 var(--spacing-xl) 0;
+}
+
+.page-title--detail {
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    border-bottom: none;
+    padding-bottom: 0;
+    margin: 0;
+    overflow-wrap: anywhere;
+}

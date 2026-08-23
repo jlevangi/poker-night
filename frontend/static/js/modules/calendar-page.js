@@ -33,7 +33,7 @@ export default class CalendarPage {
         }
         return renderSkeletonPage([
             // Title
-            renderSkeleton({ style: 'width: 80%; height: 2.5rem; margin: 0 auto 2rem auto;' }),
+            renderSkeleton({ style: 'width: 60%; height: 2.5rem; margin: 0 0 2rem 0;' }),
             // Month navigation
             '<div class="neo-card" style="margin-bottom: 2rem; text-align: center;">' +
                 renderSkeleton({ style: 'width: 50%; height: 48px; margin: 0 auto; border-radius: 4px;' }) +
@@ -66,7 +66,7 @@ export default class CalendarPage {
     render() {
         let html = `
             <div class="fade-in" style="padding: 1.5rem; max-width: 1200px; margin: 0 auto;">
-                <h2 style="font-size: 2.5rem; font-weight: 600; margin-bottom: 2rem; color: var(--text-primary); text-align: center;">&#128197; Upcoming Poker Nights</h2>
+                <h2 class="page-title">&#128197; Upcoming Poker Nights</h2>
 
                 <div class="neo-card neo-card-green" style="margin-bottom: 2rem; text-align: center;">
                     <button id="schedule-event-btn" class="neo-btn neo-btn-green neo-btn-lg">+ Schedule Event</button>

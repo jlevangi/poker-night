@@ -85,7 +85,7 @@ export default class PlayersPage {
     render() {
         let html = `
             <div class="fade-in" style="padding: 1.5rem; max-width: 1200px; margin: 0 auto;">
-                <h2 style="font-size: 2.5rem; font-weight: 600; margin-bottom: 2rem; color: var(--text-primary);">🎭 Players</h2>
+                <h2 class="page-title">🎭 Players</h2>
 
                 <div class="neo-card neo-card-purple" style="margin-bottom: 2rem; padding-top: 1rem;">
                     <h3 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem; margin-top: 0; color: var(--casino-purple-dark);">➕ Add New Player</h3>

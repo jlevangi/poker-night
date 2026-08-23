@@ -143,7 +143,7 @@ export default class PlayerDetailPage {
                 
                 <!-- Player Header Card -->
                 <div class="neo-card ${isTopPerformer ? 'neo-card-gold' : 'neo-card-primary'}">
-                    <h2 style="font-size: 1.75rem; font-weight: 600; margin-bottom: 1.5rem; color: inherit; display: flex; align-items: center; gap: 1rem; overflow-wrap: anywhere;">
+                    <h2 class="page-title--detail" style="margin-bottom: 1.5rem; display: flex; align-items: center; gap: 1rem;">
                         ${player.name}
                     </h2>
                     
