@@ -92,24 +92,7 @@ export default class SessionsPage {
             `;
 
             activeSessions.forEach(session => {
-                html += `
-                    <a href="#session/${session.session_id}" class="neo-card neo-card-gold list-card-row" style="text-decoration: none; color: inherit;">
-                        <div>
-                            <div class="list-card-text">
-                                📅 ${formatDate(session.date)}
-                            </div>
-                            <div class="list-card-subtitle">
-                                Buy-in: ${formatCurrency(session.buyin)} | Total: ${formatCurrency(session.totalValue)}
-                            </div>
-                        </div>
-                        <div style="display: flex; align-items: center; gap: 0.5rem;">
-                            <span style="color: var(--casino-gold); font-size: 1.25rem;">🟡</span>
-                            <span style="font-size: 0.875rem; font-weight: 600; color: var(--casino-gold);">
-                                ACTIVE
-                            </span>
-                        </div>
-                    </a>
-                `;
+                html += this._renderSessionCard(session);
             });
 
             html += `</div>`;
@@ -158,31 +141,7 @@ export default class SessionsPage {
             html += `<div style="display: grid; gap: 1rem;">`;
 
             sessions.forEach(session => {
-                const isActive = session.status === 'ACTIVE';
-                const cardColor = isActive ? 'neo-card-gold' : '';
-                const statusColor = isActive ? 'var(--casino-gold)' : 'var(--text-secondary)';
-                const statusIcon = isActive ? '🟡' : '⚪';
-
-                html += `
-                    <a href="#session/${session.session_id}" class="neo-card ${cardColor} list-card-row" style="text-decoration: none; color: inherit;">
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <div>
-                                <div class="list-card-text">
-                                    📅 ${formatDate(session.date)}
-                                </div>
-                                <div class="list-card-subtitle">
-                                    Buy-in: ${formatCurrency(session.buyin)} | Total: ${formatCurrency(session.totalValue)}
-                                </div>
-                            </div>
-                            <div style="display: flex; align-items: center; gap: 0.5rem;">
-                                <span style="color: ${statusColor}; font-size: 1.25rem;">${statusIcon}</span>
-                                <span style="font-size: 0.875rem; font-weight: 600; color: ${statusColor};">
-                                    ${session.status || 'Unknown'}
-                                </span>
-                            </div>
-                        </div>
-                    </a>
-                `;
+                html += this._renderSessionCard(session);
             });
 
             html += `</div>`;
@@ -202,6 +161,35 @@ export default class SessionsPage {
         this.setupEventListeners();
     }
 
+
+    // Build one scannable session card: date + status + buy-in on the
+    // left (context); the total money at the table as the headline on
+    // the right.  Mirrors the dashboard hero's left-meta / right-headline
+    // language so the sessions list scans the same way the dashboard does.
+    _renderSessionCard(session) {
+        const isActive = session.status === 'ACTIVE';
+        const cardClass = isActive
+            ? 'neo-card neo-card-gold session-card session-card--active'
+            : 'neo-card session-card';
+        const status = session.status || 'Unknown';
+        const statusState = isActive ? 'active' : 'ended';
+
+        return `
+            <a href="#session/${session.session_id}" class="${cardClass} list-card-row" style="text-decoration: none; color: inherit;">
+                <div class="session-card__meta">
+                    <div class="session-card__when">
+                        <span class="session-card__date">${formatDate(session.date)}</span>
+                        <span class="session-card__status session-card__status--${statusState}">${status}</span>
+                    </div>
+                    <div class="session-card__buyin"><b>${formatCurrency(session.buyin)}</b> buy-in</div>
+                </div>
+                <div class="session-card__lead">
+                    <span class="session-card__total-value">${formatCurrency(session.totalValue)}</span>
+                    <span class="session-card__total-label">Total</span>
+                </div>
+            </a>
+        `;
+    }
 
     escapeHtml(str) {
         if (!str) return '';
