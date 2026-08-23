@@ -15,19 +15,20 @@ export default class CalendarPage {
     static skeleton() {
         let events = '';
         for (let i = 0; i < 3; i++) {
+            // Mirrors the real event card: when | title | RSVP zones
             events +=
-                '<div class="neo-card" style="margin-bottom: 1rem;">' +
-                    '<div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem;">' +
-                        '<div>' +
-                            renderSkeleton({ classes: 'skeleton-text', style: 'width: 70%;' }) +
-                            renderSkeleton({ classes: 'skeleton-text', style: 'width: 100%;' }) +
-                            renderSkeleton({ classes: 'skeleton-text', style: 'width: 50%;' }) +
-                        '</div>' +
-                        '<div style="display: flex; gap: 0.5rem;">' +
-                            renderSkeleton({ classes: 'skeleton-badge' }) +
-                            renderSkeleton({ classes: 'skeleton-badge' }) +
-                            renderSkeleton({ classes: 'skeleton-badge' }) +
-                        '</div>' +
+                '<div class="neo-event-card neo-card" style="margin-bottom: 1rem;">' +
+                    '<div class="event-card-when">' +
+                        renderSkeleton({ classes: 'skeleton-text', style: 'width: 85%;' }) +
+                        renderSkeleton({ classes: 'skeleton-text', style: 'width: 55%;' }) +
+                    '</div>' +
+                    '<div class="event-card-title">' +
+                        renderSkeleton({ classes: 'skeleton-text', style: 'width: 75%;' }) +
+                    '</div>' +
+                    '<div class="neo-rsvp-badges">' +
+                        renderSkeleton({ classes: 'skeleton-badge' }) +
+                        renderSkeleton({ classes: 'skeleton-badge' }) +
+                        renderSkeleton({ classes: 'skeleton-badge' }) +
                     '</div>' +
                 '</div>';
         }
@@ -68,7 +69,7 @@ export default class CalendarPage {
             <div class="fade-in" style="padding: 1.5rem; max-width: 1200px; margin: 0 auto;">
                 <h2 class="page-title">&#128197; Upcoming Poker Nights</h2>
 
-                <div class="neo-card neo-card-green" style="margin-bottom: 2rem; text-align: center;">
+                <div class="neo-card neo-card-green calendar-cta-card">
                     <button id="schedule-event-btn" class="neo-btn neo-btn-green neo-btn-lg">+ Schedule Event</button>
                 </div>
 
@@ -96,8 +97,8 @@ export default class CalendarPage {
         const today = new Date().toISOString().split('T')[0];
         return `
             <div class="neo-card" style="margin-bottom: 1.5rem;">
-                <h3 style="font-size: 1.125rem; font-weight: 600; margin-bottom: 1rem; color: var(--text-primary);">Schedule a Poker Night</h3>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <h3 class="section-heading">Schedule a Poker Night</h3>
+                <div class="create-event-grid">
                     <div>
                         <label class="modal-form-label">Date *</label>
                         <input type="date" id="event-date" value="${today}" class="neo-input" style="width: 100%;">
@@ -143,32 +144,35 @@ export default class CalendarPage {
         const totalPlayers = counts.yes + counts.maybe + counts.no;
         const isCancelled = event.is_cancelled;
 
+        // One scannable row: the date leads (calendar identity), the title
+        // + status name the event, and the RSVP counts sit at a glance on
+        // the right.  All layout lives in _calendar.css — no inline styles.
         const statusBadge = isCancelled
-            ? '<span style="display: inline-block; background: var(--casino-red); color: #fff; font-size: 0.7rem; font-weight: 600; padding: 0.125rem 0.5rem; border: 1px solid var(--border-color); border-radius: var(--radius-md);">Cancelled</span>'
-            : '<span style="display: inline-block; background: var(--casino-green); color: #fff; font-size: 0.7rem; font-weight: 600; padding: 0.125rem 0.5rem; border: 1px solid var(--border-color); border-radius: var(--radius-md);">Upcoming</span>';
+            ? '<span class="event-status-badge event-status-badge--cancelled">Cancelled</span>'
+            : '<span class="event-status-badge event-status-badge--upcoming">Upcoming</span>';
+
+        const rsvpBadges = totalPlayers > 0
+            ? `<span class="neo-rsvp-badge neo-rsvp-badge-yes">${counts.yes} In</span>
+               <span class="neo-rsvp-badge neo-rsvp-badge-maybe">${counts.maybe} Maybe</span>
+               <span class="neo-rsvp-badge neo-rsvp-badge-no">${counts.no} Out</span>`
+            : '<span class="neo-rsvp-badge neo-rsvp-badge--empty">No RSVPs yet</span>';
+
+        const meta = [timeFormatted, event.location ? '📍 ' + this.escapeHtml(event.location) : '']
+            .filter(part => part !== '')
+            .join(' · ');
 
         return `
-            <a href="#event/${event.event_id}" class="neo-event-card-link" style="text-decoration: none; color: inherit; display: block; margin-bottom: 1rem;">
-                <div class="neo-event-card neo-card ${isCancelled ? 'neo-event-cancelled' : ''}" style="${isCancelled ? 'opacity: 0.6;' : ''} cursor: pointer; transition: transform 0.1s, box-shadow 0.1s;">
-                    <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 0.5rem;">
-                        <div>
-                            <div style="font-weight: 600; font-size: 1.25rem; color: var(--text-primary); display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
-                                ${this.escapeHtml(event.title || 'Poker Night')}
-                                ${statusBadge}
-                            </div>
-                            <div style="font-weight: 700; color: var(--text-secondary); margin-top: 0.25rem;">
-                                ${dateFormatted}${timeFormatted ? ' at ' + timeFormatted : ''}
-                            </div>
-                            ${event.location ? `<div style="font-weight: 600; color: var(--text-secondary); margin-top: 0.25rem;">&#128205; ${this.escapeHtml(event.location)}</div>` : ''}
-                            ${totalPlayers > 0 ? `<div style="font-weight: 600; color: var(--text-secondary); margin-top: 0.25rem;">${totalPlayers} player${totalPlayers !== 1 ? 's' : ''} responding</div>` : ''}
-                        </div>
-
-                        <div class="neo-rsvp-badges">
-                            <span class="neo-rsvp-badge neo-rsvp-badge-yes">${counts.yes} In</span>
-                            <span class="neo-rsvp-badge neo-rsvp-badge-maybe">${counts.maybe} Maybe</span>
-                            <span class="neo-rsvp-badge neo-rsvp-badge-no">${counts.no} Out</span>
-                        </div>
+            <a href="#event/${event.event_id}" class="neo-event-card-link">
+                <div class="neo-event-card neo-card ${isCancelled ? 'neo-event-cancelled' : ''}">
+                    <div class="event-card-when">
+                        <div class="event-card-date">${dateFormatted}</div>
+                        ${meta ? `<div class="event-card-meta">${meta}</div>` : ''}
                     </div>
+                    <div class="event-card-title">
+                        <span class="event-card-title-text">${this.escapeHtml(event.title || 'Poker Night')}</span>
+                        ${statusBadge}
+                    </div>
+                    <div class="neo-rsvp-badges">${rsvpBadges}</div>
                 </div>
             </a>
         `;
