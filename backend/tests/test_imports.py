@@ -87,6 +87,57 @@ class TestImportsAPI(unittest.TestCase):
         )
         return analysis, response
 
+    # -- 7-2 wins ------------------------------------------------------------
+
+    def test_import_carries_seven_two_wins_to_the_player_total(self):
+        """An imported log should not still need the + button clicked.
+
+        The parser counts 7-2 wins from the hand log, but only the entry was
+        being written; player.seven_two_wins -- the number the dashboard shows
+        -- stayed where it was.
+        """
+        analysis, response = self._import(players=[{
+            'seat': 1, 'player_id': '', 'new_player_name': 'Seven Deuce',
+            'buy_in': 20.0, 'cash_out': 40.0, 'buy_in_count': 1,
+            'seven_two_wins': 3,
+        }])
+        self.assertEqual(response.status_code, 201, response.get_json())
+        with self.app.app_context():
+            player = Player.query.filter_by(name='Seven Deuce').first()
+            self.assertIsNotNone(player)
+            self.assertEqual(3, player.seven_two_wins)
+            entry = Entry.query.filter_by(player_id=player.player_id).first()
+            self.assertEqual(3, entry.session_seven_two_wins)
+
+    def test_correcting_an_entry_moves_the_total_by_the_delta(self):
+        """Re-committing the SAME session+player must not add the count twice.
+
+        Re-importing a log creates a new session, and two sessions of three
+        wins really is six -- that is correct.  What must not double is fixing
+        an entry that already exists: the total tracks the corrected figure.
+        """
+        from app.services.database_service import DatabaseService
+
+        with self.app.app_context():
+            db_service = DatabaseService()
+            player = db_service.add_player('Seven Deuce')
+            session = db_service.create_session('2026-08-21', 20.0)
+
+            def commit(wins):
+                db_service.upsert_entry_with_amounts(
+                    session_id=session.session_id, player_id=player.player_id,
+                    buy_in_count=1, total_buy_in_amount=20.0, payout=40.0,
+                    seven_two_wins=wins,
+                )
+                return Player.query.filter_by(
+                    player_id=player.player_id).first().seven_two_wins
+
+            self.assertEqual(3, commit(3), 'first import writes the full count')
+            self.assertEqual(3, commit(3), 're-committing the same figure is a no-op')
+            self.assertEqual(5, commit(5), 'a correction upward moves by +2')
+            self.assertEqual(1, commit(1), 'a correction downward moves by -4')
+            self.assertEqual(0, commit(0), 'clearing it removes what it added')
+
     # -- analyze -------------------------------------------------------------
 
     def test_analyze_returns_preview(self):

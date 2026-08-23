@@ -1111,6 +1111,34 @@ button.neo-stat-card:active {
     background-image: none !important;
 }
 
+/* Segmented controls (the Rank / Name / Sessions sort on the players page).
+   `.neo-btn-primary` marked the active choice but had no rule at all, and it
+   could never have worked as written: `.neo-btn` is ALREADY
+   background: var(--primary-color), so a "primary" variant is the default by
+   another name.  The distinction has to come from the unselected buttons
+   receding instead -- hence the ghost. */
+.neo-btn-primary,
+.neo-btn[aria-pressed="true"] {
+    background: var(--primary-color);
+    color: #FFFFFF;
+    border: none;
+    box-shadow: var(--neo-shadow-md);
+}
+
+.neo-btn-ghost,
+.neo-btn[aria-pressed="false"] {
+    background: transparent;
+    color: var(--text-secondary);
+    border: 1px solid var(--border-color);
+    box-shadow: none;
+}
+
+.neo-btn-ghost:hover,
+.neo-btn[aria-pressed="false"]:hover {
+    background: var(--bg-card);
+    color: var(--text-primary);
+}
+
 .neo-btn-gold {
     background: var(--casino-gold);
     color: #FFFFFF;

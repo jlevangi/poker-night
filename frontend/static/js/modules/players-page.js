@@ -103,9 +103,9 @@ export default class PlayersPage {
                         </div>
                         <div style="display: flex; gap: 0.5rem; align-items: center;">
                             <span style="font-weight: 600; font-size: 0.875rem;">Sort:</span>
-                            <button id="sort-rank" class="neo-btn ${this.sortBy === 'rank' ? 'neo-btn-primary' : ''}" style="padding: 0.5rem 1rem;">Rank</button>
-                            <button id="sort-name" class="neo-btn ${this.sortBy === 'name' ? 'neo-btn-primary' : ''}" style="padding: 0.5rem 1rem;">Name</button>
-                            <button id="sort-sessions" class="neo-btn ${this.sortBy === 'sessions' ? 'neo-btn-primary' : ''}" style="padding: 0.5rem 1rem;">Sessions</button>
+                            <button id="sort-rank" class="neo-btn ${this.sortBy === 'rank' ? 'neo-btn-primary' : 'neo-btn-ghost'}" aria-pressed="${this.sortBy === 'rank'}" style="padding: 0.5rem 1rem;">Rank</button>
+                            <button id="sort-name" class="neo-btn ${this.sortBy === 'name' ? 'neo-btn-primary' : 'neo-btn-ghost'}" aria-pressed="${this.sortBy === 'name'}" style="padding: 0.5rem 1rem;">Name</button>
+                            <button id="sort-sessions" class="neo-btn ${this.sortBy === 'sessions' ? 'neo-btn-primary' : 'neo-btn-ghost'}" aria-pressed="${this.sortBy === 'sessions'}" style="padding: 0.5rem 1rem;">Sessions</button>
                         </div>
                     </div>
                 </div>
@@ -145,15 +145,17 @@ export default class PlayersPage {
         const sortRankBtn = document.getElementById('sort-rank');
         const sortNameBtn = document.getElementById('sort-name');
         const sortSessionsBtn = document.getElementById('sort-sessions');
-        if (sortRankBtn) {
-            sortRankBtn.className = `neo-btn ${this.sortBy === 'rank' ? 'neo-btn-primary' : ''}`;
-        }
-        if (sortNameBtn) {
-            sortNameBtn.className = `neo-btn ${this.sortBy === 'name' ? 'neo-btn-primary' : ''}`;
-        }
-        if (sortSessionsBtn) {
-            sortSessionsBtn.className = `neo-btn ${this.sortBy === 'sessions' ? 'neo-btn-primary' : ''}`;
-        }
+        // One place to set both halves of the state, so the class and the
+        // accessible attribute can never disagree.
+        const paintSort = (button, key) => {
+            if (!button) return;
+            const active = this.sortBy === key;
+            button.className = `neo-btn ${active ? 'neo-btn-primary' : 'neo-btn-ghost'}`;
+            button.setAttribute('aria-pressed', String(active));
+        };
+        paintSort(sortRankBtn, 'rank');
+        paintSort(sortNameBtn, 'name');
+        paintSort(sortSessionsBtn, 'sessions');
 
         let html = '';
         if (players && players.length > 0) {

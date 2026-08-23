@@ -1307,7 +1307,27 @@ class DatabaseService:
             entry.total_buy_in_amount = round_to_cents(float(total_buy_in_amount))
             entry.payout = round_to_cents(float(payout))
             entry.is_cashed_out = True
-            entry.session_seven_two_wins = max(int(seven_two_wins), 0)
+
+            # Carry the session's 7-2 wins up to the player's lifetime total.
+            #
+            # The parser already counts these from the hand log, but until now
+            # only the entry was written, so the number the dashboard shows --
+            # player.seven_two_wins -- stayed where it was and somebody still
+            # had to click + once per win.  That was the whole point of
+            # uploading the log.
+            #
+            # Applied as a delta against what this entry previously held, so
+            # re-importing or correcting a session moves the total by the
+            # difference rather than adding the whole count again.  A fresh
+            # entry starts at 0, so the delta is the full count first time.
+            previous = max(int(entry.session_seven_two_wins or 0), 0)
+            detected = max(int(seven_two_wins), 0)
+            entry.session_seven_two_wins = detected
+            if detected != previous:
+                player.seven_two_wins = max(
+                    int(player.seven_two_wins or 0) + detected - previous, 0
+                )
+
             entry.calculate_profit()
             db.session.commit()
             return entry
