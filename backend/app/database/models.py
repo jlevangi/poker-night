@@ -159,6 +159,19 @@ class Session(db.Model):
             result['total_value'] = round_to_cents(total_value)
         else:
             result['total_value'] = 0.0
+
+        # Roster: distinct players who entered, in entry order.  Reuses the
+        # entries already loaded for total_value above, so the list endpoint
+        # pays no extra query for this field.
+        player_names = []
+        seen_player_ids = set()
+        for entry in self.entries:
+            if entry.player_id in seen_player_ids:
+                continue
+            seen_player_ids.add(entry.player_id)
+            player_names.append(entry.player.name if entry.player else 'Unknown Player')
+        result['player_count'] = len(player_names)
+        result['player_names'] = player_names
         
         # Parse chip distribution if it exists
         if self.chip_distribution:

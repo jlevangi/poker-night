@@ -88,7 +88,7 @@ export default class SessionsPage {
         if (activeSessions.length > 0) {
             html += `
                 <h3 class="section-title" style="font-size: 1.5rem; margin-bottom: 1.5rem;">Active Sessions</h3>
-                <div style="display: grid; gap: 1rem; margin-bottom: 2rem;">
+                <div style="display: grid; grid-template-columns: minmax(0, 1fr); gap: 1rem; margin-bottom: 2rem;">
             `;
 
             activeSessions.forEach(session => {
@@ -102,7 +102,7 @@ export default class SessionsPage {
         if (upcomingEvents.length > 0) {
             html += `
                 <h3 class="section-title" style="font-size: 1.5rem; margin-bottom: 1.5rem;">Upcoming</h3>
-                <div style="display: grid; gap: 1rem; margin-bottom: 2rem;">
+                <div style="display: grid; grid-template-columns: minmax(0, 1fr); gap: 1rem; margin-bottom: 2rem;">
             `;
 
             upcomingEvents.forEach(evt => {
@@ -138,7 +138,7 @@ export default class SessionsPage {
         `;
 
         if (sessions && sessions.length > 0) {
-            html += `<div style="display: grid; gap: 1rem;">`;
+            html += `<div style="display: grid; grid-template-columns: minmax(0, 1fr); gap: 1rem;">`;
 
             sessions.forEach(session => {
                 html += this._renderSessionCard(session);
@@ -174,6 +174,24 @@ export default class SessionsPage {
         const status = session.status || 'Unknown';
         const statusState = isActive ? 'active' : 'ended';
 
+        // Roster: who's at the table.  The count is the anchor; the names
+        // are scannable context, capped at three with a "+N more" tail.
+        const names = Array.isArray(session.player_names) ? session.player_names : [];
+        const playerCount = Number(session.player_count) || names.length;
+        let roster = '';
+        if (playerCount > 0 && names.length > 0) {
+            const shown = names.slice(0, 3).map(n => this.escapeHtml(n)).join(' · ');
+            const extra = playerCount - Math.min(3, names.length);
+            const more = extra > 0
+                ? ` <span class="session-card__roster-more">+${extra} more</span>`
+                : '';
+            roster = `
+                    <div class="session-card__roster" title="${this.escapeHtml(names.join(', '))}">
+                        <span class="session-card__roster-count">👥 ${playerCount}</span>
+                        <span class="session-card__roster-names">${shown}${more}</span>
+                    </div>`;
+        }
+
         return `
             <a href="#session/${session.session_id}" class="${cardClass} list-card-row" style="text-decoration: none; color: inherit;">
                 <div class="session-card__meta">
@@ -182,6 +200,7 @@ export default class SessionsPage {
                         <span class="session-card__status session-card__status--${statusState}">${status}</span>
                     </div>
                     <div class="session-card__buyin"><b>${formatCurrency(session.buyin)}</b> buy-in</div>
+                    ${roster}
                 </div>
                 <div class="session-card__lead">
                     <span class="session-card__total-value">${formatCurrency(session.totalValue)}</span>
