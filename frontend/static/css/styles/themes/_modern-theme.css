@@ -1517,7 +1517,11 @@ a.neo-gamble-king-name:focus-visible {
 
 .neo-quick-actions {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    /* minmax(140px): the <=768px repeat(2,1fr) override stops applying at
+       769px, and from 769-779px the grid column (641-652px) fits 3 tiles
+       (3*150+3*16=498 <= col) but not a 4th (648), leaving a stretched
+       orphan row. 140px pulls the 4-across threshold down to 608. */
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
     gap: 1rem;
     margin-bottom: 1.25rem;
 }
@@ -2090,6 +2094,13 @@ a.neo-gamble-king-name:focus-visible {
         grid-template-columns: 1fr !important;
     }
 
+    /* At 332px content width a 2-col row leaves ~150px per tile: the
+       48px icon circle clears, but long labels ("View Live Session")
+       need the full row to wrap cleanly. */
+    .neo-quick-actions {
+        grid-template-columns: 1fr;
+    }
+
     .neo-header h1 {
         font-size: 1.25rem;
     }
@@ -2272,6 +2283,27 @@ a.neo-gamble-king-name:focus-visible {
 
 .neo-standings-rank.is-king {
     color: var(--casino-gold-dark);
+}
+
+/* Below ~480px the 4-column podium no longer fits its widest row:
+   at 360vw the table wrapper gets ~316px (grid column 332px minus
+   2×16px card padding, plus the 1rem full-bleed), of which rank +
+   profit + win-rate take ~224px even shrunk. The name column is
+   left ~92px: typical names fit, long ones wrap via
+   overflow-wrap: anywhere instead of forcing the wrapper into a
+   silent horizontal scroll. */
+@media (max-width: 480px) {
+    .neo-standings-rank {
+        font-size: 0.7rem;
+    }
+
+    .neo-standings-pl {
+        font-size: 0.8125rem;
+    }
+
+    .neo-standings-winrate {
+        font-size: 0.75rem;
+    }
 }
 
 .neo-standings-name {
