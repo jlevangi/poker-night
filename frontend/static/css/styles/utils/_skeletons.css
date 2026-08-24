@@ -5,11 +5,6 @@
     --skeleton-shine: #F1F5F9;
 }
 
-[data-theme="dark"] {
-    --skeleton-base: #334155;
-    --skeleton-shine: #475569;
-}
-
 /* Base skeleton element */
 .skeleton {
     background: linear-gradient(90deg,

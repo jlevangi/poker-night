@@ -1,26 +1,29 @@
 /* Dark Mode Overrides */
-/* Most dark mode styling is handled in _modern-theme.css via [data-theme="dark"] */
-/* This file handles remaining global overrides and legacy class support */
+/* Most dark mode styling is handled in _modern-theme.css via [data-theme="dark"].
+   This file is loaded after main.css (see index.html), so it handles:
+   - legacy compat token flips (--bg-secondary, --bg-tertiary, --border-*,
+     --neutral-*) that main.css cannot override,
+   - duplicate dark token declarations so inline-styled elements
+     (style="color: var(--profit-negative)") flip too,
+   - hard-catch rules for inline styles and legacy classes.
+   All values reference the brand tokens from _theme.css / the
+   _modern-theme.css dark flip; no ad-hoc palette hexes live here. */
 
 :root {
-    --bg-primary: #FFFFFF;
-    --bg-secondary: #F8FAFC;
+    /* Legacy compat names (no canonical equivalent yet). Light values mirror
+       _theme.css so this file (loaded last) does not shift light mode. */
+    --bg-secondary: #F1F5F9;
     --bg-tertiary: #F1F5F9;
-    --card-bg: #FFFFFF;
-    --header-bg: #0F172A;
-    --nav-bg: #0F172A;
-    --nav-text: rgba(255, 255, 255, 0.9);
 }
 
 [data-theme="dark"] {
-    --bg-primary: #0F172A;
+    /* Legacy compat flips */
     --bg-secondary: #1E293B;
     --bg-tertiary: #334155;
-    --card-bg: #1E293B;
-    /* --header-bg, --nav-bg, --nav-text inherited from :root (unchanged in dark mode) */
     --border-color: #334155;
     --border-light: #334155;
 
+    /* Neutral scale flip (consumed by _navigation.css and friends) */
     --neutral-50: #334155;
     --neutral-100: #475569;
     --neutral-200: #64748B;
@@ -31,6 +34,18 @@
     --neutral-700: #F8FAFC;
     --neutral-800: #FFFFFF;
     --neutral-900: #FFFFFF;
+
+    /* Duplicate of the _modern-theme.css dark flip: without it, inline
+       styles (var(--profit-negative), var(--bg-body)) would not flip. */
+    --bg-body: #0F172A;
+    --bg-content: #1E293B;
+    --bg-card: #1E293B;
+    --link-color: #93C5FD;
+    --profit-positive: #6EE7B7;
+    --profit-negative: #FCA5A5;
+    /* Skeleton tokens (replaces the dark block in _skeletons.css) */
+    --skeleton-base: var(--neutral-700);
+    --skeleton-shine: var(--neutral-600);
 }
 
 /* Base elements */
@@ -40,7 +55,7 @@ html {
 }
 
 html[data-theme="dark"] {
-    background-color: #0F172A;
+    background-color: var(--bg-body);
 }
 
 body {
@@ -50,7 +65,7 @@ body {
 }
 
 [data-theme="dark"] body {
-    background-color: #0F172A;
+    background-color: var(--bg-body);
 }
 
 html, body {
@@ -99,19 +114,19 @@ a {
 }
 
 [data-theme="dark"] a {
-    color: #93C5FD;
+    color: var(--link-color);
 }
 
 /* The Gamble King hero's name is a link, but it must stay white on the dark
    felt (gold on hover) in both themes — the generic dark link blue above
    would repaint it. Higher specificity than the rules it overrides. */
 [data-theme="dark"] a.neo-gamble-king-name {
-    color: #FFFFFF;
+    color: var(--text-white);
 }
 
 [data-theme="dark"] a.neo-gamble-king-name:hover,
 [data-theme="dark"] a.neo-gamble-king-name:focus-visible {
-    color: #FCD34D;
+    color: var(--casino-gold-dark);
 }
 
 a:hover {
@@ -119,7 +134,7 @@ a:hover {
 }
 
 [data-theme="dark"] a:hover {
-    color: #BFDBFE;
+    color: var(--casino-blue-dark);
 }
 
 /* Headings in dark mode */
@@ -174,38 +189,6 @@ footer {
 [data-theme="dark"] header nav a {
     color: #FFFFFF !important;
 }
-
-/* Profit colors in dark mode (handled by _modern-theme.css but kept for legacy) */
-[data-theme="dark"] .profit-positive {
-    color: #6EE7B7 !important;
-}
-
-[data-theme="dark"] .profit-negative {
-    color: #FCA5A5 !important;
-}
-
-/* Action buttons */
-.action-btn {
-    background-color: var(--primary-color);
-    color: white;
-    border: none;
-}
-
-[data-theme="dark"] .action-btn {
-    background-color: var(--primary-color);
-    color: white;
-}
-
-.btn-primary {
-    background-color: var(--primary-color);
-    color: white;
-}
-
-[data-theme="dark"] .btn-primary {
-    background-color: var(--primary-color);
-    color: white;
-}
-
 /* White background overrides */
 [data-theme="dark"] [style*="background: white"],
 [data-theme="dark"] [style*="background:white"] {
