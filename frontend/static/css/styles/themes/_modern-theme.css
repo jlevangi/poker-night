@@ -2315,6 +2315,12 @@ a.neo-gamble-king-name:focus-visible {
     border-bottom-color: rgba(252, 211, 77, 0.18);
 }
 
+.neo-standings-name:focus-visible,
+.neo-standings-all:focus-visible {
+    outline: 2px solid var(--focus-ring-color);
+    outline-offset: 2px;
+}
+
 .neo-standings-name:hover {
     color: var(--link-color);
     text-decoration: underline;

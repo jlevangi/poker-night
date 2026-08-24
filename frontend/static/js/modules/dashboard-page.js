@@ -106,7 +106,7 @@ export default class DashboardPage {
         const buyIn = formatCurrency(session.default_buy_in_value || 0);
         const heroHref = '#session/' + session.session_id;
         return `
-            <a href="${heroHref}" class="neo-card neo-card-gold neo-active-session-hero">
+            <a href="${heroHref}" class="neo-card neo-card-gold neo-active-session-hero" aria-label="Live session, buy-in ${buyIn}, open session details">
                 <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 0.5rem;">
                     <div>
                         <div class="section-title" style="color: var(--text-primary); display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
@@ -140,7 +140,7 @@ export default class DashboardPage {
         const counts = event.rsvp_counts || { yes: 0, maybe: 0, no: 0 };
 
         return `
-            <a href="#calendar" class="neo-card neo-next-event-card list-card-row" style="text-decoration: none; color: inherit;">
+            <a href="#calendar" class="neo-card neo-next-event-card list-card-row" style="text-decoration: none; color: inherit;" aria-label="Upcoming poker night, ${dateFormatted}${timeFormatted}, ${counts.yes} in, ${counts.maybe} maybe, ${counts.no} out, open calendar">
                 <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
                     <div>
                         <div class="section-title" style="color: var(--text-primary); display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
@@ -202,11 +202,11 @@ export default class DashboardPage {
         // Session tile: links to the live session when one is running,
         // otherwise opens the new-session modal (handler in setupEventListeners).
         const sessionTile = activeSession
-            ? `<a href="#session/${activeSession.session_id}" class="neo-quick-action neo-quick-action--green">
+            ? `<a href="#session/${activeSession.session_id}" class="neo-quick-action neo-quick-action--green" aria-label="Open live session">
                     <span class="neo-quick-action-icon">${DashboardPage.chipIcon()}</span>
                     <span class="neo-quick-action-label">View Live Session</span>
                 </a>`
-            : `<button id="quick-start-session-btn" class="neo-quick-action neo-quick-action--gold" type="button">
+            : `<button id="quick-start-session-btn" class="neo-quick-action neo-quick-action--gold" type="button" aria-label="Start a new session">
                     <span class="neo-quick-action-icon">${DashboardPage.chipIcon()}</span>
                     <span class="neo-quick-action-label">Start Session</span>
                 </button>`;
@@ -214,15 +214,15 @@ export default class DashboardPage {
         return `
             <section class="neo-quick-actions" aria-label="Quick actions">
                 ${sessionTile}
-                <a href="#calendar" class="neo-quick-action neo-quick-action--purple">
+                <a href="#calendar" class="neo-quick-action neo-quick-action--purple" aria-label="Schedule a poker night">
                     <span class="neo-quick-action-icon">${DashboardPage.calendarIcon()}</span>
                     <span class="neo-quick-action-label">Poker Night</span>
                 </a>
-                <a href="#players" class="neo-quick-action neo-quick-action--blue">
+                <a href="#players" class="neo-quick-action neo-quick-action--blue" aria-label="View players">
                     <span class="neo-quick-action-icon">${DashboardPage.playersIcon()}</span>
                     <span class="neo-quick-action-label">Players</span>
                 </a>
-                <a href="#stats" class="neo-quick-action neo-quick-action--red">
+                <a href="#stats" class="neo-quick-action neo-quick-action--red" aria-label="View stats">
                     <span class="neo-quick-action-icon">${DashboardPage.statsIcon()}</span>
                     <span class="neo-quick-action-label">Stats</span>
                 </a>
@@ -393,7 +393,7 @@ export default class DashboardPage {
             const cardColor = session.is_active ? 'neo-card-gold' : '';
             
             html += `
-                <a href="#session/${session.session_id}" class="neo-card ${cardColor} list-card-row" style="text-decoration: none; color: inherit;">
+                <a href="#session/${session.session_id}" class="neo-card ${cardColor} list-card-row" style="text-decoration: none; color: inherit;" aria-label="${formatDate(session.date)}, buy-in ${formatCurrency(session.default_buy_in_value || 0)}, ${statusText}, open session details">
                     <div style="display: flex; justify-content: space-between; align-items: center;">
                         <div>
                             <div class="list-card-text">
