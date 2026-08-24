@@ -210,19 +210,10 @@ textarea,
     border-color: #334155;
 }
 
-/* Dark mode Gamble King */
+/* Dark mode Gamble King: the hero is dark felt in both themes; in dark mode
+   just soften the glow so it doesn't over-illuminate a dark page. */
 [data-theme="dark"] .neo-gamble-king {
-    background: rgba(245, 158, 11, 0.08);
-    border-color: rgba(245, 158, 11, 0.2);
-}
-
-[data-theme="dark"] .neo-gamble-king-name {
-    color: var(--casino-gold-dark);
-    text-shadow: none;
-}
-
-[data-theme="dark"] .neo-gamble-king-title {
-    color: var(--casino-gold-dark);
+    border-color: rgba(252, 211, 77, 0.35);
 }
 
 [data-theme="dark"] .neo-card,
@@ -1271,25 +1262,30 @@ div .neo-btn.neo-btn-green:hover,
 /* GAMBLE KING */
 /* ============================================================================ */
 
+
 .neo-gamble-king {
-    background: linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 100%);
-    border: 1px solid rgba(245, 158, 11, 0.2);
-    box-shadow: var(--neo-shadow-md);
-    padding: var(--spacing-neo);
+    background:
+        radial-gradient(130% 120% at 50% -20%, rgba(252, 211, 77, 0.28) 0%, rgba(252, 211, 77, 0) 52%),
+        linear-gradient(165deg, #14532D 0%, #0B3B21 48%, #062513 100%);
+    border: 1px solid rgba(252, 211, 77, 0.5);
+    box-shadow: var(--neo-shadow-lg), 0 0 44px rgba(245, 158, 11, 0.14), inset 0 0 0 1px rgba(252, 211, 77, 0.12);
+    padding: 1.5rem var(--spacing-neo) 1.375rem;
     margin-bottom: var(--spacing-neo);
     position: relative;
     overflow: hidden;
-    border-radius: 20px;
+    border-radius: var(--radius-xl);
+    text-align: center;
+    color: #F8FAFC;
     animation: goldGlow 4s ease-in-out infinite;
 }
 
-/* The one loop on the dashboard that earns its keep: this card only exists
+/* The one loop on the dashboard that earns its keep: this hero only appears
    when somebody is actually winning, so the motion marks a state rather than
    decorating a surface.  Both loops are stilled by the global
    prefers-reduced-motion rule in utils/_animations.css. */
 @keyframes goldGlow {
-    0%, 100% { box-shadow: var(--neo-shadow-md), 0 0 8px rgba(245, 158, 11, 0.08); }
-    50% { box-shadow: var(--neo-shadow-md), 0 0 20px rgba(245, 158, 11, 0.15), 0 0 40px rgba(245, 158, 11, 0.05); }
+    0%, 100% { box-shadow: var(--neo-shadow-lg), 0 0 10px rgba(245, 158, 11, 0.1), inset 0 0 0 1px rgba(252, 211, 77, 0.12); }
+    50% { box-shadow: var(--neo-shadow-lg), 0 0 26px rgba(245, 158, 11, 0.22), 0 0 60px rgba(245, 158, 11, 0.08), inset 0 0 0 1px rgba(252, 211, 77, 0.12); }
 }
 
 .neo-gamble-king::before {
@@ -1321,35 +1317,90 @@ div .neo-btn.neo-btn-green:hover,
     100% { transform: translateX(33.333%); }
 }
 
-/* Spotlight hierarchy: the profit figure is the lead number; the
-   other three stats are compact supporting metrics, not full cards. */
+@keyframes crownBob {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-4px); }
+}
+
+.neo-gamble-king-top {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.neo-gamble-king-crown {
+    width: clamp(48px, 9vw, 72px);
+    height: auto;
+    color: #FCD34D;
+    filter: drop-shadow(0 2px 12px rgba(245, 158, 11, 0.55));
+    animation: crownBob 4s ease-in-out infinite;
+}
+
+.neo-gamble-king-title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.24em;
+    color: #FCD34D;
+    text-shadow: none;
+    position: relative;
+}
+
+.neo-gamble-king-name {
+    margin-top: 0.75rem;
+    font-size: clamp(2.25rem, 6.5vw, 3.5rem);
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    text-align: center;
+    color: #FFFFFF;
+    text-shadow: none;
+    overflow-wrap: anywhere;
+    position: relative;
+}
+
+a.neo-gamble-king-name {
+    text-decoration: none;
+    transition: color var(--transition-neo);
+}
+
+a.neo-gamble-king-name:hover,
+a.neo-gamble-king-name:focus-visible {
+    color: #FCD34D;
+}
+
 .neo-gamble-king-lead {
     text-align: center;
-    margin-bottom: 1rem;
+    margin: 1.125rem 0 1.25rem;
 }
 
 .neo-gamble-king-lead-value {
-    font-size: clamp(1.75rem, 4vw, 2.5rem);
+    font-size: clamp(1.75rem, 5vw, 2.625rem);
     font-weight: 700;
-    line-height: 1.15;
+    line-height: 1.1;
     font-variant-numeric: tabular-nums;
+    color: #FCD34D;
+    text-shadow: 0 0 26px rgba(245, 158, 11, 0.4);
     overflow-wrap: anywhere;
 }
 
 .neo-gamble-king-lead-label {
-    margin-top: 0.25rem;
+    margin-top: 0.375rem;
     font-size: 0.75rem;
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--casino-gold-dark);
+    letter-spacing: 0.14em;
+    color: rgba(248, 250, 252, 0.66);
 }
 
 .neo-gamble-king-metrics {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
-    gap: 0.5rem 1.75rem;
+    gap: 0.5rem 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(252, 211, 77, 0.22);
 }
 
 .neo-gamble-king-metric {
@@ -1360,49 +1411,37 @@ div .neo-btn.neo-btn-green:hover,
 }
 
 .neo-gamble-king-metric-value {
-    font-size: 1rem;
+    font-size: 1.125rem;
     font-weight: 600;
     line-height: 1.2;
-    color: var(--text-primary);
+    color: #F8FAFC;
     font-variant-numeric: tabular-nums;
 }
 
 .neo-gamble-king-metric-label {
     font-size: 0.6875rem;
-    font-weight: 500;
-    color: var(--casino-gold-dark);
-    opacity: 0.8;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: rgba(252, 211, 77, 0.75);
 }
 
 .neo-gamble-king-empty {
-    text-align: center;
-    font-size: 1rem;
-    color: var(--casino-gold-dark);
-}
-
-.neo-gamble-king-title {
-    font-size: 1.125rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--casino-gold-dark);
-    margin-bottom: 0.5rem;
-    text-align: center;
-    text-shadow: none;
+    margin-top: 0.5rem;
+    font-size: 0.9375rem;
+    color: rgba(248, 250, 252, 0.6);
     position: relative;
 }
 
-.neo-gamble-king-name {
-    font-size: 2rem;
-    font-weight: 700;
-    text-align: center;
-    margin-bottom: 1rem;
-    color: var(--casino-black);
-    text-shadow: none;
-    text-transform: none;
-    letter-spacing: -0.025em;
-    overflow-wrap: anywhere;
-    position: relative;
+.neo-gamble-king--empty {
+    animation: none;
+    border-style: dashed;
+}
+
+.neo-gamble-king--empty .neo-gamble-king-crown {
+    color: rgba(252, 211, 77, 0.45);
+    filter: none;
+    animation: none;
 }
 
 /* ============================================================================ */
@@ -1886,10 +1925,6 @@ div .neo-btn.neo-btn-green:hover,
         gap: 0.75rem;
     }
 
-    .neo-gamble-king-name {
-        font-size: 1.75rem;
-    }
-
     .neo-quick-actions {
         flex-direction: column;
     }
@@ -1930,10 +1965,6 @@ div .neo-btn.neo-btn-green:hover,
 
     .neo-stats-grid {
         grid-template-columns: 1fr 1fr;
-    }
-
-    .neo-gamble-king-name {
-        font-size: 1.5rem;
     }
 
     .neo-stat-value {
@@ -1979,17 +2010,6 @@ div .neo-btn.neo-btn-green:hover,
         left: -320px;
     }
 
-    .neo-gamble-king-lead-value {
-        font-size: 1.375rem;
-    }
-
-    .neo-gamble-king-name {
-        font-size: 1.25rem !important;
-    }
-
-    .neo-gamble-king-title {
-        font-size: 0.875rem !important;
-    }
 }
 
 @media (max-width: 320px) {

@@ -7,7 +7,7 @@ export default class DashboardPage {
     static skeleton() {
         return renderSkeletonPage([
             // Gamble King Banner Skeleton
-            renderSkeleton({ classes: 'neo-card', style: 'height: 140px; margin-bottom: 1rem;' }),
+            renderSkeleton({ classes: 'neo-card', style: 'height: 210px; margin-bottom: 1rem;' }),
             // Active Session Hero Skeleton
             renderSkeleton({ classes: 'neo-card', style: 'height: 96px; margin-bottom: 1rem;' }),
             // Stats Grid Skeleton (2x2)
@@ -196,24 +196,44 @@ export default class DashboardPage {
     }
     
     // Render Gamble King section
+    // Render Gamble King section — the theatrical hero: crown, name, profit,
+    // and compact supporting metrics.
+    static crownIcon() {
+        return `<svg class="neo-gamble-king-crown" viewBox="0 0 24 21" width="72" height="63" fill="currentColor" aria-hidden="true" focusable="false">
+            <path d="M2.6 17.5 L1.2 5.4 L7.1 9.9 L12 2 L16.9 9.9 L22.8 5.4 L21.4 17.5 Z"/>
+            <circle cx="1.2" cy="5.4" r="1.15"/>
+            <circle cx="12" cy="2" r="1.15"/>
+            <circle cx="22.8" cy="5.4" r="1.15"/>
+            <rect x="2.6" y="17.5" width="18.8" height="2" rx="1"/>
+        </svg>`;
+    }
+
     renderGambleKingSection(gambleKing) {
         if (!gambleKing || gambleKing.net_profit <= 0) {
             return `
-                <div class="neo-gamble-king">
-                    <div class="neo-gamble-king-title">👑 Current Gamble King</div>
-                    <div class="neo-gamble-king-name">No Gamble King crowned yet!</div>
-                    <div class="neo-gamble-king-empty">Play some games to claim the throne!</div>
+                <div class="neo-gamble-king neo-gamble-king--empty">
+                    <div class="neo-gamble-king-top">
+                        ${DashboardPage.crownIcon()}
+                        <span class="neo-gamble-king-title">Current Gamble King</span>
+                    </div>
+                    <div class="neo-gamble-king-name">No Gamble King crowned yet</div>
+                    <div class="neo-gamble-king-empty">Win a session to claim the throne.</div>
                 </div>
             `;
         }
-        
+
+        const profit = gambleKing.net_profit || 0;
+
         return `
-            <div class="neo-gamble-king neo-bounce">
-                <div class="neo-gamble-king-title">👑 Current Gamble King</div>
-                <div class="neo-gamble-king-name">${gambleKing.name}</div>
+            <article class="neo-gamble-king" aria-label="Current Gamble King: ${gambleKing.name}">
+                <div class="neo-gamble-king-top">
+                    ${DashboardPage.crownIcon()}
+                    <span class="neo-gamble-king-title">Current Gamble King</span>
+                </div>
+                <a class="neo-gamble-king-name" href="#player/${gambleKing.player_id}">${gambleKing.name}</a>
                 <div class="neo-gamble-king-lead">
-                    <div class="neo-gamble-king-lead-value profit-${gambleKing.net_profit >= 0 ? 'positive' : 'negative'}">${formatCurrency(gambleKing.net_profit || 0)}</div>
-                    <div class="neo-gamble-king-lead-label">Total Profit</div>
+                    <div class="neo-gamble-king-lead-value">${formatCurrency(profit)}</div>
+                    <div class="neo-gamble-king-lead-label">All-time profit</div>
                 </div>
                 <div class="neo-gamble-king-metrics">
                     <div class="neo-gamble-king-metric">
@@ -222,14 +242,14 @@ export default class DashboardPage {
                     </div>
                     <div class="neo-gamble-king-metric">
                         <div class="neo-gamble-king-metric-value">${formatPercent(gambleKing.win_percentage || 0)}</div>
-                        <div class="neo-gamble-king-metric-label">Win Rate</div>
+                        <div class="neo-gamble-king-metric-label">Win rate</div>
                     </div>
                     <div class="neo-gamble-king-metric">
                         <div class="neo-gamble-king-metric-value">${gambleKing.seven_two_wins || 0}</div>
-                        <div class="neo-gamble-king-metric-label">7-2 Wins</div>
+                        <div class="neo-gamble-king-metric-label">7-2 wins</div>
                     </div>
                 </div>
-            </div>
+            </article>
         `;
     }
     
