@@ -2160,3 +2160,69 @@ a.neo-gamble-king-name:focus-visible {
     margin: 0;
     overflow-wrap: anywhere;
 }
+
+/* ============================================================================ */
+/* TOP PLAYERS PODIUM (home) — compact top-3, full board lives on #players */
+/* ============================================================================ */
+
+.neo-standings-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.5rem;
+}
+
+.neo-standings-head .section-title {
+    margin-bottom: 0;
+}
+
+.neo-standings-all {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--link-color);
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.neo-standings-all:hover {
+    text-decoration: underline;
+}
+
+/* Compact the table inside the podium: tighter rows, no heavy thead shadow. */
+.neo-standings-table {
+    margin-top: 0;
+}
+
+.neo-standings-table tbody td {
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+}
+
+.neo-standings-rank {
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+}
+
+.neo-standings-name {
+    color: var(--text-primary);
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    overflow-wrap: anywhere;
+}
+
+.neo-standings-name:hover {
+    color: var(--link-color);
+    text-decoration: underline;
+}
+
+/* Gamble King's row gets a subtle gold wash; the hero already crowns them,
+   so the podium just echoes it. Uses the theme's -light tint (opaque light /
+   translucent dark) so both themes read. */
+.neo-standings-king {
+    background: var(--casino-gold-light);
+}

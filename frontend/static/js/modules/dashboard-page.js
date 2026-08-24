@@ -302,22 +302,28 @@ export default class DashboardPage {
         `;
     }
     
-    // Render player standings section
+    // Render player standings section — compact top-3 podium only; the full
+    // leaderboard lives on the players page (no report-like dump on home).
     renderStandingsSection(players) {
         if (!players || players.length === 0) {
             return `
-                <div class="neo-card">
-                    <h3 class="section-title" style="margin-bottom: 1.5rem;">🏆 Player Standings</h3>
+                <div class="neo-card neo-standings-card">
+                    <h3 class="section-title" style="margin-bottom: 1.5rem;">🏆 Top Players</h3>
                     ${renderEmptyState({ icon: '🏆', message: 'No players found.', card: false })}
                 </div>
             `;
         }
-        
+
+        const top = players.slice(0, 3);
+
         let html = `
-            <div class="neo-card">
-                <h3 class="section-title" style="margin-bottom: 1.5rem;">🏆 Player Standings</h3>
+            <div class="neo-card neo-standings-card">
+                <div class="neo-standings-head">
+                    <h3 class="section-title">🏆 Top Players</h3>
+                    <a href="#players" class="neo-standings-all">See all players →</a>
+                </div>
                 <div class="table-responsive">
-                    <table class="neo-table">
+                    <table class="neo-table neo-standings-table">
                         <thead>
                             <tr>
                                 <th>Rank</th>
@@ -327,16 +333,16 @@ export default class DashboardPage {
                         </thead>
                         <tbody>
         `;
-        
-        players.forEach((player, index) => {
+
+        top.forEach((player, index) => {
             const isGambleKing = index === 0 && player.net_profit > 0;
             html += `
-                <tr${isGambleKing ? ' style="background: var(--casino-gold-light);"' : ''}>
-                    <td style="font-weight: 600;">${index + 1}</td>
+                <tr${isGambleKing ? ' class="neo-standings-king"' : ''}>
+                    <td class="neo-standings-rank">${index + 1}</td>
                     <td>
-                        <a href="#player/${player.player_id}" style="color: var(--link-color); text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 0.5rem;">
+                        <a href="#player/${player.player_id}" class="neo-standings-name">
                             ${player.name}
-                            ${isGambleKing ? '<span style="font-size: 1.25rem;">👑</span>' : ''}
+                            ${isGambleKing ? '<span aria-hidden="true">👑</span>' : ''}
                         </a>
                     </td>
                     <td class="text-right ${player.net_profit >= 0 ? 'profit-positive' : 'profit-negative'}" style="font-weight: 600;">
@@ -346,14 +352,14 @@ export default class DashboardPage {
                 </tr>
             `;
         });
-        
+
         html += `
                         </tbody>
                     </table>
                 </div>
             </div>
         `;
-        
+
         return html;
     }
     
