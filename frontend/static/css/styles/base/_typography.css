@@ -10,9 +10,9 @@
  *   1.125 lg       emphasized text, card titles (h3)
  *   1.25  xl       section headings (h2)
  *   1.5   2xl      large titles
- *   1.75  3xl      detail-page titles (player + event detail, reached from a list row)
+ *   1.75  3xl      detail-page titles (.page-title--detail, reached from a list row)
  *   2     display  stat values (.neo-stat-value)
- *   2.5   title    page titles (list pages: players, calendar; stats clamps 1.5-2.5)
+ *   2.5   title    page titles (.page-title on list pages; clamps 1.5-2.5 on mobile)
  * Weights: 400 body / 600 labels + headings / 700 emphasized values.
  * Never use px font-sizes or the bold/normal keywords.
  */

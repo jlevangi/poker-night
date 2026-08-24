@@ -71,6 +71,136 @@ li a:hover {
     font-weight: 600;
 }
 
+/* Session card — dense single row with the money at the table front and
+   center.  Left: date + status pill + buy-in (context).  Right: headline
+   total.  Mirrors the dashboard hero's left-meta / right-headline language
+   so the sessions list scans the same way the dashboard does. */
+.session-card {
+    gap: var(--spacing-md, 1rem);
+}
+
+.session-card__meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+    min-width: 0;
+    overflow: hidden;
+}
+
+.session-card__when {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.session-card__date {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    white-space: nowrap;
+}
+
+.session-card__status {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    line-height: 1.5;
+    padding: 0.0625rem 0.5rem;
+    border-radius: 999px;
+    white-space: nowrap;
+}
+
+.session-card__status--active {
+    color: var(--casino-gold-dark);
+    background: var(--casino-gold-light);
+}
+
+.session-card__status--ended {
+    color: var(--text-secondary);
+    background: var(--status-neutral-bg, rgba(100, 116, 139, 0.14));
+}
+
+.session-card__buyin {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+
+.session-card__buyin b {
+    font-weight: 700;
+    color: var(--text-secondary);
+    font-variant-numeric: tabular-nums;
+}
+
+/* Roster: who's at the table.  Count is the anchor; names are muted context,
+   ellipsized on narrow rows so the card never overflows. */
+.session-card__roster {
+    display: flex;
+    align-items: baseline;
+    gap: 0.375rem;
+    min-width: 0;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+
+.session-card__roster-count {
+    font-weight: 700;
+    color: var(--text-secondary);
+    white-space: nowrap;
+}
+
+.session-card__roster-names {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.session-card__roster-more {
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+
+/* Headline: the total money at the table is the visual anchor of the card. */
+.session-card__lead {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    text-align: right;
+}
+
+.session-card__total-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1.15;
+    font-variant-numeric: tabular-nums;
+    color: var(--text-primary);
+}
+
+.session-card__total-label {
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--text-muted);
+    margin-top: 0.125rem;
+}
+
+/* Active session: gold headline to match the gold card and read as "live". */
+.session-card--active .session-card__total-value {
+    color: var(--casino-gold-dark);
+}
+
+/* Mobile: shrink the headline so date + pill + total fit in a narrow row. */
+@media (max-width: 600px) {
+    .session-card__total-value {
+        font-size: 1.25rem;
+    }
+}
+
 /* Session Lists */
 .sessions-list {
     list-style: none;
@@ -108,11 +238,38 @@ li a:hover {
 
 /* Roster count chip: the muted "(N players)" count that trails the roster
    title. Inline within the title (unlike block form labels) and smaller than
-   the 1.75rem title; colored with --text-secondary (not an opacity trick) so
-   it reads correctly in both light and dark. */
+   the 1.25rem .section-heading title; colored with --text-secondary (not an
+   opacity trick) so it reads correctly in both light and dark. */
 .roster-count {
     font-size: 1rem;
     color: var(--text-secondary);
+}
+
+/* Player roster row — left: name + session stats (context), right: the net
+   profit headline (who's up, who's down, at a glance). .list-card-row supplies
+   the flex row + padding; mirrors .session-card's left-context/right-money
+   language with the same 1.5rem headline step (1.25 on mobile, as sessions).
+   .profit-* supplies color; this class owns size/digit alignment (weight
+   is 600 — the theme forces 600 !important on .profit-*; the hierarchy comes
+   from the 1.5rem size + right alignment, as on .session-card). */
+.player-row-main {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.player-row-pl {
+    font-size: 1.5rem;
+    line-height: 1.15;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+@media (max-width: 600px) {
+    .player-row-pl {
+        font-size: 1.25rem;
+    }
 }
 
 .players-list {

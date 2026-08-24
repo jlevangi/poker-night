@@ -1,6 +1,15 @@
 /* Calendar / Events styles */
 
+/* Event cards (calendar list) — one row, three zones:
+   when (bold date lead + time/location meta) | what (title + status) |
+   RSVP at a glance.  The date leads because it is a calendar entry's
+   identity; the whole row stacks to one column on small screens. */
 .neo-event-card {
+    display: grid;
+    grid-template-columns: minmax(0, auto) minmax(0, 1fr) auto;
+    gap: 0.25rem 1.25rem;
+    align-items: start;
+    cursor: pointer;
     transition: all var(--transition-neo, 0.2s ease);
     overflow-wrap: anywhere; /* break long free-text titles/locations inside the card, not past it */
 }
@@ -12,6 +21,77 @@
 
 .neo-event-cancelled {
     opacity: 0.6;
+}
+
+/* The whole card is one link; no inline styles on the anchor */
+.neo-event-card-link {
+    display: block;
+    margin-bottom: 1rem;
+    text-decoration: none;
+    color: inherit;
+}
+
+/* Keyboard focus mirrors the hover lift so the focused card reads
+   like a hovered one (the link's own outline comes from the global
+   a:focus-visible rule in _utilities.css). */
+.neo-event-card-link:focus-visible .neo-event-card {
+    box-shadow: var(--neo-shadow-md);
+}
+
+/* When zone — the date is the card's lead line */
+.event-card-when {
+    min-width: 0;
+}
+
+.event-card-date {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    font-variant-numeric: tabular-nums;
+    overflow-wrap: anywhere;
+}
+
+.event-card-meta {
+    margin-top: 0.25rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    overflow-wrap: anywhere;
+}
+
+/* What zone — title and status badge share one row */
+.event-card-title {
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.event-card-title-text {
+    overflow-wrap: anywhere;
+}
+
+/* Status badge (was a fully inline-styled span in calendar-page.js) */
+.event-status-badge {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 0.125rem 0.5rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    color: #fff;
+}
+
+.event-status-badge--upcoming {
+    background: var(--casino-green);
+}
+
+.event-status-badge--cancelled {
+    background: var(--casino-red);
 }
 
 .neo-rsvp-badges {
@@ -46,6 +126,15 @@
 .neo-rsvp-badge-no {
     background: var(--casino-red, #e74c3c);
     color: var(--text-white);
+}
+
+/* Neutral chip for events with no responses yet — clearer at a glance
+   than a trio of "0 In / 0 Maybe / 0 Out" badges. */
+.neo-rsvp-badge--empty {
+    background: transparent;
+    color: var(--text-secondary);
+    border-style: dashed;
+    box-shadow: none;
 }
 
 .neo-rsvp-btn-yes {
@@ -99,6 +188,21 @@
     border-radius: var(--radius-md) !important;
 }
 
+/* "Schedule Event" call-to-action card above the form */
+.calendar-cta-card {
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+/* Create-event form grid — two columns, one on small screens.
+   Replaces the old brittle .neo-create-event-form .neo-card >
+   div:first-of-type !important rule. */
+.create-event-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+}
+
 /* Next Event dashboard card */
 .neo-next-event-card {
     cursor: pointer;
@@ -112,8 +216,14 @@
 
 /* Mobile responsive */
 @media (max-width: 600px) {
-    .neo-create-event-form .neo-card > div:first-of-type {
-        grid-template-columns: 1fr !important;
+    /* Event cards stack: when → title → RSVP badges */
+    .neo-event-card {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+    }
+
+    .create-event-grid {
+        grid-template-columns: 1fr;
     }
 
     .neo-rsvp-form > div {

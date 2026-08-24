@@ -73,7 +73,7 @@ export default class SessionsPage {
     render(sessions, upcomingEvents = []) {
         let html = `
             <div class="fade-in" style="padding: 1.5rem; max-width: 1200px; margin: 0 auto;">
-                <h2 class="section-title" style="font-size: 2.5rem; margin-bottom: 2rem;">🃏 Sessions</h2>
+                <h2 class="page-title">🃏 Sessions</h2>
 
                 <div class="neo-card neo-card-green" style="margin-bottom: 2rem; text-align: center;">
                     <div class="modal-actions">
@@ -88,28 +88,11 @@ export default class SessionsPage {
         if (activeSessions.length > 0) {
             html += `
                 <h3 class="section-title" style="font-size: 1.5rem; margin-bottom: 1.5rem;">Active Sessions</h3>
-                <div style="display: grid; gap: 1rem; margin-bottom: 2rem;">
+                <div style="display: grid; grid-template-columns: minmax(0, 1fr); gap: 1rem; margin-bottom: 2rem;">
             `;
 
             activeSessions.forEach(session => {
-                html += `
-                    <a href="#session/${session.session_id}" class="neo-card neo-card-gold list-card-row" style="text-decoration: none; color: inherit;">
-                        <div>
-                            <div class="list-card-text">
-                                📅 ${formatDate(session.date)}
-                            </div>
-                            <div class="list-card-subtitle">
-                                Buy-in: ${formatCurrency(session.buyin)} | Total: ${formatCurrency(session.totalValue)}
-                            </div>
-                        </div>
-                        <div style="display: flex; align-items: center; gap: 0.5rem;">
-                            <span style="color: var(--casino-gold); font-size: 1.25rem;">🟡</span>
-                            <span style="font-size: 0.875rem; font-weight: 600; color: var(--casino-gold);">
-                                ACTIVE
-                            </span>
-                        </div>
-                    </a>
-                `;
+                html += this._renderSessionCard(session);
             });
 
             html += `</div>`;
@@ -119,7 +102,7 @@ export default class SessionsPage {
         if (upcomingEvents.length > 0) {
             html += `
                 <h3 class="section-title" style="font-size: 1.5rem; margin-bottom: 1.5rem;">Upcoming</h3>
-                <div style="display: grid; gap: 1rem; margin-bottom: 2rem;">
+                <div style="display: grid; grid-template-columns: minmax(0, 1fr); gap: 1rem; margin-bottom: 2rem;">
             `;
 
             upcomingEvents.forEach(evt => {
@@ -155,34 +138,10 @@ export default class SessionsPage {
         `;
 
         if (sessions && sessions.length > 0) {
-            html += `<div style="display: grid; gap: 1rem;">`;
+            html += `<div style="display: grid; grid-template-columns: minmax(0, 1fr); gap: 1rem;">`;
 
             sessions.forEach(session => {
-                const isActive = session.status === 'ACTIVE';
-                const cardColor = isActive ? 'neo-card-gold' : '';
-                const statusColor = isActive ? 'var(--casino-gold)' : 'var(--text-secondary)';
-                const statusIcon = isActive ? '🟡' : '⚪';
-
-                html += `
-                    <a href="#session/${session.session_id}" class="neo-card ${cardColor} list-card-row" style="text-decoration: none; color: inherit;">
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <div>
-                                <div class="list-card-text">
-                                    📅 ${formatDate(session.date)}
-                                </div>
-                                <div class="list-card-subtitle">
-                                    Buy-in: ${formatCurrency(session.buyin)} | Total: ${formatCurrency(session.totalValue)}
-                                </div>
-                            </div>
-                            <div style="display: flex; align-items: center; gap: 0.5rem;">
-                                <span style="color: ${statusColor}; font-size: 1.25rem;">${statusIcon}</span>
-                                <span style="font-size: 0.875rem; font-weight: 600; color: ${statusColor};">
-                                    ${session.status || 'Unknown'}
-                                </span>
-                            </div>
-                        </div>
-                    </a>
-                `;
+                html += this._renderSessionCard(session);
             });
 
             html += `</div>`;
@@ -202,6 +161,54 @@ export default class SessionsPage {
         this.setupEventListeners();
     }
 
+
+    // Build one scannable session card: date + status + buy-in on the
+    // left (context); the total money at the table as the headline on
+    // the right.  Mirrors the dashboard hero's left-meta / right-headline
+    // language so the sessions list scans the same way the dashboard does.
+    _renderSessionCard(session) {
+        const isActive = session.status === 'ACTIVE';
+        const cardClass = isActive
+            ? 'neo-card neo-card-gold session-card session-card--active'
+            : 'neo-card session-card';
+        const status = session.status || 'Unknown';
+        const statusState = isActive ? 'active' : 'ended';
+
+        // Roster: who's at the table.  The count is the anchor; the names
+        // are scannable context, capped at three with a "+N more" tail.
+        const names = Array.isArray(session.player_names) ? session.player_names : [];
+        const playerCount = Number(session.player_count) || names.length;
+        let roster = '';
+        if (playerCount > 0 && names.length > 0) {
+            const shown = names.slice(0, 3).map(n => this.escapeHtml(n)).join(' · ');
+            const extra = playerCount - Math.min(3, names.length);
+            const more = extra > 0
+                ? ` <span class="session-card__roster-more">+${extra} more</span>`
+                : '';
+            roster = `
+                    <div class="session-card__roster" title="${this.escapeHtml(names.join(', '))}">
+                        <span class="session-card__roster-count">👥 ${playerCount}</span>
+                        <span class="session-card__roster-names">${shown}${more}</span>
+                    </div>`;
+        }
+
+        return `
+            <a href="#session/${session.session_id}" class="${cardClass} list-card-row" style="text-decoration: none; color: inherit;">
+                <div class="session-card__meta">
+                    <div class="session-card__when">
+                        <span class="session-card__date">${formatDate(session.date)}</span>
+                        <span class="session-card__status session-card__status--${statusState}">${status}</span>
+                    </div>
+                    <div class="session-card__buyin"><b>${formatCurrency(session.buyin)}</b> buy-in</div>
+                    ${roster}
+                </div>
+                <div class="session-card__lead">
+                    <span class="session-card__total-value">${formatCurrency(session.totalValue)}</span>
+                    <span class="session-card__total-label">Total</span>
+                </div>
+            </a>
+        `;
+    }
 
     escapeHtml(str) {
         if (!str) return '';

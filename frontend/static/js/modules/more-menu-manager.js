@@ -113,15 +113,21 @@ export default class MoreMenuManager {
 
     updateActiveItems() {
         const currentHash = window.location.hash || '#dashboard';
-        const currentPage = currentHash.split('/')[0].replace('#', '') || 'dashboard';
+        let currentPage = currentHash.split('/')[0].replace('#', '') || 'dashboard';
+        // Map detail pages to their section (mirrors router._navSectionForPath)
+        const sectionMap = { session: 'sessions', player: 'players', event: 'calendar' };
+        if (sectionMap[currentPage]) currentPage = sectionMap[currentPage];
 
         // Update items inside the More menu
         if (this.menu) {
             this.menu.querySelectorAll('.neo-more-item[data-hash]').forEach(item => {
-                item.classList.remove('active');
                 const hash = item.getAttribute('data-hash');
-                if (hash === `#${currentPage}`) {
-                    item.classList.add('active');
+                const active = hash === `#${currentPage}`;
+                item.classList.toggle('active', active);
+                if (active) {
+                    item.setAttribute('aria-current', 'page');
+                } else {
+                    item.removeAttribute('aria-current');
                 }
             });
         }

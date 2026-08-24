@@ -31,3 +31,36 @@ textarea:focus-visible,
 
 /* Currently the original CSS doesn't have many utility classes,
    but this file provides a place to add them as needed */
+/* Session-detail hierarchy (iter 9):
+ *   .section-heading   — page section headings (Players, From the Log,
+ *                        Chip Distribution): the 1.25 xl step, one tier below
+ *                        the .page-title--detail hero (1.75).
+ *   .stat-value-lg     — emphasized entry/session money values (lg step, 700).
+ *   .player-card-value — per-player stat values (base step, 600).
+ * tabular-nums so digits align when scanning rows of cards.
+ * Lives in the last-imported main.css partial so these utilities win cascade
+ * ties against base/_typography.css (e.g. .profit-* sets font-weight: 600). */
+.section-heading {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0 0 var(--spacing-md) 0;
+    /* No underline: the generic h2 rule in base/_typography.css adds a
+       border-bottom, which is wrong for section headings (iter 11 added
+       .section-heading to h2s on the stats page). Harmless on the existing
+       h3 uses (h3 has no border). */
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.stat-value-lg {
+    font-size: 1.125rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+}
+
+.player-card-value {
+    font-size: 1rem;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+}

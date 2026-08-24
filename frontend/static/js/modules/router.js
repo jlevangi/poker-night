@@ -226,28 +226,42 @@ export default class Router {
         }
     }
 
+    // Map a route path to the top-level nav section it belongs to,
+    // so detail pages keep their parent section highlighted
+    // (e.g. #session/123 -> sessions, #event/evt_x -> calendar).
+    _navSectionForPath(path) {
+        const base = path.split('/')[0];
+        const sectionMap = { session: 'sessions', player: 'players', event: 'calendar' };
+        return sectionMap[base] || base;
+    }
+
     // Update active nav button based on current hash
     updateActiveNavButton() {
-        const currentHash = window.location.hash.slice(1) || 'dashboard';
+        const currentPath = window.location.hash.slice(1) || 'dashboard';
+        const currentSection = this._navSectionForPath(currentPath);
+        const matches = (targetHash) =>
+            targetHash === `#${currentSection}` ||
+            (targetHash === '#dashboard' && currentPath === '');
 
         // Update bottom navigation (mobile) for route buttons only
         document.querySelectorAll('.bottom-nav .nav-btn[data-hash], .neo-bottom-nav .neo-nav-mobile-btn[data-hash]').forEach(btn => {
-            if (btn.dataset && btn.dataset.hash && (btn.dataset.hash === `#${currentHash}` ||
-               (btn.dataset.hash === '#dashboard' && currentHash === ''))) {
-                btn.classList.add('active');
+            const active = !!(btn.dataset && btn.dataset.hash && matches(btn.dataset.hash));
+            btn.classList.toggle('active', active);
+            if (active) {
+                btn.setAttribute('aria-current', 'page');
             } else {
-                btn.classList.remove('active');
+                btn.removeAttribute('aria-current');
             }
         });
 
         // Update desktop navigation for route links only
         document.querySelectorAll('.desktop-nav a[href], .neo-desktop-nav .neo-nav-btn[href]').forEach(link => {
-            const linkHash = link.getAttribute('href');
-            if (linkHash === `#${currentHash}` ||
-               (linkHash === '#dashboard' && currentHash === '')) {
-                link.classList.add('active');
+            const active = matches(link.getAttribute('href'));
+            link.classList.toggle('active', active);
+            if (active) {
+                link.setAttribute('aria-current', 'page');
             } else {
-                link.classList.remove('active');
+                link.removeAttribute('aria-current');
             }
         });
     }

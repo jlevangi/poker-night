@@ -16,15 +16,21 @@
     position: relative;
 }
 
+/* Chart frame header (iter 11): left-aligned, .section-heading tier
+   (1.25 xl / 600) — the old 1.75 bold centered treatment competed with the
+   page title and off-laddered every other section on the stats page.
+   border-bottom/padding-bottom reset the generic h2 underline inherited
+   from base/_typography.css. */
 .neo-chart-header {
     margin-bottom: var(--spacing-md);
-    text-align: center;
 }
 
 .neo-chart-header h2 {
-    font-size: 1.75rem;
-    font-weight: var(--font-weight-bold);
+    font-size: 1.25rem;
+    font-weight: 600;
     color: var(--text-primary);
+    border-bottom: none;
+    padding-bottom: 0;
     margin: 0 0 0.5rem 0;
 }
 
@@ -32,6 +38,20 @@
     font-size: 1rem;
     font-weight: var(--font-weight-bold);
     color: var(--text-secondary);
+}
+
+/* Pie chart frame (iter 11): the SVG is generated with a hardcoded 420px
+   width (stats-page.js `const size = 420`) and .neo-pie-chart-canvas is
+   flex-shrink: 0, so narrow mobile viewports overflowed horizontally.
+   Cap the canvas to its container and let the SVG scale proportionally;
+   the absolutely-positioned center label stays centered (50/50 translate). */
+.neo-pie-chart-canvas {
+    max-width: 100%;
+}
+
+.neo-pie-chart-canvas svg {
+    max-width: 100%;
+    height: auto;
 }
 
 /* Chart Wrapper */
@@ -374,10 +394,6 @@
 
     .neo-y-label {
         font-size: 0.7rem;
-    }
-
-    .neo-chart-header h2 {
-        font-size: 1.5rem;
     }
 
     .neo-chart-subtitle {

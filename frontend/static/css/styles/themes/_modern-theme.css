@@ -40,6 +40,9 @@ textarea,
     --casino-purple-dark: #4F46E5;
     --casino-purple-light: #EEF2FF;
 
+    /* Neutral status pill background (session cards) */
+    --status-neutral-bg: rgba(100, 116, 139, 0.14);
+
     --casino-black: #0F172A;
     --casino-gray: #475569;
     --casino-cream: #F8FAFC;
@@ -165,6 +168,8 @@ textarea,
     --casino-green-light: rgba(16, 185, 129, 0.1);
     --casino-purple-light: rgba(99, 102, 241, 0.1);
 
+    --status-neutral-bg: rgba(148, 163, 184, 0.16);
+
     --casino-red-dark: #FCA5A5;
     --casino-gold-dark: #FCD34D;
     --casino-green-dark: #6EE7B7;
@@ -264,9 +269,12 @@ textarea,
     gap: 0.75rem;
 }
 
-.neo-royal-crown {
-    font-size: 1.5rem;
-    filter: none;
+.neo-brand-mark {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    flex-shrink: 0;
+    display: block;
 }
 
 .neo-header h1 {
@@ -300,7 +308,7 @@ textarea,
     transition: all 0.2s ease;
     border-radius: 8px;
     -webkit-tap-highlight-color: transparent !important;
-    outline: none !important;
+    outline: none;
     touch-action: manipulation;
 }
 
@@ -311,14 +319,12 @@ textarea,
     color: var(--text-header);
 }
 
+/* Active = pill + gold inset bar (Gamble King accent; --casino-gold-dark
+   swaps per theme: #D97706 light / #FCD34D dark). */
 .neo-nav-btn.active {
     background: var(--bg-shell-active);
     color: var(--text-header);
-    box-shadow: none;
-}
-
-.neo-nav-btn:focus {
-    outline: none !important;
+    box-shadow: inset 0 -2px 0 var(--casino-gold-dark);
 }
 
 .neo-nav-btn:focus-visible {
@@ -406,7 +412,7 @@ textarea,
     height: 100%;
     border-radius: 14px;
     -webkit-tap-highlight-color: transparent !important;
-    outline: none !important;
+    outline: none;
     touch-action: manipulation;
 }
 
@@ -418,12 +424,8 @@ textarea,
 
 .neo-nav-mobile-btn.active {
     background: var(--bg-shell-active);
-    color: var(--text-header);
+    color: var(--casino-gold-dark);
     border-radius: 14px;
-}
-
-.neo-nav-mobile-btn:focus {
-    outline: none !important;
 }
 
 .neo-nav-mobile-btn:focus-visible {
@@ -618,23 +620,6 @@ textarea,
     text-shadow: none;
 }
 
-[data-theme="dark"] .neo-royal-crown {
-    filter: none;
-}
-
-[data-theme="dark"] .neo-nav-btn {
-    color: var(--text-header-muted);
-}
-
-[data-theme="dark"] .neo-nav-btn:hover {
-    background: var(--bg-shell-hover);
-    color: var(--text-header);
-}
-
-[data-theme="dark"] .neo-nav-btn.active {
-    background: var(--bg-shell-active);
-    color: var(--text-header);
-}
 
 [data-theme="dark"] .neo-header-btn {
     background: var(--primary-color);
@@ -648,20 +633,6 @@ textarea,
 [data-theme="dark"] .neo-bottom-nav {
     background: var(--bg-bottom-nav);
     border-color: var(--border-bottom-nav);
-}
-
-[data-theme="dark"] .neo-nav-mobile-btn {
-    color: var(--text-header-muted);
-}
-
-[data-theme="dark"] .neo-nav-mobile-btn:hover {
-    background: var(--bg-shell-hover);
-    color: var(--text-header);
-}
-
-[data-theme="dark"] .neo-nav-mobile-btn.active {
-    background: var(--bg-shell-active);
-    color: var(--text-header);
 }
 
 [data-theme="dark"] .neo-settings-menu {
@@ -815,7 +786,7 @@ button.neo-more-item {
     width: 100%;
     text-align: left;
     -webkit-tap-highlight-color: transparent !important;
-    outline: none !important;
+    outline: none;
     touch-action: manipulation;
 }
 
@@ -830,18 +801,18 @@ button.neo-more-item {
     box-shadow: none;
 }
 
-.neo-more-item:focus {
-    outline: none !important;
-}
-
 .neo-more-item:focus-visible {
     outline: 2px solid var(--focus-ring-color);
     outline-offset: 2px;
 }
 
 .neo-more-item.active {
-    background: var(--primary-light);
-    color: var(--primary-color);
+    background: var(--casino-gold-light);
+    color: var(--text-primary);
+}
+
+.neo-more-item.active .neo-more-icon {
+    color: var(--casino-gold-dark);
 }
 
 .neo-more-icon {
@@ -864,11 +835,6 @@ button.neo-more-item {
     height: 1px;
     background: var(--border-light, #E2E8F0);
     margin: 0.25rem 0.5rem;
-}
-
-#more-trigger.active {
-    background: var(--bg-shell-active);
-    color: var(--text-header);
 }
 
 @media (min-width: 769px) {
@@ -909,11 +875,6 @@ button.neo-more-item {
 
 [data-theme="dark"] .neo-more-item:hover {
     background: rgba(255, 255, 255, 0.05);
-}
-
-[data-theme="dark"] .neo-more-item.active {
-    background: rgba(37, 99, 235, 0.1);
-    color: #93C5FD;
 }
 
 [data-theme="dark"] .neo-more-divider {
@@ -1275,6 +1236,7 @@ div .neo-btn.neo-btn-green:hover,
     font-size: 2rem;
     font-weight: 700;
     line-height: 1.3;
+    font-variant-numeric: tabular-nums;
     margin-bottom: 0.25rem;
     color: inherit;
     overflow-wrap: anywhere;
@@ -1287,6 +1249,22 @@ div .neo-btn.neo-btn-green:hover,
     letter-spacing: 0;
     color: inherit;
     opacity: 0.7;
+}
+
+/* Dashboard quick grid: action tiles keep their accent tint (they are
+   interactive); metric tiles go neutral so the gold spotlight above and
+   the colored actions are the only things with color on the page. */
+.neo-stats-grid--quick .neo-stat-card--metric {
+    background: var(--bg-card);
+    border-color: var(--border-light, #E2E8F0);
+    box-shadow: none;
+    text-align: left;
+}
+
+.neo-stats-grid--quick .neo-stat-card--metric .neo-stat-value {
+    font-size: 1.375rem;
+    line-height: 1.25;
+    color: var(--text-primary);
 }
 
 /* ============================================================================ */
@@ -1343,8 +1321,63 @@ div .neo-btn.neo-btn-green:hover,
     100% { transform: translateX(33.333%); }
 }
 
-.neo-gamble-king .neo-stats-grid {
-    margin-bottom: 0;
+/* Spotlight hierarchy: the profit figure is the lead number; the
+   other three stats are compact supporting metrics, not full cards. */
+.neo-gamble-king-lead {
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.neo-gamble-king-lead-value {
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+    font-weight: 700;
+    line-height: 1.15;
+    font-variant-numeric: tabular-nums;
+    overflow-wrap: anywhere;
+}
+
+.neo-gamble-king-lead-label {
+    margin-top: 0.25rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--casino-gold-dark);
+}
+
+.neo-gamble-king-metrics {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.75rem;
+}
+
+.neo-gamble-king-metric {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.125rem;
+}
+
+.neo-gamble-king-metric-value {
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.2;
+    color: var(--text-primary);
+    font-variant-numeric: tabular-nums;
+}
+
+.neo-gamble-king-metric-label {
+    font-size: 0.6875rem;
+    font-weight: 500;
+    color: var(--casino-gold-dark);
+    opacity: 0.8;
+}
+
+.neo-gamble-king-empty {
+    text-align: center;
+    font-size: 1rem;
+    color: var(--casino-gold-dark);
 }
 
 .neo-gamble-king-title {
@@ -1368,6 +1401,7 @@ div .neo-btn.neo-btn-green:hover,
     text-shadow: none;
     text-transform: none;
     letter-spacing: -0.025em;
+    overflow-wrap: anywhere;
     position: relative;
 }
 
@@ -1828,10 +1862,6 @@ div .neo-btn.neo-btn-green:hover,
 /* ============================================================================ */
 
 @media (max-width: 768px) {
-    .neo-royal-crown {
-        font-size: 1.25rem;
-    }
-
     .neo-desktop-nav {
         display: none;
     }
@@ -1887,10 +1917,6 @@ div .neo-btn.neo-btn-green:hover,
 }
 
 @media (max-width: 480px) {
-    .neo-royal-crown {
-        font-size: 1.125rem;
-    }
-
     .neo-header-btn {
         width: 40px;
         height: 40px;
@@ -1930,32 +1956,13 @@ div .neo-btn.neo-btn-green:hover,
         font-size: 0.875rem;
     }
 
-    .neo-gamble-king .neo-stats-grid {
-        grid-template-columns: repeat(2, 1fr) !important;
-        gap: 0.5rem !important;
-    }
-
-    .neo-gamble-king .neo-stat-card {
-        padding: 0.75rem !important;
-        margin: 0 !important;
-    }
-
-    .neo-gamble-king .neo-stat-value {
-        font-size: 1.25rem !important;
-    }
-
-    .neo-gamble-king .neo-stat-label {
-        font-size: 0.75rem !important;
-        line-height: 1.2 !important;
+    .neo-gamble-king-metrics {
+        gap: 0.5rem 1rem;
     }
 }
 
 @media (max-width: 360px) {
     .neo-stats-grid {
-        grid-template-columns: 1fr !important;
-    }
-
-    .neo-gamble-king .neo-stats-grid {
         grid-template-columns: 1fr !important;
     }
 
@@ -1972,12 +1979,8 @@ div .neo-btn.neo-btn-green:hover,
         left: -320px;
     }
 
-    .neo-gamble-king .neo-stat-value {
-        font-size: 1rem !important;
-    }
-
-    .neo-gamble-king .neo-stat-label {
-        font-size: 0.65rem !important;
+    .neo-gamble-king-lead-value {
+        font-size: 1.375rem;
     }
 
     .neo-gamble-king-name {
@@ -2068,4 +2071,30 @@ div .neo-btn.neo-btn-green:hover,
 .badge-info {
     background: var(--casino-purple-light);
     color: var(--casino-purple-dark);
+}
+
+/* Page-title tier: one treatment for every top-level page heading so list
+   pages and detail pages read as the same product.
+   .page-title           — list pages (players, sessions, stats, calendar);
+                           clamps 1.5-2.5 (the "title" step) for mobile.
+   .page-title--detail   — detail pages reached from a list row (the "3xl"
+                           1.75 step per the _typography.css scale).
+   Both neutralize the base h2 border/padding from _typography.css. */
+.page-title {
+    font-size: clamp(1.5rem, 7vw, 2.5rem);
+    font-weight: 600;
+    color: var(--text-primary);
+    border-bottom: none;
+    padding-bottom: 0;
+    margin: 0 0 var(--spacing-xl) 0;
+}
+
+.page-title--detail {
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    border-bottom: none;
+    padding-bottom: 0;
+    margin: 0;
+    overflow-wrap: anywhere;
 }

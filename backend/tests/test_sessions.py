@@ -3,7 +3,7 @@
 import unittest
 
 from app import create_app
-from app.database.models import db, Session, Entry
+from app.database.models import db, Session, Entry, Player
 
 from tests.test_config import TestConfig
 
@@ -12,7 +12,7 @@ from tests.test_config import TestConfig
 SESSION_FIELDS = {
     'session_id', 'date', 'default_buy_in_value', 'is_active', 'status',
     'wisdom_quote', 'wisdom_player_id', 'created_at', 'updated_at',
-    'total_value',
+    'total_value', 'player_count', 'player_names',
 }
 
 
@@ -30,6 +30,7 @@ class TestSessionsAPI(unittest.TestCase):
         with self.app.app_context():
             db.session.query(Entry).delete()
             db.session.query(Session).delete()
+            db.session.query(Player).delete()
             db.session.commit()
 
     def _create_session(self, date="2024-01-15", **extra):
@@ -61,6 +62,29 @@ class TestSessionsAPI(unittest.TestCase):
         self.assertEqual(session['session_id'], 'sid_20240115_1')
         self.assertEqual(session['date'], '2024-01-15')
         self.assertTrue(session['is_active'])
+
+    def test_get_sessions_includes_roster(self):
+        """GET /api/sessions reports each session's roster (count + names)."""
+        self._create_session()
+        with self.app.app_context():
+            db.session.add(Player(player_id='pid_0091', name='Alice'))
+            db.session.add(Player(player_id='pid_0092', name='Bob'))
+            session = db.session.query(Session).filter_by(
+                session_id='sid_20240115_1').first()
+            db.session.add(Entry(
+                entry_id='eid_9001', session_id=session.session_id,
+                player_id='pid_0091', total_buy_in_amount=20.0,
+            ))
+            db.session.add(Entry(
+                entry_id='eid_9002', session_id=session.session_id,
+                player_id='pid_0092', total_buy_in_amount=40.0,
+            ))
+            db.session.commit()
+        resp = self.client.get('/api/sessions')
+        session_data = resp.get_json()[0]
+        self.assertEqual(session_data['player_count'], 2)
+        self.assertEqual(set(session_data['player_names']), {'Alice', 'Bob'})
+        self.assertEqual(session_data['total_value'], 60.0)
 
     # ------------------------------------------------------------------
     # GET /api/sessions/active  (active sessions)

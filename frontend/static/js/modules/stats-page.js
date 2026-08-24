@@ -72,7 +72,7 @@ export default class StatsPage {
     render() {
         const html = `
             <div class="fade-in stats-page" style="padding: 1.5rem; max-width: 1200px; margin: 0 auto;">
-                <h2 style="font-size: clamp(1.5rem, 7vw, 2.5rem); font-weight: 600; margin-bottom: 2rem; color: var(--text-primary); white-space: nowrap;">🏆 Stats & Awards</h2>
+                <h2 class="page-title">🏆 Stats & Awards</h2>
                 
                 <!-- Summary Stats Grid -->
                 ${this.renderSummaryStats()}
@@ -172,7 +172,7 @@ export default class StatsPage {
         if (!this.chartData || !this.chartData.data || this.chartData.data.length === 0) {
             return `
                 <div class="neo-card" style="margin-bottom: 2rem; text-align: center; padding: 2rem;">
-                    <h2>No Data Available</h2>
+                    <h2 class="section-heading">No Data Available</h2>
                     <p>Start playing some poker sessions to see your gambling trends!</p>
                     <a href="#sessions" class="neo-btn neo-btn-green neo-btn-lg">
                         Create First Session
@@ -186,7 +186,7 @@ export default class StatsPage {
         return `
             <div class="neo-card" style="margin-bottom: 2rem;">
                 <div class="neo-chart-header">
-                    <h2>💰 Money Gambled Over Time</h2>
+                    <h2 class="section-heading">💰 Money Gambled Over Time</h2>
                     <div class="neo-chart-subtitle">
                         ${dateRange?.start && dateRange?.end
                             ? `${dateRange.start} - ${dateRange.end}`
@@ -219,7 +219,7 @@ export default class StatsPage {
         return `
             <div class="neo-card neo-card-purple" style="margin-bottom: 2rem;">
                 <div class="neo-chart-header">
-                    <h2>🎰 Money Gambled by Player</h2>
+                    <h2 class="section-heading">🎰 Money Gambled by Player</h2>
                     <div class="neo-chart-subtitle">
                         Who's contributing to the pot?
                     </div>
@@ -249,7 +249,7 @@ export default class StatsPage {
         };
         
         return `
-            <h2 style="font-size: 2rem; font-weight: 600; margin-bottom: 1.5rem; color: var(--text-primary); text-align: center;">🏅 Leaderboards</h2>
+            <h2 class="section-heading">🏅 Leaderboards</h2>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
 
                 <div class="neo-leaderboard-stat green">

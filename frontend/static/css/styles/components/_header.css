@@ -7,19 +7,6 @@ header {
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-/* Royal Header */
-.royal-header {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-}
-
-.royal-crown {
-    font-size: 1.25rem;
-    margin: 0 0.5rem;
-    flex-shrink: 0;
-}
 
 header h1 {
     margin: 0;
@@ -55,13 +42,4 @@ header h1 {
     header {
         padding: 0.5rem 0.25rem;
     }
-}
-
-/* Migrated from responsive-fixes.css (missed by the original migration). */
-.royal-crown.left {
-    transform: rotate(-10deg);
-}
-
-.royal-crown.right {
-    transform: rotate(10deg);
 }
