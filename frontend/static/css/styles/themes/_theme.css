@@ -43,13 +43,14 @@
     --border-card: #E2E8F0;
     --border-table: #E2E8F0;
 
-    /* Shadow */
-    --shadow-light: 0 1px 2px rgba(0, 0, 0, 0.05);
-    --shadow-medium: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
-    --shadow-heavy: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
-    --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
-
+    /* Shadow — legacy names alias the neo-* scale (defined in _modern-theme.css)
+       so every shadow inherits the dark-mode flip in one place. */
+    --shadow-light: var(--neo-shadow-sm);
+    --shadow-medium: var(--neo-shadow-md);
+    --shadow-heavy: var(--neo-shadow-lg);
+    --shadow-card: var(--neo-shadow-static);
     /* Gamble King Colors */
+    --casino-white: #FFFFFF;
     --gamble-king-bg: rgba(245, 158, 11, 0.08);
     --gamble-king-bg-hover: rgba(245, 158, 11, 0.12);
     --gamble-king-label-bg: #F59E0B;
