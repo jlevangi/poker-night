@@ -10,15 +10,16 @@
     --bg-body: #F8FAFC;
     --bg-content: #FFFFFF;
     --bg-card: #FFFFFF;
-    --bg-header: #0F172A;
     --bg-primary: #FFFFFF;
     --bg-secondary: #F1F5F9;
 
-    /* Text Colors */
+    /* Text Colors — muted variants use the neutral slate scale
+       (--neutral-500) so all text tints share one family. The dark
+       values are aligned in a later step. */
     --text-primary: #0F172A;
     --text-secondary: #475569;
-    --text-muted: #4F7289;
-    --text-light: #4F7289;
+    --text-muted: #64748B;
+    --text-light: #64748B;
     --text-white: #FFFFFF;
 
     /* Success/Error Colors */
@@ -31,7 +32,10 @@
     --color-info: #6366F1;
     --color-info-hover: #4F46E5;
 
-    /* Profit Colors */
+    /* Profit Colors
+       NOTE: declared here so _modern-theme.css (loaded after this file)
+       cannot shadow them with divergent values. Step 3 removes the
+       duplicate block there. */
     --profit-positive: #047857;
     --profit-negative: #DC2626;
     --profit-unpaid: #92400E;
@@ -43,12 +47,78 @@
     --border-card: #E2E8F0;
     --border-table: #E2E8F0;
 
-    /* Shadow — legacy names alias the neo-* scale (defined in _modern-theme.css)
-       so every shadow inherits the dark-mode flip in one place. */
+    /* Shadow — legacy names alias the neo-* scale (defined below in this
+       file), so every shadow inherits the dark-mode flip in one place. */
     --shadow-light: var(--neo-shadow-sm);
     --shadow-medium: var(--neo-shadow-md);
     --shadow-heavy: var(--neo-shadow-lg);
     --shadow-card: var(--neo-shadow-static);
+
+    /* Brand Palette — the de facto brand set (casino-* is the majority
+       consumer name). Single source: _modern-theme.css (loaded after
+       this file) must not re-declare these; step 3 removes its copies. */
+    --casino-red: #EF4444;
+    --casino-red-dark: #DC2626;
+    --casino-red-light: #FEF2F2;
+
+    --casino-gold: #F59E0B;
+    --casino-gold-dark: #92400E;
+    --casino-gold-light: #FFFBEB;
+
+    --casino-green: #10B981;
+    --casino-green-dark: #059669;
+    --casino-green-light: #ECFDF5;
+
+    --casino-purple: #6366F1;
+    --casino-purple-dark: #4F46E5;
+    --casino-purple-light: #EEF2FF;
+
+    --casino-blue: #3B82F6;
+    --casino-blue-dark: #2563EB;
+    --casino-blue-light: #EFF6FF;
+
+    /* Neutral status pill background (session cards) */
+    --status-neutral-bg: rgba(100, 116, 139, 0.14);
+
+    /* Brand neutrals */
+    --casino-black: #0F172A;
+    --casino-gray: #475569;
+    --casino-cream: #F8FAFC;
+
+    --gamble-king-stripe-color: rgba(217, 119, 6, 0.08);
+
+    /* Shell / header surfaces */
+    --bg-header: #FFFFFF;
+    --bg-header-gradient-start: #FFFFFF;
+    --bg-header-gradient-end: #F8FAFC;
+    --bg-shell-hover: rgba(37, 99, 235, 0.08);
+    --bg-shell-active: rgba(37, 99, 235, 0.12);
+    --bg-bottom-nav: rgba(255, 255, 255, 0.92);
+
+    /* Shell borders */
+    --border-header: rgba(148, 163, 184, 0.2);
+    --border-bottom-nav: rgba(148, 163, 184, 0.25);
+
+    /* Header text */
+    --text-header: #0F172A;
+    --text-header-muted: #475569;
+
+    /* Shadow scale — single source (the legacy shadow-* names above
+       alias these, so every shadow inherits the dark-mode flip).
+       Step 3 removes the duplicate scale in _modern-theme.css. */
+    --neo-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --neo-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+    --neo-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
+    --neo-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+    --neo-shadow-static: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+
+    /* Focus ring — brightened in dark mode for contrast on dark surfaces */
+    --focus-ring-color: var(--primary-color);
+
+    /* Typography weights */
+    --font-weight-bold: 600;
+    --font-weight-black: 700;
+
     /* Gamble King Colors */
     --casino-white: #FFFFFF;
     --gamble-king-bg: rgba(245, 158, 11, 0.08);
@@ -58,19 +128,19 @@
     --gamble-king-gradient: linear-gradient(135deg, #F59E0B, #D97706);
 
     /* Seven-Two Game Colors */
-    --seven-two-bg: #10B981;
-    --seven-two-bg-hover: #059669;
-    --seven-two-increment: #10B981;
-    --seven-two-increment-hover: #059669;
-    --seven-two-decrement: #EF4444;
-    --seven-two-decrement-hover: #DC2626;
-    --seven-two-border: #10B981;
+    --seven-two-bg: var(--casino-green);
+    --seven-two-bg-hover: var(--casino-green-dark);
+    --seven-two-increment: var(--casino-green);
+    --seven-two-increment-hover: var(--casino-green-dark);
+    --seven-two-decrement: var(--casino-red);
+    --seven-two-decrement-hover: var(--casino-red-dark);
+    --seven-two-border: var(--casino-green);
 
     /* Counter Button Colors */
-    --counter-increment: #10B981;
-    --counter-increment-hover: #059669;
-    --counter-decrement: #EF4444;
-    --counter-decrement-hover: #DC2626;
+    --counter-increment: var(--casino-green);
+    --counter-increment-hover: var(--casino-green-dark);
+    --counter-decrement: var(--casino-red);
+    --counter-decrement-hover: var(--casino-red-dark);
 
     /* Spacing */
     --spacing-xs: 0.25rem;
@@ -78,8 +148,10 @@
     --spacing-md: 1rem;
     --spacing-lg: 1.5rem;
     --spacing-xl: 2rem;
+    --spacing-neo: 1.25rem;
 
-    /* Border Radius */
+    /* Border Radius — single source. Step 3 removes the duplicate
+       scale in _modern-theme.css. */
     --radius-sm: 6px;
     --radius-md: 10px;
     --radius-lg: 14px;
@@ -96,7 +168,8 @@
     --font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", system-ui, sans-serif;
     --line-height: 1.6;
 
-    /* Z-Index */
+    /* Z-Index — single source. Step 3 removes the duplicates in
+       _modern-theme.css. */
     --z-modal: 2000;
     --z-nav: 1000;
 }
