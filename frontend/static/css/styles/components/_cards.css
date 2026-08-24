@@ -22,6 +22,36 @@
     letter-spacing: 0.03em;
 }
 
+/* Sessions list: keep lifecycle state at the trailing edge with the card's
+   headline value instead of letting it drift beside dates of varying width. */
+.session-card__lead {
+    text-align: right;
+}
+
+.session-card__status {
+    display: block;
+    margin-bottom: 0.25rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: capitalize;
+}
+
+.session-card__status--active { color: var(--casino-green-dark); }
+.session-card__status--ended { color: var(--text-secondary); }
+
+/* Recent-session cards use a fixed trailing status column so Active/Ended and
+   their icons align regardless of the date or buy-in text on the left. */
+.recent-session-status {
+    min-width: 5.5rem;
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    text-align: right;
+    white-space: nowrap;
+}
+
 /* Mobile Card Adjustments */
 @media (max-width: 700px) {
     /* Fix double borders and reduce whitespace on dashboard table */

@@ -197,12 +197,12 @@ export default class SessionsPage {
                 <div class="session-card__meta">
                     <div class="session-card__when">
                         <span class="session-card__date">${formatDate(session.date)}</span>
-                        <span class="session-card__status session-card__status--${statusState}">${status}</span>
                     </div>
                     <div class="session-card__buyin"><b>${formatCurrency(session.buyin)}</b> buy-in</div>
                     ${roster}
                 </div>
                 <div class="session-card__lead">
+                    <span class="session-card__status session-card__status--${statusState}">${status}</span>
                     <span class="session-card__total-value">${formatCurrency(session.totalValue)}</span>
                     <span class="session-card__total-label">Total</span>
                 </div>

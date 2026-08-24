@@ -136,8 +136,8 @@ export default class PlayerDetailPage {
         let html = `
             <div style="padding: 1.5rem; max-width: 1200px; margin: 0 auto;">
                 <!-- Header with navigation -->
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-                    <button id="player-detail-back-btn" type="button" class="neo-btn neo-btn-purple">← Back</button>
+                <div class="detail-action-bar">
+                    <button id="player-detail-back-btn" type="button" class="neo-btn neo-btn-purple detail-back-btn">← Back</button>
                     <button id="share-btn" class="neo-btn neo-btn-gold">&#128203; Share</button>
                 </div>
                 

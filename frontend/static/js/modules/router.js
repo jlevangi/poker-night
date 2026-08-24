@@ -217,6 +217,10 @@ export default class Router {
             container.innerHTML = `<div class="skeleton-page"><p>Error loading content: ${error.message}. Check console.</p></div>`;
             this.pageManager.show('detail');
         } finally {
+            // Each route is a new page, even though keep-alive containers share
+            // one document. Native navigation starts new pages at the top; match
+            // that expectation after the destination has rendered.
+            window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
             this._transitioning = false;
             if (this._pendingPath) {
                 const next = this._pendingPath;

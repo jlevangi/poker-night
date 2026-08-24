@@ -93,8 +93,8 @@ export default class EventDetailPage {
         this.appContent.innerHTML = `
             <div class="fade-in" style="padding: 1.5rem; max-width: 800px; margin: 0 auto;">
                 <!-- Header with navigation -->
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-                    <button id="event-detail-back-btn" type="button" class="neo-btn neo-btn-purple">&larr; Back</button>
+                <div class="detail-action-bar">
+                    <button id="event-detail-back-btn" type="button" class="neo-btn neo-btn-purple detail-back-btn">← Back</button>
                     <button id="share-event-btn" class="neo-btn neo-btn-gold">&#128203; Share</button>
                 </div>
 

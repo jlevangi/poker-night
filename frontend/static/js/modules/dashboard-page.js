@@ -216,7 +216,7 @@ export default class DashboardPage {
                 ${sessionTile}
                 <a href="#calendar" class="neo-quick-action neo-quick-action--purple" aria-label="Schedule a poker night">
                     <span class="neo-quick-action-icon">${DashboardPage.calendarIcon()}</span>
-                    <span class="neo-quick-action-label">Poker Night</span>
+                    <span class="neo-quick-action-label">Schedule a Poker Night</span>
                 </a>
                 <a href="#players" class="neo-quick-action neo-quick-action--blue" aria-label="View players">
                     <span class="neo-quick-action-icon">${DashboardPage.playersIcon()}</span>
@@ -321,7 +321,7 @@ export default class DashboardPage {
             <div class="neo-card neo-standings-card">
                 <div class="neo-standings-head">
                     <h3 class="section-title">🏆 Top Players</h3>
-                    <a href="#players" class="neo-standings-all">See all players →</a>
+                    <a href="#players" class="neo-btn neo-btn-sm neo-btn-purple">View All</a>
                 </div>
                 <div class="table-responsive">
                     <table class="neo-table neo-standings-table">
@@ -403,7 +403,7 @@ export default class DashboardPage {
                                 Buy-in: ${formatCurrency(session.default_buy_in_value || 0)}
                             </div>
                         </div>
-                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <div class="recent-session-status">
                             <span style="color: ${statusColor}; font-size: 1.25rem;">${statusIcon}</span>
                             <span style="font-size: 0.875rem; font-weight: 600; color: ${statusColor};">
                                 ${statusText}

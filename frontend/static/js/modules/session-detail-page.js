@@ -335,23 +335,11 @@ export default class SessionDetailPage {
                         <div class="stat-label stat-label--sm">7-2 Wins</div>
                         <div style="display: flex; align-items: center; justify-content: center; gap: 0.25rem;">
                             ${isActive ? `
-                                <button class="neo-btn neo-btn-sm seven-two-decrement-btn" data-player-id="${player.id}" aria-label="Decrease 7-2 wins" style="
-                                    width: 22px; height: 22px; padding: 0; font-size: 0.75rem; font-weight: 700;
-                                    display: inline-flex; align-items: center; justify-content: center;
-                                    border: 1px solid var(--casino-gold); border-radius: 50%;
-                                    background: transparent; color: var(--casino-gold);
-                                    cursor: pointer; line-height: 1;
-                                ">−</button>
+                                <button class="session-counter-btn session-counter-btn--gold session-counter-btn--decrement seven-two-decrement-btn" data-player-id="${player.id}" aria-label="Decrease 7-2 wins">−</button>
                             ` : ''}
                             <span class="player-card-value" style="color: var(--casino-gold); min-width: 1.25rem;">${player.sevenTwoWins || 0}</span>
                             ${isActive ? `
-                                <button class="neo-btn neo-btn-sm seven-two-increment-btn" data-player-id="${player.id}" aria-label="Increase 7-2 wins" style="
-                                    width: 22px; height: 22px; padding: 0; font-size: 0.75rem; font-weight: 700;
-                                    display: inline-flex; align-items: center; justify-content: center;
-                                    border: 1px solid var(--casino-gold); border-radius: 50%;
-                                    background: var(--casino-gold); color: var(--text-white);
-                                    cursor: pointer; line-height: 1;
-                                ">+</button>
+                                <button class="session-counter-btn session-counter-btn--gold seven-two-increment-btn" data-player-id="${player.id}" aria-label="Increase 7-2 wins">+</button>
                             ` : ''}
                         </div>
                     </div>
@@ -359,23 +347,11 @@ export default class SessionDetailPage {
                         <div class="stat-label stat-label--sm">Strikes</div>
                         <div style="display: flex; align-items: center; justify-content: center; gap: 0.25rem;">
                             ${isActive ? `
-                                <button class="neo-btn neo-btn-sm strikes-decrement-btn" data-player-id="${player.id}" aria-label="Decrease strikes" style="
-                                    width: 22px; height: 22px; padding: 0; font-size: 0.75rem; font-weight: 700;
-                                    display: inline-flex; align-items: center; justify-content: center;
-                                    border: 1px solid var(--casino-red); border-radius: 50%;
-                                    background: transparent; color: var(--casino-red);
-                                    cursor: pointer; line-height: 1;
-                                ">−</button>
+                                <button class="session-counter-btn session-counter-btn--red session-counter-btn--decrement strikes-decrement-btn" data-player-id="${player.id}" aria-label="Decrease strikes">−</button>
                             ` : ''}
                             <span class="player-card-value" style="color: var(--casino-red); min-width: 1.25rem;">${player.strikes || 0}</span>
                             ${isActive ? `
-                                <button class="neo-btn neo-btn-sm strikes-increment-btn" data-player-id="${player.id}" aria-label="Increase strikes" style="
-                                    width: 22px; height: 22px; padding: 0; font-size: 0.75rem; font-weight: 700;
-                                    display: inline-flex; align-items: center; justify-content: center;
-                                    border: 1px solid var(--casino-red); border-radius: 50%;
-                                    background: var(--casino-red); color: var(--text-white);
-                                    cursor: pointer; line-height: 1;
-                                ">+</button>
+                                <button class="session-counter-btn session-counter-btn--red strikes-increment-btn" data-player-id="${player.id}" aria-label="Increase strikes">+</button>
                             ` : ''}
                         </div>
                     </div>
@@ -617,8 +593,8 @@ export default class SessionDetailPage {
         let html = `
             <div style="padding: 1.5rem; max-width: 1200px; margin: 0 auto;">
                 <!-- Header with navigation -->
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                    <button id="session-detail-back-btn" type="button" class="neo-btn neo-btn-purple">← Back</button>
+                <div class="detail-action-bar">
+                    <button id="session-detail-back-btn" type="button" class="neo-btn neo-btn-purple detail-back-btn">← Back</button>
                     <button id="share-btn" class="neo-btn neo-btn-gold">&#128203; Share</button>
                 </div>
                 ${isActive ?
