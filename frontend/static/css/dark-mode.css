@@ -102,6 +102,18 @@ a {
     color: #93C5FD;
 }
 
+/* The Gamble King hero's name is a link, but it must stay white on the dark
+   felt (gold on hover) in both themes — the generic dark link blue above
+   would repaint it. Higher specificity than the rules it overrides. */
+[data-theme="dark"] a.neo-gamble-king-name {
+    color: #FFFFFF;
+}
+
+[data-theme="dark"] a.neo-gamble-king-name:hover,
+[data-theme="dark"] a.neo-gamble-king-name:focus-visible {
+    color: #FCD34D;
+}
+
 a:hover {
     color: var(--primary-hover);
 }
