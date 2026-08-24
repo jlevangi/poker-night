@@ -29,7 +29,7 @@ textarea,
     --casino-red-light: #FEF2F2;
 
     --casino-gold: #F59E0B;
-    --casino-gold-dark: #D97706;
+    --casino-gold-dark: #92400E;
     --casino-gold-light: #FFFBEB;
 
     --casino-green: #10B981;
@@ -324,7 +324,7 @@ textarea,
 }
 
 /* Active = pill + gold inset bar (Gamble King accent; --casino-gold-dark
-   swaps per theme: #D97706 light / #FCD34D dark). */
+   swaps per theme: #92400E light / #FCD34D dark). */
 .neo-nav-btn.active {
     background: var(--bg-shell-active);
     color: var(--text-header);
@@ -1388,7 +1388,7 @@ a.neo-gamble-king-name:focus-visible {
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.14em;
-    color: rgba(248, 250, 252, 0.66);
+    color: rgba(248, 250, 252, 0.85);
 }
 
 .neo-gamble-king-metrics {
@@ -1420,13 +1420,13 @@ a.neo-gamble-king-name:focus-visible {
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    color: rgba(252, 211, 77, 0.75);
+    color: rgba(252, 211, 77, 0.95);
 }
 
 .neo-gamble-king-empty {
     margin-top: 0.5rem;
     font-size: 0.9375rem;
-    color: rgba(248, 250, 252, 0.6);
+    color: rgba(248, 250, 252, 0.85);
     position: relative;
 }
 
