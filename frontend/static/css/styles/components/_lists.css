@@ -95,14 +95,14 @@ li a:hover {
 }
 
 .session-card__date {
-    font-size: 0.8125rem;
+    font-size: 0.75rem;
     font-weight: 600;
     color: var(--text-secondary);
     white-space: nowrap;
 }
 
 .session-card__status {
-    font-size: 0.625rem;
+    font-size: 0.75rem;
     font-weight: 700;
     letter-spacing: 0.04em;
     text-transform: uppercase;
@@ -198,10 +198,6 @@ li a:hover {
 @media (max-width: 600px) {
     .session-card__total-value {
         font-size: 1.25rem;
-    }
-
-    .session-card__date {
-        font-size: 0.75rem;
     }
 }
 
