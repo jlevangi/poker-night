@@ -40,6 +40,10 @@ textarea,
     --casino-purple-dark: #4F46E5;
     --casino-purple-light: #EEF2FF;
 
+    --casino-blue: #3B82F6;
+    --casino-blue-dark: #2563EB;
+    --casino-blue-light: #EFF6FF;
+
     /* Neutral status pill background (session cards) */
     --status-neutral-bg: rgba(100, 116, 139, 0.14);
 
@@ -167,6 +171,7 @@ textarea,
     --casino-gold-light: rgba(245, 158, 11, 0.1);
     --casino-green-light: rgba(16, 185, 129, 0.1);
     --casino-purple-light: rgba(99, 102, 241, 0.1);
+    --casino-blue-light: rgba(59, 130, 246, 0.1);
 
     --status-neutral-bg: rgba(148, 163, 184, 0.16);
 
@@ -174,6 +179,7 @@ textarea,
     --casino-gold-dark: #FCD34D;
     --casino-green-dark: #6EE7B7;
     --casino-purple-dark: #A5B4FC;
+    --casino-blue-dark: #93C5FD;
 
     /* Brighter focus ring for dark backgrounds (nav, menus) */
     --focus-ring-color: #60A5FA;
@@ -1242,22 +1248,6 @@ div .neo-btn.neo-btn-green:hover,
     opacity: 0.7;
 }
 
-/* Dashboard quick grid: action tiles keep their accent tint (they are
-   interactive); metric tiles go neutral so the gold spotlight above and
-   the colored actions are the only things with color on the page. */
-.neo-stats-grid--quick .neo-stat-card--metric {
-    background: var(--bg-card);
-    border-color: var(--border-light, #E2E8F0);
-    box-shadow: none;
-    text-align: left;
-}
-
-.neo-stats-grid--quick .neo-stat-card--metric .neo-stat-value {
-    font-size: 1.375rem;
-    line-height: 1.25;
-    color: var(--text-primary);
-}
-
 /* ============================================================================ */
 /* GAMBLE KING */
 /* ============================================================================ */
@@ -1518,42 +1508,92 @@ a.neo-gamble-king-name:focus-visible {
 /* ============================================================================ */
 
 .neo-quick-actions {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
     gap: 1rem;
-    flex-wrap: wrap;
-    justify-content: center;
     margin-bottom: 1.25rem;
 }
 
 .neo-quick-action {
-    flex: 1;
-    min-width: 200px;
-    max-width: 300px;
-    background: var(--casino-purple-light);
-    border: 1px solid rgba(99, 102, 241, 0.15);
-    box-shadow: var(--neo-shadow-sm);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 96px;
     padding: 1rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border-light, #E2E8F0);
+    box-shadow: var(--neo-shadow-sm);
+    border-radius: 14px;
     text-align: center;
     text-decoration: none;
-    color: var(--casino-purple-dark);
-    font-weight: 500;
-    text-transform: none;
+    font-size: 0.875rem;
+    font-weight: 600;
     letter-spacing: 0;
+    color: var(--qa-accent-dark, var(--text-primary));
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
     transition: all 0.2s ease;
-    border-radius: 14px;
 }
 
-.neo-quick-action:hover {
+/* Accent modifiers set local vars; the element-scoped rules below consume
+   them, so each accent is one line and both themes work automatically
+   (-dark/-light vars flip in the dark block above). The `a`/`button`
+   element prefix keeps specificity above `[data-theme="dark"] a`. */
+.neo-quick-action--gold { --qa-accent: var(--casino-gold); --qa-accent-dark: var(--casino-gold-dark); --qa-accent-light: var(--casino-gold-light); }
+.neo-quick-action--green { --qa-accent: var(--casino-green); --qa-accent-dark: var(--casino-green-dark); --qa-accent-light: var(--casino-green-light); }
+.neo-quick-action--purple { --qa-accent: var(--casino-purple); --qa-accent-dark: var(--casino-purple-dark); --qa-accent-light: var(--casino-purple-light); }
+.neo-quick-action--blue { --qa-accent: var(--casino-blue); --qa-accent-dark: var(--casino-blue-dark); --qa-accent-light: var(--casino-blue-light); }
+.neo-quick-action--red { --qa-accent: var(--casino-red); --qa-accent-dark: var(--casino-red-dark); --qa-accent-light: var(--casino-red-light); }
+
+.neo-quick-actions a.neo-quick-action,
+.neo-quick-actions button.neo-quick-action {
+    color: var(--qa-accent-dark, var(--text-primary));
+}
+
+.neo-quick-action .neo-quick-action-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    margin: 0;
+    background: var(--qa-accent-light, var(--bg-tertiary));
+    color: var(--qa-accent-dark, var(--text-primary));
+}
+
+.neo-quick-action .neo-quick-action-icon svg {
+    width: 24px;
+    height: 24px;
+}
+
+.neo-quick-action .neo-quick-action-label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+.neo-quick-actions a.neo-quick-action:hover,
+.neo-quick-actions button.neo-quick-action:hover {
     transform: translateY(-2px);
     box-shadow: var(--neo-shadow-md);
-    color: var(--casino-purple-dark);
+    border-color: var(--qa-accent, var(--border-color));
+    color: var(--qa-accent-dark, var(--text-primary));
     text-decoration: none;
 }
 
-.neo-quick-action-icon {
-    font-size: 2rem;
-    display: block;
-    margin-bottom: 0.5rem;
+.neo-quick-action:active {
+    transform: translateY(0);
+    box-shadow: var(--neo-shadow-sm);
+}
+
+.neo-quick-actions a.neo-quick-action:focus-visible,
+.neo-quick-actions button.neo-quick-action:focus-visible {
+    outline: 2px solid var(--focus-ring-color, #60A5FA);
+    outline-offset: 2px;
 }
 
 /* ============================================================================ */
@@ -1926,11 +1966,8 @@ a.neo-gamble-king-name:focus-visible {
     }
 
     .neo-quick-actions {
-        flex-direction: column;
-    }
-
-    .neo-quick-action {
-        max-width: none;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
     }
 
     .neo-stat-value {
@@ -1965,6 +2002,11 @@ a.neo-gamble-king-name:focus-visible {
 
     .neo-stats-grid {
         grid-template-columns: 1fr 1fr;
+    }
+
+    .neo-quick-actions {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
     }
 
     .neo-stat-value {
