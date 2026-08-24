@@ -81,11 +81,11 @@ export default class DashboardPage {
                 <!-- Active Session Hero (leads: what's happening right now) -->
                 ${data.activeSession ? this.renderActiveSessionCard(data.activeSession) : ''}
 
+                <!-- Next Event Card (promoted: "what's coming" pairs with "what's happening") -->
+                ${data.nextEvent ? this.renderNextEventCard(data.nextEvent) : ''}
+
                 <!-- Quick Actions and Stats Grid -->
                 ${this.renderQuickActionsAndStatsGrid(data)}
-
-                <!-- Next Event Card -->
-                ${data.nextEvent ? this.renderNextEventCard(data.nextEvent) : ''}
 
                 <!-- Top Players Section -->
                 ${this.renderStandingsSection(data.players)}
@@ -110,7 +110,7 @@ export default class DashboardPage {
                 <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 0.5rem;">
                     <div>
                         <div class="section-title" style="color: var(--text-primary); display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
-                            <span class="neo-live-badge">LIVE</span>
+                            <span class="neo-live-badge"><span class="neo-live-dot"></span>LIVE</span>
                             Active Session
                         </div>
                         <div class="card-subtitle" style="margin-top: 0.25rem;">
@@ -140,7 +140,7 @@ export default class DashboardPage {
         const counts = event.rsvp_counts || { yes: 0, maybe: 0, no: 0 };
 
         return `
-            <a href="#calendar" class="neo-card neo-next-event-card neo-card-primary list-card-row" style="text-decoration: none; color: inherit;">
+            <a href="#calendar" class="neo-card neo-next-event-card list-card-row" style="text-decoration: none; color: inherit;">
                 <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
                     <div>
                         <div class="section-title" style="color: var(--text-primary);">

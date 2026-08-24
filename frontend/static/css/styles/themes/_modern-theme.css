@@ -2226,3 +2226,54 @@ a.neo-gamble-king-name:focus-visible {
 .neo-standings-king {
     background: var(--casino-gold-light);
 }
+
+/* ============================================================================ */
+/* LIVE / NEXT-SESSION CONTEXT (home) — the "now" and "next" pair. */
+/* ============================================================================ */
+
+/* Pulsing dot inside the LIVE badge: the only moving thing on the page,
+   and the one that should move. Neutralized by prefers-reduced-motion. */
+.neo-live-dot {
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 50%;
+    background: #fff;
+    display: inline-block;
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.6);
+    animation: neo-live-pulse 1.6s ease-out infinite;
+}
+
+@keyframes neo-live-pulse {
+    0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.55); }
+    70%, 100% { box-shadow: 0 0 0 0.4rem rgba(255, 255, 255, 0); }
+}
+
+.neo-next-event-card {
+    background: var(--casino-gold-light);
+    border-color: rgba(245, 158, 11, 0.3);
+    color: var(--text-primary);
+}
+
+/* RSVP chips: theme-aware. The inline styles in renderNextEventCard use
+   --casino-* tints; in dark mode the opaque casino color behind white
+   text stays legible (that's the light-mode look), so no override needed. */
+
+/* Metric strip: the three .neo-stat-card--metric tiles sit under the
+   96px quick-action tiles; left-align + slim them so they read as a
+   caption strip, not a second row of hero tiles. */
+.neo-stat-card--metric {
+    text-align: left;
+    padding: 0.75rem 1rem;
+    border-radius: 12px;
+}
+
+.neo-stat-card--metric .neo-stat-value {
+    font-size: 1.375rem;
+    margin-bottom: 0.125rem;
+}
+
+.neo-stat-card--metric .neo-stat-label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
