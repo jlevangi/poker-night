@@ -2241,41 +2241,83 @@ a.neo-gamble-king-name:focus-visible {
     text-decoration: underline;
 }
 
-/* Compact the table inside the podium: tighter rows, no heavy thead shadow. */
+/* Compact the podium: quiet header row, tighter body rows, no heavy
+   thead shadow. The goal is three glanceable rows, not a report —
+   so the type scale drops one step from the base .neo-table. */
 .neo-standings-table {
     margin-top: 0;
+    font-size: 0.875rem;
+}
+
+.neo-standings-table thead th {
+    padding-top: 0.375rem;
+    padding-bottom: 0.375rem;
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
 }
 
 .neo-standings-table tbody td {
-    padding-top: 0.75rem;
-    padding-bottom: 0.75rem;
+    padding-top: 0.6rem;
+    padding-bottom: 0.6rem;
 }
 
 .neo-standings-rank {
+    font-size: 0.75rem;
     font-weight: 700;
+    color: var(--text-secondary);
     font-variant-numeric: tabular-nums;
+}
+
+.neo-standings-rank.is-king {
+    color: var(--casino-gold-dark);
 }
 
 .neo-standings-name {
     color: var(--text-primary);
     text-decoration: none;
     font-weight: 600;
+    font-size: 0.9375rem;
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;
     overflow-wrap: anywhere;
 }
 
-.neo-standings-name:hover {
-    color: var(--link-color);
-    text-decoration: underline;
+/* P/L is the number a podium is for; win rate stays secondary.
+   The base .profit-* rules already supply the color in both themes. */
+.neo-standings-pl {
+    font-size: 0.9375rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+}
+
+.neo-standings-winrate {
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    font-variant-numeric: tabular-nums;
 }
 
 /* Gamble King's row gets a subtle gold wash; the hero already crowns them,
-   so the podium just echoes it. Uses the theme's -light tint (opaque light /
-   translucent dark) so both themes read. */
-.neo-standings-king {
+   so the podium just echoes it. The tr class carries the tint so it bleeds
+   to the card edges; uses the theme's -light tint so both themes read. */
+.neo-standings-king--full {
     background: var(--casino-gold-light);
+}
+
+.neo-standings-king--full td {
+    border-bottom-color: rgba(245, 158, 11, 0.18);
+}
+
+[data-theme="dark"] .neo-standings-king--full td {
+    border-bottom-color: rgba(252, 211, 77, 0.18);
+}
+
+.neo-standings-name:hover {
+    color: var(--link-color);
+    text-decoration: underline;
 }
 
 /* ============================================================================ */

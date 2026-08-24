@@ -338,18 +338,18 @@ export default class DashboardPage {
         top.forEach((player, index) => {
             const isGambleKing = index === 0 && player.net_profit > 0;
             html += `
-                <tr${isGambleKing ? ' class="neo-standings-king"' : ''}>
-                    <td class="neo-standings-rank">${index + 1}</td>
+                <tr${isGambleKing ? ' class="neo-standings-king--full"' : ''}>
+                    <td class="neo-standings-rank${isGambleKing ? ' is-king' : ''}">${index + 1}</td>
                     <td>
                         <a href="#player/${player.player_id}" class="neo-standings-name">
                             ${player.name}
                             ${isGambleKing ? '<span aria-hidden="true">👑</span>' : ''}
                         </a>
                     </td>
-                    <td class="text-right ${player.net_profit >= 0 ? 'profit-positive' : 'profit-negative'}" style="font-weight: 600;">
+                    <td class="text-right neo-standings-pl ${player.net_profit >= 0 ? 'profit-positive' : 'profit-negative'}">
                         ${formatCurrency(player.net_profit || 0)}
                     </td>
-                    <td class="text-right" style="font-weight: 600;">${formatPercent(player.win_percentage || 0)}</td>
+                    <td class="text-right neo-standings-winrate">${formatPercent(player.win_percentage || 0)}</td>
                 </tr>
             `;
         });
