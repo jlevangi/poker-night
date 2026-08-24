@@ -5,6 +5,7 @@
     --primary-color: #2563EB;
     --primary-hover: #1D4ED8;
     --primary-light: #EFF6FF;
+    --link-color: var(--primary-color);
 
     /* Background Colors */
     --bg-body: #F8FAFC;
@@ -163,6 +164,7 @@
     --transition-fast: 0.15s ease;
     --transition-medium: 0.25s ease;
     --transition-slow: 0.4s ease;
+    --transition-neo: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 
     /* Typography */
     --font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", system-ui, sans-serif;
