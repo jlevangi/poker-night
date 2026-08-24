@@ -10,8 +10,10 @@ export default class DashboardPage {
             renderSkeleton({ classes: 'neo-card', style: 'height: 210px; margin-bottom: 1rem;' }),
             // Active Session Hero Skeleton
             renderSkeleton({ classes: 'neo-card', style: 'height: 96px; margin-bottom: 1rem;' }),
-            // Stats Grid Skeleton (2x2)
+            // Quick Actions Skeleton (icon tiles)
             renderSkeletonStatGrid({ count: 4 }),
+            // Metrics Strip Skeleton
+            renderSkeletonStatGrid({ count: 3 }),
             // Standings Table Skeleton
             '<div class="neo-card" style="margin-bottom: 1rem;">' +
                 renderSkeleton({ style: 'height: 1.25rem; width: 50%; margin-bottom: 1.5rem; border-radius: 4px;' }) +
@@ -158,43 +160,90 @@ export default class DashboardPage {
         `;
     }
 
-    // Render quick actions and stats in a 2x2 grid
+    // Render quick actions: icon-led tiles wired to real routes/workflows
+    // (view live session / start session, schedule poker night, players,
+    // stats), followed by the neutral metric strip.
+    static chipIcon() {
+        return `<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true" focusable="false">
+            <circle cx="12" cy="12" r="8.5"/>
+            <circle cx="12" cy="12" r="4.2" stroke-width="1.3"/>
+            <path d="M12 3.5v2.6M12 17.9v2.6M3.5 12h2.6M17.9 12h2.6M6 6l1.8 1.8M16.2 16.2L18 18M18 6l-1.8 1.8M7.8 16.2L6 18"/>
+        </svg>`;
+    }
+
+    static calendarIcon() {
+        return `<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <rect x="3" y="5" width="18" height="16" rx="2.5"/>
+            <path d="M3 9.5h18M8 3v4M16 3v4"/>
+            <path d="M8 13.5h3M8 16.5h6"/>
+        </svg>`;
+    }
+
+    static playersIcon() {
+        return `<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <circle cx="9" cy="8" r="3.4"/>
+            <path d="M2.5 20c.9-3.3 3.4-5.4 6.5-5.4s5.6 2.1 6.5 5.4"/>
+            <circle cx="17.3" cy="9" r="2.6"/>
+            <path d="M15.7 14.9c2.7.4 4.8 2.3 5.6 5.1"/>
+        </svg>`;
+    }
+
+    static statsIcon() {
+        return `<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false">
+            <path d="M5 20v-6M10 20V6M15 20v-9M20 20v-3.5"/>
+            <path d="M3 20.5h18"/>
+        </svg>`;
+    }
+
     renderQuickActionsAndStatsGrid(data) {
         const { totalGambled, totalPlayers, totalSessions, activeSession } = data;
-        
-        return `
-            <div class="neo-stats-grid neo-stats-grid--quick">
-                <!-- Action tiles keep their accent tint; metric tiles go neutral -->
-                ${activeSession ? `
-                    <div class="neo-stat-card neo-stat-card--metric">
-                        <div class="neo-stat-value" data-animate-value="${totalPlayers || 0}">${totalPlayers || 0}</div>
-                        <div class="neo-stat-label">Players</div>
-                    </div>
-                ` : `
-                    <button id="quick-start-session-btn" class="neo-stat-card neo-stat-card--action neo-card-primary" style="position: relative; width: 100%; font-family: inherit;">
-                        <div class="neo-stat-value">🃏</div>
-                        <div class="neo-stat-label">Start New Session</div>
-                    </button>
-                `}
-                <a href="#calendar" class="neo-stat-card neo-stat-card--action neo-card-primary" style="text-decoration: none;">
-                    <div class="neo-stat-value">📅</div>
-                    <div class="neo-stat-label">Schedule Session</div>
-                </a>
 
+        // Session tile: links to the live session when one is running,
+        // otherwise opens the new-session modal (handler in setupEventListeners).
+        const sessionTile = activeSession
+            ? `<a href="#session/${activeSession.session_id}" class="neo-quick-action neo-quick-action--green">
+                    <span class="neo-quick-action-icon">${DashboardPage.chipIcon()}</span>
+                    <span class="neo-quick-action-label">View Live Session</span>
+                </a>`
+            : `<button id="quick-start-session-btn" class="neo-quick-action neo-quick-action--gold" type="button">
+                    <span class="neo-quick-action-icon">${DashboardPage.chipIcon()}</span>
+                    <span class="neo-quick-action-label">Start Session</span>
+                </button>`;
+
+        return `
+            <section class="neo-quick-actions" aria-label="Quick actions">
+                ${sessionTile}
+                <a href="#calendar" class="neo-quick-action neo-quick-action--purple">
+                    <span class="neo-quick-action-icon">${DashboardPage.calendarIcon()}</span>
+                    <span class="neo-quick-action-label">Poker Night</span>
+                </a>
+                <a href="#players" class="neo-quick-action neo-quick-action--blue">
+                    <span class="neo-quick-action-icon">${DashboardPage.playersIcon()}</span>
+                    <span class="neo-quick-action-label">Players</span>
+                </a>
+                <a href="#stats" class="neo-quick-action neo-quick-action--red">
+                    <span class="neo-quick-action-icon">${DashboardPage.statsIcon()}</span>
+                    <span class="neo-quick-action-label">Stats</span>
+                </a>
+            </section>
+
+            <div class="neo-stats-grid">
+                <div class="neo-stat-card neo-stat-card--metric">
+                    <div class="neo-stat-value" data-animate-value="${totalPlayers || 0}">${totalPlayers || 0}</div>
+                    <div class="neo-stat-label">Players</div>
+                </div>
                 <div class="neo-stat-card neo-stat-card--metric">
                     <div class="neo-stat-value" data-animate-value="${totalGambled || 0}" data-animate-prefix="$" data-animate-decimals="2">${formatCurrency(totalGambled || 0)}</div>
                     <div class="neo-stat-label">Total Gambled</div>
                 </div>
-
                 <div class="neo-stat-card neo-stat-card--metric">
                     <div class="neo-stat-value" data-animate-value="${totalSessions || 0}">${totalSessions || 0}</div>
                     <div class="neo-stat-label">Sessions Played</div>
                 </div>
-
             </div>
         `;
     }
-    
+
     // Render Gamble King section
     // Render Gamble King section — the theatrical hero: crown, name, profit,
     // and compact supporting metrics.
