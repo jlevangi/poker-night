@@ -111,7 +111,7 @@ export default class DashboardPage {
                     <div>
                         <div class="section-title" style="color: var(--text-primary); display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
                             <span class="neo-live-badge"><span class="neo-live-dot"></span>LIVE</span>
-                            Active Session
+                            <span class="neo-card-eyebrow">Active Session</span>
                         </div>
                         <div class="card-subtitle" style="margin-top: 0.25rem;">
                             ${formatDate(session.date)}
@@ -143,8 +143,9 @@ export default class DashboardPage {
             <a href="#calendar" class="neo-card neo-next-event-card list-card-row" style="text-decoration: none; color: inherit;">
                 <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
                     <div>
-                        <div class="section-title" style="color: var(--text-primary);">
-                            Next Poker Night
+                        <div class="section-title" style="color: var(--text-primary); display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+                            <span class="neo-upcoming-badge"><span class="neo-upcoming-dot"></span>UPCOMING</span>
+                            <span class="neo-card-eyebrow">Next Poker Night</span>
                         </div>
                         <div class="card-subtitle" style="margin-top: 0.25rem;">
                             ${dateFormatted}${timeFormatted}${event.location ? ' - ' + event.location : ''}
