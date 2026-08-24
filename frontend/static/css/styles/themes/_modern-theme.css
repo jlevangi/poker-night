@@ -1596,6 +1596,17 @@ a.neo-gamble-king-name:focus-visible {
     outline-offset: 2px;
 }
 
+/* Touch devices never fire :hover reliably; give the tiles a pressed state
+   so a tap still reads as a tap (lift + accent border), same as the mouse hover. */
+@media (hover: none) {
+    .neo-quick-actions a.neo-quick-action:active,
+    .neo-quick-actions button.neo-quick-action:active {
+        transform: translateY(-2px);
+        box-shadow: var(--neo-shadow-md);
+        border-color: var(--qa-accent, var(--border-color));
+    }
+}
+
 /* ============================================================================ */
 /* ANIMATIONS */
 /* ============================================================================ */
@@ -1990,8 +2001,8 @@ a.neo-gamble-king-name:focus-visible {
 
 @media (max-width: 480px) {
     .neo-header-btn {
-        width: 40px;
-        height: 40px;
+        width: 44px;
+        height: 44px;
         font-size: 1rem;
     }
 
@@ -2005,7 +2016,7 @@ a.neo-gamble-king-name:focus-visible {
     }
 
     .neo-quick-actions {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr);
         gap: 0.75rem;
     }
 
@@ -2248,10 +2259,16 @@ a.neo-gamble-king-name:focus-visible {
     70%, 100% { box-shadow: 0 0 0 0.4rem rgba(255, 255, 255, 0); }
 }
 
-.neo-next-event-card {
+.neo-next-event-card.neo-next-event-card {
     background: var(--casino-gold-light);
     border-color: rgba(245, 158, 11, 0.3);
     color: var(--text-primary);
+    /* .list-card-row (in _lists.css, imported after this theme file) sets the
+       shorthand `margin: 0`, which at equal class specificity wins over the
+       single-class rule here and leaves the gold card flush against the
+       quick-action tiles. Repeating the class raises specificity and keeps
+       the standard dashboard-card spacing. */
+    margin-bottom: var(--spacing-neo);
 }
 
 /* RSVP chips: theme-aware. The inline styles in renderNextEventCard use
