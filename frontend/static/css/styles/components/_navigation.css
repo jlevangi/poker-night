@@ -505,6 +505,10 @@ button.neo-more-item {
         display: none;
     }
 
+    .neo-bottom-nav {
+        display: flex;
+    }
+
     .neo-settings-body {
         justify-content: flex-end;
         padding-bottom: 10vh;

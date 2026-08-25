@@ -71,6 +71,9 @@
     --casino-green-dark: #6EE7B7;
     --casino-purple-dark: #A5B4FC;
     --casino-blue-dark: #93C5FD;
+    /* Soft status washes — darker surfaces need a stronger fill of the same hue */
+    --color-danger-soft: rgba(239, 68, 68, 0.22);
+    --color-warning-soft: rgba(245, 158, 11, 0.18);
     --focus-ring-color: #60A5FA;
 
     /* Neutral scale flip (consumed by _navigation.css and friends) */
@@ -83,6 +86,8 @@
     --neutral-600: #F1F5F9;
     --neutral-700: #F8FAFC;
     --neutral-800: #FFFFFF;
+    --backdrop: rgba(0, 0, 0, 0.65);
+    --bg-modal-header: var(--bg-content);
     --neutral-900: #FFFFFF;
 
     /* Duplicate of the _modern-theme.css dark flip: without it, inline

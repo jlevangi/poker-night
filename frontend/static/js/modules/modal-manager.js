@@ -86,72 +86,33 @@ export default class ModalManager {
                 alert("There was a problem showing the form. Please refresh the page and try again.");
                 return;
             }
-            
-            // Apply comprehensive styling to make sure it shows on all devices
-            // First remove any inline style that might be interfering
-            this.modal.removeAttribute('style');
-            
-            // Add the active class for CSS transitions
-            this.modal.classList.add('active');
 
-            const shouldUseMobileSheet =
-                this.modal.dataset.mobileSheet === 'true' &&
-                window.matchMedia('(max-width: 700px)').matches;
-            
-            // As a backup, explicitly set all necessary styles
-            const modalStyles = {
-                'display': 'flex',
-                'opacity': '1',
-                'visibility': 'visible',
-                'z-index': 'var(--z-modal)',
-                'pointer-events': 'auto',
-                'position': 'fixed',
-                'top': '0',
-                'left': '0',
-                'width': '100%',
-                'height': '100%',
-                'background-color': 'rgba(0, 0, 0, 0.5)',
-                'justify-content': 'center',
-                'align-items': shouldUseMobileSheet ? 'flex-start' : 'center'
-            };
-            
-            // Apply all styles
-            Object.keys(modalStyles).forEach(key => {
-                this.modal.style[key] = modalStyles[key];
-            });
-            
-            // Make sure modal is at the end of body to avoid z-index issues
+            // The .modal-overlay/.modal-content system in
+            // components/_modals.css owns all dialog styling (backdrop,
+            // sheet position, entrance). .active alone reveals it; nothing
+            // is set inline anymore.
+            this.modal.removeAttribute('style');
+            this.modal.classList.add('active');
+            // Keep the overlay at the end of body to avoid z-index issues
             document.body.appendChild(this.modal);
         } catch(e) {
             console.error("Error showing modal:", e);
             alert("There was a problem showing the form. Please try again later.");
         }
-        
+
         return this; // Allow chaining
     }
     
     hide() {
         try {
             if (this.modal) {
-                // Remove active class
                 this.modal.classList.remove('active');
-                
-                // Reset all direct styles
-                const modalHideStyles = {
-                    'opacity': '0',
-                    'visibility': 'hidden',
-                    'pointer-events': 'none'
-                };
-                
-                // Apply hide styles
-                Object.keys(modalHideStyles).forEach(key => {
-                    this.modal.style[key] = modalHideStyles[key];
-                });
+                this.modal.removeAttribute('style');
             }
         } catch(e) {
             console.error("Error hiding modal:", e);
         }
-        
+
         return this; // Allow chaining
     }
 }

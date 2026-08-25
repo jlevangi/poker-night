@@ -449,6 +449,10 @@ export default class SessionDetailPage {
         const container = document.getElementById('add-players-card-container');
         if (!container) return;
 
+        // Any prior overlay — body-level (promoted on open) or in-container —
+        // is stale the moment the card rebuilds; remove every copy so re-opening
+        // never leaves duplicates behind.
+        document.querySelectorAll('#add-players-modal-overlay').forEach(el => el.remove());
         container.innerHTML = this.renderAddPlayersCard(sessionData);
         this.setupAddPlayerPicker(sessionData, sessionId, options);
 
@@ -1086,11 +1090,6 @@ export default class SessionDetailPage {
     }
 
     setupAddPlayerPicker(sessionData, sessionId, options = {}) {
-        // An open overlay is promoted to document.body (see below); on every
-        // re-render, drop the stale body-level copy before the new markup lands.
-        const staleOverlay = document.getElementById('add-players-modal-overlay');
-        if (staleOverlay && staleOverlay.parentNode === document.body) staleOverlay.remove();
-
         const searchInput = document.getElementById('add-player-search');
         const openPickerBtn = document.getElementById('open-player-picker-btn');
         const closePickerBtn = document.getElementById('close-player-picker-btn');
@@ -1813,64 +1812,27 @@ export default class SessionDetailPage {
     showDiscrepancyModal(unpaidValue, sessionId, endSessionBtn) {
         const discrepancyType = unpaidValue > 0 ? 'Unpaid' : 'House Loss';
         const discrepancyAmount = formatCurrency(Math.abs(unpaidValue));
-        const discrepancyColor = unpaidValue > 0 ? '#991B1B' : '#EA580C';
+        const warn = unpaidValue <= 0;
 
-        const modalHtml = `
-            <div class="discrepancy-modal-overlay" style="
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0,0,0,0.6);
-                z-index: 10001;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                padding: 1rem;
-            ">
-                <div style="
-                    background: var(--bg-card);
-                    padding: 2rem;
-                    border: 1px solid var(--border-color);
-                    box-shadow: var(--neo-shadow-lg);
-                    max-width: 500px;
-                    width: 100%;
-                ">
-                    <h2 style="
+        // Shared dialog chrome (components/_modals.css); the danger/warning
+        // tint on the figure is the one content-specific treatment.
+        const modalElement = document.createElement('div');
+        modalElement.innerHTML = `
+            <div class="modal-overlay discrepancy-modal-overlay">
+                <div class="modal-content">
+                    <h2 class="discrepancy-title" style="
                         font-size: 1.5rem;
                         font-weight: 600;
-                        margin-bottom: 1.5rem;
-                        color: ${discrepancyColor};
-                        display: flex;
-                        align-items: center;
-                        gap: 0.5rem;
+                        margin: 0 0 1.5rem;
+                        text-align: center;
+                        color: ${warn ? 'var(--color-warning)' : 'var(--color-danger)'};
                     ">
                         ⚠️ Money Discrepancy
                     </h2>
 
-                    <div style="
-                        background: ${unpaidValue > 0 ? 'rgba(153, 27, 27, 0.1)' : 'rgba(234, 88, 12, 0.1)'};
-                        border: 3px solid ${discrepancyColor};
-                        padding: 1.5rem;
-                        margin-bottom: 1.5rem;
-                    ">
-                        <p style="
-                            font-size: 1.125rem;
-                            font-weight: 700;
-                            color: var(--text-primary);
-                            margin-bottom: 0.75rem;
-                        ">
-                            The session money does not balance:
-                        </p>
-                        <p style="
-                            font-size: 1.75rem;
-                            font-weight: 600;
-                            color: ${discrepancyColor};
-                            margin: 0;
-                        ">
-                            ${discrepancyType}: ${discrepancyAmount}
-                        </p>
+                    <div class="discrepancy-alert${warn ? ' discrepancy-alert--warn' : ''}">
+                        <p>The session money does not balance:</p>
+                        <p class="discrepancy-alert__value">${discrepancyType}: ${discrepancyAmount}</p>
                     </div>
 
                     <p style="
@@ -1894,7 +1856,7 @@ export default class SessionDetailPage {
                         Do you want to end the session anyway, or go back to recount?
                     </p>
 
-                    <div style="display: flex; gap: 1rem; justify-content: flex-end; flex-wrap: wrap;">
+                    <div class="modal-actions" style="flex-wrap: wrap;">
                         <button id="cancel-end-session" class="neo-btn neo-btn-primary" style="flex: 1; min-width: 120px;">
                             No, Recount
                         </button>
@@ -1906,9 +1868,10 @@ export default class SessionDetailPage {
             </div>
         `;
 
-        const modalElement = document.createElement('div');
-        modalElement.innerHTML = modalHtml;
         document.body.appendChild(modalElement);
+        requestAnimationFrame(() => requestAnimationFrame(() =>
+            modalElement.querySelector('.modal-overlay').classList.add('active')
+        ));
 
         const cancelBtn = document.getElementById('cancel-end-session');
         const confirmBtn = document.getElementById('confirm-end-session');
@@ -1933,7 +1896,6 @@ export default class SessionDetailPage {
                 document.body.removeChild(modalElement);
             }
         });
-
         // Close on overlay click
         const overlay = modalElement.querySelector('.discrepancy-modal-overlay');
         overlay.addEventListener('click', (e) => {
@@ -1941,6 +1903,15 @@ export default class SessionDetailPage {
                 document.body.removeChild(modalElement);
             }
         });
+
+        // Close on escape key
+        const handleEscape = (e) => {
+            if (e.key === 'Escape') {
+                document.body.removeChild(modalElement);
+                document.removeEventListener('keydown', handleEscape);
+            }
+        };
+        document.addEventListener('keydown', handleEscape);
     }
 
     /**

@@ -157,7 +157,7 @@
     background: var(--bg-card);
     border: 1px solid var(--border-light);
     box-shadow: var(--neo-shadow-static);
-    border-radius: 16px;
+    border-radius: var(--radius-card);
     padding: var(--spacing-neo);
     margin-bottom: var(--spacing-neo);
     position: relative;

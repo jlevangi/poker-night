@@ -1,7 +1,19 @@
-/* Modal Component Styles
-   One pattern for every dialog in the app (create-session modal, add-players
-   picker, and anything added later): same backdrop, same card surface, same
-   close affordance, same entrance. Dark mode comes free from the theme vars. */
+/* Modal / Dialog System — the single chrome for EVERY dialog in the app
+   (create-session, add-players, edit-player, cash-out / buy-in, stats
+   session-detail, discrepancy, add-to-calendar popover). Same backdrop,
+   same card surface, same close affordance, same entrance. Every value
+   reads tokens, so dark mode is inherited automatically.
+
+   Chrome classes (this file): .modal-overlay / .modal-content /
+   .modal-header / .modal-close-btn / .modal-subtitle / .modal-actions /
+   .modal-content--compact.
+   Content-specific classes (owned by their domain file): .modal-form-* +
+   .modal-buyin-* in _forms.css/_buttons.css, .neo-session-info-* in
+   _charts.css, .discrepancy-alert here.
+
+   JS contract: dialogs are appended to <body> (or live in the template),
+   painted one hidden frame, then get .active via a double requestAnimation
+   Frame. Dismissal: Escape, backdrop click, close button. */
 
 /* Backdrop — identical on every dialog */
 .modal-overlay {
@@ -10,7 +22,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: var(--backdrop);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -33,7 +45,7 @@
     background: var(--bg-card);
     border: 1px solid var(--border-color);
     box-shadow: var(--neo-shadow-lg);
-    border-radius: 16px;
+    border-radius: var(--radius-card);
     padding: var(--spacing-neo);
     width: 90%;
     max-width: 450px;
@@ -49,6 +61,30 @@
 .modal-overlay.active .modal-content {
     transform: translateY(0);
     opacity: 1;
+}
+
+/* Modal header — tinted top bar the wide dialogs (stats session-detail)
+   get: title left, close button right. Plain dialogs keep the centered
+   .modal-content h3 + absolute close button instead. */
+.modal-header {
+    margin: calc(-1 * var(--spacing-neo)) calc(-1 * var(--spacing-neo)) var(--spacing-md);
+    padding: var(--spacing-md) var(--spacing-lg);
+    background: var(--bg-modal-header);
+    border-bottom: 1px solid var(--border-color);
+    border-radius: var(--radius-card) var(--radius-card) 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--spacing-md);
+}
+
+.modal-header h3 {
+    margin: 0;
+    text-align: left;
+}
+
+.modal-header .modal-close-btn {
+    position: static;
 }
 
 /* Close affordance — top-right X, real hit area, visible pressed state */
@@ -92,6 +128,8 @@
     overflow-wrap: anywhere;
 }
 
+
+
 .modal-subtitle {
     margin: -0.75rem 0 0;
     text-align: center;
@@ -107,6 +145,24 @@
     gap: 0.75rem;
 }
 
+.modal-content h3 {
+    margin-top: 0;
+    margin-bottom: var(--spacing-lg);
+    color: var(--text-primary);
+    text-align: center;
+    font-weight: 600;
+    font-size: 1.25rem;
+    overflow-wrap: anywhere;
+}
+
+.modal-actions a {
+    text-decoration: none;
+}
+
+.modal-actions a:hover {
+    text-decoration: none;
+}
+
 /* Mobile: every dialog is a top-anchored sheet with safe-area padding */
 @media (max-width: 700px) {
     .modal-overlay {
@@ -118,6 +174,10 @@
         width: min(100%, 32rem);
         max-height: calc(100dvh - max(2rem, env(safe-area-inset-top)) - max(1rem, env(safe-area-inset-bottom)));
         margin-top: clamp(0rem, 7vh, 4rem);
+    }
+
+    .modal-header {
+        padding: 0.75rem 1rem;
     }
 }
 
@@ -142,4 +202,41 @@
 .modal-content--compact input[type="number"] {
     width: 100%;
     margin: 0;
+}
+
+/* Discrepancy alert — the money-mismatch figure in the end-session
+   discrepancy dialog. --danger keeps the red/orange meaning distinction
+   (unpaid vs house loss) through theme flips: light keeps the solid brand
+   color, dark gets the lightened *-dark value. */
+.discrepancy-alert {
+    border: 3px solid var(--color-danger);
+    background: var(--color-danger-soft);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-lg);
+    margin-bottom: var(--spacing-lg);
+}
+
+.discrepancy-alert--warn {
+    border-color: var(--color-warning);
+    background: var(--color-warning-soft);
+}
+
+.discrepancy-alert p {
+    margin: 0 0 0.75rem;
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.discrepancy-alert p:last-child {
+    margin-bottom: 0;
+}
+
+.discrepancy-alert__value {
+    font-size: 1.75rem;
+    color: var(--color-danger);
+}
+
+.discrepancy-alert--warn .discrepancy-alert__value {
+    color: var(--color-warning);
 }

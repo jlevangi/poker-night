@@ -214,79 +214,9 @@
     gap: var(--spacing-neo) !important;
 }
 
-/* Session Modal Styles */
-.neo-session-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.8);
-    backdrop-filter: blur(4px);
-    z-index: var(--z-modal, 2000);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    animation: neo-modal-fade-in 0.2s ease-out;
-}
-
-.neo-session-modal-content {
-    background: var(--bg-card);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-xl);
-    box-shadow: var(--neo-shadow-xl);
-    max-width: 500px;
-    width: 90%;
-    max-height: 80vh;
-    overflow-y: auto;
-    animation: neo-modal-slide-up 0.3s ease-out;
-}
-
-.neo-session-modal-header {
-    background: var(--bg-secondary, #F1F5F9);
-    border-bottom: 1px solid var(--border-color);
-    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
-    padding: var(--spacing-md) var(--spacing-lg);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.neo-session-modal-header h3 {
-    margin: 0;
-    font-size: 1.5rem;
-    font-weight: var(--font-weight-bold);
-    color: var(--text-primary);
-}
-
-.neo-session-modal-close {
-    background: var(--bg-card);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-circle);
-    color: var(--text-secondary);
-    font-size: 1.5rem;
-    font-weight: var(--font-weight-black);
-    width: 36px;
-    height: 36px;
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: all var(--transition-fast);
-    box-shadow: var(--neo-shadow-sm);
-}
-
-.neo-session-modal-close:hover {
-    background: var(--casino-red);
-    color: var(--text-white);
-    transform: scale(1.05);
-    box-shadow: var(--neo-shadow-md);
-}
-
-.neo-session-modal-body {
-    padding: var(--spacing-lg);
-}
-
+/* Stats session-detail DIALOG CONTENT — chrome (backdrop, panel, close) is
+   the shared system in components/_modals.css; only the 2x2 info grid and
+   its highlight tile are stats-specific. */
 .neo-session-info-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -295,7 +225,7 @@
 }
 
 .neo-session-info-card {
-    background: var(--bg-secondary, #F1F5F9);
+    background: var(--bg-secondary);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-md);
     padding: var(--spacing-md);
@@ -358,25 +288,6 @@
     }
 }
 
-@keyframes neo-modal-fade-in {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
-}
-
-@keyframes neo-modal-slide-up {
-    from {
-        transform: translateY(50px);
-        opacity: 0;
-    }
-    to {
-        transform: translateY(0);
-        opacity: 1;
-    }
-}
 
 /* Responsive Design */
 @media (max-width: 768px) {
@@ -405,22 +316,9 @@
         gap: 1rem !important;
     }
 
-    .neo-session-modal-content {
-        width: 95%;
-        margin: var(--spacing-sm);
-    }
-
     .neo-session-info-grid {
         grid-template-columns: 1fr;
         gap: 0.75rem;
-    }
-
-    .neo-session-modal-header {
-        padding: 0.75rem 1rem;
-    }
-
-    .neo-session-modal-header h3 {
-        font-size: 1.125rem;
     }
 
     .neo-session-actions {
@@ -441,20 +339,6 @@
     }
 }
 
-/* Touch improvements */
-@media (hover: none) and (pointer: coarse) {
-    .neo-data-point:hover {
-        fill: var(--casino-gold);
-        r: 6;
-        stroke-width: 2;
-    }
-
-    .neo-session-modal-close:hover {
-        transform: none;
-        box-shadow: var(--neo-shadow-sm);
-    }
-}
-
 /* Dark mode compatibility */
 [data-theme="dark"] .neo-chart-tooltip {
     background: var(--bg-card);
@@ -465,35 +349,6 @@
 [data-theme="dark"] .neo-chart-tooltip::after {
     border-top-color: var(--border-color);
 }
-
-[data-theme="dark"] .neo-session-modal-content {
-    background: var(--bg-card);
-}
-
-[data-theme="dark"] .neo-session-modal-header {
-    background: var(--bg-secondary);
-}
-
-[data-theme="dark"] .neo-session-info-card {
-    background: var(--bg-secondary);
-}
-
-[data-theme="dark"] .neo-session-info-label {
-    color: var(--text-secondary);
-}
-
-[data-theme="dark"] .neo-session-info-value {
-    color: var(--text-primary);
-}
-
-[data-theme="dark"] .neo-session-info-card.neo-highlight {
-    background: var(--casino-green);
-}
-
-[data-theme="dark"] .neo-session-info-card.neo-highlight .neo-session-info-value {
-    color: var(--text-white);
-}
-
 /* Enhanced Leaderboard Stat Cards */
 /* Leaderboard Stats - Matching neo-stat-card style */
 .neo-leaderboard-stat {

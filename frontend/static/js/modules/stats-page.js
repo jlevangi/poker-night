@@ -726,53 +726,52 @@ export default class StatsPage {
     // Show session details modal
     showSessionDetails(sessionData) {
         // Remove existing modal if any
-        const existingModal = document.querySelector('.neo-session-modal');
+        const existingModal = document.querySelector('.modal-overlay.stats-session-modal');
         if (existingModal) {
             existingModal.remove();
         }
         
-        // Create modal overlay
+        // Shared dialog chrome (components/_modals.css); content stays stats-owned
         const modalOverlay = document.createElement('div');
-        modalOverlay.className = 'neo-session-modal';
+        modalOverlay.className = 'modal-overlay stats-session-modal';
         modalOverlay.innerHTML = `
-            <div class="neo-session-modal-content">
-                <div class="neo-session-modal-header">
+            <div class="modal-content">
+                <div class="modal-header">
                     <h3>🃏 Session Details</h3>
-                    <button class="neo-session-modal-close">×</button>
+                    <button class="modal-close-btn" type="button" aria-label="Close session details">&times;</button>
                 </div>
-                <div class="neo-session-modal-body">
-                    <div class="neo-session-info-grid">
-                        <div class="neo-session-info-card">
-                            <div class="neo-session-info-label">Session Date</div>
-                            <div class="neo-session-info-value">${sessionData.date}</div>
-                        </div>
-                        <div class="neo-session-info-card">
-                            <div class="neo-session-info-label">Players</div>
-                            <div class="neo-session-info-value">${sessionData.players}</div>
-                        </div>
-                        <div class="neo-session-info-card">
-                            <div class="neo-session-info-label">Total Buy-ins</div>
-                            <div class="neo-session-info-value">${sessionData.sessionAmount}</div>
-                        </div>
-                        <div class="neo-session-info-card neo-highlight">
-                            <div class="neo-session-info-label">Cumulative Total</div>
-                            <div class="neo-session-info-value">${sessionData.cumulativeAmount}</div>
-                        </div>
+                <div class="neo-session-info-grid">
+                    <div class="neo-session-info-card">
+                        <div class="neo-session-info-label">Session Date</div>
+                        <div class="neo-session-info-value">${sessionData.date}</div>
                     </div>
-                    <div class="neo-session-actions">
-                        <a href="#session/${sessionData.sessionId}" class="neo-btn neo-btn-green">
-                            View Full Session
-                        </a>
+                    <div class="neo-session-info-card">
+                        <div class="neo-session-info-label">Players</div>
+                        <div class="neo-session-info-value">${sessionData.players}</div>
                     </div>
+                    <div class="neo-session-info-card">
+                        <div class="neo-session-info-label">Total Buy-ins</div>
+                        <div class="neo-session-info-value">${sessionData.sessionAmount}</div>
+                    </div>
+                    <div class="neo-session-info-card neo-highlight">
+                        <div class="neo-session-info-label">Cumulative Total</div>
+                        <div class="neo-session-info-value">${sessionData.cumulativeAmount}</div>
+                    </div>
+                </div>
+                <div class="neo-session-actions">
+                    <a href="#session/${sessionData.sessionId}" class="neo-btn neo-btn-green">
+                        View Full Session
+                    </a>
                 </div>
             </div>
         `;
         
         // Add modal to DOM
         document.body.appendChild(modalOverlay);
+        requestAnimationFrame(() => requestAnimationFrame(() => modalOverlay.classList.add('active')));
         
         // Add event listeners for closing
-        const closeButtons = modalOverlay.querySelectorAll('.neo-session-modal-close');
+        const closeButtons = modalOverlay.querySelectorAll('.modal-close-btn');
         closeButtons.forEach(button => {
             button.addEventListener('click', () => {
                 modalOverlay.remove();

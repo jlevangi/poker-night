@@ -35,6 +35,12 @@
     --color-info: var(--casino-purple);
     --color-info-hover: var(--casino-purple-dark);
 
+    /* Soft washes of the same brand hues (10% opacity) for inline alert
+       backgrounds — stay legible on the card surface in both themes, so
+       no per-theme flip is needed. */
+    --color-danger-soft: rgba(239, 68, 68, 0.1);
+    --color-warning-soft: rgba(245, 158, 11, 0.1);
+
     /* Profit Colors — the single source for the .profit-* text treatment
        (owned by components/_chips.css); dark-mode.css flips these for the
        [data-theme="dark"] theme. */
@@ -169,6 +175,22 @@
     /* Typography */
     --font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", system-ui, sans-serif;
     --line-height: 1.6;
+
+    /* Skeleton shimmer tokens — single source (light values);
+       dark-mode.css flips these per theme. Owned by utils/_skeletons.css. */
+    --skeleton-base: #E2E8F0;
+    --skeleton-shine: #F1F5F9;
+
+    /* Card corner radius — the signature 16px card/modal round (between
+       --radius-lg and --radius-xl); .neo-card and .modal-content share it. */
+    --radius-card: 16px;
+
+    /* Modal surfaces — the backdrop and the tinted dialog header that every
+       dialog shares (owned by components/_modals.css). Flipped in
+       dark-mode.css so dark dialogs dim more heavily and their header sits
+       on the content surface. */
+    --backdrop: rgba(15, 23, 42, 0.55);
+    --bg-modal-header: var(--bg-secondary);
 
     /* Z-Index — single source. Step 3 removes the duplicates in
        _modern-theme.css. */
