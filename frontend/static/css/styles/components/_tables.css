@@ -1,252 +1,231 @@
-/* Table Component Styles */
+/* Table Component Styles — single owner for every data table in the app.
+   One family, three treatments:
+     .neo-table           report tables (session history, podium base)
+     .neo-table--dense    wide numeric tables (session "From the Log")
+     .neo-standings-*     the compact top-3 podium on the home page
+   All colors come from tokens (--border-light, --bg-body, --bg-card,
+   --table-hover, --casino-gold-*), so dark mode flips through the token
+   values; this file holds no [data-theme="dark"] rules. */
 
 .table-responsive {
     overflow-x: auto;
     margin-bottom: var(--spacing-lg);
-    border-radius: 12px;
+    border-radius: var(--radius-lg);
+    -webkit-overflow-scrolling: touch;
 }
 
-/* Dashboard Player Standings Table */
-.players-dashboard-table {
+/* Base data-table surface: rounded card-like table, quiet header row.
+   The thead paints with --bg-body so the header reads as a quieter band
+   than the --bg-card body in both themes (dark flips both tokens). */
+.neo-table {
     width: 100%;
-    max-width: 600px;
-    border-collapse: collapse;
-    margin: var(--spacing-md) auto;
-    background-color: var(--bg-content);
-    border-radius: 12px;
+    border-collapse: separate;
+    border-spacing: 0;
+    border: 1px solid var(--border-light);
+    background: var(--bg-card);
+    border-radius: var(--radius-lg);
     overflow: hidden;
+    font-variant-numeric: tabular-nums;
 }
 
-.players-dashboard-table th,
-.players-dashboard-table td {
-    padding: 0.75rem var(--spacing-sm);
+.neo-table th {
+    background: var(--bg-body);
+    color: var(--text-secondary);
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.75rem 1rem;
+    text-align: left;
     border-bottom: 1px solid var(--border-light);
+}
+
+.neo-table td {
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    border-bottom: 1px solid var(--border-light);
+}
+
+.neo-table tr:last-child td {
+    border-bottom: none;
+}
+
+.neo-table tr:hover {
+    background: var(--table-hover);
+}
+
+/* Dense: wide multi-column numeric tables. The numbers are the content,
+   so cells right-align under quiet uppercase headers. These tables live
+   inside a .neo-card, so they drop the card chrome of the base variant
+   and read as a section of the card, not a card inside a card. */
+.neo-table--dense {
+    border: none;
+    border-radius: 0;
+    background: transparent;
+}
+
+.neo-table--dense th {
+    background: transparent;
+    padding: 0 0.5rem 0.5rem;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    text-align: right;
+}
+
+.neo-table--dense td {
+    padding: 0.5rem;
+    font-size: 1rem;
+    text-align: right;
+    white-space: nowrap;
+}
+
+.neo-table--dense th:first-child,
+.neo-table--dense td:first-child {
     text-align: left;
 }
 
-.players-dashboard-table th {
-    background-color: var(--bg-body);
+.neo-table--dense td:first-child {
+    font-weight: 700;
+}
+
+/* ============================================================================ */
+/* TOP PLAYERS PODIUM (home) — compact top-3, full board lives on #players.
+   The podium reuses the .neo-table base surface; this section only owns its
+   compact type scale and the gold king-row echo. */
+/* ============================================================================ */
+
+.neo-standings-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.5rem;
+}
+
+.neo-standings-head .section-title {
+    margin-bottom: 0;
+}
+
+.neo-standings-all {
+    font-size: 0.875rem;
     font-weight: 600;
-    color: var(--text-secondary);
-    font-size: 0.75rem;
-    border-bottom: 1px solid var(--border-color);
-}
-
-.players-dashboard-table tr:hover {
-    background-color: rgba(0, 0, 0, 0.02);
-}
-
-.players-dashboard-table td a {
-    color: var(--primary-color);
+    color: var(--link-color);
     text-decoration: none;
-    font-weight: 500;
+    white-space: nowrap;
 }
 
-.players-dashboard-table td a:hover {
+.neo-standings-all:hover {
     text-decoration: underline;
 }
 
-/* Player Statistics Table */
-.players-stats-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: var(--spacing-md);
-    background-color: var(--bg-content);
-    border-radius: 12px;
-    overflow: hidden;
-    table-layout: fixed;
-}
-
-.players-stats-table th:nth-child(1),
-.players-stats-table td:nth-child(1) { width: 10%; }
-
-.players-stats-table th:nth-child(2),
-.players-stats-table td:nth-child(2) { width: 10%; }
-
-.players-stats-table th:nth-child(3),
-.players-stats-table td:nth-child(3) { width: 10%; }
-
-.players-stats-table th:nth-child(4),
-.players-stats-table td:nth-child(4) { width: 20%; }
-
-.players-stats-table th:nth-child(2),
-.players-stats-table td:nth-child(2),
-.players-stats-table th:nth-child(3),
-.players-stats-table td:nth-child(3),
-.players-stats-table th:nth-child(4),
-.players-stats-table td:nth-child(4) {
-    text-align: left;
-}
-
-.players-stats-table th,
-.players-stats-table td {
-    padding: 0.75rem 0.5rem;
-    border-bottom: 1px solid var(--border-light);
-    text-align: left;
-}
-
-.players-stats-table th {
-    background-color: var(--bg-body);
-    font-weight: 600;
-    color: var(--text-secondary);
-    font-size: 0.75rem;
-    border-bottom: 1px solid var(--border-color);
-}
-
-.players-stats-table tr:hover {
-    background-color: rgba(0, 0, 0, 0.02);
-}
-
-.players-stats-table td a {
-    color: var(--primary-color);
-    text-decoration: none;
-    font-weight: 500;
-}
-
-.players-stats-table td a:hover {
-    text-decoration: underline;
-}
-
-/* Mobile responsive adjustments */
-@media (max-width: 768px) {
-    .players-stats-table {
-        table-layout: auto;
-        width: 100%;
-    }
-
-    .players-stats-table th,
-    .players-stats-table td {
-        width: auto;
-        font-size: 0.875rem;
-        text-align: left;
-        white-space: nowrap;
-        max-width: 0;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-    .players-stats-table th:first-child,
-    .players-stats-table td:first-child {
-        text-align: left;
-        white-space: normal;
-        width: 1%;
-        min-width: max-content;
-    }
-
-    .players-stats-table th:nth-child(2),
-    .players-stats-table td:nth-child(2),
-    .players-stats-table th:nth-child(3),
-    .players-stats-table td:nth-child(3),
-    .players-stats-table th:nth-child(4),
-    .players-stats-table td:nth-child(4) {
-        width: 1%;
-        min-width: max-content;
-    }
-}
-
-/* Modern Table Styles */
-.modern-table {
-    border: 1px solid var(--border-color);
-    box-shadow: none;
-    border-radius: 12px;
-    overflow: hidden;
-}
-
-.modern-table th,
-.modern-table td {
-    padding: var(--spacing-sm);
+/* Compact the podium: quiet header row, tighter body rows, no heavy
+   thead shadow. The goal is three glanceable rows, not a report —
+   so the type scale drops one step from the base .neo-table. */
+.neo-standings-table {
+    margin-top: 0;
     font-size: 0.875rem;
 }
 
-/* Dark mode tables */
-[data-theme="dark"] .players-dashboard-table th,
-[data-theme="dark"] .players-stats-table th {
-    background-color: rgba(0, 0, 0, 0.2);
+.neo-standings-table thead th {
+    padding-top: 0.375rem;
+    padding-bottom: 0.375rem;
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.neo-standings-table tbody td {
+    padding-top: 0.6rem;
+    padding-bottom: 0.6rem;
+}
+
+.neo-standings-rank {
+    font-size: 0.75rem;
+    font-weight: 700;
     color: var(--text-secondary);
+    font-variant-numeric: tabular-nums;
 }
 
-[data-theme="dark"] .players-dashboard-table tr:hover,
-[data-theme="dark"] .players-stats-table tr:hover {
-    background-color: rgba(255, 255, 255, 0.03);
+.neo-standings-rank.is-king {
+    color: var(--casino-gold-dark);
 }
 
-/* Mobile Table Adjustments */
+.neo-standings-name {
+    color: var(--text-primary);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9375rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    overflow-wrap: anywhere;
+}
+
+/* P/L is the number a podium is for; win rate stays secondary.
+   The base .profit-* rules already supply the color in both themes. */
+.neo-standings-pl {
+    font-size: 0.9375rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+}
+
+.neo-standings-winrate {
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    font-variant-numeric: tabular-nums;
+}
+
+/* Gamble King's row gets a subtle gold wash; the hero already crowns them,
+   so the podium just echoes it. The tr class carries the tint so it bleeds
+   to the card edges; uses the theme's -light tint so both themes read. */
+.neo-standings-king--full {
+    background: var(--casino-gold-light);
+}
+
+.neo-standings-king--full td {
+    border-bottom-color: var(--podium-king-border);
+}
+
+.neo-standings-name:focus-visible,
+.neo-standings-all:focus-visible {
+    outline: 2px solid var(--focus-ring-color);
+    outline-offset: 2px;
+}
+
+.neo-standings-name:hover {
+    color: var(--link-color);
+    text-decoration: underline;
+}
+
+/* Mobile: the old 700px override kept tables flush with the card bottom
+   (no bottom margin); kept so mobile spacing is unchanged. The 480px
+   block below tightens cells and podium type to fit narrow screens. */
 @media (max-width: 700px) {
-    .modern-table {
-        border: 1px solid var(--border-color) !important;
-        box-shadow: none !important;
-    }
-
     .table-responsive {
-        margin: 0 !important;
-        padding: 0 !important;
-        -webkit-overflow-scrolling: touch;
-    }
-
-    .modern-table th,
-    .modern-table td {
-        padding: var(--spacing-sm) !important;
-        font-size: 0.875rem !important;
+        margin: 0;
+        padding: 0;
     }
 }
 
-/* Migrated from responsive-fixes.css (missed by the original migration). */
-@media (max-width: 600px) {
-    .dashboard-content .players-stats-table {
-        min-width: 100%;
-        width: 100%;
+@media (max-width: 480px) {
+    .neo-table th,
+    .neo-table td {
+        padding: 0.5rem 0.5rem;
+        font-size: 0.875rem;
     }
-    /* Tighten the numeric columns so they fit without the name column
-       losing room.  Kept ahead of the .dashboard-content padding rule
-       below to preserve the original responsive-fixes.css cascade order
-       (both selectors have equal specificity). */
-    .players-stats-table td:not(:first-child),
-    .players-dashboard-table td:not(:first-child) {
-        padding-left: 0.125rem;
-        padding-right: 0.125rem;
-    }
-    .dashboard-content .players-stats-table th, .dashboard-content .players-stats-table td {
-        padding: 0.5rem 0.25rem;
-    }
-    .dashboard-content .players-stats-table td:first-child {
-        width: 60%;
-    }
-    .dashboard-content .players-stats-table td:nth-child(2), .dashboard-content .players-stats-table td:nth-child(3) {
-        width: 20%;
-        text-align: center;
-    }
-}
 
-@media (max-width: 400px) {
-    .dashboard-content .players-stats-table th {
-        font-size: 0.875rem;
-        padding: 0.25rem;
-    }
-    .dashboard-content .players-stats-table td {
-        font-size: 0.875rem;
-    }
-    .dashboard-content .gamble-king-label {
+    .neo-standings-rank {
         font-size: 0.7rem;
-        padding: 0.125rem 0.25rem;
     }
-}
 
-/* Dashboard content */ .dashboard-content {
-    width: 100%;
-}
-
-.dashboard-content .table-responsive {
-    margin-bottom: 1rem;
-}
-
-@media (max-width: 600px) {
-    .dashboard-content .table-responsive {
-        margin: 0 -0.5rem;
-        width: calc(100% + 1rem);
+    .neo-standings-pl {
+        font-size: 0.8125rem;
     }
-}
 
-/* Migrated from responsive-fixes.css (missed by the original migration). */
-.players-dashboard-table td:first-child {
-    white-space: nowrap;
+    .neo-standings-winrate {
+        font-size: 0.75rem;
+    }
 }

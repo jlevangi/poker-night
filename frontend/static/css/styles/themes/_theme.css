@@ -48,7 +48,6 @@
     --border-light: #E2E8F0;
     --border-lighter: #F1F5F9;
     --border-card: #E2E8F0;
-    --border-table: #E2E8F0;
 
     /* Shadow — legacy names alias the neo-* scale (defined below in this
        file), so every shadow inherits the dark-mode flip in one place. */
@@ -126,6 +125,10 @@
     --neo-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
     --neo-shadow-static: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
 
+    /* Table row hover — the single neutral wash every data-table row hover
+       uses. Flipped to a light wash in dark mode. */
+    --table-hover: rgba(15, 23, 42, 0.03);
+
     /* Focus ring — brightened in dark mode for contrast on dark surfaces */
     --focus-ring-color: var(--primary-color);
 
@@ -135,11 +138,8 @@
 
     /* Gamble King Colors */
     --casino-white: #FFFFFF;
-    --gamble-king-bg: rgba(245, 158, 11, 0.08);
-    --gamble-king-bg-hover: rgba(245, 158, 11, 0.12);
-    --gamble-king-label-bg: #F59E0B;
-    --gamble-king-label-text: #FFFFFF;
     --gamble-king-gradient: linear-gradient(135deg, #F59E0B, #D97706);
+    --podium-king-border: rgba(245, 158, 11, 0.18);
 
     /* Counter / 7-2 button colors now resolve directly to the casino
        tokens (var(--casino-green)/--casino-red) in _buttons.css; the

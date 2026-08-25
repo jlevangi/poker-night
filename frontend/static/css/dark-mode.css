@@ -47,6 +47,7 @@
     --casino-cream: #1E293B;
     --border-header: rgba(255, 255, 255, 0.08);
     --border-bottom-nav: rgba(255, 255, 255, 0.08);
+    --podium-king-border: rgba(252, 211, 77, 0.18);
     --gamble-king-stripe-color: rgba(252, 211, 77, 0.12);
     --neo-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
     --neo-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -2px rgba(0, 0, 0, 0.2);
@@ -64,6 +65,7 @@
     --badge-tint-red: var(--casino-red-light);
     --badge-tint-purple: var(--casino-purple-light);
     --badge-tint-neutral: var(--status-neutral-bg);
+    --table-hover: rgba(255, 255, 255, 0.05);
     --casino-red-dark: #FCA5A5;
     --casino-gold-dark: #FCD34D;
     --casino-green-dark: #6EE7B7;
@@ -209,22 +211,6 @@ a:hover {
 }
 
 .ui-card-header {
-    border-bottom-color: var(--border-light);
-}
-
-/* Legacy table support */
-.modern-table {
-    background-color: var(--bg-card);
-    border-color: var(--border-color);
-}
-
-.modern-table th {
-    background-color: var(--bg-secondary);
-    color: var(--text-primary);
-}
-
-.modern-table td {
-    color: var(--text-primary);
     border-bottom-color: var(--border-light);
 }
 

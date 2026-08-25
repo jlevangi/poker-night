@@ -276,7 +276,7 @@ export default class SessionDetailPage {
                     <div class="neo-card">
                         <h4 class="section-title">Player Breakdown</h4>
                         <div class="table-responsive">
-                            <table class="log-stats-table">
+                            <table class="neo-table neo-table--dense">
                                 <thead>
                                     <tr>
                                         <th>Player</th><th>Hands</th><th>Won</th><th>VPIP</th>

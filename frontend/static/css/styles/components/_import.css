@@ -217,34 +217,6 @@
     overflow-wrap: anywhere;
 }
 
-/* Per-player log stats on the session page. */
-.log-stats-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-variant-numeric: tabular-nums;
-}
-
-.log-stats-table th,
-.log-stats-table td {
-    padding: 0.5rem;
-    text-align: right;
-    white-space: nowrap;
-    border-bottom: 1px solid var(--border-light);
-}
-
-.log-stats-table th {
-    font-size: 0.6875rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    color: var(--text-secondary);
-}
-
-.log-stats-table th:first-child,
-.log-stats-table td:first-child {
-    text-align: left;
-    font-weight: 700;
-}
 
 .log-stat-help {
     font-size: 0.8125rem;
