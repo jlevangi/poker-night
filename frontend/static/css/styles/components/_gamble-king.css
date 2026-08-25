@@ -1,0 +1,190 @@
+/* Gamble King hero card: felt gradient, glow/stripe/crown keyframes, crown, title, lead value, metric row, empty-throne state, the dark-mode glow swap, and compact <=480px padding. (The hero-name link pin lives in dark-mode.css; the metrics gap at <=768px lives in themes/_modern-theme.css.) */
+.neo-gamble-king {
+    background:
+        radial-gradient(130% 120% at 50% -20%, rgba(252, 211, 77, 0.28) 0%, rgba(252, 211, 77, 0) 52%),
+        linear-gradient(165deg, #14532D 0%, #0B3B21 48%, #062513 100%);
+    border: 1px solid rgba(252, 211, 77, 0.5);
+    box-shadow: var(--neo-shadow-lg), 0 0 44px rgba(245, 158, 11, 0.14), inset 0 0 0 1px rgba(252, 211, 77, 0.12);
+    padding: 1.5rem var(--spacing-neo) 1.375rem;
+    margin-bottom: var(--spacing-neo);
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--radius-xl);
+    text-align: center;
+    color: #F8FAFC;
+    animation: goldGlow 4s ease-in-out infinite;
+}
+
+/* The one loop on the dashboard that earns its keep: this hero only appears
+   when somebody is actually winning, so the motion marks a state rather than
+   decorating a surface.  Both loops are stilled by the global
+   prefers-reduced-motion rule in utils/_animations.css. */
+@keyframes goldGlow {
+    0%, 100% { box-shadow: var(--neo-shadow-lg), 0 0 10px rgba(245, 158, 11, 0.1), inset 0 0 0 1px rgba(252, 211, 77, 0.12); }
+    50% { box-shadow: var(--neo-shadow-lg), 0 0 26px rgba(245, 158, 11, 0.22), 0 0 60px rgba(245, 158, 11, 0.08), inset 0 0 0 1px rgba(252, 211, 77, 0.12); }
+}
+
+.neo-gamble-king::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 300%;
+    height: 100%;
+    background: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 20px,
+        var(--gamble-king-stripe-color) 20px,
+        var(--gamble-king-stripe-color) 40px
+    );
+    pointer-events: none;
+    animation: slideStripes 8s linear infinite;
+}
+
+/* The card's own children need to sit above the stripe overlay. */
+.neo-gamble-king > * {
+    position: relative;
+    z-index: 1;
+}
+
+@keyframes slideStripes {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(33.333%); }
+}
+
+@keyframes crownBob {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-4px); }
+}
+
+.neo-gamble-king-top {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.neo-gamble-king-crown {
+    width: clamp(48px, 9vw, 72px);
+    height: auto;
+    color: #FCD34D;
+    filter: drop-shadow(0 2px 12px rgba(245, 158, 11, 0.55));
+    animation: crownBob 4s ease-in-out infinite;
+}
+
+.neo-gamble-king-title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.24em;
+    color: #FCD34D;
+    text-shadow: none;
+    position: relative;
+}
+
+.neo-gamble-king-name {
+    margin-top: 0.75rem;
+    font-size: clamp(2.25rem, 6.5vw, 3.5rem);
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    text-align: center;
+    color: #FFFFFF;
+    text-shadow: none;
+    overflow-wrap: anywhere;
+    position: relative;
+}
+
+a.neo-gamble-king-name {
+    text-decoration: none;
+    transition: color var(--transition-neo);
+}
+
+a.neo-gamble-king-name:hover,
+a.neo-gamble-king-name:focus-visible {
+    color: #FCD34D;
+}
+
+.neo-gamble-king-lead {
+    text-align: center;
+    margin: 1.125rem 0 1.25rem;
+}
+
+.neo-gamble-king-lead-value {
+    font-size: clamp(1.75rem, 5vw, 2.625rem);
+    font-weight: 700;
+    line-height: 1.1;
+    font-variant-numeric: tabular-nums;
+    color: #FCD34D;
+    text-shadow: 0 0 26px rgba(245, 158, 11, 0.4);
+    overflow-wrap: anywhere;
+}
+
+.neo-gamble-king-lead-label {
+    margin-top: 0.375rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: rgba(248, 250, 252, 0.85);
+}
+
+.neo-gamble-king-metrics {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.5rem 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(252, 211, 77, 0.22);
+}
+
+.neo-gamble-king-metric {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.125rem;
+}
+
+.neo-gamble-king-metric-value {
+    font-size: 1.125rem;
+    font-weight: 600;
+    line-height: 1.2;
+    color: #F8FAFC;
+    font-variant-numeric: tabular-nums;
+}
+
+.neo-gamble-king-metric-label {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: rgba(252, 211, 77, 0.95);
+}
+
+.neo-gamble-king-empty {
+    margin-top: 0.5rem;
+    font-size: 0.9375rem;
+    color: rgba(248, 250, 252, 0.85);
+    position: relative;
+}
+
+/* Empty throne: no glow (the base box-shadow is the lit-state glow), no
+   moving stripes — a static dashed card. */
+.neo-gamble-king--empty {
+    animation: none;
+    box-shadow: var(--neo-shadow-lg);
+    border-style: dashed;
+}
+
+.neo-gamble-king--empty::before {
+    display: none;
+}
+
+/* <=480px: compact the hero. */
+@media (max-width: 480px) {
+    .neo-gamble-king {
+        padding: 0.75rem;
+        margin-bottom: 0.75rem;
+    }
+}

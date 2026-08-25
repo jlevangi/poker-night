@@ -22,7 +22,12 @@
 
 /* 4. Component styles */
 @import 'components/_buttons.css';
-@import 'components/_cards.css';
+@import 'components/_cards-dashboard-context.css';
+@import 'components/_card-variants.css';
+@import 'components/_stat-cards.css';
+@import 'components/_gamble-king.css';
+@import 'components/_quick-actions.css';
+@import 'components/_next-event-card.css';
 @import 'components/_forms.css';
 @import 'components/_header.css';
 @import 'components/_lists.css';

@@ -1,6 +1,6 @@
 // Pure HTML renderers for the session detail page — no DOM access, no state.
 // Kept out of session-detail-page.js so the page module stays an orchestration
-// layer. Styling: css/styles/components/_cards.css (player chips), _charts.css
+// layer. Styling: css/styles/components/_card-variants.css (player chips), _charts.css
 // (log stat cards), plus inline styles mirroring the original markup.
 import { formatCurrency } from './formatters.js';
 import { escapeHtml, renderAwardCard, renderEmptyState } from './ui.js';

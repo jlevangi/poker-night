@@ -1,0 +1,41 @@
+/* Next-event card (dashboard): the gold-tinted card, its dark-mode wash,
+   and compact <=480px padding. The live-badge chip it carries lives in
+   components/_chips.css. */
+.neo-next-event-card.neo-next-event-card {
+    background: var(--casino-gold-light);
+    border-color: rgba(245, 158, 11, 0.3);
+    color: var(--text-primary);
+    /* .list-card-row (in _lists.css, imported after this theme file) sets the
+       shorthand `margin: 0`, which at equal class specificity wins over the
+       single-class rule here and leaves the gold card flush against the
+       quick-action tiles. Repeating the class raises specificity and keeps
+       the standard dashboard-card spacing. */
+    margin-bottom: var(--spacing-neo);
+}
+
+/* RSVP chips: theme-aware. The inline styles in renderNextEventCard use
+   --casino-* tints; in dark mode the opaque casino color behind white
+   text stays legible (that's the light-mode look), so no override needed. */
+
+/* <=480px: slim padding, let the date-time-location subtitle wrap. */
+@media (max-width: 480px) {
+    /* Tighter vertical stack: slim padding, and let the long
+       date-time-location subtitle wrap (min-width: 0) instead of
+       forcing the flex row past the card edge. */
+
+    .neo-next-event-card {
+        padding: 0.75rem 1rem;
+    }
+
+    .neo-next-event-card > div > div {
+        min-width: 0;
+    }
+}
+
+/* The next-event card's gold tint resolves --casino-gold-light, which the
+   [data-theme="dark"] token flip turns into a translucent wash. This file
+   loads after that flip, so the gold card stays a quiet tint on dark felt
+   instead of an opaque slab. */
+[data-theme="dark"] .neo-next-event-card.neo-next-event-card {
+    background: var(--casino-gold-light);
+}

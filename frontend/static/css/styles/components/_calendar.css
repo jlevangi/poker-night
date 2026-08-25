@@ -1,6 +1,6 @@
 /* Calendar / Events styles — event-card grid, the RSVP player pick, and
    the schedule form. Card surfaces, hover lifts, and the RSVP buttons'
-   fills come from the shared primitives (_cards.css, _modern-theme.css
+   fills come from the shared primitives (_card-variants.css, _modern-theme.css
    button roles, _forms.css); this file owns only event-specific layout. */
 
 /* Event cards (calendar list) — one row, three zones:
@@ -8,7 +8,7 @@
    RSVP at a glance.  The date leads because it is a calendar entry's
    identity; the whole row stacks to one column on small screens.
    The hover lift comes from the shared clickable-card group in
-   _cards.css (the card sits inside a link); the focus rule below
+   _card-variants.css (the card sits inside a link); the focus rule below
    mirrors it for keyboard users. */
 .neo-event-card {
     display: grid;

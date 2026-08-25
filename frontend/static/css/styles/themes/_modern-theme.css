@@ -79,8 +79,8 @@ textarea,
 }
 
 /* Card-family surfaces (base card, tints, stat cards, the Gamble King hero,
-   quick-action tiles, the next-event card, list items) live in
-   components/_cards.css. */
+   quick-action tiles, the next-event card, list items) live in the
+   components/_card-*.css partials. */
 
 /* Dark mode button overrides */
 [data-theme="dark"] .neo-btn-purple {

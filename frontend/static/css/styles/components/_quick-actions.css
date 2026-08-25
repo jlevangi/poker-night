@@ -1,0 +1,161 @@
+/* Dashboard quick-action tiles: grid, tiles, accent modifiers via local vars, icon circles, hover/press/focus states, the touch-device hover guard, and the responsive column steps. */
+.neo-quick-actions {
+    display: grid;
+    /* minmax(140px): the <=768px repeat(2,1fr) override stops applying at
+       769px, and from 769-779px the grid column (641-652px) fits 3 tiles
+       (3*150+3*16=498 <= col) but not a 4th (648), leaving a stretched
+       orphan row. 140px pulls the 4-across threshold down to 608. */
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+}
+
+.neo-quick-action {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 96px;
+    padding: 1rem;
+    /* Accent-tinted tile at rest (light mode reads as chips on felt); the
+       dark block below resets it to a neutral card so dark stays quiet. */
+    background: var(--qa-accent-light, var(--bg-card));
+    border: 1px solid var(--border-light);
+    box-shadow: var(--neo-shadow-sm);
+    border-radius: 14px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: 0;
+    color: var(--qa-accent-dark, var(--text-primary));
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: all 0.2s ease;
+    /* Ink for the icon when the circle fills to full accent on hover/press.
+       Light theme: white on the -dark fills (all >= 3:1). Dark theme flips
+       --qa-accent-dark to pale values, so the flip below uses dark ink. */
+    --qa-hover-ink: var(--text-white);
+}
+
+/* Accent modifiers set local vars; the element-scoped rules below consume
+   them, so each accent is one line and both themes work automatically
+   (-dark/-light vars flip in the dark block above). The `a`/`button`
+   element prefix keeps specificity above `[data-theme="dark"] a`. */
+.neo-quick-action--gold { --qa-accent: var(--casino-gold); --qa-accent-dark: var(--casino-gold-dark); --qa-accent-light: var(--casino-gold-light); }
+.neo-quick-action--green { --qa-accent: var(--casino-green); --qa-accent-dark: var(--casino-green-dark); --qa-accent-light: var(--casino-green-light); }
+.neo-quick-action--purple { --qa-accent: var(--casino-purple); --qa-accent-dark: var(--casino-purple-dark); --qa-accent-light: var(--casino-purple-light); }
+.neo-quick-action--blue { --qa-accent: var(--casino-blue); --qa-accent-dark: var(--casino-blue-dark); --qa-accent-light: var(--casino-blue-light); }
+.neo-quick-action--red { --qa-accent: var(--casino-red); --qa-accent-dark: var(--casino-red-dark); --qa-accent-light: var(--casino-red-light); }
+
+/* Dark keeps neutral card tiles (the accent lives in the icon circle) and
+   flips the hover ink, because dark --qa-accent-* values are pale. */
+[data-theme="dark"] .neo-quick-action {
+    --qa-hover-ink: var(--casino-black);
+    background: var(--bg-card);
+}
+
+.neo-quick-actions a.neo-quick-action,
+.neo-quick-actions button.neo-quick-action {
+    color: var(--qa-accent-dark, var(--text-primary));
+}
+
+.neo-quick-action .neo-quick-action-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    margin: 0;
+    background: var(--qa-accent-light, var(--bg-tertiary));
+    color: var(--qa-accent-dark, var(--text-primary));
+    transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.neo-quick-action .neo-quick-action-icon svg {
+    width: 24px;
+    height: 24px;
+}
+
+.neo-quick-action .neo-quick-action-label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+.neo-quick-actions a.neo-quick-action:hover,
+.neo-quick-actions button.neo-quick-action:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--neo-shadow-md);
+    border-color: var(--qa-accent, var(--border-color));
+    color: var(--qa-accent-dark, var(--text-primary));
+    text-decoration: none;
+}
+
+/* Chip snap: the icon circle fills to full accent on hover, icon flips to
+   --qa-hover-ink (white on light, dark ink on dark). */
+.neo-quick-actions a.neo-quick-action:hover .neo-quick-action-icon,
+.neo-quick-actions button.neo-quick-action:hover .neo-quick-action-icon {
+    background: var(--qa-accent-dark, var(--bg-tertiary));
+    color: var(--qa-hover-ink, var(--text-white));
+    transform: scale(1.06);
+}
+
+.neo-quick-actions a.neo-quick-action:active,
+.neo-quick-actions button.neo-quick-action:active {
+    transform: translateY(0) scale(0.98);
+    box-shadow: var(--neo-shadow-sm);
+}
+
+.neo-quick-actions a.neo-quick-action:focus-visible,
+.neo-quick-actions button.neo-quick-action:focus-visible {
+    outline: 2px solid var(--focus-ring-color);
+    outline-offset: 2px;
+}
+
+/* Touch devices never fire :hover reliably; give the tiles a pressed state
+   so a tap still reads as a tap (lift + accent border), same as the mouse hover. */
+@media (hover: none) {
+    .neo-quick-actions a.neo-quick-action:active,
+    .neo-quick-actions button.neo-quick-action:active {
+        transform: translateY(-2px);
+        box-shadow: var(--neo-shadow-md);
+        border-color: var(--qa-accent, var(--border-color));
+    }
+
+    /* Touch press mirrors the mouse hover: filled icon circle. */
+    .neo-quick-actions a.neo-quick-action:active .neo-quick-action-icon,
+    .neo-quick-actions button.neo-quick-action:active .neo-quick-action-icon {
+        background: var(--qa-accent-dark, var(--bg-tertiary));
+        color: var(--qa-hover-ink, var(--text-white));
+        transform: scale(1.06);
+    }
+}
+
+/* <=768px: two columns. */
+@media (max-width: 768px) {
+    .neo-quick-actions {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+    }
+}
+/* <=480px: still two columns. */
+@media (max-width: 480px) {
+    .neo-quick-actions {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+    }
+}
+/* <=360px: full-width tiles. */
+@media (max-width: 360px) {
+    /* At 332px content width a 2-col row leaves ~150px per tile: the
+       48px icon circle clears, but long labels ("View Live Session")
+       need the full row to wrap cleanly. */
+
+    .neo-quick-actions {
+        grid-template-columns: 1fr;
+    }
+}

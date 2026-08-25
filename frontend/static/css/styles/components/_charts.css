@@ -439,7 +439,7 @@
 
 /* --casino-black never flips, so its ink would sit on the dark slate
    wash (~1:1) in dark mode. Pin the "black" tile to white ink there —
-   the same pattern as the hero name pin in _cards.css. */
+   the same pattern as the hero name pin in dark-mode.css. */
 [data-theme="dark"] .neo-leaderboard-stat.black {
     color: var(--casino-white);
 }
