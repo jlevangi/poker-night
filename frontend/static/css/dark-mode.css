@@ -122,15 +122,18 @@ input, textarea, select {
     border-color: var(--border-color);
 }
 
+/* Forms: token-driven in both themes. In dark, --bg-content/--bg-card are the
+   same slate and --border-color flips to #334155, so classed and unclassed
+   fields share one border. */
 [data-theme="dark"] input[type="text"],
 [data-theme="dark"] input[type="number"],
 [data-theme="dark"] input[type="email"],
 [data-theme="dark"] input[type="password"],
 [data-theme="dark"] select,
 [data-theme="dark"] textarea {
-    background-color: var(--bg-content);
+    background-color: var(--bg-card);
     color: var(--text-primary);
-    border-color: #475569;
+    border-color: var(--border-color);
 }
 
 [data-theme="dark"] input::placeholder,
