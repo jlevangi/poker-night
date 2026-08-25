@@ -1,6 +1,7 @@
 // Stats page module
 import { staggerChildren } from './animations.js';
 import { formatCurrency, formatCurrencyWhole, formatPercent } from './formatters.js';
+import { buildLinePath, createPieSlice } from './stats-chart-paths.js';
 import { renderEmptyState, renderSkeleton, renderSkeletonPage, renderSkeletonStatGrid, showPageError } from './ui.js';
 
 export default class StatsPage {
@@ -428,7 +429,7 @@ export default class StatsPage {
                         </g>
 
                         <!-- Line -->
-                        <path d="${this.buildLinePath(data, xScale, yScale, margin.top)}"
+                        <path d="${buildLinePath(data, xScale, yScale, margin.top)}"
                               fill="none"
                               stroke="var(--casino-green-dark)"
                               stroke-width="3" />
@@ -463,192 +464,6 @@ export default class StatsPage {
         this.addChartInteractions();
     }
     
-    // Build the SVG path for the line chart
-    buildLinePath(data, xScale, yScale, marginTop) {
-        if (data.length === 0) return '';
-
-        // Start at first point
-        const firstX = xScale(0);
-        const firstY = marginTop + yScale(data[0].cumulative_amount);
-        let path = `M ${firstX} ${firstY}`;
-
-        // Draw line through all data points
-        for (let i = 1; i < data.length; i++) {
-            const x = xScale(i);
-            const y = marginTop + yScale(data[i].cumulative_amount);
-            path += ` L ${x} ${y}`;
-        }
-
-        return path;
-    }
-
-    // Generate x-axis labels for every 3 months
-    generateXAxisLabels(data) {
-        if (!data || data.length === 0) return [];
-
-        const labels = [];
-        const usedIndices = new Set();
-
-        // Get first and last dates
-        const firstDate = new Date(data[0].date);
-        const lastDate = new Date(data[data.length - 1].date);
-
-        // Always show first date
-        const firstMonth = firstDate.getMonth() + 1;
-        const firstYear = firstDate.getFullYear().toString().slice(-2);
-        labels.push({
-            index: 0,
-            text: `${firstMonth}/${firstYear}`
-        });
-        usedIndices.add(0);
-
-        // Find quarter months between first and last date
-        let currentDate = new Date(firstDate);
-        currentDate.setDate(1);
-        // Move to next quarter (0, 3, 6, 9)
-        const startMonth = currentDate.getMonth();
-        const nextQuarter = Math.ceil((startMonth + 1) / 3) * 3;
-        if (nextQuarter <= 11) {
-            currentDate.setMonth(nextQuarter);
-        } else {
-            currentDate.setMonth(0);
-            currentDate.setFullYear(currentDate.getFullYear() + 1);
-        }
-
-        // Generate labels every 3 months
-        while (currentDate <= lastDate) {
-            const month = currentDate.getMonth();
-            const year = currentDate.getFullYear();
-
-            // Find the closest data point index to this date
-            let closestIndex = 0;
-            let closestDiff = Infinity;
-
-            data.forEach((point, index) => {
-                const pointDate = new Date(point.date);
-                const diff = Math.abs(pointDate - currentDate);
-                if (diff < closestDiff) {
-                    closestDiff = diff;
-                    closestIndex = index;
-                }
-            });
-
-            // Only add if not already used
-            if (!usedIndices.has(closestIndex)) {
-                const shortYear = year.toString().slice(-2);
-                const displayMonth = month + 1;
-                labels.push({
-                    index: closestIndex,
-                    text: `${displayMonth}/${shortYear}`
-                });
-                usedIndices.add(closestIndex);
-            }
-
-            // Move to next quarter
-            currentDate.setMonth(currentDate.getMonth() + 3);
-        }
-
-        // Always show last date if different from others
-        if (data.length > 1 && !usedIndices.has(data.length - 1)) {
-            const lastMonth = lastDate.getMonth() + 1;
-            const lastYear = lastDate.getFullYear().toString().slice(-2);
-            labels.push({
-                index: data.length - 1,
-                text: `${lastMonth}/${lastYear}`
-            });
-        }
-
-        return labels;
-    }
-
-    // Create Y-axis labels with absolute positioning
-    createYAxisLabels(coords) {
-        return coords.yLabels.map(value => {
-            const y = coords.getLabelYCoordinate(value);
-            return `<div class="neo-y-label" style="position: absolute; top: ${y}px; right: 0.5rem; transform: translateY(-50%);">${formatCurrencyWhole(value)}</div>`;
-        }).join('');
-    }
-
-    // Create grid lines for Y-axis values
-    createGridLines(coords) {
-        let gridHTML = '';
-        
-        coords.yLabels.forEach((value) => {
-            const y = coords.getLabelYCoordinate(value);
-            
-            const strokeWidth = value === coords.chartMinValue ? "3" : "2";
-            const opacity = value === coords.chartMinValue ? "1" : "0.3";
-            const stroke = value === coords.chartMinValue ? "var(--text-primary)" : "var(--text-muted)";
-            
-            gridHTML += `<line x1="0" y1="${y}" x2="${coords.chartWidth}" y2="${y}" stroke="${stroke}" stroke-width="${strokeWidth}" opacity="${opacity}"/>`;
-        });
-        
-        return gridHTML;
-    }
-
-    // Create SVG area path
-    createAreaPath(data, coords) {
-        if (data.length === 0) return '';
-        
-        // Y position for baseline ($0) - use same coordinate system as grid lines
-        const baselineY = coords.getYCoordinate(coords.chartMinValue);
-        
-        let pathD = '';
-        
-        // Start from the baseline at the first data point's X position
-        const firstX = coords.getXCoordinate(0, data.length);
-        
-        // Start the path from the bottom baseline ($0)
-        pathD += `M ${firstX} ${baselineY}`;
-        
-        // Draw the line through all data points
-        data.forEach((point, index) => {
-            const x = coords.getXCoordinate(index, data.length);
-            const y = coords.getYCoordinate(point.cumulative_amount);
-            pathD += ` L ${x} ${y}`;
-        });
-        
-        // Close the area by going down to the bottom and back to start
-        if (data.length > 0) {
-            const lastX = coords.getXCoordinate(data.length - 1, data.length);
-            pathD += ` L ${lastX} ${baselineY}`;
-            pathD += ` L ${firstX} ${baselineY}`;
-            pathD += ' Z';
-        }
-        
-        return `
-            <path d="${pathD}" 
-                  fill="var(--casino-green)" 
-                  stroke="var(--casino-green-dark)" 
-                  stroke-width="3" 
-                  class="neo-area-path"/>
-        `;
-    }
-
-    // Create data points
-    createDataPoints(data, coords) {
-        if (data.length === 0) return '';
-        
-        return data.map((point, index) => {
-            const x = coords.getXCoordinate(index, data.length);
-            const y = coords.getYCoordinate(point.cumulative_amount);
-            
-            return `
-                <circle cx="${x}" 
-                        cy="${y}" 
-                        r="6" 
-                        fill="var(--casino-gold)" 
-                        stroke="var(--casino-green-dark)"
-                        stroke-width="1.5"
-                        class="neo-data-point"
-                        data-session-id="${point.session_id}"
-                        data-date="${point.date}"
-                        data-session-amount="${formatCurrency(point.session_amount)}"
-                        data-value="${formatCurrency(point.cumulative_amount)}"
-                        data-players="${point.player_count}"/>
-            `;
-        }).join('');
-    }    // Add chart interaction handlers
     addChartInteractions() {
         const dataPoints = document.querySelectorAll('.neo-data-point');
         
@@ -868,15 +683,21 @@ export default class StatsPage {
         const centerY = size / 2;
         const radius = size / 2 - 24;
         const innerRadius = 92;
-
-        // Store slices data for access in createPieSlice method
-        this._currentPieSlices = slices;
-
         // Build SVG
         let currentAngle = -90; // Start at top
         const slicePaths = slices.map((slice, index) => {
             const angle = (slice.percentage / 100) * 360;
-            const path = this.createPieSlice(centerX, centerY, radius, innerRadius, currentAngle, currentAngle + angle, slice.color, slice.name, index);
+            const path = createPieSlice({
+                cx: centerX,
+                cy: centerY,
+                radius: radius,
+                innerRadius: innerRadius,
+                startAngle: currentAngle,
+                endAngle: currentAngle + angle,
+                color: slice.color,
+                name: slice.name,
+                slice: slice
+            });
             currentAngle += angle;
             return path;
         });
@@ -1023,50 +844,5 @@ export default class StatsPage {
         };
 
         document.addEventListener('click', this.boundPieChartResetHandler);
-    }
-
-    // Create SVG path for pie slice
-    createPieSlice(cx, cy, radius, innerRadius, startAngle, endAngle, color, playerName = '', sliceIndex = 0) {
-        const startRad = (startAngle * Math.PI) / 180;
-        const endRad = (endAngle * Math.PI) / 180;
-
-        const x1 = cx + radius * Math.cos(startRad);
-        const y1 = cy + radius * Math.sin(startRad);
-        const x2 = cx + radius * Math.cos(endRad);
-        const y2 = cy + radius * Math.sin(endRad);
-        const x3 = cx + innerRadius * Math.cos(endRad);
-        const y3 = cy + innerRadius * Math.sin(endRad);
-        const x4 = cx + innerRadius * Math.cos(startRad);
-        const y4 = cy + innerRadius * Math.sin(startRad);
-
-        const largeArc = endAngle - startAngle > 180 ? 1 : 0;
-
-        const pathData = [
-            `M ${x1} ${y1}`,
-            `A ${radius} ${radius} 0 ${largeArc} 1 ${x2} ${y2}`,
-            `L ${x3} ${y3}`,
-            `A ${innerRadius} ${innerRadius} 0 ${largeArc} 0 ${x4} ${y4}`,
-            'Z'
-        ].join(' ');
-
-        // Get player data from slices array
-        const slice = this.getCurrentSliceData(sliceIndex);
-        const playerValue = slice ? formatCurrency(slice.value) : '0.00';
-        const playerPercentage = slice ? formatPercent(slice.percentage) : '0.0%';
-
-        return `<path d="${pathData}"
-                      fill="${color}"
-                      stroke="var(--bg-card)"
-                      stroke-width="3"
-                      filter="url(#pieSliceShadow)"
-                      class="neo-pie-slice"
-                      data-player-name="${playerName}"
-                      data-player-value="${playerValue}"
-                      data-player-percentage="${playerPercentage}" />`;
-    }
-
-    // Helper to get current slice data (stored temporarily during pie chart rendering)
-    getCurrentSliceData(index) {
-        return this._currentPieSlices ? this._currentPieSlices[index] : null;
     }
 }
