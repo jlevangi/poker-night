@@ -5,8 +5,9 @@ import { staggerChildren } from './animations.js';
 import Router from './router.js';
 import EventBus from './event-bus.js';
 import { formatCurrency, formatDate } from './formatters.js';
-import { renderEmptyState, renderSkeleton, renderSkeletonPage, renderSkeletonStatGrid, showPageError } from './ui.js';
+import { renderSkeleton, renderSkeletonPage, renderSkeletonStatGrid, showPageError } from './ui.js';
 import { renderChipDistribution, renderLogStats, renderPlayersListHTML } from './session-detail-renderers.js';
+import AddPlayersPickerController from './session-add-players-picker.js';
 
 export default class SessionDetailPage {
     static skeleton() {
@@ -43,10 +44,7 @@ export default class SessionDetailPage {
         this.appContent = appContent;
         this.api = apiService;
         this.notificationManager = new NotificationManager(apiService);
-        this.addPlayerSearchQuery = '';
-        this.selectedPlayerIds = new Set();
-        this.isAddPlayersModalOpen = false;
-        this.boundHandleAddPlayersModalEscape = null;
+        this.addPlayersPicker = new AddPlayersPickerController();
     }
     
 
@@ -96,9 +94,7 @@ export default class SessionDetailPage {
             }
 
             session.allPlayers = availablePlayers || [];
-            this.addPlayerSearchQuery = '';
-            this.selectedPlayerIds.clear();
-            this.isAddPlayersModalOpen = false;
+            this.addPlayersPicker.reset();
             
             // Ensure the buy-in value is available for the form
             if (session.session_info && session.session_info.default_buy_in_value) {
@@ -122,95 +118,16 @@ export default class SessionDetailPage {
         }
     }
     
-    getFilteredPlayerPickerPlayers() {
-        const players = [...(this.currentSession?.allPlayers || [])].sort((a, b) => a.name.localeCompare(b.name));
-        const query = this.addPlayerSearchQuery.trim().toLowerCase();
-        const existingPlayerIds = new Set((this.currentSession?.players || []).map(player => player.id));
 
-        const mappedPlayers = players.map(player => ({
-            ...player,
-            isInSession: existingPlayerIds.has(player.player_id)
-        }));
-
-        if (!query) {
-            return mappedPlayers;
-        }
-
-        return mappedPlayers.filter(player => player.name.toLowerCase().includes(query));
-    }
-
-    renderAddPlayersCard(sessionData) {
-        const totalPlayers = this.currentSession?.allPlayers?.length || 0;
-
-        return `
-            <div class="session-player-picker-card">
-                <button id="open-player-picker-btn" class="neo-btn neo-btn-green" type="button" style="padding: 0.75rem 1rem;">Add Players</button>
-                ${this.isAddPlayersModalOpen ? this.renderAddPlayersModal(sessionData, totalPlayers) : ''}
-            </div>
-        `;
-    }
-
-    renderAddPlayersModal(sessionData, totalPlayers) {
-        const filteredPlayers = this.getFilteredPlayerPickerPlayers();
-        const selectedCount = this.selectedPlayerIds.size;
-        const defaultBuyin = formatCurrency(sessionData?.default_buy_in_value || 20);
-
-        return `
-            <div id="add-players-modal-overlay" class="modal-overlay">
-                <div class="modal-content">
-                    <button id="close-player-picker-btn" class="modal-close-btn" type="button" aria-label="Close add players">&times;</button>
-                    <h3>Add Players</h3>
-                    <p class="modal-subtitle">${totalPlayers} total players</p>
-                    <div class="session-player-picker-toolbar">
-                        <input type="text" id="add-player-search" class="neo-input" placeholder="Search players..." value="${this.escapeHtml(this.addPlayerSearchQuery)}" style="margin-bottom: 0;">
-                    </div>
-                    <div class="session-player-picker-list">
-                        ${filteredPlayers.length > 0 ? filteredPlayers.map(player => `
-                            <label class="session-player-picker-option ${player.isInSession ? 'already-in' : ''} ${this.selectedPlayerIds.has(player.player_id) ? 'selected' : ''}">
-                                <input
-                                    type="checkbox"
-                                    class="session-player-checkbox"
-                                    value="${player.player_id}"
-                                    ${player.isInSession || this.selectedPlayerIds.has(player.player_id) ? 'checked' : ''}
-                                    ${player.isInSession ? 'disabled' : ''}
-                                >
-                                <span class="session-player-picker-name">${this.escapeHtml(player.name)}</span>
-                                ${player.isInSession ? '<span class="chip-neutral">In Session</span>' : ''}
-                            </label>
-                        `).join('') : `
-                            ${renderEmptyState({ icon: '🔍', message: 'No players match your search.', card: false })}
-                        `}
-                    </div>
-                    <div class="session-player-picker-footer">
-                        <div class="session-player-picker-footer-summary">
-                            <strong>${selectedCount}</strong> player${selectedCount === 1 ? '' : 's'} selected · Default buy-in ${defaultBuyin}
-                        </div>
-                        <button id="add-player-to-session-btn" class="neo-btn neo-btn-green" type="button" ${selectedCount === 0 ? 'disabled' : ''}>
-                            ${selectedCount === 0 ? 'Select Players to Add' : `Add ${selectedCount} Player${selectedCount === 1 ? '' : 's'}`}
-                        </button>
-                    </div>
-                </div>
-            </div>
-        `;
-    }
-
-    refreshAddPlayersCard(sessionData, sessionId, options = {}) {
-        const container = document.getElementById('add-players-card-container');
-        if (!container) return;
-
-        // Any prior overlay — body-level (promoted on open) or in-container —
-        // is stale the moment the card rebuilds; remove every copy so re-opening
-        // never leaves duplicates behind.
-        document.querySelectorAll('#add-players-modal-overlay').forEach(el => el.remove());
-        container.innerHTML = this.renderAddPlayersCard(sessionData);
-        this.setupAddPlayerPicker(sessionData, sessionId, options);
-
-        if (typeof options.listScrollTop === 'number') {
-            const pickerList = document.querySelector('.session-player-picker-list');
-            if (pickerList) {
-                pickerList.scrollTop = options.listScrollTop;
-            }
-        }
+    // Context object handed to the add-players picker controller: the live
+    // session plus the callbacks it needs, so the controller never touches
+    // page internals directly.
+    pickerContext() {
+        return {
+            currentSession: this.currentSession,
+            api: this.api,
+            refreshEntries: (newEntries, sessionId) => this.refreshEntries(newEntries, sessionId)
+        };
     }
 
     // Partially refresh the session page after an action — no full reload needed
@@ -274,7 +191,7 @@ export default class SessionDetailPage {
         }
 
         if (isActive) {
-            this.refreshAddPlayersCard(sessionData, sessionId);
+            this.addPlayersPicker.refresh(this.pickerContext(), sessionData, sessionId);
         }
 
         // Re-attach player-specific event listeners
@@ -403,7 +320,7 @@ export default class SessionDetailPage {
                     <h3 class="section-heading">🎭 Players</h3>
                     ${isActive ? `
                         <div id="add-players-card-container">
-                            ${this.renderAddPlayersCard(sessionData)}
+                            ${this.addPlayersPicker.renderCard(this.pickerContext(), sessionData)}
                         </div>
                     ` : ''}
                 </div>
@@ -796,7 +713,7 @@ export default class SessionDetailPage {
             }
 
             // Add player to session button
-            this.setupAddPlayerPicker(session, sessionId);
+            this.addPlayersPicker.setup(this.pickerContext(), session, sessionId);
             
             // Set up notification functionality for active sessions
             this.setupNotificationHandlers(sessionId);
@@ -807,137 +724,6 @@ export default class SessionDetailPage {
 
     }
 
-    setupAddPlayerPicker(sessionData, sessionId, options = {}) {
-        const searchInput = document.getElementById('add-player-search');
-        const openPickerBtn = document.getElementById('open-player-picker-btn');
-        const closePickerBtn = document.getElementById('close-player-picker-btn');
-        const modalOverlay = document.getElementById('add-players-modal-overlay');
-        const addPlayersBtn = document.getElementById('add-player-to-session-btn');
-        
-        if (openPickerBtn) {
-            openPickerBtn.addEventListener('click', () => {
-                this.isAddPlayersModalOpen = true;
-                this.refreshAddPlayersCard(sessionData, sessionId, { animateOpen: true });
-            });
-        }
-
-        if (closePickerBtn) {
-            closePickerBtn.addEventListener('click', () => {
-                this.isAddPlayersModalOpen = false;
-                this.refreshAddPlayersCard(sessionData, sessionId);
-            });
-        }
-
-        if (modalOverlay) {
-            modalOverlay.addEventListener('click', (event) => {
-                if (event.target === modalOverlay) {
-                    this.isAddPlayersModalOpen = false;
-                    this.refreshAddPlayersCard(sessionData, sessionId);
-                }
-            });
-        }
-
-        if (searchInput) {
-            searchInput.addEventListener('input', (event) => {
-                this.addPlayerSearchQuery = event.target.value;
-                this.refreshAddPlayersCard(sessionData, sessionId);
-            });
-        }
-
-        document.querySelectorAll('.session-player-checkbox').forEach(checkbox => {
-            checkbox.addEventListener('change', (event) => {
-                const pickerList = event.target.closest('.session-player-picker-list');
-                const listScrollTop = pickerList ? pickerList.scrollTop : 0;
-                const playerId = event.target.value;
-                if (event.target.checked) {
-                    this.selectedPlayerIds.add(playerId);
-                } else {
-                    this.selectedPlayerIds.delete(playerId);
-                }
-
-                this.refreshAddPlayersCard(sessionData, sessionId, { listScrollTop });
-            });
-        });
-
-        if (addPlayersBtn) {
-            addPlayersBtn.addEventListener('click', async () => {
-                const existingPlayerIds = new Set((this.currentSession?.players || []).map(player => player.id));
-                const selectedPlayerIds = Array.from(this.selectedPlayerIds).filter(playerId => !existingPlayerIds.has(playerId));
-
-                if (selectedPlayerIds.length === 0) {
-                    alert('Please select at least one player');
-                    return;
-                }
-                const numBuyIns = 1;
-
-                if (numBuyIns <= 0) {
-                    alert('Buy-in amount must result in at least one buy-in');
-                    return;
-                }
-
-                try {
-                    addPlayersBtn.disabled = true;
-                    addPlayersBtn.textContent = `Adding ${selectedPlayerIds.length}...`;
-
-                    const newEntries = await this.api.addPlayersToSessionBulk(sessionId, {
-                        player_ids: selectedPlayerIds,
-                        num_buy_ins: numBuyIns
-                    });
-                    EventBus.emit('data:entries-changed');
-
-                    this.selectedPlayerIds.clear();
-                    this.addPlayerSearchQuery = '';
-                    this.isAddPlayersModalOpen = false;
-                    this.refreshAddPlayersCard(sessionData, sessionId);
-                    this.refreshEntries(newEntries, sessionId);
-                } catch (error) {
-                    console.error('Error adding players to session:', error);
-                    alert(`Error: ${error.message}`);
-                    addPlayersBtn.disabled = false;
-                    addPlayersBtn.textContent = `Add ${selectedPlayerIds.length} Player${selectedPlayerIds.length === 1 ? '' : 's'}`;
-                }
-            });
-        }
-
-        if (this.boundHandleAddPlayersModalEscape) {
-            document.removeEventListener('keydown', this.boundHandleAddPlayersModalEscape);
-            this.boundHandleAddPlayersModalEscape = null;
-        }
-
-        if (this.isAddPlayersModalOpen) {
-            this.boundHandleAddPlayersModalEscape = (event) => {
-                if (event.key === 'Escape') {
-                    this.isAddPlayersModalOpen = false;
-                    this.refreshAddPlayersCard(sessionData, sessionId);
-                }
-            };
-            document.addEventListener('keydown', this.boundHandleAddPlayersModalEscape);
-        }
-
-        // Mount the overlay at body level: the page container keeps a transform
-        // from its enter animation (fill-mode: forwards), which would trap
-        // position:fixed inside it. Then reveal it and move focus into the dialog.
-        if (this.isAddPlayersModalOpen) {
-            const openOverlay = document.getElementById('add-players-modal-overlay');
-            if (openOverlay) {
-                if (openOverlay.parentNode !== document.body) {
-                    document.body.appendChild(openOverlay);
-                }
-                if (options.animateOpen) {
-                    // Play the canonical fade + rise entrance: paint one hidden frame first.
-                    openOverlay.classList.remove('active');
-                    requestAnimationFrame(() => requestAnimationFrame(() => openOverlay.classList.add('active')));
-                } else {
-                    openOverlay.classList.add('active');
-                }
-            }
-            const activeSearch = document.getElementById('add-player-search');
-            if (activeSearch) {
-                activeSearch.focus();
-                activeSearch.setSelectionRange(activeSearch.value.length, activeSearch.value.length);
-            }
-        }
-    }
 
     // Show an inline edit popup for a player in an active session
     showPlayerEditModal(player, sessionData, sessionId) {
