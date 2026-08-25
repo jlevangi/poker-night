@@ -75,32 +75,27 @@
 
 /* RSVP panel (event detail). "I'm In" and "Can't Make It" render with
    the shared solid brand roles (neo-btn-green / neo-btn-red, set in
-   event-detail-page.js). "Maybe" uses the gold TINT instead of the
-   solid gold fill: white ink on amber is ~2:1 in light and the dark
-   theme flips --casino-gold-dark to a pale fill, so a solid gold
-   button is never legible. The tint pair auto-flips per theme (pale
-   wash + brown ink in light, glow + pale gold in dark); hover fills
-   to solid amber with --casino-black ink (~8:1 in both themes). The
-   doubled class beats the base .neo-btn:hover on specificity, so no
-   !important. */
-.neo-btn.neo-rsvp-btn-maybe {
-    background: var(--casino-gold-light);
-    color: var(--casino-gold-dark);
-}
-
-/* The dark theme gives role buttons a tinted rest state; "yes" already
-   stays solid via the theme's green force, but "no" fell to the red
-   tint. The RSVP row is one semantic status set (in / maybe / out), so
-   pin "no" to its solid fill in dark too — same pattern as the hero's
-   name pin in _cards.css. --casino-red-dark flips to a pale in dark,
-   so the hover stays the same solid fill. "Maybe" deliberately keeps
-   the tint: it reads as the tentative answer between two committed
-   ones. */
+   event-detail-page.js). The RSVP row is one semantic status set, so in
+   dark — where the theme's role-tint rest state would split it
+   solid/tint/tint — "no" is pinned to its solid fill (its -dark token
+   flips pale, so rest and hover share the fill), and "maybe" is pinned
+   to solid amber too: a solid gold button is never legible with white
+   ink (white on #F59E0B is ~2:1, and in dark --casino-gold-dark flips
+   to a pale fill, failing white ink there as well), but amber with
+   dark ink is ~8:1 in both themes. --casino-gold and --casino-black
+   never flip, so both states pin with the same rule. "Maybe" reads as
+   the tentative answer between two committed ones. No !important: the
+   [data-theme] selectors out-rank the theme's single-class rules. */
 [data-theme="dark"] .neo-btn.neo-rsvp-btn-no {
     background: var(--casino-red);
     color: var(--text-white);
 }
 
+[data-theme="dark"] .neo-btn.neo-rsvp-btn-maybe,
+[data-theme="dark"] .neo-btn.neo-rsvp-btn-maybe:hover {
+    background: var(--casino-gold);
+    color: var(--casino-black);
+}
 [data-theme="dark"] .neo-btn.neo-rsvp-btn-no:hover {
     background: var(--casino-red);
     color: var(--text-white);
