@@ -23,6 +23,49 @@
     --border-color: #334155;
     --border-light: #334155;
 
+    /* Brand token flips — single source (moved here from
+       _modern-theme.css). Loaded last, so these win the cascade over the
+       light declarations in _theme.css for every consumer, and duplicate
+       flips for inline styles (var(--bg-body), var(--profit-negative)). */
+    --bg-body: #0F172A;
+    --bg-content: #1E293B;
+    --bg-card: #1E293B;
+    --link-color: #93C5FD;
+    --profit-positive: #6EE7B7;
+    --profit-negative: #FCA5A5;
+    --bg-header: #0F172A;
+    --bg-header-gradient-start: #0F172A;
+    --bg-header-gradient-end: #1E293B;
+    --bg-shell-hover: rgba(255, 255, 255, 0.1);
+    --bg-shell-active: rgba(255, 255, 255, 0.15);
+    --bg-bottom-nav: rgba(15, 23, 42, 0.95);
+    --text-primary: #F8FAFC;
+    --text-secondary: #CBD5E1;
+    --text-muted: #8494A7;
+    --text-header: #F8FAFC;
+    --text-header-muted: rgba(255, 255, 255, 0.6);
+    --casino-cream: #1E293B;
+    --border-header: rgba(255, 255, 255, 0.08);
+    --border-bottom-nav: rgba(255, 255, 255, 0.08);
+    --gamble-king-stripe-color: rgba(252, 211, 77, 0.12);
+    --neo-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
+    --neo-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -2px rgba(0, 0, 0, 0.2);
+    --neo-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.35), 0 4px 6px -4px rgba(0, 0, 0, 0.2);
+    --neo-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 8px 10px -6px rgba(0, 0, 0, 0.2);
+    --neo-shadow-static: 0 1px 3px rgba(0, 0, 0, 0.2), 0 1px 2px rgba(0, 0, 0, 0.15);
+    --casino-red-light: rgba(239, 68, 68, 0.1);
+    --casino-gold-light: rgba(245, 158, 11, 0.1);
+    --casino-green-light: rgba(16, 185, 129, 0.1);
+    --casino-purple-light: rgba(99, 102, 241, 0.1);
+    --casino-blue-light: rgba(59, 130, 246, 0.1);
+    --status-neutral-bg: rgba(148, 163, 184, 0.16);
+    --casino-red-dark: #FCA5A5;
+    --casino-gold-dark: #FCD34D;
+    --casino-green-dark: #6EE7B7;
+    --casino-purple-dark: #A5B4FC;
+    --casino-blue-dark: #93C5FD;
+    --focus-ring-color: #60A5FA;
+
     /* Neutral scale flip (consumed by _navigation.css and friends) */
     --neutral-50: #334155;
     --neutral-100: #475569;
