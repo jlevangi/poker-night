@@ -394,7 +394,7 @@ export default class DashboardPage {
             
             html += `
                 <a href="#session/${session.session_id}" class="neo-card ${cardColor} list-card-row" style="text-decoration: none; color: inherit;" aria-label="${formatDate(session.date)}, buy-in ${formatCurrency(session.default_buy_in_value || 0)}, ${statusText}, open session details">
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
                         <div>
                             <div class="list-card-text">
                                 📅 ${formatDate(session.date)}
