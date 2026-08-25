@@ -32,7 +32,10 @@
 @import 'components/_header.css';
 @import 'components/_lists.css';
 @import 'components/_modals.css';
-@import 'components/_navigation.css';
+@import 'components/_nav-desktop.css';
+@import 'components/_nav-bottom.css';
+@import 'components/_settings-menu.css';
+@import 'components/_more-menu.css';
 @import 'components/_calendar.css';
 @import 'components/_charts.css';
 @import 'components/_chips.css';

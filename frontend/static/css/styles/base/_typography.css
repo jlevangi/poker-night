@@ -20,7 +20,8 @@
  * Spacing scale — the only margin/padding values the app uses (rem, root 16px).
  * Ladder (8 steps): 0.125 / 0.25 / 0.5 / 0.75 / 1 / 1.25 / 1.5 / 2
  * Variables: --spacing-xs/.sm/.md/.lg/.xl = .25/.5/1/1.5/2 (_theme.css);
- *   --spacing-neo = 1.25, shrinks to 1rem at <=768 (_navigation.css).
+ *   --spacing-neo = 1.25rem (theme default; nav breakpoints live in the
+ *   components/_nav-*.css and _settings-menu.css partials).
  *   In CSS, prefer the variable when it matches the ladder value; 0.75 and 0.125
  *   have no variable and stay literals. JS inline styles use ladder literals
  *   (or var(--spacing-*) where the app already does).
@@ -36,7 +37,7 @@
  *   ladder without re-checking nav height).
  * Legacy: --spacing-mobile (0.75, <=700px in _theme.css) is defined but never
  *   consumed; --space-2/--space-4 (_legacy-vars.css) are now 0 consumers (migrated to --spacing-*)
- *   _navigation.css with fallbacks equal to their values -> migrate those to
+ *   except the components/_nav-*.css partials with fallbacks equal to their values ->
  *   --spacing-sm/--spacing-md and drop the legacy defs (sub-step 3/5).
  */
 

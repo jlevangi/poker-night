@@ -1,0 +1,212 @@
+/* More-menu bottom sheet.
+   Owns: .neo-more-overlay (+ .active), .neo-more-menu (+ .open, 480px
+   radius), .neo-more-header (+ 480px), .neo-more-title, .neo-more-close
+   (+ :hover), .neo-more-body (+ 480px), .neo-more-item (button form +
+   hover/active/focus-visible/active, 480px/360px), .neo-more-icon (+
+   active color, 360px), .neo-more-label, .neo-more-external,
+   .neo-more-divider, the >=769px hide of the overlay (the sheet itself is
+   parked off-screen via transform and gains no display rule).
+   Shell tokens from _theme.css; dark-mode.css flips them.
+   Former _navigation.css (split 2026-08-25). */
+
+/* More Menu Bottom Sheet */
+
+.neo-more-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: calc(var(--z-nav) + 1);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.25s ease;
+}
+
+.neo-more-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.neo-more-menu {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--bg-content);
+    border-top: 1px solid var(--border-light);
+    border-radius: 20px 20px 0 0;
+    box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.25);
+    z-index: calc(var(--z-nav) + 2);
+    transform: translateY(100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    padding-bottom: env(safe-area-inset-bottom, 0);
+}
+
+.neo-more-menu.open {
+    transform: translateY(0);
+}
+
+.neo-more-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--border-light);
+}
+
+.neo-more-title {
+    font-size: 1rem;
+    font-weight: 600;
+    text-transform: none;
+    letter-spacing: 0;
+    color: var(--text-primary);
+}
+
+.neo-more-close {
+    background: transparent;
+    color: var(--text-muted);
+    border: none;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.125rem;
+    font-weight: 400;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-radius: 8px;
+}
+
+.neo-more-close:hover {
+    background: var(--casino-red-light);
+    color: var(--casino-red-dark);
+    transform: none;
+    box-shadow: none;
+}
+
+.neo-more-body {
+    padding: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.neo-more-item,
+button.neo-more-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    text-decoration: none;
+    color: var(--text-primary);
+    font-size: 1rem;
+    font-weight: 500;
+    text-transform: none;
+    letter-spacing: 0;
+    border-radius: 12px;
+    width: 100%;
+    text-align: left;
+    -webkit-tap-highlight-color: transparent !important;
+    outline: none;
+    touch-action: manipulation;
+}
+
+.neo-more-item:hover {
+    transform: none;
+    box-shadow: none;
+    background: var(--bg-body);
+}
+
+.neo-more-item:active {
+    transform: scale(0.98);
+    box-shadow: none;
+}
+
+.neo-more-item:focus-visible {
+    outline: 2px solid var(--focus-ring-color);
+    outline-offset: 2px;
+}
+
+.neo-more-item.active {
+    background: var(--casino-gold-light);
+    color: var(--text-primary);
+}
+
+.neo-more-item.active .neo-more-icon {
+    color: var(--casino-gold-dark);
+}
+
+.neo-more-icon {
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    width: 1.5rem;
+    text-align: center;
+}
+
+.neo-more-label {
+    flex: 1;
+}
+
+.neo-more-external {
+    font-size: 0.875rem;
+    opacity: 0.5;
+}
+
+.neo-more-divider {
+    height: 1px;
+    background: var(--border-light);
+    margin: 0.25rem 0.5rem;
+}
+@media (max-width: 480px) {
+    .neo-more-menu {
+        border-radius: 16px 16px 0 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .neo-more-body {
+        gap: 0.25rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .neo-more-item {
+        padding: 0.75rem;
+        font-size: 0.875rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .neo-more-header {
+        padding: 0.75rem 1rem;
+    }
+}
+@media (max-width: 360px) {
+    .neo-more-item {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.875rem;
+    }
+}
+
+@media (max-width: 360px) {
+    .neo-more-icon {
+        font-size: 1.125rem;
+    }
+}
+
+@media (min-width: 769px) {
+    .neo-more-menu,
+    .neo-more-overlay {
+        display: none;
+    }
+}

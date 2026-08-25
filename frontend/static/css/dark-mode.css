@@ -76,7 +76,7 @@
     --color-warning-soft: rgba(245, 158, 11, 0.18);
     --focus-ring-color: #60A5FA;
 
-    /* Neutral scale flip (consumed by _navigation.css and friends) */
+    /* Neutral scale flip (consumed by components/_nav-desktop.css and friends) */
     --neutral-50: #334155;
     --neutral-100: #475569;
     --neutral-200: #64748B;

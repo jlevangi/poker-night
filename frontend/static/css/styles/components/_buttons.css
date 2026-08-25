@@ -3,7 +3,7 @@
    (neo-btn-green / -gold / -purple / -red / -ghost / -primary), defined in
    _modern-theme.css. This file owns the rules `.neo-btn` does not cover:
    the neutral base fallback, compact session counters, and modal buttons
-   (the detail-page back control lives in components/_navigation.css).
+   (the detail-page back control lives in components/_nav-desktop.css).
    All colors come from the brand tokens in _theme.css. */
 
 /* Neutral base fallback. Classed buttons (neo-btn, session-counter-btn,

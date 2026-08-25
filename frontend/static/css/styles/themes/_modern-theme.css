@@ -532,7 +532,7 @@ div .neo-btn.neo-btn-green:hover,
 }
 
 /* ============================================================================ */
-/* RESPONSIVE (non-nav; nav breakpoints live in components/_navigation.css) */
+/* RESPONSIVE (non-nav; nav breakpoints live in components/_nav-*.css) */
 /* ============================================================================ */
 
 @media (max-width: 768px) {

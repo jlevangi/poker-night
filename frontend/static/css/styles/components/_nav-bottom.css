@@ -1,0 +1,104 @@
+/* Mobile bottom navigation pill.
+   Owns: .neo-bottom-nav, .neo-nav-mobile-btn (+ hover/active/focus-visible,
+   .nav-icon, active icon scale, 44/48px touch targets, :active press),
+   and the display/width steps at 768px (show), 380px, and 360px.
+   Shell tokens from _theme.css; dark-mode.css flips them.
+   Former _navigation.css (split 2026-08-25). */
+
+/* Bottom Navigation (mobile pill) */
+.neo-bottom-nav {
+    display: none;
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 1rem;
+    background: var(--bg-bottom-nav);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--border-bottom-nav);
+    z-index: var(--z-nav);
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 75vw;
+    max-width: 400px;
+    padding: 0.5rem;
+    gap: 0.25rem;
+    border-radius: 20px;
+    padding-bottom: max(0.5rem, env(safe-area-inset-bottom, 0));
+}
+
+.neo-nav-mobile-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-header-muted);
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 0.5rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    height: 100%;
+    border-radius: 14px;
+    -webkit-tap-highlight-color: transparent !important;
+    outline: none;
+    touch-action: manipulation;
+}
+
+.neo-nav-mobile-btn:hover {
+    background: var(--bg-shell-hover);
+    color: var(--text-header);
+    border-radius: 14px;
+}
+
+.neo-nav-mobile-btn.active {
+    background: var(--bg-shell-active);
+    color: var(--casino-gold-dark);
+    border-radius: 14px;
+}
+
+.neo-nav-mobile-btn:focus-visible {
+    outline: 2px solid var(--focus-ring-color);
+    outline-offset: 2px;
+}
+
+.neo-nav-mobile-btn .nav-icon {
+    font-size: 1.25rem;
+    filter: none;
+    transition: transform 0.2s ease;
+}
+
+.neo-nav-mobile-btn.active .nav-icon {
+    transform: scale(1.1);
+}
+.neo-nav-mobile-btn {
+    min-height: 44px;
+}
+@media (pointer: coarse) {
+    .neo-nav-mobile-btn {
+        min-height: 48px;
+    }
+}
+.neo-nav-mobile-btn:active {
+    background: var(--bg-shell-active);
+    color: var(--text-header);
+    transform: scale(0.95);
+    filter: brightness(0.92);
+}
+@media (max-width: 768px) {
+    .neo-bottom-nav {
+        display: flex;
+    }
+}
+@media (max-width: 380px) {
+    .neo-bottom-nav {
+        width: 85vw;
+        bottom: 0.75rem;
+    }
+}
+@media (max-width: 360px) {
+    .neo-bottom-nav {
+        width: 90vw;
+    }
+}

@@ -1,0 +1,101 @@
+/* Desktop header navigation + the shared detail-page back control.
+   Owns: nav element margin, .detail-action-bar, .detail-back-btn (+
+   focus-visible, coarse-pointer 48px), .neo-desktop-nav, .neo-nav-btn
+   (+ hover/active/focus-visible/active-pressed, 44/48px touch targets),
+   and the <=768px hide of .neo-desktop-nav.
+   Shell tokens come from _theme.css; dark-mode.css flips them, so no
+   [data-theme="dark"] rules live here. Former _navigation.css (split
+   2026-08-25). */
+
+nav {
+    margin-top: var(--spacing-sm);
+}
+/* Back Navigation Buttons — one shared control across the session, player,
+   and event detail pages (neo-btn base + .detail-back-btn). */
+.detail-action-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+}
+
+.detail-back-btn {
+    min-width: 6rem;
+    min-height: 44px;
+}
+
+.detail-back-btn:focus-visible {
+    outline: 2px solid var(--focus-ring-color);
+    outline-offset: 2px;
+}
+
+@media (pointer: coarse) {
+    .detail-back-btn {
+        min-height: 48px;
+    }
+}
+/* Desktop Navigation */
+.neo-desktop-nav {
+    display: flex;
+    justify-content: center;
+    gap: 0.25rem;
+}
+
+.neo-nav-btn {
+    background: transparent;
+    border: 1px solid transparent;
+    color: var(--text-header-muted);
+    padding: 0.5rem 1rem;
+    font-weight: 500;
+    font-size: 0.875rem;
+    letter-spacing: 0;
+    text-transform: none;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-radius: 8px;
+    -webkit-tap-highlight-color: transparent !important;
+    outline: none;
+    touch-action: manipulation;
+}
+
+.neo-nav-btn:hover {
+    transform: none;
+    box-shadow: none;
+    background: var(--bg-shell-hover);
+    color: var(--text-header);
+}
+
+/* Active = pill + gold inset bar (Gamble King accent; --casino-gold-dark
+   swaps per theme: #92400E light / #FCD34D dark). */
+.neo-nav-btn.active {
+    background: var(--bg-shell-active);
+    color: var(--text-header);
+    box-shadow: inset 0 -2px 0 var(--casino-gold-dark);
+}
+
+.neo-nav-btn:focus-visible {
+    outline: 2px solid var(--focus-ring-color);
+    outline-offset: 2px;
+}
+/* Real hit areas: 44px minimum (48px on coarse pointers) */
+.neo-nav-btn {
+    min-height: 44px;
+}
+@media (pointer: coarse) {
+    .neo-nav-btn {
+        min-height: 48px;
+    }
+}
+.neo-nav-btn:active {
+    background: var(--bg-shell-active);
+    color: var(--text-header);
+    transform: scale(0.97);
+    filter: brightness(0.92);
+}
+@media (max-width: 768px) {
+    .neo-desktop-nav {
+        display: none;
+    }
+}
