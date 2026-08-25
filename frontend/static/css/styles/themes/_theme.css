@@ -83,6 +83,17 @@
     /* Neutral status pill background (session cards) */
     --status-neutral-bg: rgba(100, 116, 139, 0.14);
 
+    /* Badge tints — single source for every status chip/pill in the app.
+       Light values are pale washes; dark-mode.css flips them to translucent
+       glows of the same hue so tint badges stay one brand treatment per
+       theme. Solid opaque badges (LIVE, RSVP, event status) deliberately
+       skip these and keep the plain --casino-* color in both themes. */
+    --badge-tint-green: var(--casino-green-light);
+    --badge-tint-gold: var(--casino-gold-light);
+    --badge-tint-red: var(--casino-red-light);
+    --badge-tint-purple: var(--casino-purple-light);
+    --badge-tint-neutral: var(--status-neutral-bg);
+
     /* Brand neutrals */
     --casino-black: #0F172A;
     --casino-gray: #475569;

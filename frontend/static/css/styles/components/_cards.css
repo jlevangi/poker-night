@@ -28,17 +28,6 @@
     text-align: right;
 }
 
-.session-card__status {
-    display: block;
-    margin-bottom: 0.25rem;
-    font-size: 0.75rem;
-    font-weight: 700;
-    text-transform: capitalize;
-}
-
-.session-card__status--active { color: var(--casino-green-dark); }
-.session-card__status--ended { color: var(--text-secondary); }
-
 /* Recent-session cards use a fixed trailing status column so Active/Ended and
    their icons align regardless of the date or buy-in text on the left. */
 .recent-session-status {
@@ -76,46 +65,6 @@
     margin-bottom: 1rem;
 }
 
-.neo-live-badge {
-    background: var(--casino-green);
-    color: #fff;
-    padding: 0.25rem 0.5rem;
-    border-radius: 50px;
-    font-weight: 600;
-    font-size: 0.75rem;
-}
-
-/* Status pair: the LIVE badge already owns the green pulse (dot defined in
-   _modern-theme.css). The UPCOMING badge is a neutral outlined pill with a
-   gold dot, so "now" reads as color and motion, "next" as quiet intent. */
-.neo-upcoming-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.375rem;
-    background: transparent;
-    border: 1.5px solid rgba(245, 158, 11, 0.45);
-    color: var(--casino-gold-dark);
-    padding: 0.2rem 0.5rem;
-    border-radius: 50px;
-    font-weight: 700;
-    font-size: 0.65rem;
-    letter-spacing: 0.06em;
-}
-
-[data-theme="dark"] .neo-upcoming-badge {
-    border-color: rgba(252, 211, 77, 0.45);
-    color: var(--casino-gold-light);
-}
-
-.neo-upcoming-dot {
-    width: 0.45rem;
-    height: 0.45rem;
-    border-radius: 50%;
-    background: var(--casino-gold);
-    display: inline-block;
-    flex-shrink: 0;
-}
-
 /* Card eyebrow: the "what kind of card is this" line next to the status
    chip. Uppercase + tracked so it reads as a label, distinct from the
    .card-subtitle facts below. */
@@ -132,11 +81,6 @@
         padding: 0.75rem 1rem;
         margin-bottom: 0.75rem;
     }
-
-    .neo-live-badge {
-        font-size: 0.65rem;
-    }
-
     .neo-card-eyebrow {
         font-size: 0.6rem;
     }

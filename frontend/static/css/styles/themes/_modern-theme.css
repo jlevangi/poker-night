@@ -1390,46 +1390,6 @@ div .neo-btn.neo-btn-green:hover,
     }
 }
 
-/* ============================================================================ */
-/* UTILITY CLASSES for JS module inline style replacement */
-/* ============================================================================ */
-
-.text-uppercase-sm {
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    font-size: 0.75rem;
-    font-weight: 600;
-}
-
-.badge {
-    display: inline-flex;
-    align-items: center;
-    padding: 0.25rem 0.5rem;
-    border-radius: 50px;
-    font-size: 0.75rem;
-    font-weight: 600;
-}
-
-.badge-success {
-    background: var(--casino-green-light);
-    color: var(--casino-green-dark);
-}
-
-.badge-warning {
-    background: var(--casino-gold-light);
-    color: var(--casino-gold-dark);
-}
-
-.badge-danger {
-    background: var(--casino-red-light);
-    color: var(--casino-red-dark);
-}
-
-.badge-info {
-    background: var(--casino-purple-light);
-    color: var(--casino-purple-dark);
-}
-
 /* Page-title tier: one treatment for every top-level page heading so list
    pages and detail pages read as the same product.
    .page-title           — list pages (players, sessions, stats, calendar);

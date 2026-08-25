@@ -81,12 +81,6 @@
     border-radius: 50%;
 }
 
-.skeleton-badge {
-    height: 1.5em;
-    width: 60px;
-    border-radius: 50px;
-    display: inline-block;
-}
 
 .skeleton-btn {
     height: 40px;

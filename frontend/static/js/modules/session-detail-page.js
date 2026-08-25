@@ -426,7 +426,7 @@ export default class SessionDetailPage {
                                     ${player.isInSession ? 'disabled' : ''}
                                 >
                                 <span class="session-player-picker-name">${this.escapeHtml(player.name)}</span>
-                                ${player.isInSession ? '<span class="session-player-picker-badge">In Session</span>' : ''}
+                                ${player.isInSession ? '<span class="chip-neutral">In Session</span>' : ''}
                             </label>
                         `).join('') : `
                             ${renderEmptyState({ icon: '🔍', message: 'No players match your search.', card: false })}
@@ -860,15 +860,6 @@ export default class SessionDetailPage {
                 grid-template-columns: minmax(0, 1fr);
                 gap: 0.75rem;
                 margin-bottom: 1rem;
-            }
-
-            .session-player-picker-badge {
-                padding: 0.25rem 0.5rem;
-                border-radius: 999px;
-                font-size: 0.75rem;
-                font-weight: 700;
-                color: var(--text-secondary);
-                background: rgba(148, 163, 184, 0.14);
             }
 
             .session-player-picker-footer {

@@ -102,24 +102,26 @@ li a:hover {
 }
 
 .session-card__status {
+    display: inline-flex;
+    align-items: center;
     font-size: 0.75rem;
     font-weight: 700;
     letter-spacing: 0.04em;
     text-transform: uppercase;
     line-height: 1.5;
-    padding: 0.0625rem 0.5rem;
-    border-radius: 999px;
+    padding: 0.25rem 0.5rem;
+    border-radius: var(--radius-pill);
     white-space: nowrap;
 }
 
 .session-card__status--active {
     color: var(--casino-gold-dark);
-    background: var(--casino-gold-light);
+    background: var(--badge-tint-gold);
 }
 
 .session-card__status--ended {
     color: var(--text-secondary);
-    background: var(--status-neutral-bg, rgba(100, 116, 139, 0.14));
+    background: var(--badge-tint-neutral);
 }
 
 .session-card__buyin {
