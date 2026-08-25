@@ -1668,44 +1668,6 @@ a.neo-gamble-king-name:focus-visible {
 }
 
 /* ============================================================================ */
-/* COUNTER BUTTONS */
-/* ============================================================================ */
-
-.neo-counter-btn {
-    width: 32px;
-    height: 32px;
-    border: none;
-    background: var(--casino-green);
-    color: var(--text-white);
-    font-size: 1rem;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.15s ease;
-    box-shadow: none;
-    border-radius: 8px;
-}
-
-.neo-counter-btn:hover {
-    transform: scale(1.05);
-    box-shadow: var(--neo-shadow-sm);
-}
-
-.neo-counter-btn:active {
-    transform: scale(0.95);
-}
-
-.neo-counter-btn.decrement {
-    background: var(--casino-red);
-}
-
-.neo-counter-btn.decrement:hover {
-    background: var(--casino-red-dark);
-}
-
-/* ============================================================================ */
 /* PAGE TRANSITIONS */
 /* ============================================================================ */
 
@@ -2032,7 +1994,7 @@ a.neo-gamble-king-name:focus-visible {
         min-height: 44px;
     }
 
-    .neo-btn-sm:not(.counter-btn):not(.seven-two-btn):not(.seven-two-increment-btn):not(.seven-two-decrement-btn):not(.strikes-increment-btn):not(.strikes-decrement-btn) {
+    .neo-btn-sm:not(.seven-two-btn):not(.seven-two-increment-btn):not(.seven-two-decrement-btn):not(.strikes-increment-btn):not(.strikes-decrement-btn) {
         min-height: 44px;
         padding-top: 0.75rem;
         padding-bottom: 0.75rem;

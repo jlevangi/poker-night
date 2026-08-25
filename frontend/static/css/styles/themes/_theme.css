@@ -22,15 +22,18 @@
     --text-light: #64748B;
     --text-white: #FFFFFF;
 
-    /* Success/Error Colors */
-    --color-success: #10B981;
-    --color-success-hover: #059669;
-    --color-danger: #EF4444;
-    --color-danger-hover: #DC2626;
-    --color-warning: #F59E0B;
-    --color-warning-hover: #D97706;
-    --color-info: #6366F1;
-    --color-info-hover: #4F46E5;
+    /* Success/Error/Warn/Info Colors — aliases of the brand palette below,
+       kept for the remaining consumers of the semantic names (import
+       balance borders, inline error text). New code should use the
+       --casino-* names directly. */
+    --color-success: var(--casino-green);
+    --color-success-hover: var(--casino-green-dark);
+    --color-danger: var(--casino-red);
+    --color-danger-hover: var(--casino-red-dark);
+    --color-warning: var(--casino-gold);
+    --color-warning-hover: var(--casino-gold-dark);
+    --color-info: var(--casino-purple);
+    --color-info-hover: var(--casino-purple-dark);
 
     /* Profit Colors
        NOTE: declared here so _modern-theme.css (loaded after this file)
@@ -127,21 +130,9 @@
     --gamble-king-label-text: #FFFFFF;
     --gamble-king-gradient: linear-gradient(135deg, #F59E0B, #D97706);
 
-    /* Seven-Two Game Colors */
-    --seven-two-bg: var(--casino-green);
-    --seven-two-bg-hover: var(--casino-green-dark);
-    --seven-two-increment: var(--casino-green);
-    --seven-two-increment-hover: var(--casino-green-dark);
-    --seven-two-decrement: var(--casino-red);
-    --seven-two-decrement-hover: var(--casino-red-dark);
-    --seven-two-border: var(--casino-green);
-
-    /* Counter Button Colors */
-    --counter-increment: var(--casino-green);
-    --counter-increment-hover: var(--casino-green-dark);
-    --counter-decrement: var(--casino-red);
-    --counter-decrement-hover: var(--casino-red-dark);
-
+    /* Counter / 7-2 button colors now resolve directly to the casino
+       tokens (var(--casino-green)/--casino-red) in _buttons.css; the
+       indirection layer was removed. */
     /* Spacing */
     --spacing-xs: 0.25rem;
     --spacing-sm: 0.5rem;

@@ -1,74 +1,28 @@
-/* Button Component Styles */
+/* Button Component Styles
+   The live button system is `.neo-btn` (primary blue) + variants
+   (neo-btn-green / -gold / -purple / -red / -ghost / -primary), defined in
+   _modern-theme.css. This file owns the rules `.neo-btn` does not cover:
+   the neutral base fallback, compact session counters, detail-page action
+   bars, and modal buttons. All colors come from the brand tokens in
+   _theme.css. */
 
-button,
-.button,
-.action-btn,
-.quick-action-btn,
-.danger-btn,
-.reactivate-session-btn {
-    padding: 0.5rem 1rem;
-    background-color: var(--primary-color);
-    color: var(--text-white);
-    border: none;
-    border-radius: var(--radius-md);
-    cursor: pointer;
-    font-size: 0.875rem;
-    font-weight: 500;
-    transition: all 0.2s ease;
-    text-decoration: none;
-    display: inline-block;
-    text-align: center;
-}
-
-button:hover,
-.button:hover,
-.action-btn:hover,
-.quick-action-btn:hover,
-.danger-btn:hover,
-.reactivate-session-btn:hover {
-    background-color: var(--primary-hover);
-    transform: translateY(-1px);
-    box-shadow: var(--shadow-medium);
-}
-
-button:active,
-.button:active,
-.action-btn:active,
-.quick-action-btn:active,
-.danger-btn:active,
-.reactivate-session-btn:active {
-    transform: translateY(1px) scale(0.98);
-    filter: brightness(0.92);
-    box-shadow: none;
-}
-
-button:focus-visible,
-.button:focus-visible,
-.action-btn:focus-visible,
-.quick-action-btn:focus-visible,
-.danger-btn:focus-visible,
-.reactivate-session-btn:focus-visible {
+/* Neutral base fallback. Classed buttons (neo-btn, session-counter-btn,
+   neo-nav-mobile-btn, modal chips) fully define their own visuals and win
+   the cascade; this rule only provides a focus ring and disabled treatment
+   for any button carrying no class. */
+button:focus-visible {
     outline: 2px solid var(--focus-ring-color);
     outline-offset: 2px;
 }
 
-button:disabled,
-.button:disabled,
-.action-btn:disabled,
-.quick-action-btn:disabled,
-.danger-btn:disabled,
-.reactivate-session-btn:disabled {
+button:disabled {
     opacity: 0.5;
     cursor: not-allowed;
 }
 
-/* Action Button */
-.action-btn {
-    margin-right: var(--spacing-sm);
-}
-
-/* Compact session counters. Deliberately not `.neo-btn`: its horizontal
-   padding and 1.5 line-height turn these single-glyph controls into pills. */
+/* Compact session counters (7-2 wins / strikes on live-session player
+   cards). Deliberately not `.neo-btn`: its horizontal padding and 1.5
+   line-height would turn these single-glyph controls into pills. */
 .session-counter-btn {
     box-sizing: border-box;
     width: 2rem;
@@ -79,14 +33,32 @@ button:disabled,
     align-items: center;
     justify-content: center;
     border: 1px solid currentColor;
-    border-radius: 50%;
-    color: #fff;
+    border-radius: var(--radius-circle);
+    position: relative;
     font-size: 1rem;
     font-weight: 800;
     line-height: 1;
     box-shadow: var(--neo-shadow-sm);
+    transition: all var(--transition-fast);
 }
 
+.session-counter-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--neo-shadow-md);
+}
+
+.session-counter-btn:active {
+    transform: translateY(0) scale(0.95);
+    box-shadow: var(--neo-shadow-sm);
+}
+
+.session-counter-btn:focus-visible {
+    outline: 2px solid var(--focus-ring-color);
+    outline-offset: 2px;
+}
+
+/* 7-2 wins use gold; strikes use red. Decrement flips to a transparent
+   outline of the same family (increment is filled). */
 .session-counter-btn--gold { background: var(--casino-gold); }
 .session-counter-btn--red { background: var(--casino-red); }
 
@@ -97,6 +69,54 @@ button:disabled,
 
 .session-counter-btn--decrement.session-counter-btn--gold { color: var(--casino-gold-dark); }
 .session-counter-btn--decrement.session-counter-btn--red { color: var(--casino-red); }
+
+/* Live-card counter actions. JS binds clicks on these class names (see
+   session-detail-page.js); the shared 32px grid below is their only
+   layout source, so the names stay even though the visual is
+   `.session-counter-btn`. */
+.seven-two-increment-btn,
+.seven-two-decrement-btn,
+.strikes-increment-btn,
+.strikes-decrement-btn {
+    box-sizing: border-box;
+    width: 32px;
+    height: 32px;
+    margin: 0 0.125rem;
+    padding: 0;
+}
+
+/* Increment glyphs render on a filled brand chip, so pin them to white —
+   the UA button color (black) would otherwise show through. */
+.seven-two-increment-btn,
+.strikes-increment-btn {
+    color: var(--text-white);
+}
+
+/* Decrement glyphs are rendered by the ::before below; the literal minus
+   in the markup is hidden behind it. */
+
+.seven-two-decrement-btn.session-counter-btn--decrement,
+.strikes-decrement-btn.session-counter-btn--decrement {
+    color: var(--casino-red);
+}
+
+.seven-two-decrement-btn.session-counter-btn--gold.session-counter-btn--decrement {
+    color: var(--casino-gold-dark);
+}
+
+/* The minus glyph comes from a pseudo-element (the literal one in the
+   markup sits behind it); it inherits the outline ink of its family. */
+.seven-two-decrement-btn::before,
+.strikes-decrement-btn::before {
+    content: "\2212";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1rem;
+    line-height: 1;
+    color: inherit;
+}
 
 /* One detail-page action bar and back control across sessions, players, events. */
 .detail-action-bar {
@@ -111,109 +131,19 @@ button:disabled,
     min-width: 6rem;
 }
 
-.action-btn i {
-    margin-right: var(--spacing-xs);
-}
-
-/* Quick Action Buttons */
-.quick-action-btn {
-    padding: var(--spacing-sm) var(--spacing-lg);
-    font-size: 1rem;
-    border-radius: var(--radius-md);
-    background-color: var(--color-success);
-    color: var(--text-white);
-}
-
-.quick-action-btn:hover {
-    background-color: var(--color-success-hover);
-}
-
-.quick-action-btn.active-session-btn {
-    background-color: var(--primary-color);
-}
-
-.quick-action-btn.active-session-btn:hover {
-    background-color: var(--primary-hover);
-}
-
-.quick-action-btn#quick-start-session-btn {
-    background-color: var(--primary-color);
-    color: white !important;
-}
-
-.quick-action-btn#quick-start-session-btn:hover {
-    background-color: var(--primary-hover);
-}
-
-/* Danger Button */
-.danger-btn {
-    background-color: var(--color-danger);
-    margin: 0.5rem 0;
-    border-radius: var(--radius-md);
-}
-
-.danger-btn:hover {
-    background-color: var(--color-danger-hover);
-}
-
-/* Reactivate Session Button */
-.reactivate-session-btn {
-    background-color: var(--color-success);
-    border-radius: var(--radius-md);
-}
-
-.reactivate-session-btn:hover {
-    background-color: var(--color-success-hover);
-}
-
-/* Session Ended Actions */
-.session-ended-actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    margin: var(--spacing-md) 0;
-}
-
-#end-session-btn {
-    width: fit-content;
-    min-width: 140px;
-}
-
-@media (max-width: 600px) {
-    .session-ended-actions {
-        flex-direction: column;
-    }
-
-    .session-ended-actions button {
-        width: 100%;
-    }
-}
-
-/* Sessions Actions */
-.sessions-actions .action-btn {
-    background-color: var(--primary-color);
-    color: var(--text-white);
-    padding: 0.5rem 1rem;
-    border-radius: var(--radius-md);
-    font-size: 0.875rem;
-}
-
-.sessions-actions .action-btn:hover {
-    background-color: var(--primary-hover);
-}
-
 /* Modal Button Styles */
 .modal-form-group button.small-btn {
     padding: var(--spacing-xs) var(--spacing-sm);
     font-size: 0.875rem;
     margin-left: var(--spacing-sm);
     vertical-align: baseline;
-    background-color: var(--text-secondary);
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
     border-radius: var(--radius-sm);
 }
 
 .modal-form-group button.small-btn:hover {
-    background-color: var(--text-secondary);
+    background-color: var(--bg-tertiary);
 }
 
 .modal-date-shortcut {
@@ -255,165 +185,17 @@ button:disabled,
     box-shadow: var(--neo-shadow-sm);
 }
 
-.modal-actions .primary-btn {
-    background-color: var(--primary-color);
-    border-radius: var(--radius-md);
-}
-
-.modal-actions .primary-btn:hover {
-    background-color: var(--primary-hover);
-}
-
-.modal-actions .primary-btn:focus-visible {
-    outline: 2px solid var(--primary-color);
-    outline-offset: 2px;
-}
-
-.modal-actions .secondary-btn {
-    background-color: var(--text-muted);
-    border-radius: var(--radius-md);
-}
-
-.modal-actions .secondary-btn:hover {
-    background-color: var(--text-secondary);
-}
-
-.modal-actions .secondary-btn:focus-visible {
-    outline: 2px solid var(--primary-color);
-    outline-offset: 2px;
-}
-
-/* Shared Counter Button Styles */
-.counter-btn,
-.seven-two-increment-btn,
-.seven-two-decrement-btn,
-.strikes-increment-btn,
-.strikes-decrement-btn {
-    width: 32px;
-    height: 32px;
-    border-radius: 8px;
-    border: none;
-    color: var(--text-white);
-    font-size: 1rem;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    margin: 0 0.125rem;
-    transition: all var(--transition-fast);
-    padding: 0;
-    text-align: center;
-    line-height: 1;
-}
-
-.counter-btn:active,
-.seven-two-increment-btn:active,
-.seven-two-decrement-btn:active,
-.strikes-increment-btn:active,
-.strikes-decrement-btn:active {
-    transform: scale(0.9);
-}
-
-.counter-btn:focus-visible,
-.seven-two-increment-btn:focus-visible,
-.seven-two-decrement-btn:focus-visible,
-.strikes-increment-btn:focus-visible,
-.strikes-decrement-btn:focus-visible {
-    outline: 2px solid var(--focus-ring-color);
-    outline-offset: 2px;
-}
-
-.counter-btn-increment,
-.seven-two-increment-btn,
-.strikes-increment-btn {
-    background-color: var(--counter-increment);
-}
-
-.counter-btn-increment:hover,
-.seven-two-increment-btn:hover,
-.strikes-increment-btn:hover {
-    background-color: var(--counter-increment-hover);
-}
-
-.counter-btn-decrement,
-.seven-two-decrement-btn,
-.strikes-decrement-btn {
-    background-color: var(--counter-decrement);
-    position: relative;
-    color: transparent;
-}
-
-.counter-btn-decrement::before,
-.seven-two-decrement-btn::before,
-.strikes-decrement-btn::before {
-    content: "\2212";
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 1rem;
-    line-height: 1;
-    color: var(--text-white);
-}
-
-.counter-btn-decrement:hover,
-.seven-two-decrement-btn:hover,
-.strikes-decrement-btn:hover {
-    background-color: var(--counter-decrement-hover);
-}
-
-/* Seven-Two Game Buttons */
-.seven-two-btn {
-    background-color: var(--seven-two-bg);
-    color: var(--text-white);
-    border: none;
-    border-radius: 8px;
-    width: 26px;
-    height: 26px;
-    font-size: 1rem;
-    font-weight: 600;
-    margin-left: var(--spacing-sm);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0;
-}
-
-.seven-two-btn:hover {
-    background-color: var(--seven-two-bg-hover);
-}
-
-.seven-two-btn:active {
-    transform: scale(0.9);
-    filter: brightness(0.92);
-}
-
-.seven-two-btn:focus-visible {
-    outline: 2px solid var(--primary-color);
-    outline-offset: 2px;
-}
-
 /* Mobile Button Adjustments */
 @media (max-width: 400px) {
     input[type="text"],
     input[type="number"],
     input[type="date"],
     select,
-    button:not(.neo-btn):not(.counter-btn):not(.neo-counter-btn):not(.seven-two-btn):not(.neo-nav-mobile-btn),
-    .action-btn,
-    .quick-action-btn {
+    button:not(.neo-btn):not(.session-counter-btn):not(.neo-counter-btn):not(.neo-nav-mobile-btn):not(.small-btn):not(.modal-buyin-chip) {
         width: 100%;
         box-sizing: border-box;
         margin-right: 0;
         margin-left: 0;
-    }
-
-    button:not(.neo-btn):not(.counter-btn):not(.neo-counter-btn):not(.seven-two-btn):not(.neo-nav-mobile-btn),
-    .action-btn,
-    .quick-action-btn {
-        margin-top: var(--spacing-sm);
     }
 
     .modal-form-group button.small-btn {
