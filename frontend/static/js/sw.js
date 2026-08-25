@@ -30,6 +30,7 @@ const URLS_TO_CACHE = [
     '/static/js/modules/animations.js',
     '/static/js/modules/service-worker-manager.js',
     '/static/js/modules/session-add-players-picker.js',
+    '/static/js/modules/session-player-edit-modal.js',
     '/static/js/modules/session-detail-page.js',
     '/static/js/modules/session-detail-renderers.js',
     '/static/js/modules/sessions-page.js',

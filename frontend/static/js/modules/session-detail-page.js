@@ -8,6 +8,7 @@ import { formatCurrency, formatDate } from './formatters.js';
 import { renderSkeleton, renderSkeletonPage, renderSkeletonStatGrid, showPageError } from './ui.js';
 import { renderChipDistribution, renderLogStats, renderPlayersListHTML } from './session-detail-renderers.js';
 import AddPlayersPickerController from './session-add-players-picker.js';
+import PlayerEditModalController from './session-player-edit-modal.js';
 
 export default class SessionDetailPage {
     static skeleton() {
@@ -45,15 +46,9 @@ export default class SessionDetailPage {
         this.api = apiService;
         this.notificationManager = new NotificationManager(apiService);
         this.addPlayersPicker = new AddPlayersPickerController();
+        this.playerEditModal = new PlayerEditModalController();
     }
     
-
-    escapeHtml(str) {
-        if (!str) return '';
-        const div = document.createElement('div');
-        div.textContent = str;
-        return div.innerHTML;
-    }
 
     // Load session detail page
     async load(sessionId) {
@@ -130,6 +125,19 @@ export default class SessionDetailPage {
         };
     }
 
+    // Context object handed to the player edit modal controller: a live getter
+    // for the session (so re-renders after an API action read the fresh
+    // object, not a captured one), the API service, and the page's partial
+    // refresh. The controller never touches page internals.
+    playerEditModalContext() {
+        return {
+            session: () => this.currentSession,
+            api: this.api,
+            refreshEntries: (newEntries, sessionId) => this.refreshEntries(newEntries, sessionId)
+        };
+    }
+
+
     // Partially refresh the session page after an action — no full reload needed
     refreshEntries(newEntries, sessionId) {
         const session = this.currentSession;
@@ -193,6 +201,7 @@ export default class SessionDetailPage {
         if (isActive) {
             this.addPlayersPicker.refresh(this.pickerContext(), sessionData, sessionId);
         }
+
 
         // Re-attach player-specific event listeners
         this.setupPlayerEventListeners(sessionData, sessionId);
@@ -725,172 +734,6 @@ export default class SessionDetailPage {
     }
 
 
-    // Show an inline edit popup for a player in an active session
-    showPlayerEditModal(player, sessionData, sessionId) {
-        // Remove a stale copy before mounting a new one (same as the add-players picker).
-        const stale = document.getElementById('player-edit-modal-wrapper');
-        if (stale && stale.parentNode) stale.parentNode.removeChild(stale);
-        const modalElement = document.createElement('div');
-        modalElement.id = 'player-edit-modal-wrapper';
-        // True once the entrance has played; re-renders after API actions must
-        // restore .active synchronously or the modal flashes closed.
-        let opened = false;
-
-        const renderModal = () => {
-            const p = this.currentSession.players.find(pp => pp.id === player.id) || player;
-            const buyInCount = p.buyInCount || 1;
-            const totalBuyIn = p.buyIn || 0;
-            const cashOut = p.cashOut || 0;
-
-            modalElement.innerHTML = `
-                <div class="modal-overlay">
-                    <div class="modal-content">
-                        <button id="edit-modal-close" class="modal-close-btn" type="button" aria-label="Close player edit">&times;</button>
-                        <h3>${this.escapeHtml(p.name)}</h3>
-
-                        <!-- Buy-ins -->
-                        <div style="margin-bottom: 1.25rem;">
-                            <div class="modal-section-label">Buy-ins</div>
-                            <div style="display: flex; align-items: center; gap: 0.75rem;">
-                                <button id="edit-buyin-minus" class="neo-btn" style="width: 36px; height: 36px; padding: 0; font-size: 1.25rem; font-weight: 700; display: flex; align-items: center; justify-content: center; border-radius: 50%;${buyInCount <= 1 ? ' opacity: 0.4;' : ''}" ${buyInCount <= 1 ? 'disabled' : ''}>−</button>
-                                <span style="font-size: 1.25rem; font-weight: 700; min-width: 2rem; text-align: center;">${buyInCount}</span>
-                                <button id="edit-buyin-plus" class="neo-btn" style="width: 36px; height: 36px; padding: 0; font-size: 1.25rem; font-weight: 700; display: flex; align-items: center; justify-content: center; border-radius: 50%;">+</button>
-                                <span style="font-size: 0.875rem; color: var(--text-secondary); margin-left: 0.25rem;">(${formatCurrency(totalBuyIn)} total)</span>
-                            </div>
-                        </div>
-
-                        <!-- Cash-out amount -->
-                        <div style="margin-bottom: 1.25rem;">
-                            <div class="modal-section-label">Cash-out Amount</div>
-                            <input type="text" id="edit-cashout-input" inputmode="decimal" pattern="[0-9]*\\.?[0-9]*" value="${cashOut > 0 ? cashOut.toFixed(2) : ''}" placeholder="0.00" style="width: 100%; margin-bottom: 0;">
-                        </div>
-
-                        <!-- 7-2 Wins -->
-                        <div style="margin-bottom: 1.25rem;">
-                            <div class="modal-section-label">7-2 Wins</div>
-                            <div style="display: flex; align-items: center; gap: 0.75rem;">
-                                <button id="edit-72-minus" class="neo-btn" style="width: 36px; height: 36px; padding: 0; font-size: 1.25rem; font-weight: 700; display: flex; align-items: center; justify-content: center; border-radius: 50%; border-color: var(--casino-gold); color: var(--casino-gold);${(p.sevenTwoWins || 0) <= 0 ? ' opacity: 0.4;' : ''}" ${(p.sevenTwoWins || 0) <= 0 ? 'disabled' : ''}>−</button>
-                                <span style="font-size: 1.25rem; font-weight: 700; min-width: 2rem; text-align: center; color: var(--casino-gold);">${p.sevenTwoWins || 0}</span>
-                                <button id="edit-72-plus" class="neo-btn" style="width: 36px; height: 36px; padding: 0; font-size: 1.25rem; font-weight: 700; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: var(--casino-gold); color: var(--text-white);">+</button>
-                            </div>
-                        </div>
-
-                        <!-- Strikes -->
-                        <div style="margin-bottom: 1.25rem;">
-                            <div class="modal-section-label">Strikes</div>
-                            <div style="display: flex; align-items: center; gap: 0.75rem;">
-                                <button id="edit-strikes-minus" class="neo-btn" style="width: 36px; height: 36px; padding: 0; font-size: 1.25rem; font-weight: 700; display: flex; align-items: center; justify-content: center; border-radius: 50%; border-color: var(--casino-red); color: var(--casino-red);${(p.strikes || 0) <= 0 ? ' opacity: 0.4;' : ''}" ${(p.strikes || 0) <= 0 ? 'disabled' : ''}>−</button>
-                                <span style="font-size: 1.25rem; font-weight: 700; min-width: 2rem; text-align: center; color: var(--casino-red);">${p.strikes || 0}</span>
-                                <button id="edit-strikes-plus" class="neo-btn" style="width: 36px; height: 36px; padding: 0; font-size: 1.25rem; font-weight: 700; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: var(--casino-red); color: var(--text-white);">+</button>
-                            </div>
-                        </div>
-
-                        <!-- Footer -->
-                        <div style="border-top: 1px solid var(--border-light, #eee); padding-top: 1rem; text-align: center;">
-                            <a href="#player/${p.id}" id="edit-modal-profile-link" style="font-size: 0.875rem; font-weight: 600; color: var(--casino-gold);">View Player Profile →</a>
-                        </div>
-                    </div>
-                </div>
-            `;
-            if (opened) modalElement.querySelector('.modal-overlay').classList.add('active');
-        };
-        renderModal();
-        document.body.appendChild(modalElement);
-
-        const handleEscape = (event) => {
-            if (event.key === 'Escape') closeModal();
-        };
-        const closeModal = () => {
-            document.removeEventListener('keydown', handleEscape);
-            if (modalElement.parentNode) document.body.removeChild(modalElement);
-        };
-        document.addEventListener('keydown', handleEscape);
-
-        // Play the canonical fade + rise entrance: paint one hidden frame first,
-        // then reveal and focus the first field.
-        requestAnimationFrame(() => requestAnimationFrame(() => {
-            const overlay = modalElement.querySelector('.modal-overlay');
-            if (!overlay) return;
-            overlay.classList.add('active');
-            opened = true;
-            const cashoutInput = modalElement.querySelector('#edit-cashout-input');
-            if (cashoutInput) cashoutInput.focus();
-        }));
-        const apiAction = async (fn) => {
-            try {
-                const newEntries = await fn();
-                this.refreshEntries(newEntries, sessionId);
-                renderModal();
-                attachListeners();
-            } catch (error) {
-                console.error('Error in player edit modal:', error);
-                alert(`Error: ${error.message}`);
-            }
-        };
-
-        const attachListeners = () => {
-            modalElement.querySelector('#edit-modal-close')?.addEventListener('click', closeModal);
-            modalElement.querySelector('#edit-modal-profile-link')?.addEventListener('click', closeModal);
-            // Close on overlay click
-            modalElement.querySelector(':scope > .modal-overlay')?.addEventListener('click', (e) => {
-                if (e.target === e.currentTarget) closeModal();
-            });
-
-            // Buy-in controls
-            modalElement.querySelector('#edit-buyin-minus')?.addEventListener('click', () => {
-                const p = this.currentSession.players.find(pp => pp.id === player.id);
-                if (p && (p.buyInCount || 1) > 1) {
-                    apiAction(() => this.api.put(`sessions/${sessionId}/entries/${player.id}/remove-buyin`));
-                }
-            });
-            modalElement.querySelector('#edit-buyin-plus')?.addEventListener('click', () => {
-                apiAction(() => this.api.post(`sessions/${sessionId}/entries/${player.id}/buy-in`, { num_buy_ins: 1 }));
-            });
-
-            // Cash-out input
-            const cashoutInput = modalElement.querySelector('#edit-cashout-input');
-            if (cashoutInput) {
-                let cashoutDebounce = null;
-                const saveCashout = async () => {
-                    const val = parseFloat(cashoutInput.value);
-                    if (isNaN(val) || val < 0) return;
-                    await apiAction(() => this.api.put(`sessions/${sessionId}/entries/${player.id}/payout`, { payout_amount: val }));
-                };
-                cashoutInput.addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter') { e.preventDefault(); saveCashout(); }
-                });
-                cashoutInput.addEventListener('blur', () => {
-                    clearTimeout(cashoutDebounce);
-                    cashoutDebounce = setTimeout(saveCashout, 100);
-                });
-                cashoutInput.addEventListener('input', (e) => {
-                    let value = e.target.value.replace(/[^0-9.]/g, '');
-                    const parts = value.split('.');
-                    if (parts.length > 2) value = parts[0] + '.' + parts.slice(1).join('');
-                    e.target.value = value;
-                });
-            }
-
-            // 7-2 controls
-            modalElement.querySelector('#edit-72-minus')?.addEventListener('click', () => {
-                apiAction(() => this.api.put(`sessions/${sessionId}/players/${player.id}/seven-two-wins/decrement`));
-            });
-            modalElement.querySelector('#edit-72-plus')?.addEventListener('click', () => {
-                apiAction(() => this.api.put(`sessions/${sessionId}/players/${player.id}/seven-two-wins/increment`));
-            });
-
-            // Strikes controls
-            modalElement.querySelector('#edit-strikes-minus')?.addEventListener('click', () => {
-                apiAction(() => this.api.put(`sessions/${sessionId}/players/${player.id}/strikes/decrement`));
-            });
-            modalElement.querySelector('#edit-strikes-plus')?.addEventListener('click', () => {
-                apiAction(() => this.api.put(`sessions/${sessionId}/players/${player.id}/strikes/increment`));
-            });
-        };
-
-        attachListeners();
-
-    }
 
     // Canonical dialog chrome for the per-player confirmation dialogs (Cash Out /
     // Buy In): shared modal-overlay + modal-content--compact, double-rAF entrance,
@@ -959,7 +802,7 @@ export default class SessionDetailPage {
                 if (!playerId) return;
                 if (isActive) {
                     const player = this.currentSession.players.find(p => p.id === playerId);
-                    if (player) this.showPlayerEditModal(player, sessionData, sessionId);
+                    if (player) this.playerEditModal.open(this.playerEditModalContext(), player, sessionId);
                 } else {
                     window.location.hash = `#player/${playerId}`;
                 }
