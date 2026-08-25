@@ -1,7 +1,8 @@
 // API service for handling API requests
 export default class ApiService {
-    constructor(baseUrl = '/api') {
+    constructor(baseUrl = '/api', fetchImpl = globalThis.fetch.bind(globalThis)) {
         this.baseUrl = baseUrl;
+        this.fetchImpl = fetchImpl;
     }
     
     // Helper method for handling API errors
@@ -15,7 +16,21 @@ export default class ApiService {
     
     // GET requests
     async get(endpoint) {
-        const response = await fetch(`${this.baseUrl}/${endpoint}`);
+        const url = `${this.baseUrl}/${endpoint}`;
+        let response;
+
+        // Mobile PWAs can resume before their network process has reattached.
+        // Retry only idempotent GETs; mutations must never be replayed silently.
+        for (const delay of [0, 250, 750]) {
+            if (delay) await new Promise(resolve => setTimeout(resolve, delay));
+            try {
+                response = await this.fetchImpl(url);
+                break;
+            } catch (error) {
+                if (!(error instanceof TypeError) || delay === 750) throw error;
+            }
+        }
+
         return this.handleResponse(response);
     }
     

@@ -222,6 +222,33 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Initialize more menu manager (mobile)
     const moreMenuManager = new MoreMenuManager(darkModeManager);
 
+    // A suspended PWA keeps its DOM but loses live network state. Refresh the
+    // visible route after a meaningful absence instead of leaving stale data or
+    // a transient "Failed to fetch" screen until the user reloads manually.
+    let hiddenAt = 0;
+    const refreshAfterResume = () => {
+        if (document.hidden || !hiddenAt || Date.now() - hiddenAt < 30000) return;
+        hiddenAt = 0;
+        dataCache.invalidateAll();
+        setTimeout(() => router.route(), 150);
+    };
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden) hiddenAt = Date.now();
+        else refreshAfterResume();
+    });
+    window.addEventListener('pageshow', event => {
+        if (event.persisted) {
+            hiddenAt = Date.now() - 30000;
+            refreshAfterResume();
+        }
+    });
+    window.addEventListener('online', () => {
+        if (!document.hidden) {
+            dataCache.invalidateAll();
+            router.route();
+        }
+    });
+
     // Initialize page modules with their persistent containers
     const dashboardPage = new DashboardPage(pageManager.getContainer('dashboard'), apiService);
     const playersPage = new PlayersPage(pageManager.getContainer('players'), apiService);

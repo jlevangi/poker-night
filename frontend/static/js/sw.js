@@ -180,6 +180,9 @@ async function staleWhileRevalidate(request) {
             cache.put(request, networkResponse.clone());
         }
         return networkResponse;
+    }).catch(error => {
+        if (cachedResponse) return cachedResponse;
+        throw error;
     });
 
     // Return cached version immediately if available, otherwise wait for network
