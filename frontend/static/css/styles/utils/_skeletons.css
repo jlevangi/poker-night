@@ -1,14 +1,9 @@
-/* Loading Skeleton Styles */
-
-:root {
-    --skeleton-base: #E2E8F0;
-    --skeleton-shine: #F1F5F9;
-}
-
-[data-theme="dark"] {
-    --skeleton-base: #334155;
-    --skeleton-shine: #475569;
-}
+/* Feedback States — one file for everything that shows while or after a
+   fetch: loading skeletons (shimmer), empty states, and error states
+   (ui.js showPageError). The --skeleton-* tokens live in themes/_theme.css
+   (single source) and are flipped per theme in dark-mode.css; empty/error
+   colors use the --text-* / --color-* roles so both themes inherit. Radii
+   follow the shared --radius-* scale. */
 
 /* Base skeleton element */
 .skeleton {
@@ -19,7 +14,7 @@
     );
     background-size: 200% 100%;
     animation: skeleton-shimmer 1.5s ease-in-out infinite;
-    border-radius: 8px;
+    border-radius: var(--radius-sm);
     color: transparent !important;
     pointer-events: none;
     user-select: none;
@@ -34,37 +29,37 @@
 .skeleton-text {
     height: 1em;
     margin-bottom: 0.5rem;
-    border-radius: 6px;
+    border-radius: var(--radius-sm);
 }
 
 .skeleton-text-sm {
     height: 0.75em;
     margin-bottom: 0.5rem;
-    border-radius: 4px;
+    border-radius: 4px; /* sub-scale tick; 4px < --radius-sm on purpose */
 }
 
 .skeleton-title {
     height: 1.5em;
     width: 60%;
     margin-bottom: 1rem;
-    border-radius: 8px;
+    border-radius: var(--radius-sm);
 }
 
 .skeleton-card {
     height: 100px;
     margin-bottom: 0.75rem;
-    border-radius: 16px;
+    border-radius: var(--radius-card);
 }
 
 .skeleton-card-lg {
     height: 160px;
     margin-bottom: 1rem;
-    border-radius: 20px;
+    border-radius: var(--radius-xl);
 }
 
 .skeleton-stat {
     height: 90px;
-    border-radius: 14px;
+    border-radius: var(--radius-lg);
 }
 
 .skeleton-row {
@@ -74,11 +69,11 @@
 }
 
 .skeleton-row:first-child {
-    border-radius: 12px 12px 0 0;
+    border-radius: var(--radius-md) var(--radius-md) 0 0;
 }
 
 .skeleton-row:last-child {
-    border-radius: 0 0 12px 12px;
+    border-radius: 0 0 var(--radius-md) var(--radius-md);
     margin-bottom: 0;
 }
 
@@ -86,12 +81,6 @@
     border-radius: 50%;
 }
 
-.skeleton-badge {
-    height: 1.5em;
-    width: 60px;
-    border-radius: 50px;
-    display: inline-block;
-}
 
 .skeleton-btn {
     height: 40px;
@@ -128,7 +117,44 @@
 
 /* Skeleton table */
 .skeleton-table {
-    border-radius: 12px;
+    border-radius: var(--radius-md);
     overflow: hidden;
     margin-bottom: 1rem;
+}
+
+/* Empty state — one shape for "nothing here": a large icon over a short
+   message, centered. Moved here from _lists.css so the feedback states
+   (loading / empty / error) share one file. ui.js renderEmptyState emits
+   this markup; card=true wraps it in .neo-card. */
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: var(--spacing-xl) var(--spacing-md);
+}
+
+.empty-state__icon {
+    font-size: 2.5rem;
+    margin-bottom: var(--spacing-md);
+    display: block;
+}
+
+.empty-state__message {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+.empty-state__action {
+    margin-top: var(--spacing-lg);
+}
+
+/* Error variant — same shape as the empty state, but the message reads the
+   danger token (ui.js showPageError emits it), so a failed load never
+   reads as "no data yet". --color-danger flips per theme. */
+.empty-state--error .empty-state__message {
+    color: var(--color-danger);
 }

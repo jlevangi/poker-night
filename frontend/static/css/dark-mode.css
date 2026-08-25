@@ -1,26 +1,82 @@
 /* Dark Mode Overrides */
-/* Most dark mode styling is handled in _modern-theme.css via [data-theme="dark"] */
-/* This file handles remaining global overrides and legacy class support */
+/* Most dark mode styling is handled in _modern-theme.css via [data-theme="dark"].
+   This file is loaded after main.css (see index.html), so it handles:
+   - legacy compat token flips (--bg-secondary, --bg-tertiary, --border-*,
+     --neutral-*) that main.css cannot override,
+   - duplicate dark token declarations so inline-styled elements
+     (style="color: var(--profit-negative)") flip too,
+   - hard-catch rules for inline styles and legacy classes.
+   All values reference the brand tokens from _theme.css / the
+   _modern-theme.css dark flip; no ad-hoc palette hexes live here. */
 
 :root {
-    --bg-primary: #FFFFFF;
-    --bg-secondary: #F8FAFC;
+    /* Legacy compat names (no canonical equivalent yet). Light values mirror
+       _theme.css so this file (loaded last) does not shift light mode. */
+    --bg-secondary: #F1F5F9;
     --bg-tertiary: #F1F5F9;
-    --card-bg: #FFFFFF;
-    --header-bg: #0F172A;
-    --nav-bg: #0F172A;
-    --nav-text: rgba(255, 255, 255, 0.9);
 }
 
 [data-theme="dark"] {
-    --bg-primary: #0F172A;
+    /* Legacy compat flips */
     --bg-secondary: #1E293B;
     --bg-tertiary: #334155;
-    --card-bg: #1E293B;
-    /* --header-bg, --nav-bg, --nav-text inherited from :root (unchanged in dark mode) */
     --border-color: #334155;
     --border-light: #334155;
 
+    /* Brand token flips — single source (moved here from
+       _modern-theme.css). Loaded last, so these win the cascade over the
+       light declarations in _theme.css for every consumer, and duplicate
+       flips for inline styles (var(--bg-body), var(--profit-negative)). */
+    --bg-body: #0F172A;
+    --bg-content: #1E293B;
+    --bg-card: #1E293B;
+    --link-color: #93C5FD;
+    --profit-positive: #6EE7B7;
+    --profit-negative: #FCA5A5;
+    --bg-header: #0F172A;
+    --bg-header-gradient-start: #0F172A;
+    --bg-header-gradient-end: #1E293B;
+    --bg-shell-hover: rgba(255, 255, 255, 0.1);
+    --bg-shell-active: rgba(255, 255, 255, 0.15);
+    --bg-bottom-nav: rgba(15, 23, 42, 0.95);
+    --text-primary: #F8FAFC;
+    --text-secondary: #CBD5E1;
+    --text-muted: #8494A7;
+    --text-header: #F8FAFC;
+    --text-header-muted: rgba(255, 255, 255, 0.6);
+    --casino-cream: #1E293B;
+    --border-header: rgba(255, 255, 255, 0.08);
+    --border-bottom-nav: rgba(255, 255, 255, 0.08);
+    --podium-king-border: rgba(252, 211, 77, 0.18);
+    --gamble-king-stripe-color: rgba(252, 211, 77, 0.12);
+    --neo-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
+    --neo-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -2px rgba(0, 0, 0, 0.2);
+    --neo-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.35), 0 4px 6px -4px rgba(0, 0, 0, 0.2);
+    --neo-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 8px 10px -6px rgba(0, 0, 0, 0.2);
+    --neo-shadow-static: 0 1px 3px rgba(0, 0, 0, 0.2), 0 1px 2px rgba(0, 0, 0, 0.15);
+    --casino-red-light: rgba(239, 68, 68, 0.1);
+    --casino-gold-light: rgba(245, 158, 11, 0.1);
+    --casino-green-light: rgba(16, 185, 129, 0.1);
+    --casino-purple-light: rgba(99, 102, 241, 0.1);
+    --casino-blue-light: rgba(59, 130, 246, 0.1);
+    --status-neutral-bg: rgba(148, 163, 184, 0.16);
+    --badge-tint-green: var(--casino-green-light);
+    --badge-tint-gold: var(--casino-gold-light);
+    --badge-tint-red: var(--casino-red-light);
+    --badge-tint-purple: var(--casino-purple-light);
+    --badge-tint-neutral: var(--status-neutral-bg);
+    --table-hover: rgba(255, 255, 255, 0.05);
+    --casino-red-dark: #FCA5A5;
+    --casino-gold-dark: #FCD34D;
+    --casino-green-dark: #6EE7B7;
+    --casino-purple-dark: #A5B4FC;
+    --casino-blue-dark: #93C5FD;
+    /* Soft status washes — darker surfaces need a stronger fill of the same hue */
+    --color-danger-soft: rgba(239, 68, 68, 0.22);
+    --color-warning-soft: rgba(245, 158, 11, 0.18);
+    --focus-ring-color: #60A5FA;
+
+    /* Neutral scale flip (consumed by _navigation.css and friends) */
     --neutral-50: #334155;
     --neutral-100: #475569;
     --neutral-200: #64748B;
@@ -30,7 +86,21 @@
     --neutral-600: #F1F5F9;
     --neutral-700: #F8FAFC;
     --neutral-800: #FFFFFF;
+    --backdrop: rgba(0, 0, 0, 0.65);
+    --bg-modal-header: var(--bg-content);
     --neutral-900: #FFFFFF;
+
+    /* Duplicate of the _modern-theme.css dark flip: without it, inline
+       styles (var(--profit-negative), var(--bg-body)) would not flip. */
+    --bg-body: #0F172A;
+    --bg-content: #1E293B;
+    --bg-card: #1E293B;
+    --link-color: #93C5FD;
+    --profit-positive: #6EE7B7;
+    --profit-negative: #FCA5A5;
+    /* Skeleton tokens (replaces the dark block in _skeletons.css) */
+    --skeleton-base: var(--neutral-700);
+    --skeleton-shine: var(--neutral-600);
 }
 
 /* Base elements */
@@ -40,7 +110,7 @@ html {
 }
 
 html[data-theme="dark"] {
-    background-color: #0F172A;
+    background-color: var(--bg-body);
 }
 
 body {
@@ -50,7 +120,7 @@ body {
 }
 
 [data-theme="dark"] body {
-    background-color: #0F172A;
+    background-color: var(--bg-body);
 }
 
 html, body {
@@ -64,15 +134,18 @@ input, textarea, select {
     border-color: var(--border-color);
 }
 
+/* Forms: token-driven in both themes. In dark, --bg-content/--bg-card are the
+   same slate and --border-color flips to #334155, so classed and unclassed
+   fields share one border. */
 [data-theme="dark"] input[type="text"],
 [data-theme="dark"] input[type="number"],
 [data-theme="dark"] input[type="email"],
 [data-theme="dark"] input[type="password"],
 [data-theme="dark"] select,
 [data-theme="dark"] textarea {
-    background-color: var(--bg-content);
+    background-color: var(--bg-card);
     color: var(--text-primary);
-    border-color: #475569;
+    border-color: var(--border-color);
 }
 
 [data-theme="dark"] input::placeholder,
@@ -99,19 +172,19 @@ a {
 }
 
 [data-theme="dark"] a {
-    color: #93C5FD;
+    color: var(--link-color);
 }
 
 /* The Gamble King hero's name is a link, but it must stay white on the dark
    felt (gold on hover) in both themes — the generic dark link blue above
    would repaint it. Higher specificity than the rules it overrides. */
 [data-theme="dark"] a.neo-gamble-king-name {
-    color: #FFFFFF;
+    color: var(--text-white);
 }
 
 [data-theme="dark"] a.neo-gamble-king-name:hover,
 [data-theme="dark"] a.neo-gamble-king-name:focus-visible {
-    color: #FCD34D;
+    color: var(--casino-gold-dark);
 }
 
 a:hover {
@@ -119,7 +192,7 @@ a:hover {
 }
 
 [data-theme="dark"] a:hover {
-    color: #BFDBFE;
+    color: var(--casino-blue-dark);
 }
 
 /* Headings in dark mode */
@@ -146,64 +219,11 @@ a:hover {
     border-bottom-color: var(--border-light);
 }
 
-/* Legacy table support */
-.modern-table {
-    background-color: var(--bg-card);
-    border-color: var(--border-color);
-}
-
-.modern-table th {
-    background-color: var(--bg-secondary);
-    color: var(--text-primary);
-}
-
-.modern-table td {
-    color: var(--text-primary);
-    border-bottom-color: var(--border-light);
-}
-
 /* Footer */
 footer {
     background-color: var(--bg-body);
     color: var(--text-muted);
     border-top: 1px solid var(--border-light);
-}
-
-/* Ensure legacy header/nav text stays white only in dark mode */
-[data-theme="dark"] header h1,
-[data-theme="dark"] header nav a {
-    color: #FFFFFF !important;
-}
-
-/* Profit colors in dark mode (handled by _modern-theme.css but kept for legacy) */
-[data-theme="dark"] .profit-positive {
-    color: #6EE7B7 !important;
-}
-
-[data-theme="dark"] .profit-negative {
-    color: #FCA5A5 !important;
-}
-
-/* Action buttons */
-.action-btn {
-    background-color: var(--primary-color);
-    color: white;
-    border: none;
-}
-
-[data-theme="dark"] .action-btn {
-    background-color: var(--primary-color);
-    color: white;
-}
-
-.btn-primary {
-    background-color: var(--primary-color);
-    color: white;
-}
-
-[data-theme="dark"] .btn-primary {
-    background-color: var(--primary-color);
-    color: white;
 }
 
 /* White background overrides */

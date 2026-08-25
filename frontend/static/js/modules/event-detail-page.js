@@ -111,9 +111,9 @@ export default class EventDetailPage {
                             ${[...this.players].sort((a, b) => a.name.localeCompare(b.name)).map(p => `<option value="${p.player_id}">${this.escapeHtml(p.name)}</option>`).join('')}
                         </select>
                         <div style="display: flex; gap: 0.5rem; width: 100%;">
-                            <button class="neo-btn neo-rsvp-btn-yes rsvp-btn" data-status="YES" style="flex: 1;">I'm In</button>
-                            <button class="neo-btn neo-rsvp-btn-maybe rsvp-btn" data-status="MAYBE" style="flex: 1;">Maybe</button>
-                            <button class="neo-btn neo-rsvp-btn-no rsvp-btn" data-status="NO" style="flex: 1;">Can't Make It</button>
+                            <button class="neo-btn neo-btn-green neo-rsvp-btn-yes rsvp-btn" data-status="YES" style="flex: 1;">I'm In</button>
+                            <button class="neo-btn neo-btn-gold neo-rsvp-btn-maybe rsvp-btn" data-status="MAYBE" style="flex: 1;">Maybe</button>
+                            <button class="neo-btn neo-btn-red neo-rsvp-btn-no rsvp-btn" data-status="NO" style="flex: 1;">Can't Make It</button>
                         </div>
                     </div>
                 </div>
@@ -182,7 +182,7 @@ export default class EventDetailPage {
                 <div>
                     <h2 class="page-title--detail">
                         ${this.escapeHtml(event.title || 'Poker Night')}
-                        ${isCancelled ? '<span style="color: var(--casino-red-dark); font-size: 1rem; margin-left: 0.5rem;">CANCELLED</span>' : ''}
+                        ${isCancelled ? '<span class="event-status-badge event-status-badge--cancelled">Cancelled</span>' : ''}
                     </h2>
                     <div style="font-weight: 700; color: var(--text-secondary); margin-top: 0.25rem; font-size: 1.125rem;">
                         ${dateFormatted}${timeFormatted ? ' at ' + timeFormatted : ''}

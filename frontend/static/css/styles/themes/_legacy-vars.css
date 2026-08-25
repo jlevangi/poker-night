@@ -3,20 +3,13 @@
  * intentionally overrides the #EFF6FF value defined in _theme.css /
  * _modern-theme.css.  Several components consume the #93C5FD value.
  *
- * The remaining token names (--neutral-50, --secondary-color,
- * etc.) use legacy naming conventions not yet unified with the structured
- * token system and are still referenced by component CSS throughout the
- * stylesheets below.
+ * The neutral scale below keeps legacy names; it is still consumed by the
+ * dark-mode.css skeleton flips. --secondary-* / --error-color are gone with
+ * their last consumers.
  */
 
 :root {
     --primary-light: #93C5FD;
-
-    --secondary-color: #10B981;
-    --secondary-dark: #059669;
-    --secondary-light: #6EE7B7;
-
-    --error-color: #EF4444;
 
     --neutral-50: #F8FAFC;
     --neutral-100: #F1F5F9;

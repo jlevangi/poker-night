@@ -20,7 +20,7 @@
  * Spacing scale — the only margin/padding values the app uses (rem, root 16px).
  * Ladder (8 steps): 0.125 / 0.25 / 0.5 / 0.75 / 1 / 1.25 / 1.5 / 2
  * Variables: --spacing-xs/.sm/.md/.lg/.xl = .25/.5/1/1.5/2 (_theme.css);
- *   --spacing-neo = 1.25, shrinks to 1rem at <=768 (_modern-theme.css).
+ *   --spacing-neo = 1.25, shrinks to 1rem at <=768 (_navigation.css).
  *   In CSS, prefer the variable when it matches the ladder value; 0.75 and 0.125
  *   have no variable and stay literals. JS inline styles use ladder literals
  *   (or var(--spacing-*) where the app already does).
@@ -71,17 +71,6 @@ a {
 a:hover {
     color: var(--primary-hover);
     text-decoration: underline;
-}
-
-/* Profit/Loss text styling */
-.profit-positive {
-    color: var(--profit-positive);
-    font-weight: 600;
-}
-
-.profit-negative {
-    color: var(--profit-negative);
-    font-weight: 600;
 }
 
 /* Gamble King name styling with gradient */

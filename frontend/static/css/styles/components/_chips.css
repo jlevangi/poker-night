@@ -1,4 +1,193 @@
-/* Chip Component Styles */
+/* Status Chips & Badges — single owner for every status chip and badge in the
+   app (moved out of _cards/_lists/_calendar/_skeletons/_modern-theme in the
+   brand consolidation; the poker chip display below keeps this file's name). */
+
+/* Neutral text chip: muted status states (e.g. "In Session" in the session
+   player picker). Same pill geometry and weight as the solid badges so the
+   family reads as one; the tint comes from --badge-tint-neutral so light/dark
+   flip together in _theme.css / dark-mode.css. */
+.chip-neutral {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.5rem;
+    border-radius: var(--radius-pill);
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+    background: var(--badge-tint-neutral);
+}
+
+/* LIVE: solid green pill, the one moving element on a page (pulsing dot).
+   Opaque casino green stays the same in dark — "now" must read as color. */
+.neo-live-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    background: var(--casino-green);
+    color: var(--text-white);
+    padding: 0.25rem 0.5rem;
+    border-radius: var(--radius-pill);
+    font-weight: 600;
+    font-size: 0.75rem;
+}
+
+/* UPCOMING: neutral outlined pill with a gold dot — "next" reads as quiet
+   intent, distinct from LIVE's color+motion. Dark mode flips the border and
+   text to the brighter gold. */
+.neo-upcoming-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    background: transparent;
+    border: 1.5px solid rgba(245, 158, 11, 0.45);
+    color: var(--casino-gold-dark);
+    padding: 0.2rem 0.5rem;
+    border-radius: var(--radius-pill);
+    font-weight: 700;
+    font-size: 0.65rem;
+    letter-spacing: 0.06em;
+}
+
+/* Dark: the border brightens to the amber; text color needs no override —
+   --casino-gold-dark flips to #FCD34D in dark-mode.css, so the base rule
+   already yields bright gold on the dark felt. */
+[data-theme="dark"] .neo-upcoming-badge {
+    border-color: rgba(252, 211, 77, 0.45);
+}
+
+.neo-upcoming-dot {
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 50%;
+    background: var(--casino-gold);
+    display: inline-block;
+    flex-shrink: 0;
+}
+
+/* Profit/loss text — the single owner of the .profit-* money colors, moved
+   here from _modern-theme.css (and the duplicate in base/_typography.css) in
+   the brand consolidation. Colors come straight from the --profit-* brand
+   tokens, so dark-mode.css's flips (bright emerald / coral / gold) drive
+   both themes; no per-theme rule is needed. Weight is 600, not forced:
+   the old `font-weight: 600 !important` in _modern-theme.css beat every
+   later partial (it is imported early in main.css, and !important reverses
+   cascade order), flattening the intended hierarchy where a 700 class
+   (.stat-value-lg, .neo-stat-value) shared an element with .profit-*.
+   _tables.css / _lists.css document this as their color source. */
+.profit-positive,
+.profit-negative {
+    font-weight: 600;
+}
+
+.profit-positive {
+    color: var(--profit-positive);
+}
+
+.profit-negative {
+    color: var(--profit-negative);
+}
+
+/* Pulsing dot inside the LIVE badge: the only moving thing on the page,
+   and the one that should move. Neutralized by prefers-reduced-motion. */
+.neo-live-dot {
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 50%;
+    background: #fff;
+    display: inline-block;
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.6);
+    animation: neo-live-pulse 1.6s ease-out infinite;
+}
+
+@keyframes neo-live-pulse {
+    0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.55); }
+    70%, 100% { box-shadow: 0 0 0 0.4rem rgba(255, 255, 255, 0); }
+}
+
+/* Event status badges (calendar list + event detail). Solid green/red so
+   "happening" vs "off" read at a glance; white text holds in both themes. */
+.event-status-badge {
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 0.125rem 0.5rem;
+    border: 1px solid transparent;
+    border-radius: var(--radius-pill);
+    color: var(--text-white);
+}
+
+.event-status-badge--upcoming {
+    background: var(--casino-green);
+}
+
+.event-status-badge--cancelled {
+    background: var(--casino-red);
+}
+
+/* RSVP count chips (calendar list + event detail): solid casino trio —
+   green In / gold Maybe / red Out. Opaque casino colors are the same in
+   dark, so no theme override is needed. */
+.neo-rsvp-badges {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.neo-rsvp-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.75rem;
+    border-radius: var(--radius-pill);
+    border: 1px solid transparent;
+}
+
+.neo-rsvp-badge-yes {
+    background: var(--casino-green);
+    color: var(--text-white);
+}
+
+/* Fixed dark text (not the --casino-gold-dark token, which flips to bright
+   #FCD34D in dark): the opaque gold behind it never changes, so the ink must
+   stay dark in both themes to hold contrast. */
+.neo-rsvp-badge-maybe {
+    background: var(--casino-gold);
+    color: #78350F;
+}
+
+
+.neo-rsvp-badge-no {
+    background: var(--casino-red);
+    color: var(--text-white);
+}
+
+/* Neutral chip for events with no responses yet — clearer at a glance
+   than a trio of "0 In / 0 Maybe / 0 Out" badges. */
+.neo-rsvp-badge--empty {
+    background: transparent;
+    color: var(--text-secondary);
+    border: 1px dashed var(--border-color);
+}
+
+/* Skeleton placeholder sized to the badge pills (moved from _skeletons.css,
+   which owns the .skeleton base). */
+.skeleton-badge {
+    height: 1.5em;
+    width: 60px;
+    border-radius: var(--radius-pill);
+    display: inline-block;
+}
+
+@media (max-width: 480px) {
+    .neo-live-badge {
+        font-size: 0.65rem;
+    }
+
+    .neo-rsvp-badges {
+        justify-content: flex-start;
+    }
+}
+
 /* Poker chip display for the chip calculator page */
 
 .chip-description {
@@ -121,17 +310,4 @@
     .chip-name {
         font-size: 0.55rem;
     }
-}
-
-/* Migrated from chip-styles.css (missed by the original migration). */
-/* Ensure white chip text is black (border handled by JavaScript) */ .chip[style*="background-color: #FFFFFF"], .chip[style*="background-color:#FFFFFF"], .chip[style*="background: #FFFFFF"], .chip[style*="background:#FFFFFF"] {
-    color: #000000 !important;
-}
-
-.chip[style*="background-color: #FFFFFF"] .chip-count, .chip[style*="background-color:#FFFFFF"] .chip-count, .chip[style*="background: #FFFFFF"] .chip-count, .chip[style*="background:#FFFFFF"] .chip-count {
-    color: #000000 !important;
-}
-
-.chip[style*="background-color: #FFFFFF"] .chip-name, .chip[style*="background-color:#FFFFFF"] .chip-name, .chip[style*="background: #FFFFFF"] .chip-name, .chip[style*="background:#FFFFFF"] .chip-name {
-    color: #000000 !important;
 }
