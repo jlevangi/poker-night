@@ -99,7 +99,7 @@ export function renderSkeletonRows(options) {
  * safe to inject via innerHTML. Uses the same textContent round-trip
  * pattern as the escapeHtml helpers in the page modules.
  */
-function escapeHtml(value) {
+export function escapeHtml(value) {
     const node = document.createElement('div');
     node.textContent = value === null || value === undefined ? '' : String(value);
     return node.innerHTML;
