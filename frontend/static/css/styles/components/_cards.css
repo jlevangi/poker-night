@@ -710,7 +710,7 @@ a.neo-gamble-king-name:focus-visible {
     transition: all 0.2s ease;
     border-radius: 12px;
 }
-
+@media (max-width: 768px) {
 
     .neo-stats-grid {
         grid-template-columns: repeat(2, 1fr);
@@ -725,8 +725,9 @@ a.neo-gamble-king-name:focus-visible {
     .neo-stat-value {
         font-size: 1.75rem;
     }
+}
 
-
+@media (max-width: 480px) {
     .neo-stats-grid {
         grid-template-columns: 1fr 1fr;
     }
@@ -744,12 +745,22 @@ a.neo-gamble-king-name:focus-visible {
         padding: 0.75rem;
         margin-bottom: 0.75rem;
     }
+}
 
 @media (max-width: 360px) {
     .neo-stats-grid {
         grid-template-columns: 1fr !important;
     }
 
+    /* At 332px content width a 2-col row leaves ~150px per tile: the
+       48px icon circle clears, but long labels ("View Live Session")
+       need the full row to wrap cleanly. */
+    .neo-quick-actions {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Touch devices — prevent stuck hover states; ensure real touch targets */
 @media (hover: none) {
     a.neo-card:hover, a .neo-card:hover,
     .neo-card-clickable:hover, .neo-card[onclick]:hover,
@@ -757,6 +768,7 @@ a.neo-gamble-king-name:focus-visible {
         transform: none;
         box-shadow: var(--neo-shadow-sm);
     }
+}
 
 /* The next-event card's gold tint resolves --casino-gold-light, which the
    [data-theme="dark"] token flip turns into a translucent wash. This file

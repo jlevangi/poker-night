@@ -1392,11 +1392,6 @@ div .neo-btn.neo-btn-green:hover,
         width: 85vw;
         bottom: 0.75rem;
     }
-
-    .neo-stats-grid {
-        grid-template-columns: 1fr 1fr;
-    }
-
     .neo-table th,
     .neo-table td {
         padding: 0.5rem 0.5rem;
@@ -1420,6 +1415,10 @@ div .neo-btn.neo-btn-green:hover,
 
     /* At 332px content width a 2-col row leaves ~150px per tile: the
        48px icon circle clears, but long labels ("View Live Session")
+       need the full row to wrap cleanly. */
+    .neo-quick-actions {
+        grid-template-columns: 1fr;
+    }
 
     .neo-header h1 {
         font-size: 1.25rem;
@@ -1444,7 +1443,7 @@ div .neo-btn.neo-btn-green:hover,
 }
 
 /* Touch devices — prevent stuck hover states; ensure real touch targets */
-
+@media (hover: none) {
     .neo-btn,
     .neo-btn-lg {
         min-height: 44px;
@@ -1657,26 +1656,3 @@ div .neo-btn.neo-btn-green:hover,
     color: var(--link-color);
     text-decoration: underline;
 }
-
-/* ============================================================================ */
-/* LIVE / NEXT-SESSION CONTEXT (home) — the "now" and "next" pair. */
-/* ============================================================================ */
-
-/* Pulsing dot inside the LIVE badge: the only moving thing on the page,
-   and the one that should move. Neutralized by prefers-reduced-motion. */
-.neo-live-dot {
-    width: 0.45rem;
-    height: 0.45rem;
-    border-radius: 50%;
-    background: #fff;
-    display: inline-block;
-    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.6);
-    animation: neo-live-pulse 1.6s ease-out infinite;
-}
-
-@keyframes neo-live-pulse {
-    0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.55); }
-    70%, 100% { box-shadow: 0 0 0 0.4rem rgba(255, 255, 255, 0); }
-}
-
-/* The next-event card and metric strip live in components/_cards.css. */
