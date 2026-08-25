@@ -6,11 +6,20 @@
     <title>Admin - Poker Night PWA</title>
     <style>
         :root {
+            /* Brand alignment: values mirror the public app's theme tokens
+             * (frontend/static/css/styles/themes/_theme.css) so the admin
+             * surface reads as the same product. The admin page is
+             * self-contained (one inline <style>, no linked stylesheets)
+             * and light-only by design — no dark theme here. */
             --primary: #2563EB;
             --primary-hover: #1D4ED8;
             --danger: #EF4444;
             --danger-hover: #DC2626;
             --success: #10B981;
+            --gold: #F59E0B;
+            --gold-dark: #92400E;
+            --green-dark: #059669;
+            --red-dark: #DC2626;
             --dark: #0F172A;
             --gray-50: #F8FAFC;
             --gray-100: #F1F5F9;
@@ -106,16 +115,16 @@
             color: var(--danger);
             margin: 10px 0;
             padding: 10px;
-            background: #fdf2f2;
-            border: 1px solid #fecaca;
+            background: rgba(239, 68, 68, 0.08);
+            border: 1px solid var(--red-dark);
             border-radius: 4px;
         }
         .success {
             color: var(--success);
             margin: 10px 0;
             padding: 10px;
-            background: #f0fdfa;
-            border: 1px solid #a7f3d0;
+            background: rgba(16, 185, 129, 0.08);
+            border: 1px solid var(--green-dark);
             border-radius: 4px;
         }
         .stats-grid {
@@ -245,13 +254,13 @@
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
-        .badge-active { background: #d4edda; color: #155724; }
+        .badge-active { background: rgba(16, 185, 129, 0.12); color: var(--green-dark); }
         .badge-ended { background: var(--gray-200); color: var(--gray-500); }
-        .badge-upcoming { background: #cce5ff; color: #004085; }
-        .badge-started { background: #d4edda; color: #155724; }
-        .badge-cancelled { background: #f8d7da; color: #721c24; }
+        .badge-upcoming { background: rgba(59, 130, 246, 0.12); color: var(--primary); }
+        .badge-started { background: rgba(16, 185, 129, 0.12); color: var(--green-dark); }
+        .badge-cancelled { background: rgba(239, 68, 68, 0.12); color: var(--red-dark); }
         .badge-past { background: var(--gray-200); color: var(--gray-500); }
-        .profit-positive { color: #155724; font-weight: 600; }
+        .profit-positive { color: var(--green-dark); font-weight: 600; }
         .profit-negative { color: var(--danger); font-weight: 600; }
 
         /* RSVP collapsible */
@@ -279,9 +288,9 @@
             padding: 4px 0;
             border-bottom: 1px solid var(--gray-200);
         }
-        .rsvp-yes { color: #155724; }
-        .rsvp-no { color: #721c24; }
-        .rsvp-maybe { color: #856404; }
+        .rsvp-yes { color: var(--green-dark); }
+        .rsvp-no { color: var(--red-dark); }
+        .rsvp-maybe { color: var(--gold-dark); }
 
         /* Modal */
         .modal-overlay {
@@ -974,7 +983,7 @@
                 if (!isCancelled && !hasSession) {
                     actions = `
                         <button onclick="openEditEventModal('${escapeHtml(evt.event_id)}')">Edit</button>
-                        <button class="danger" style="background:#f39c12;" onclick="cancelEvent('${escapeHtml(evt.event_id)}')">Cancel</button>
+                        <button class="danger" style="background: var(--gold); color: var(--dark);" onclick="cancelEvent('${escapeHtml(evt.event_id)}')">Cancel</button>
                         <button class="danger" onclick="deleteEvent('${escapeHtml(evt.event_id)}')">Delete</button>`;
                 } else if (isCancelled) {
                     actions = `
