@@ -1,4 +1,5 @@
 // Router module for handling navigation with keep-alive pages
+import { renderEmptyState, showPageError } from './ui.js';
 export default class Router {
     constructor(appContent, pageManager, dataCache) {
         this.appContent = appContent;
@@ -207,14 +208,20 @@ export default class Router {
                     await handler();
                 } else {
                     const container = this.pageManager.getContainer('detail');
-                    container.innerHTML = '<div class="skeleton-page"><h2>Page Not Found</h2></div>';
+                    container.innerHTML = '<div class="skeleton-page">' +
+                        renderEmptyState({ icon: '🃏', message: 'Page Not Found' }) +
+                    '</div>';
                     this.pageManager.show('detail');
                 }
             }
         } catch (error) {
             console.error("Error loading content:", error);
             const container = this.pageManager.getContainer('detail');
-            container.innerHTML = `<div class="skeleton-page"><p>Error loading content: ${error.message}. Check console.</p></div>`;
+            showPageError(container, {
+                message: 'Error loading content: ' + error.message,
+                actionLabel: 'Try Again',
+                onAction: () => this.route(),
+            });
             this.pageManager.show('detail');
         } finally {
             // Each route is a new page, even though keep-alive containers share

@@ -14,7 +14,8 @@
  *   The app's single error-state shape: the same neo-card + icon + message
  *   family as renderEmptyState, plus one optional action button. Sets
  *   container.innerHTML and binds the button itself, so a failed load is a
- *   single call. Options: icon (default '⚠️'), message — ESCAPED, so passing
+ *   single call. The message carries .empty-state--error (reads the danger
+ *   token) so a failed load never reads as an empty list.
  *   error.message is safe (renderEmptyState is static-copy only; do not mix
  *   the two), actionLabel + onAction (pass both to render and wire the
  *   button, or neither for a message-only error), actionClass (default
@@ -51,9 +52,9 @@
  * showPageError escapes the message (dynamic error text); its actionLabel
  * is still static copy.
  *
- * Styling lives in css/styles/utils/_skeletons.css (skeletons) and
- * css/styles/components/_lists.css (.empty-state*); both use theme variables,
- * so dark mode is inherited automatically.
+ * Styling lives in css/styles/utils/_skeletons.css (loading, empty, and
+ * error states); every value reads theme tokens, so dark mode is
+ * inherited automatically.
  */
 
 export function renderEmptyState(options) {
@@ -115,7 +116,7 @@ export function showPageError(container, options) {
     const actionLabel = opts.actionLabel;
     const actionClass = opts.actionClass || 'neo-btn-red';
     const onAction = opts.onAction;
-    let html = '<div class="neo-card empty-state">' +
+    let html = '<div class="neo-card empty-state empty-state--error">' +
         '<div class="empty-state__icon">' + icon + '</div>' +
         '<p class="empty-state__message">' + escapeHtml(opts.message || 'Something went wrong.') + '</p>';
     const hasAction = typeof onAction === 'function' && !!actionLabel;

@@ -1,32 +1,5 @@
 /* List Component Styles */
 
-/* Empty State */
-.empty-state {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: var(--spacing-xl) var(--spacing-md);
-}
-
-.empty-state__icon {
-    font-size: 2.5rem;
-    margin-bottom: var(--spacing-md);
-    display: block;
-}
-
-.empty-state__message {
-    font-size: 1.125rem;
-    font-weight: 600;
-    color: var(--text-secondary);
-    margin: 0;
-}
-
-.empty-state__action {
-    margin-top: var(--spacing-lg);
-}
-
 /* List card rows — generic class for card-based list items (sessions, players).
    Replaces repeated inline padding/margin/text-decoration on <a> card links. */
 .list-card-row {
