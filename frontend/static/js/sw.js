@@ -16,6 +16,7 @@ const URLS_TO_CACHE = [
     '/static/css/styles/main.css',
     '/static/js/app.js',
     '/static/js/config.js',
+    '/static/js/admin.js',
     '/static/js/modules/api-service.js',
     '/static/js/modules/calendar-page.js',
     '/static/js/modules/dark-mode-manager.js',
