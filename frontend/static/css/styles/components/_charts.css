@@ -339,16 +339,6 @@
     }
 }
 
-/* Dark mode compatibility */
-[data-theme="dark"] .neo-chart-tooltip {
-    background: var(--bg-card);
-    color: var(--text-primary);
-    border-color: var(--border-color);
-}
-
-[data-theme="dark"] .neo-chart-tooltip::after {
-    border-top-color: var(--border-color);
-}
 /* Enhanced Leaderboard Stat Cards */
 /* Leaderboard Stats - Matching neo-stat-card style */
 .neo-leaderboard-stat {
@@ -405,7 +395,12 @@
     color: inherit;
 }
 
-/* Color variants for leaderboard stats - light backgrounds with dark text */
+/* Color variants for leaderboard stats — the brand's badge-tint
+   vocabulary: wash fill + darker ink per hue. The pairs flip per theme
+   (the -light washes go translucent and the -dark inks go pale in dark
+   mode), so each variant needs no dark-mode override of its own. The
+   semi-transparent borders stay theme-stable on purpose: 20% of the
+   hue reads correctly over either surface. */
 .neo-leaderboard-stat.green {
     background: var(--casino-green-light);
     border-color: rgba(6, 95, 70, 0.2);
@@ -419,9 +414,9 @@
 }
 
 .neo-leaderboard-stat.blue {
-    background: #DBEAFE;
+    background: var(--casino-blue-light);
     border-color: rgba(30, 64, 175, 0.2);
-    color: #1E40AF;
+    color: var(--casino-blue-dark);
 }
 
 .neo-leaderboard-stat.purple {
@@ -437,38 +432,14 @@
 }
 
 .neo-leaderboard-stat.black {
-    background: #E5E7EB;
+    background: var(--status-neutral-bg);
     border-color: rgba(31, 41, 55, 0.2);
-    color: #1F2937;
+    color: var(--casino-black);
 }
 
-/* Dark mode overrides - softer dark-mode backgrounds */
-[data-theme="dark"] .neo-leaderboard-stat.green {
-    background: rgba(6, 95, 70, 0.1);
-    color: var(--casino-green-dark);
-}
-
-[data-theme="dark"] .neo-leaderboard-stat.red {
-    background: rgba(153, 27, 27, 0.1);
-    color: var(--casino-red-dark);
-}
-
-[data-theme="dark"] .neo-leaderboard-stat.blue {
-    background: rgba(30, 64, 175, 0.1);
-    color: #60A5FA;
-}
-
-[data-theme="dark"] .neo-leaderboard-stat.purple {
-    background: rgba(109, 40, 217, 0.1);
-    color: var(--casino-purple-dark);
-}
-
-[data-theme="dark"] .neo-leaderboard-stat.gold {
-    background: rgba(245, 158, 11, 0.1);
-    color: var(--casino-gold-dark);
-}
-
+/* --casino-black never flips, so its ink would sit on the dark slate
+   wash (~1:1) in dark mode. Pin the "black" tile to white ink there —
+   the same pattern as the hero name pin in _cards.css. */
 [data-theme="dark"] .neo-leaderboard-stat.black {
-    background: rgba(31, 41, 55, 0.1);
-    color: #D1D5DB;
+    color: var(--casino-white);
 }
