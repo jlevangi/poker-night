@@ -198,8 +198,8 @@
    profit headline (who's up, who's down, at a glance). .list-card-row supplies
    the flex row + padding; mirrors .session-card's left-context/right-money
    language with the same 1.5rem headline step (1.25 on mobile, as sessions).
-   .profit-* supplies color; this class owns size/digit alignment (weight
-   is 600 — the theme forces 600 !important on .profit-*; the hierarchy comes
+   .profit-* (owned by _chips.css) supplies color; this class owns
+   size/digit alignment — weight 600 from _chips.css; the hierarchy comes
    from the 1.5rem size + right alignment, as on .session-card). */
 .player-row-main {
     display: flex;

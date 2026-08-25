@@ -64,6 +64,29 @@
     flex-shrink: 0;
 }
 
+/* Profit/loss text — the single owner of the .profit-* money colors, moved
+   here from _modern-theme.css (and the duplicate in base/_typography.css) in
+   the brand consolidation. Colors come straight from the --profit-* brand
+   tokens, so dark-mode.css's flips (bright emerald / coral / gold) drive
+   both themes; no per-theme rule is needed. Weight is 600, not forced:
+   the old `font-weight: 600 !important` in _modern-theme.css beat every
+   later partial (it is imported early in main.css, and !important reverses
+   cascade order), flattening the intended hierarchy where a 700 class
+   (.stat-value-lg, .neo-stat-value) shared an element with .profit-*.
+   _tables.css / _lists.css document this as their color source. */
+.profit-positive,
+.profit-negative {
+    font-weight: 600;
+}
+
+.profit-positive {
+    color: var(--profit-positive);
+}
+
+.profit-negative {
+    color: var(--profit-negative);
+}
+
 /* Pulsing dot inside the LIVE badge: the only moving thing on the page,
    and the one that should move. Neutralized by prefers-reduced-motion. */
 .neo-live-dot {

@@ -73,17 +73,6 @@ a:hover {
     text-decoration: underline;
 }
 
-/* Profit/Loss text styling */
-.profit-positive {
-    color: var(--profit-positive);
-    font-weight: 600;
-}
-
-.profit-negative {
-    color: var(--profit-negative);
-    font-weight: 600;
-}
-
 /* Gamble King name styling with gradient */
 .gamble-king-name-dash {
     background: var(--gamble-king-gradient);

@@ -981,9 +981,11 @@ div .neo-btn.neo-btn-green:hover,
 }
 
 
-/* Data tables live in components/_tables.css (single owner): the base
-   .neo-table surface, the --dense variant, the podium, and the
-   log-stats table. This theme file no longer styles table chrome. */
+/* Data tables + list rows live in components/_tables.css and _lists.css
+   (single owners): the base .neo-table surface, the --dense variant, the
+   podium, and the log-stats table. The .profit-* money colors they use
+   are owned by components/_chips.css via the --profit-* tokens. This
+   theme file styles neither table chrome nor profit text. */
 
 
 /* ============================================================================ */
@@ -992,40 +994,6 @@ div .neo-btn.neo-btn-green:hover,
 
 .neo-bounce {
     transition: transform 0.2s ease;
-}
-
-/* ============================================================================ */
-/* PROFIT/LOSS */
-/* ============================================================================ */
-
-.profit-positive {
-    color: var(--casino-green) !important;
-    font-weight: 600 !important;
-    text-shadow: none;
-}
-
-.profit-negative {
-    color: var(--casino-red) !important;
-    font-weight: 600 !important;
-    text-shadow: none;
-}
-
-.profit-unpaid {
-    color: var(--casino-gold) !important;
-    font-weight: 600 !important;
-    text-shadow: none;
-}
-
-[data-theme="dark"] .profit-positive {
-    color: #6EE7B7 !important;
-}
-
-[data-theme="dark"] .profit-negative {
-    color: #FCA5A5 !important;
-}
-
-[data-theme="dark"] .profit-unpaid {
-    color: #FCD34D !important;
 }
 
 /* ============================================================================ */

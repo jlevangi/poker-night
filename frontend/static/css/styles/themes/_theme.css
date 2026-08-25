@@ -35,10 +35,9 @@
     --color-info: var(--casino-purple);
     --color-info-hover: var(--casino-purple-dark);
 
-    /* Profit Colors
-       NOTE: declared here so _modern-theme.css (loaded after this file)
-       cannot shadow them with divergent values. Step 3 removes the
-       duplicate block there. */
+    /* Profit Colors — the single source for the .profit-* text treatment
+       (owned by components/_chips.css); dark-mode.css flips these for the
+       [data-theme="dark"] theme. */
     --profit-positive: #047857;
     --profit-negative: #DC2626;
     --profit-unpaid: #92400E;
