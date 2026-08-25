@@ -2,12 +2,12 @@
 
 .import-dropzone {
     border: 2px dashed var(--border-color);
-    border-radius: 14px;
+    border-radius: var(--radius-lg);
     padding: 2rem 1.5rem;
     text-align: center;
     cursor: pointer;
     background: var(--bg-card);
-    transition: border-color 0.2s ease, background-color 0.2s ease;
+    transition: border-color var(--transition-fast), background-color var(--transition-fast);
 }
 
 .import-dropzone:hover,
@@ -17,7 +17,7 @@
 }
 
 .import-dropzone__icon {
-    font-size: 2.5rem;
+    font-size: 1.5rem;
     line-height: 1;
     margin-bottom: 0.75rem;
 }
@@ -153,7 +153,7 @@
     gap: 0.75rem;
     margin-top: 1rem;
     padding: 0.75rem 1rem;
-    border-radius: 12px;
+    border-radius: var(--radius-md);
     font-weight: 600;
     background: var(--bg-card);
     border: 2px solid var(--border-color);
@@ -183,7 +183,7 @@
     gap: 0.75rem;
     align-items: flex-start;
     padding: 0.75rem;
-    border-radius: 12px;
+    border-radius: var(--radius-md);
     background: var(--bg-card);
     border: 1px solid var(--border-light);
 }
@@ -206,20 +206,20 @@
 }
 
 .award-card__name {
-    font-size: 1.0625rem;
+    font-size: 1rem;
     font-weight: 700;
     overflow-wrap: anywhere;
 }
 
 .award-card__detail {
-    font-size: 0.8125rem;
+    font-size: 0.875rem;
     color: var(--text-secondary);
     overflow-wrap: anywhere;
 }
 
 
 .log-stat-help {
-    font-size: 0.8125rem;
+    font-size: 0.875rem;
     color: var(--text-secondary);
     margin-top: 0.75rem;
 }

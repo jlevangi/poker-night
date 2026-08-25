@@ -1,41 +1,35 @@
-/* Calendar / Events styles */
+/* Calendar / Events styles — event-card grid, the RSVP player pick, and
+   the schedule form. Card surfaces, hover lifts, and the RSVP buttons'
+   fills come from the shared primitives (_cards.css, _modern-theme.css
+   button roles, _forms.css); this file owns only event-specific layout. */
 
 /* Event cards (calendar list) — one row, three zones:
    when (bold date lead + time/location meta) | what (title + status) |
    RSVP at a glance.  The date leads because it is a calendar entry's
-   identity; the whole row stacks to one column on small screens. */
+   identity; the whole row stacks to one column on small screens.
+   The hover lift comes from the shared clickable-card group in
+   _cards.css (the card sits inside a link); the focus rule below
+   mirrors it for keyboard users. */
 .neo-event-card {
     display: grid;
     grid-template-columns: minmax(0, auto) minmax(0, 1fr) auto;
-    gap: 0.25rem 1.25rem;
+    gap: var(--spacing-xs) var(--spacing-neo);
     align-items: start;
-    cursor: pointer;
-    transition: all var(--transition-neo, 0.2s ease);
     overflow-wrap: anywhere; /* break long free-text titles/locations inside the card, not past it */
 }
 
-.neo-event-card:hover {
-    transform: translate(-2px, -2px);
-    box-shadow: var(--neo-shadow-md);
-}
-
-.neo-event-cancelled {
-    opacity: 0.6;
-}
-
-/* The whole card is one link; no inline styles on the anchor */
+/* The whole card is one link; no inline styles on the anchor. Spacing
+   between cards comes from the .neo-card base margin. */
 .neo-event-card-link {
     display: block;
-    margin-bottom: 1rem;
     text-decoration: none;
     color: inherit;
 }
 
-/* Keyboard focus mirrors the hover lift so the focused card reads
-   like a hovered one (the link's own outline comes from the global
-   a:focus-visible rule in _utilities.css). */
 .neo-event-card-link:focus-visible .neo-event-card {
+    transform: translateY(-2px);
     box-shadow: var(--neo-shadow-md);
+    border-color: var(--primary-color);
 }
 
 /* When zone — the date is the card's lead line */
@@ -52,7 +46,7 @@
 }
 
 .event-card-meta {
-    margin-top: 0.25rem;
+    margin-top: var(--spacing-xs);
     font-size: 0.875rem;
     font-weight: 500;
     color: var(--text-secondary);
@@ -65,7 +59,7 @@
     display: flex;
     align-items: center;
     flex-wrap: wrap;
-    gap: 0.5rem;
+    gap: var(--spacing-sm);
     font-size: 1rem;
     font-weight: 600;
     color: var(--text-primary);
@@ -75,60 +69,52 @@
     overflow-wrap: anywhere;
 }
 
-.neo-rsvp-btn-yes {
-    background: var(--casino-green, #2ecc71) !important;
-    color: var(--text-white) !important;
-    font-weight: 700 !important;
-    border: 1px solid transparent !important;
-    border-radius: var(--radius-md) !important;
-    box-shadow: var(--shadow-light);
+.neo-event-cancelled {
+    opacity: 0.6;
 }
 
-.neo-rsvp-btn-yes:hover {
-    transform: translate(-1px, -1px);
-    box-shadow: var(--neo-shadow-md);
+/* RSVP panel (event detail). "I'm In" and "Can't Make It" render with
+   the shared solid brand roles (neo-btn-green / neo-btn-red, set in
+   event-detail-page.js). "Maybe" uses the gold TINT instead of the
+   solid gold fill: white ink on amber is ~2:1 in light and the dark
+   theme flips --casino-gold-dark to a pale fill, so a solid gold
+   button is never legible. The tint pair auto-flips per theme (pale
+   wash + brown ink in light, glow + pale gold in dark); hover fills
+   to solid amber with --casino-black ink (~8:1 in both themes). The
+   doubled class beats the base .neo-btn:hover on specificity, so no
+   !important. */
+.neo-btn.neo-rsvp-btn-maybe {
+    background: var(--casino-gold-light);
+    color: var(--casino-gold-dark);
 }
 
-.neo-rsvp-btn-maybe {
-    background: var(--casino-gold, #f1c40f) !important;
-    color: var(--text-primary) !important;
-    font-weight: 700 !important;
-    border: 1px solid transparent !important;
-    border-radius: var(--radius-md) !important;
-    box-shadow: var(--shadow-light);
+/* The dark theme gives role buttons a tinted rest state; "yes" already
+   stays solid via the theme's green force, but "no" fell to the red
+   tint. The RSVP row is one semantic status set (in / maybe / out), so
+   pin "no" to its solid fill in dark too — same pattern as the hero's
+   name pin in _cards.css. --casino-red-dark flips to a pale in dark,
+   so the hover stays the same solid fill. "Maybe" deliberately keeps
+   the tint: it reads as the tentative answer between two committed
+   ones. */
+[data-theme="dark"] .neo-btn.neo-rsvp-btn-no {
+    background: var(--casino-red);
+    color: var(--text-white);
 }
 
-.neo-rsvp-btn-maybe:hover {
-    transform: translate(-1px, -1px);
-    box-shadow: var(--neo-shadow-md);
+[data-theme="dark"] .neo-btn.neo-rsvp-btn-no:hover {
+    background: var(--casino-red);
+    color: var(--text-white);
 }
 
-.neo-rsvp-btn-no {
-    background: var(--casino-red, #e74c3c) !important;
-    color: var(--text-white) !important;
-    font-weight: 700 !important;
-    border: 1px solid transparent !important;
-    border-radius: var(--radius-md) !important;
-    box-shadow: var(--shadow-light);
-}
-
-.neo-rsvp-btn-no:hover {
-    transform: translate(-1px, -1px);
-    box-shadow: var(--neo-shadow-md);
-}
-
-.rsvp-player-select {
-    border: 1px solid var(--border-color, #E2E8F0) !important;
-    font-weight: 600 !important;
-    font-size: 0.875rem !important;
-    background: var(--bg-card, #fff) !important;
-    color: var(--text-primary, #222) !important;
-    border-radius: var(--radius-md) !important;
+/* The player pick in the RSVP panel — the standard select, bold, since
+   it names who is answering. */
+.neo-select.rsvp-player-select {
+    font-weight: 600;
 }
 
 /* "Schedule Event" call-to-action card above the form */
 .calendar-cta-card {
-    margin-bottom: 2rem;
+    margin-bottom: var(--spacing-xl);
     text-align: center;
 }
 
@@ -138,18 +124,7 @@
 .create-event-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1rem;
-}
-
-/* Next Event dashboard card */
-.neo-next-event-card {
-    cursor: pointer;
-    transition: all var(--transition-neo, 0.2s ease);
-}
-
-.neo-next-event-card:hover {
-    transform: translate(-2px, -2px);
-    box-shadow: var(--neo-shadow-md);
+    gap: var(--spacing-md);
 }
 
 /* Mobile responsive */
@@ -157,19 +132,10 @@
     /* Event cards stack: when → title → RSVP badges */
     .neo-event-card {
         grid-template-columns: 1fr;
-        gap: 0.5rem;
+        gap: var(--spacing-sm);
     }
 
     .create-event-grid {
         grid-template-columns: 1fr;
-    }
-
-    .neo-rsvp-form > div {
-        flex-direction: column !important;
-        align-items: stretch !important;
-    }
-
-    .neo-rsvp-form .rsvp-player-select {
-        width: 100% !important;
     }
 }
