@@ -1,4 +1,6 @@
-/* Header Component Styles */
+/* Header Component Styles — single owner for the app shell header.
+   Every value reads shell tokens (_theme.css; dark flips in
+   dark-mode.css), so no [data-theme="dark"] rules are needed here. */
 
 header {
     background-color: var(--bg-header);
@@ -22,6 +24,56 @@ header h1 {
     margin-bottom: var(--spacing-xl);
 }
 
+/* App Shell Header (Gamble King brand bar) */
+
+.neo-header {
+    background: var(--bg-header);
+    border-bottom: 1px solid var(--border-header);
+    box-shadow: var(--neo-shadow-static);
+    position: relative;
+}
+
+.neo-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, var(--bg-header-gradient-start) 0%, var(--bg-header-gradient-end) 100%);
+    z-index: 1;
+}
+
+.neo-header > * {
+    position: relative;
+    z-index: 2;
+}
+
+.neo-royal-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+}
+
+.neo-brand-mark {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    flex-shrink: 0;
+    display: block;
+}
+
+.neo-header h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--text-header);
+    text-shadow: none;
+    margin: 0;
+    text-transform: none;
+    letter-spacing: -0.025em;
+}
+
 /* Mobile Header Adjustments */
 @media (max-width: 600px) {
     header h1 {
@@ -41,5 +93,11 @@ header h1 {
 
     header {
         padding: 0.5rem 0.25rem;
+    }
+}
+
+@media (max-width: 360px) {
+    .neo-header h1 {
+        font-size: 1.25rem;
     }
 }

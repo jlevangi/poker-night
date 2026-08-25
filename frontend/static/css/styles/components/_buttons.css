@@ -2,9 +2,9 @@
    The live button system is `.neo-btn` (primary blue) + variants
    (neo-btn-green / -gold / -purple / -red / -ghost / -primary), defined in
    _modern-theme.css. This file owns the rules `.neo-btn` does not cover:
-   the neutral base fallback, compact session counters, detail-page action
-   bars, and modal buttons. All colors come from the brand tokens in
-   _theme.css. */
+   the neutral base fallback, compact session counters, and modal buttons
+   (the detail-page back control lives in components/_navigation.css).
+   All colors come from the brand tokens in _theme.css. */
 
 /* Neutral base fallback. Classed buttons (neo-btn, session-counter-btn,
    neo-nav-mobile-btn, modal chips) fully define their own visuals and win
@@ -117,20 +117,6 @@ button:disabled {
     line-height: 1;
     color: inherit;
 }
-
-/* One detail-page action bar and back control across sessions, players, events. */
-.detail-action-bar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 0.75rem;
-    margin-bottom: 1.5rem;
-}
-
-.detail-back-btn {
-    min-width: 6rem;
-}
-
 /* Modal Button Styles */
 .modal-form-group button.small-btn {
     padding: var(--spacing-xs) var(--spacing-sm);

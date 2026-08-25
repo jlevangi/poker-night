@@ -221,11 +221,6 @@ footer {
     border-top: 1px solid var(--border-light);
 }
 
-/* Ensure legacy header/nav text stays white only in dark mode */
-[data-theme="dark"] header h1,
-[data-theme="dark"] header nav a {
-    color: #FFFFFF !important;
-}
 /* White background overrides */
 [data-theme="dark"] [style*="background: white"],
 [data-theme="dark"] [style*="background:white"] {
