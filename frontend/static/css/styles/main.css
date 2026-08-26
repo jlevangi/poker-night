@@ -3,6 +3,10 @@
 /* 1. Theme variables and CSS custom properties */
 @import 'themes/_theme.css';
 
+/* Light .neo-btn system loads before the theme: the theme's responsive */
+/* blocks re-style .neo-btn later so they win on mobile (original order). */
+@import 'themes/_neo-buttons.css';
+
 /* Modern Theme */
 @import 'themes/_modern-theme.css';
 
@@ -38,6 +42,7 @@
 @import 'components/_more-menu.css';
 @import 'components/_calendar.css';
 @import 'components/_charts.css';
+@import 'components/_pie-chart.css';
 @import 'components/_chips.css';
 @import 'components/_tables.css';
 @import 'components/_import.css';

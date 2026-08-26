@@ -103,6 +103,57 @@
     --skeleton-shine: var(--neutral-600);
 }
 
+/* Dark mode button overrides (moved from themes/_modern-theme.css): the
+   [data-theme="dark"] attribute decides the flip by specificity, not load
+   order, so serving them from this last-loaded stylesheet changes nothing.
+   The light variants in themes/_neo-buttons.css and its !important
+   background-image kills keep winning exactly as before. */
+[data-theme="dark"] .neo-btn-purple {
+    background: rgba(99, 102, 241, 0.1);
+    color: #A5B4FC;
+    border-color: rgba(99, 102, 241, 0.2);
+}
+
+[data-theme="dark"] .neo-btn-purple:hover {
+    background: var(--casino-purple);
+    color: #FFFFFF;
+}
+
+[data-theme="dark"] .neo-btn-green {
+    background: rgba(16, 185, 129, 0.1);
+    color: #6EE7B7;
+    border-color: rgba(16, 185, 129, 0.2);
+}
+
+[data-theme="dark"] .neo-btn-green:hover {
+    background: var(--casino-green);
+    color: #FFFFFF;
+}
+
+[data-theme="dark"] .neo-btn-red,
+[data-theme="dark"] button.neo-btn-red {
+    background: rgba(239, 68, 68, 0.1);
+    color: #FCA5A5;
+    border-color: rgba(239, 68, 68, 0.2);
+}
+
+[data-theme="dark"] .neo-btn-red:hover,
+[data-theme="dark"] button.neo-btn-red:hover {
+    background: var(--casino-red);
+    color: #FFFFFF;
+}
+
+[data-theme="dark"] .neo-btn-gold {
+    background: rgba(245, 158, 11, 0.1);
+    color: #FCD34D;
+    border-color: rgba(245, 158, 11, 0.2);
+}
+
+[data-theme="dark"] .neo-btn-gold:hover {
+    background: var(--casino-gold);
+    color: #FFFFFF;
+}
+
 /* Base elements */
 html {
     background-color: var(--bg-body, #F8FAFC);

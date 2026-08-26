@@ -26,3 +26,15 @@
     }
 
 }
+
+/* <=768px (moved from themes/_modern-theme.css): the !important paddings
+   were the real winners on #app-content at <=768px (every competing rule
+   in this file is non-important, so they lose whether before or after).
+   .fade-in's !important padding moved to utils/_transitions.css (same
+   !important-vs-normal relationship, order-independent). */
+@media (max-width: 768px) {
+    #app-content {
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+}

@@ -1,0 +1,203 @@
+/* Light .neo-btn system — the base button plus color/size variants
+   (gold/green/purple/red/ghost/primary, lg/sm, segmented controls).
+   Owned surface moved out of themes/_modern-theme.css. It must load
+   BEFORE _modern-theme.css: the theme's responsive blocks re-style
+   .neo-btn at small viewports and, like in the original single file,
+   they come later in the cascade so they win on mobile. The dark
+   overrides for these variants stay in _modern-theme.css (higher
+   specificity via [data-theme="dark"], order-independent).
+   See components/_buttons.css for the rules .neo-btn does not cover. */
+
+/* ============================================================================ */
+/* BUTTONS */
+/* ============================================================================ */
+
+.neo-btn {
+    background: var(--primary-color);
+    color: #FFFFFF;
+    border: none;
+    border-radius: 10px;
+    padding: 0.75rem 1.25rem;
+    font-weight: 500;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    text-transform: none;
+    letter-spacing: 0;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: var(--neo-shadow-sm);
+    position: relative;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+    -webkit-tap-highlight-color: transparent !important;
+    outline: none !important;
+    touch-action: manipulation;
+}
+
+.neo-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--neo-shadow-md);
+    background: var(--primary-hover);
+    color: #FFFFFF;
+}
+
+.neo-btn:active {
+    transform: translateY(1px) scale(0.98);
+    box-shadow: var(--neo-shadow-sm);
+    filter: brightness(0.93);
+}
+
+.neo-btn:focus {
+    outline: none !important;
+}
+
+.neo-btn:focus-visible {
+    outline: 2px solid var(--focus-ring-color) !important;
+    outline-offset: 2px;
+}
+
+/* Remove gradient overrides — clean flat colors */
+.neo-btn,
+.neo-btn:hover,
+.neo-btn:focus,
+.neo-btn:active {
+    background-image: none !important;
+}
+
+/* Segmented controls (the Rank / Name / Sessions sort on the players page).
+   `.neo-btn-primary` marked the active choice but had no rule at all, and it
+   could never have worked as written: `.neo-btn` is ALREADY
+   background: var(--primary-color), so a "primary" variant is the default by
+   another name.  The distinction has to come from the unselected buttons
+   receding instead -- hence the ghost. */
+.neo-btn-primary,
+.neo-btn[aria-pressed="true"] {
+    background: var(--primary-color);
+    color: #FFFFFF;
+    border: none;
+    box-shadow: var(--neo-shadow-md);
+}
+
+.neo-btn-ghost,
+.neo-btn[aria-pressed="false"] {
+    background: transparent;
+    color: var(--text-secondary);
+    border: 1px solid var(--border-color);
+    box-shadow: none;
+}
+
+.neo-btn-ghost:hover,
+.neo-btn[aria-pressed="false"]:hover {
+    background: var(--bg-card);
+    color: var(--text-primary);
+}
+
+.neo-btn-gold {
+    background: var(--casino-gold);
+    color: #FFFFFF;
+    border: none;
+}
+
+.neo-btn-gold:hover {
+    background: var(--casino-gold-dark);
+    color: #FFFFFF;
+}
+
+.neo-btn-green {
+    background: var(--casino-green);
+    color: #FFFFFF;
+    border: none;
+}
+
+.neo-btn-green:hover {
+    background: var(--casino-green-dark);
+    color: #FFFFFF;
+}
+
+.neo-btn-purple {
+    background: var(--casino-purple);
+    color: #FFFFFF;
+    border: none;
+}
+
+.neo-btn-purple:hover {
+    background: var(--casino-purple-dark);
+    color: #FFFFFF;
+}
+
+.neo-btn-red {
+    background: var(--casino-red);
+    color: #FFFFFF;
+    border: none;
+}
+
+.neo-btn-red:hover {
+    background: var(--casino-red-dark);
+    color: #FFFFFF;
+}
+
+.neo-btn-lg {
+    padding: 1rem 2rem;
+    font-size: 1rem;
+}
+
+.neo-btn-sm {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.75rem;
+}
+
+/* Force no gradients on all neo button variants */
+.neo-btn-red, .neo-btn-green, .neo-btn-purple, .neo-btn-gold,
+.neo-btn-red:hover, .neo-btn-green:hover, .neo-btn-purple:hover, .neo-btn-gold:hover,
+.neo-btn-red:focus, .neo-btn-green:focus, .neo-btn-purple:focus, .neo-btn-gold:focus,
+.neo-btn-red:active, .neo-btn-green:active, .neo-btn-purple:active, .neo-btn-gold:active {
+    background-image: none !important;
+}
+
+button.neo-btn, input.neo-btn, a.neo-btn,
+.neo-btn.primary-btn, .neo-btn.secondary-btn, .neo-btn.btn {
+    background-image: none !important;
+}
+
+/* Green large button */
+.neo-btn.neo-btn-green.neo-btn-lg,
+button.neo-btn.neo-btn-green.neo-btn-lg {
+    background: var(--casino-green) !important;
+    background-image: none !important;
+    border: none !important;
+    color: #FFFFFF !important;
+    box-shadow: var(--neo-shadow-sm) !important;
+}
+
+.neo-btn.neo-btn-green.neo-btn-lg:hover,
+button.neo-btn.neo-btn-green.neo-btn-lg:hover {
+    background: var(--casino-green-dark) !important;
+    background-image: none !important;
+    color: #FFFFFF !important;
+    transform: translateY(-1px) !important;
+    box-shadow: var(--neo-shadow-md) !important;
+}
+
+*[class*="neo-btn"][class*="green"] {
+    background-image: none !important;
+}
+
+div button.neo-btn.neo-btn-green,
+div .neo-btn.neo-btn-green,
+.neo-card button.neo-btn.neo-btn-green,
+.neo-card .neo-btn.neo-btn-green {
+    background: var(--casino-green) !important;
+    background-image: none !important;
+    border: none !important;
+    color: #FFFFFF !important;
+}
+
+div button.neo-btn.neo-btn-green:hover,
+div .neo-btn.neo-btn-green:hover,
+.neo-card button.neo-btn.neo-btn-green:hover,
+.neo-card .neo-btn.neo-btn-green:hover {
+    background: var(--casino-green-dark) !important;
+    background-image: none !important;
+    color: #FFFFFF !important;
+}

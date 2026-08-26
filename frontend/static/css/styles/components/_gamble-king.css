@@ -1,4 +1,4 @@
-/* Gamble King hero card: felt gradient, glow/stripe/crown keyframes, crown, title, lead value, metric row, empty-throne state, the dark-mode glow swap, and compact <=480px padding. (The hero-name link pin lives in dark-mode.css; the metrics gap at <=768px lives in themes/_modern-theme.css.) */
+/* Gamble King hero card: felt gradient, glow/stripe/crown keyframes, crown, title, lead value, metric row, empty-throne state, the dark-mode glow swap, and compact <=480px padding. (The hero-name link pin lives in dark-mode.css; the <=480px metrics gap moved here from themes/_modern-theme.css.) */
 .neo-gamble-king {
     background:
         radial-gradient(130% 120% at 50% -20%, rgba(252, 211, 77, 0.28) 0%, rgba(252, 211, 77, 0) 52%),
@@ -186,5 +186,10 @@ a.neo-gamble-king-name:focus-visible {
     .neo-gamble-king {
         padding: 0.75rem;
         margin-bottom: 0.75rem;
+    }
+
+    /* Gap shrinks at <=480px (moved from themes/_modern-theme.css). */
+    .neo-gamble-king-metrics {
+        gap: 0.5rem 1rem;
     }
 }

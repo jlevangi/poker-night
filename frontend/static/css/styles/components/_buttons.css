@@ -1,10 +1,12 @@
 /* Button Component Styles
    The live button system is `.neo-btn` (primary blue) + variants
-   (neo-btn-green / -gold / -purple / -red / -ghost / -primary), defined in
-   _modern-theme.css. This file owns the rules `.neo-btn` does not cover:
-   the neutral base fallback, compact session counters, and modal buttons
-   (the detail-page back control lives in components/_nav-desktop.css).
-   All colors come from the brand tokens in _theme.css. */
+   (neo-btn-green / -gold / -purple / -red / -ghost / -primary).
+   This file owns all button rules: the neo-btn-* system, the neutral base
+   fallback, compact session counters, modal buttons (the detail-page back
+   control lives in components/_nav-desktop.css), and the button system's own
+   responsive + touch-hover overrides (moved here from
+   themes/_modern-theme.css in this split).
+   Brand color tokens (--btn-*) are owned by themes/_theme.css. */
 
 /* Neutral base fallback. Classed buttons (neo-btn, session-counter-btn,
    neo-nav-mobile-btn, modal chips) fully define their own visuals and win
@@ -189,5 +191,25 @@ button:disabled {
         margin-left: 0;
         margin-top: var(--spacing-sm);
         display: block;
+    }
+}
+/* <=480px: compact touch buttons (moved from themes/_modern-theme.css). */
+@media (max-width: 480px) {
+    .neo-btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.875rem;
+    }
+}
+/* Touch devices — prevent stuck hover states; ensure real touch targets */
+@media (hover: none) {
+    .neo-btn,
+    .neo-btn-lg {
+        min-height: 44px;
+    }
+
+    .neo-btn-sm:not(.seven-two-btn):not(.seven-two-increment-btn):not(.seven-two-decrement-btn):not(.strikes-increment-btn):not(.strikes-decrement-btn) {
+        min-height: 44px;
+        padding-top: 0.75rem;
+        padding-bottom: 0.75rem;
     }
 }

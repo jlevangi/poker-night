@@ -67,7 +67,7 @@
         font-size: 1.5rem;
     }
 }
-/* <=360px: one column (themes/_modern-theme.css loads before this file and carries a !important copy of the same step). */
+/* <=360px: one column. The !important predates this file's split — the theme's equivalent rule loaded earlier and always lost, so the winner is unchanged by the move. */
 @media (max-width: 360px) {
     .neo-stats-grid {
         grid-template-columns: 1fr !important;

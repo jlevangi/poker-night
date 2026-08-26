@@ -63,3 +63,30 @@
         transform: translateY(0);
     }
 }
+/* Modern page fade (list/detail pages apply .fade-in): moved from
+   themes/_modern-theme.css. The only other .fade-in rule (dark-mode.css)
+   sets background-color — a different property — so load order is
+   immaterial. The <=768px !important padding override (also moved here
+   from the theme) must stay last: at <=600px it must still beat
+   _layout.css's non-important #app-content/.fade-in paddings by
+   !important, exactly as in the original cascade. */
+.fade-in {
+    animation: modernFadeIn 0.3s ease-out;
+}
+
+@keyframes modernFadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 768px) {
+    .fade-in {
+        padding: 1rem 0.75rem !important;
+    }
+}
