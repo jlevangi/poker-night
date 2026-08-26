@@ -39,7 +39,7 @@ export function renderChipDistribution(session) {
         <div class="neo-card neo-card-purple" style="margin-bottom: 2rem;">
             <h3 class="section-heading" style="color: var(--casino-purple-dark);">🎰 Chip Distribution</h3>
             <p style="font-weight: 600; color: var(--casino-purple-dark); margin-bottom: 1.5rem;">
-                For a buy-in of <span style="color: var(--casino-green); font-weight: 600;">${formatCurrency(buyInValue)}</span>, 
+                For a buy-in of <span style="color: var(--casino-green); font-weight: 600;">${formatCurrency(buyInValue)}</span>,
                 use the following chip distribution (<span style="color: var(--casino-gold); font-weight: 600;">${totalChips} total chips</span>):
             </p>
             <div style="display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;">`;
@@ -52,15 +52,15 @@ export function renderChipDistribution(session) {
 
             html += `
                 <div style="
-                    width: 80px; 
-                    height: 80px; 
-                    border-radius: 50%; 
-                    background-color: ${backgroundColor}; 
-                    color: ${textColor}; 
+                    width: 80px;
+                    height: 80px;
+                    border-radius: 50%;
+                    background-color: ${backgroundColor};
+                    color: ${textColor};
                     border: 1px solid var(--border-color);
-                    display: flex; 
-                    flex-direction: column; 
-                    align-items: center; 
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
                     justify-content: center;
                     font-weight: 600;
                     text-align: center;
@@ -70,7 +70,7 @@ export function renderChipDistribution(session) {
                 ">
                     <div style="font-size: 1rem; line-height: 1;">${chipDistribution[chipColor]}</div>
                     <div style="font-size: 0.65rem; margin-top: 0.125rem;">${chipColor}</div>
-                    
+
                     <!-- Chip texture lines -->
                     <div style="
                         position: absolute;

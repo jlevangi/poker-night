@@ -43,7 +43,7 @@
         margin-bottom: var(--spacing-md) !important;
         box-shadow: var(--shadow-card) !important;
     }
-    
+
     .ui-card-header {
         padding-bottom: var(--spacing-sm) !important;
         margin-bottom: 0.75rem !important;
