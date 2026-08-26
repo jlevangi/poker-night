@@ -1,9 +1,9 @@
-# Handoff — Frontend Modularization (iteration 9 of ≤16, in progress)
+# Handoff — Frontend Modularization (iteration 10 of ≤17, complete)
 
 Base: `a281c6e12caa`. All work in this worktree is a behavior-preserving
 architecture refactor: no feature changes, no visual redesign.
 
-## Module boundaries created (cumulative, 9 commits)
+## Module boundaries created (cumulative, 10 commits)
 
 ### JavaScript (ES modules, no bundler)
 - `session-detail-page.js` 1942 → 1289. Extracted by responsibility:
@@ -38,12 +38,23 @@ architecture refactor: no feature changes, no visual redesign.
   `_nav-bottom.css` (104: .neo-bottom-nav, .neo-nav-mobile-btn + states,
   768/380/360 steps), `_settings-menu.css` (180: settings slide-out),
   `_more-menu.css` (212: more-menu bottom sheet + ≥769 hide).
+- `_modern-theme.css` (610 → 98, iter 10): light neo-btn button system →
+  `themes/_neo-buttons.css` (loads before the theme in `main.css`, original
+  slot); pie-chart rules → `components/_pie-chart.css`; every responsive
+  block moved to its owning partial (`_layout`, `_transitions`,
+  `_typography`, `_buttons`, `_stat-cards`, `_gamble-king`,
+  `_quick-actions`). The theme now holds only tap-highlight suppression,
+  the dark token flip, dark button-variant flips, and body font.
+  Cascade parse (base vs worktree, all partials inlined in import order):
+  0 order flips, 0 gained duplicates, 16 lost declarations — every one
+  verified dead (exact duplicates still present later in cascade, or
+  zero-consumer `.neo-bounce` / unreferenced `@keyframes fadeIn`).
 - `main.css` import order preserves each original file's slot exactly, so
   cascade order is unchanged. `main.css` + `dark-mode.css` remain the only
   app-owned public stylesheets (plus pre-existing CDN Font Awesome).
 
 ### Import graph
-`main.css` partials: 25 → 31. Every JS page module still imports only from
+`main.css` partials: 25 → 33. Every JS page module still imports only from
 `modules/`; new modules import `api-service`, `ui`, `formatters`, `modal-
 manager`, `event-bus`, `logger` — no cycles, no new globals.
 
@@ -57,18 +68,29 @@ manager`, `event-bus`, `logger` — no cycles, no new globals.
   Rendered cascade is therefore byte-equivalent modulo dead duplicate lines.
 - Nav split verified 1:1 declaration-multiset-identical to `_navigation.css`.
 - Browser (CDP wrapper, worktree on :5091): zero console errors on `/`,
-  `/sessions`, `/session/sid_20260825_1`, `/players`, `/stats`, `/calendar`,
-  `/admin`; stylesheet link structure identical to base; all 11 new assets
-  serve 200; desktop 1280 light/dark + mobile 390 dark captured.
-  NOTE: pixel-diff screenshots of the two servers are NOT comparable — the
-  base checkout on :5092 serves a different database (TimBuckets/28 players)
-  than this worktree (Carol White/3 players), so content differs by design.
-  Computed-style spot check: nav button colors/bg identical between builds
-  in dark mode.
+  `/session/sid_20260825_1`, `/players`, `/stats`, `/calendar`,
+  `/admin`; stylesheet link structure identical to base; all 13 new assets
+  serve 200; desktop 1280 light/dark + mobile 390 computed styles compared
+  base (:5092) vs worktree (:5091): **byte-identical getComputedStyle**
+  for body/nav/bottom-nav/stat-card/card/btn across light, dark, and
+  mobile widths. Nav clicks switch pages correctly (keep-alive); admin
+  login → dashboard → tab switching verified.
+  NOTE: pixel-diff screenshots are NOT comparable — the base checkout
+  serves a different database (28 players) than this worktree (3 players).
+  A full-page direct deep-link (`/` + `#route`) shows dashboard content on
+  BOTH builds identically (pre-existing router race, not a regression —
+  confirmed by running base code against the worktree DB).
+- Pre-existing backend bugs found (NOT regressions; backend files
+  byte-identical to base `a281c6e`):
+  1. `POST /admin/players` 500s: player is created, then the response
+     builder calls `.get()` on the ORM object (`backend/app/routes/admin.py`).
+  2. `GET /api/stats/leaderboards` returns `Infinity` (invalid JSON) when a
+     player has <5 games, breaking the stats page pie chart on small DBs.
+  Left untouched: this is a behavior-preserving frontend refactor.
 
 ## Gates (last run, all pass)
 `python3 -m compileall -q backend` · `python3 scripts/check-css.py`
-(36 stylesheets, 0 problems) · `../.venv/bin/python -m unittest discover
+(38 stylesheets, 0 problems) · `../.venv/bin/python -m unittest discover
 -s tests` (181 OK) · `node --check` on every changed JS file ·
 `git diff --check` clean.
 
@@ -83,13 +105,14 @@ Worktree server: :5091 (0.0.0.0). Base comparison server: :5092.
 | stats-page.js | 1072 | 347 |
 | _cards.css | 737 | deleted (6 partials) |
 | _navigation.css | 576 | deleted (4 partials) |
+| _modern-theme.css | 610 | 98 (buttons/pie/responsive extracted) |
 | admin.js | — | 808 (new) |
 | admin.css | — | 517 (new) |
 
 ## Deliberately left unsplit (with reasons)
-- `_modern-theme.css` (610): one file, one owner (the theme itself). Splitting
-  tokens by namespace would fragment a single conceptual surface; token edits
-  are already token-grep-able.
+- `_modern-theme.css` (98 after iter 10): holds only the dark token flip,
+  dark button-variant flips, tap-highlight, and body font — one conceptual
+  surface, already minimal.
 - `_chips.css` (313), `_tables.css` (231), `_modals.css` (232),
   `_import.css` (225), `_lists.css` (195), `_buttons.css` (193): each already
   owns exactly one surface; under the "one authoritative owner per selector"
@@ -102,9 +125,10 @@ Worktree server: :5091 (0.0.0.0). Base comparison server: :5092.
   apply the same renderer-extraction pattern used for session-detail.
 - Generated images (`Gemini_Generated_Image_*.png`, icons): out of scope.
 
-## Remaining primary targets, in order
+## Remaining targets (all original primary targets complete)
+All six named primary targets are done. Remaining candidates, only if
+iterations remain:
 1. `player-detail-page.js` (541) — candidate split as above.
-2. Admin CRUD is 808 lines in one file; if a future iteration touches it,
-   split by tab (players/sessions/backups/settings) into `admin-*.js`
-   controllers with `admin.js` as the thin loader.
-3. Nothing else exceeds ~300 lines.
+2. `admin.js` (808) — split by tab (players/sessions/backups/settings) into
+   `admin-*.js` controllers with `admin.js` as thin loader.
+3. Nothing else exceeds ~600 lines.
