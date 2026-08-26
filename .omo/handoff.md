@@ -54,7 +54,7 @@ architecture refactor: no feature changes, no visual redesign.
   app-owned public stylesheets (plus pre-existing CDN Font Awesome).
 
 ### Import graph
-`main.css` partials: 25 → 33. Every JS page module still imports only from
+`main.css` partials: 25 → 34. Every JS page module still imports only from
 `modules/`; new modules import `api-service`, `ui`, `formatters`, `modal-
 manager`, `event-bus`, `logger` — no cycles, no new globals.
 
