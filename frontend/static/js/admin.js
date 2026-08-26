@@ -15,6 +15,10 @@ function escapeHtml(str) {
     return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
 
+function inlineString(value) {
+    return escapeHtml(JSON.stringify(String(value)));
+}
+
 function showMessage(message, type) {
     const messagesDiv = document.getElementById('messages');
     const cls = type === 'error' ? 'error' : 'success';
@@ -217,8 +221,8 @@ function displayPlayersCards(players) {
             <div class="card-detail"><span class="detail-label">7-2 Wins</span><span>${escapeHtml(p.seven_two_wins)}</span></div>
             <div class="card-detail"><span class="detail-label">Created</span><span>${created}</span></div>
             <div class="card-actions">
-                <button onclick="openEditPlayerModal('${escapeHtml(p.player_id)}','${escapeHtml(p.name)}',${Number(p.seven_two_wins)})">Edit</button>
-                <button class="danger" onclick="deletePlayer('${escapeHtml(p.player_id)}')">Delete</button>
+                <button onclick="openEditPlayerModal(${inlineString(p.player_id)},${inlineString(p.name)},${Number(p.seven_two_wins)})">Edit</button>
+                <button class="danger" onclick="deletePlayer(${inlineString(p.player_id)})">Delete</button>
             </div>
         </div>`;
     }).join('');
@@ -238,8 +242,8 @@ function displaySessionsCards(sessions) {
             <div class="card-id">${escapeHtml(s.session_id)}</div>
             <div class="card-detail"><span class="detail-label">Buy-in</span><span>$${Number(s.default_buy_in_value).toFixed(2)}</span></div>
             <div class="card-actions">
-                <button onclick="openEditSessionModal('${escapeHtml(s.session_id)}','${escapeHtml(s.date)}',${Number(s.default_buy_in_value)},${!!s.is_active})">Edit</button>
-                <button class="danger" onclick="deleteSession('${escapeHtml(s.session_id)}')">Delete</button>
+                <button onclick="openEditSessionModal(${inlineString(s.session_id)},${inlineString(s.date)},${Number(s.default_buy_in_value)},${!!s.is_active})">Edit</button>
+                <button class="danger" onclick="deleteSession(${inlineString(s.session_id)})">Delete</button>
             </div>
         </div>`;
     }).join('');
@@ -259,8 +263,8 @@ function renderEntryCard(e) {
         <div class="card-detail"><span class="detail-label">7-2 Wins</span><span>${escapeHtml(e.session_seven_two_wins)}</span></div>
         <div class="card-detail"><span class="detail-label">Strikes</span><span>${escapeHtml(e.session_strikes || 0)}</span></div>
         <div class="card-actions">
-            <button onclick="openEditEntryModal('${escapeHtml(e.entry_id)}',${Number(e.buy_in_count)},${Number(e.total_buy_in_amount)},${Number(e.payout)},${Number(e.session_seven_two_wins)},${Number(e.session_strikes||0)})">Edit</button>
-            <button class="danger" onclick="deleteEntry('${escapeHtml(e.entry_id)}')">Delete</button>
+            <button onclick="openEditEntryModal(${inlineString(e.entry_id)},${Number(e.buy_in_count)},${Number(e.total_buy_in_amount)},${Number(e.payout)},${Number(e.session_seven_two_wins)},${Number(e.session_strikes||0)})">Edit</button>
+            <button class="danger" onclick="deleteEntry(${inlineString(e.entry_id)})">Delete</button>
         </div>
     </div>`;
 }
@@ -343,15 +347,15 @@ function displayEventsCards(events) {
         let actions = '';
         if (!isCancelled && !hasSession) {
             actions = `
-                <button onclick="openEditEventModal('${escapeHtml(evt.event_id)}')">Edit</button>
-                <button class="danger" style="background: var(--gold); color: var(--dark);" onclick="cancelEvent('${escapeHtml(evt.event_id)}')">Cancel</button>
-                <button class="danger" onclick="deleteEvent('${escapeHtml(evt.event_id)}')">Delete</button>`;
+                <button onclick="openEditEventModal(${inlineString(evt.event_id)})">Edit</button>
+                <button class="danger" style="background: var(--gold); color: var(--dark);" onclick="cancelEvent(${inlineString(evt.event_id)})">Cancel</button>
+                <button class="danger" onclick="deleteEvent(${inlineString(evt.event_id)})">Delete</button>`;
         } else if (isCancelled) {
             actions = `
-                <button onclick="uncancelEvent('${escapeHtml(evt.event_id)}')">Restore</button>
-                <button class="danger" onclick="deleteEvent('${escapeHtml(evt.event_id)}')">Delete</button>`;
+                <button onclick="uncancelEvent(${inlineString(evt.event_id)})">Restore</button>
+                <button class="danger" onclick="deleteEvent(${inlineString(evt.event_id)})">Delete</button>`;
         } else {
-            actions = `<button class="danger" onclick="deleteEvent('${escapeHtml(evt.event_id)}')">Delete</button>`;
+            actions = `<button class="danger" onclick="deleteEvent(${inlineString(evt.event_id)})">Delete</button>`;
         }
 
         return `<div class="data-card" ${isCancelled ? 'style="opacity:0.6"' : ''}>

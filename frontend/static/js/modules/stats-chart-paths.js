@@ -2,6 +2,7 @@
 // No DOM access, no page state: inputs are data plus scale functions,
 // so these can be tested with node directly.
 import { formatCurrency, formatPercent } from './formatters.js';
+import { escapeHtml } from './ui.js';
 
 // Build the SVG path for the line chart
 export function buildLinePath(data, xScale, yScale, marginTop) {
@@ -57,7 +58,7 @@ export function createPieSlice({ cx, cy, radius, innerRadius, startAngle, endAng
                       stroke-width="3"
                       filter="url(#pieSliceShadow)"
                       class="neo-pie-slice"
-                      data-player-name="${name}"
+                      data-player-name="${escapeHtml(name)}"
                       data-player-value="${playerValue}"
                       data-player-percentage="${playerPercentage}" />`;
 }

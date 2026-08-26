@@ -183,14 +183,17 @@ export function renderPlayerCard(player, sessionData, isActive) {
     const profit = cashOut - buyIn;
     const isCashedOut = !!player.isCashedOut;
     const profitColor = isCashedOut ? (profit >= 0 ? 'neo-card-green' : 'neo-card-primary') : '';
+    const playerId = escapeHtml(player.id);
+    const playerHref = encodeURIComponent(player.id);
+    const playerName = escapeHtml(player.name);
 
     return `
-        <div class="neo-card ${profitColor} clickable-player-details" data-player-id="${player.id}" style="cursor: pointer; padding: 1rem;${isActive && !isCashedOut ? ' border-left: 3px solid var(--casino-gold); opacity: 0.85;' : ''}">
+        <div class="neo-card ${profitColor} clickable-player-details" data-player-id="${playerId}" style="cursor: pointer; padding: 1rem;${isActive && !isCashedOut ? ' border-left: 3px solid var(--casino-gold); opacity: 0.85;' : ''}">
             <!-- Name + Profit header row -->
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; row-gap: 0.25rem; margin-bottom: 0.75rem;">
                 <div style="display: flex; align-items: center; gap: 0.5rem;">
                     <h4 style="font-size: 1.125rem; font-weight: 600; margin: 0;">
-                        <a href="#player/${player.id}" style="color: inherit; text-decoration: none;">${player.name}</a>
+                        <a href="#player/${playerHref}" style="color: inherit; text-decoration: none;">${playerName}</a>
                         ${player.id === sessionData.wisdom_player_id ? ' 🗣️' : ''}
                     </h4>
                     ${isActive ? `
@@ -216,11 +219,11 @@ export function renderPlayerCard(player, sessionData, isActive) {
                     <div class="stat-label stat-label--sm">7-2 Wins</div>
                     <div style="display: flex; align-items: center; justify-content: center; gap: 0.25rem;">
                         ${isActive ? `
-                            <button class="session-counter-btn session-counter-btn--gold session-counter-btn--decrement seven-two-decrement-btn" data-player-id="${player.id}" aria-label="Decrease 7-2 wins">−</button>
+                            <button class="session-counter-btn session-counter-btn--gold session-counter-btn--decrement seven-two-decrement-btn" data-player-id="${playerId}" aria-label="Decrease 7-2 wins">−</button>
                         ` : ''}
                         <span class="player-card-value" style="color: var(--casino-gold); min-width: 1.25rem;">${player.sevenTwoWins || 0}</span>
                         ${isActive ? `
-                            <button class="session-counter-btn session-counter-btn--gold seven-two-increment-btn" data-player-id="${player.id}" aria-label="Increase 7-2 wins">+</button>
+                            <button class="session-counter-btn session-counter-btn--gold seven-two-increment-btn" data-player-id="${playerId}" aria-label="Increase 7-2 wins">+</button>
                         ` : ''}
                     </div>
                 </div>
@@ -228,11 +231,11 @@ export function renderPlayerCard(player, sessionData, isActive) {
                     <div class="stat-label stat-label--sm">Strikes</div>
                     <div style="display: flex; align-items: center; justify-content: center; gap: 0.25rem;">
                         ${isActive ? `
-                            <button class="session-counter-btn session-counter-btn--red session-counter-btn--decrement strikes-decrement-btn" data-player-id="${player.id}" aria-label="Decrease strikes">−</button>
+                            <button class="session-counter-btn session-counter-btn--red session-counter-btn--decrement strikes-decrement-btn" data-player-id="${playerId}" aria-label="Decrease strikes">−</button>
                         ` : ''}
                         <span class="player-card-value" style="color: var(--casino-red); min-width: 1.25rem;">${player.strikes || 0}</span>
                         ${isActive ? `
-                            <button class="session-counter-btn session-counter-btn--red strikes-increment-btn" data-player-id="${player.id}" aria-label="Increase strikes">+</button>
+                            <button class="session-counter-btn session-counter-btn--red strikes-increment-btn" data-player-id="${playerId}" aria-label="Increase strikes">+</button>
                         ` : ''}
                     </div>
                 </div>
@@ -242,10 +245,10 @@ export function renderPlayerCard(player, sessionData, isActive) {
             ${isActive ? `
                 <div style="margin-top: 0.75rem;">
                     ${player.isCashedOut ?
-                        `<button class="neo-btn neo-btn-green buy-in-player-btn" data-player-id="${player.id}" data-is-cashed-out="${player.isCashedOut}" style="width: 100%; padding: 0.75rem 1rem;">💰 Buy In</button>` :
+                        `<button class="neo-btn neo-btn-green buy-in-player-btn" data-player-id="${playerId}" data-is-cashed-out="${player.isCashedOut}" style="width: 100%; padding: 0.75rem 1rem;">💰 Buy In</button>` :
                         `<div style="display: flex; gap: 0.5rem;">
-                            <button class="neo-btn neo-btn-green rebuy-player-btn" data-player-id="${player.id}" style="flex: 1; padding: 0.75rem 1rem;">🔄 Re-buy</button>
-                            <button class="neo-btn neo-btn-gold cash-out-player-btn" data-player-id="${player.id}" data-is-cashed-out="${player.isCashedOut}" style="flex: 1; padding: 0.75rem 1rem;">💸 Cash Out</button>
+                            <button class="neo-btn neo-btn-green rebuy-player-btn" data-player-id="${playerId}" style="flex: 1; padding: 0.75rem 1rem;">🔄 Re-buy</button>
+                            <button class="neo-btn neo-btn-gold cash-out-player-btn" data-player-id="${playerId}" data-is-cashed-out="${player.isCashedOut}" style="flex: 1; padding: 0.75rem 1rem;">💸 Cash Out</button>
                         </div>`
                     }
                 </div>

@@ -10,7 +10,7 @@
 // internals.
 import { formatCurrency, formatCurrencyWhole, formatPercent } from './formatters.js';
 import { buildLinePath, createPieSlice } from './stats-chart-paths.js';
-import { renderEmptyState } from './ui.js';
+import { escapeHtml, renderEmptyState } from './ui.js';
 
 export default class StatsChartsController {
     constructor(context) {
@@ -389,7 +389,7 @@ export default class StatsChartsController {
             <div class="neo-pie-legend-item" style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; border: 1px solid var(--border-color); background: var(--bg-card);">
                 <div class="neo-pie-legend-swatch" style="background: ${slice.color}; flex-shrink: 0;"></div>
                 <div style="flex: 1; min-width: 0;">
-                    <div style="font-weight: 700; font-size: 0.75rem; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${slice.name}</div>
+                    <div style="font-weight: 700; font-size: 0.75rem; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${escapeHtml(slice.name)}</div>
                     <div class="neo-pie-legend-meta">${formatCurrency(slice.value)} • ${formatPercent(slice.percentage)}</div>
                 </div>
             </div>
@@ -412,7 +412,7 @@ export default class StatsChartsController {
             <div id="everyone-else-expanded" style="display: none; margin-top: 0.5rem; padding: 0.75rem; border: 1px solid var(--border-color); background: var(--bg-content); border-radius: var(--radius-lg); grid-column: 1 / -1;">
                 ${otherPlayers.map((player, idx) => `
                     <div class="neo-pie-expanded-row" style="display: flex; justify-content: space-between; gap: 1rem; padding: 0.5rem; border-bottom: ${idx < otherPlayers.length - 1 ? '1px solid var(--border-light)' : 'none'};">
-                        <span style="font-weight: 700; font-size: 0.75rem; color: var(--text-primary);">${player.name}</span>
+                        <span style="font-weight: 700; font-size: 0.75rem; color: var(--text-primary);">${escapeHtml(player.name)}</span>
                         <span class="neo-pie-legend-meta">${formatCurrency(player.total_buy_ins_value)} • ${formatPercent((player.total_buy_ins_value / totalGambled) * 100)}</span>
                     </div>
                 `).join('')}
