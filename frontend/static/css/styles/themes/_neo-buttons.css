@@ -4,7 +4,7 @@
    BEFORE _modern-theme.css: the theme's responsive blocks re-style
    .neo-btn at small viewports and, like in the original single file,
    they come later in the cascade so they win on mobile. The dark
-   overrides for these variants stay in _modern-theme.css (higher
+   overrides for these variants live in css/dark-mode.css (higher
    specificity via [data-theme="dark"], order-independent).
    See components/_buttons.css for the rules .neo-btn does not cover. */
 

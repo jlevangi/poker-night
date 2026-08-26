@@ -3,8 +3,8 @@
 /* 1. Theme variables and CSS custom properties */
 @import 'themes/_theme.css';
 
-/* Light .neo-btn system loads before the theme: the theme's responsive */
-/* blocks re-style .neo-btn later so they win on mobile (original order). */
+/* Light .neo-btn system loads before the theme; the dark variants live */
+/* in dark-mode.css (see themes/_neo-buttons.css for why the order matters). */
 @import 'themes/_neo-buttons.css';
 
 /* Modern Theme */
