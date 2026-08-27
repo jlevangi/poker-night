@@ -6,8 +6,8 @@
        (3*150+3*16=498 <= col) but not a 4th (648), leaving a stretched
        orphan row. 140px pulls the 4-across threshold down to 608. */
     grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: 1rem;
-    margin-bottom: 1.25rem;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-neo);
 }
 
 .neo-quick-action {
@@ -15,15 +15,15 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 0.5rem;
+    gap: var(--spacing-sm);
     min-height: 96px;
-    padding: 1rem;
+    padding: var(--spacing-md);
     /* Accent-tinted tile at rest (light mode reads as chips on felt); the
        dark block below resets it to a neutral card so dark stays quiet. */
     background: var(--qa-accent-light, var(--bg-card));
     border: 1px solid var(--border-light);
     box-shadow: var(--neo-shadow-sm);
-    border-radius: 14px;
+    border-radius: var(--radius-lg);
     text-align: center;
     text-decoration: none;
     font-size: 0.875rem;
@@ -68,7 +68,7 @@
     width: 48px;
     height: 48px;
     flex-shrink: 0;
-    border-radius: 50%;
+    border-radius: var(--radius-circle);
     margin: 0;
     background: var(--qa-accent-light, var(--bg-tertiary));
     color: var(--qa-accent-dark, var(--text-primary));
