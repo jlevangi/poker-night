@@ -74,7 +74,7 @@ textarea {
 }
 
 .stat-label--sm {
-    margin-bottom: 0.125rem;
+    margin-bottom: var(--spacing-xs);
     font-size: 0.7rem;
 }
 

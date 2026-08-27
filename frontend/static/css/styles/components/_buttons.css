@@ -83,7 +83,7 @@ button:disabled {
     box-sizing: border-box;
     width: 32px;
     height: 32px;
-    margin: 0 0.125rem;
+    margin: 0 var(--spacing-xs);
     padding: 0;
 }
 

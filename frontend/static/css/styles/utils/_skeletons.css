@@ -64,7 +64,7 @@
 
 .skeleton-row {
     height: 48px;
-    margin-bottom: 0.125rem;
+    margin-bottom: var(--spacing-xs);
     border-radius: 0;
 }
 

@@ -16,7 +16,7 @@
     font-size: 0.65rem;
     font-weight: 600;
     color: var(--text-muted);
-    margin-top: 0.125rem;
+    margin-top: var(--spacing-xs);
     text-transform: uppercase;
     letter-spacing: 0.03em;
 }
