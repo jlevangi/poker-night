@@ -59,7 +59,7 @@ header h1 {
 .neo-brand-mark {
     width: 32px;
     height: 32px;
-    border-radius: 8px;
+    border-radius: var(--radius-md);
     flex-shrink: 0;
     display: block;
 }

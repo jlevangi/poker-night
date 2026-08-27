@@ -9,7 +9,7 @@ textarea {
     padding: var(--spacing-base);
     margin-bottom: var(--spacing-sm);
     border: 1px solid var(--border-color);
-    border-radius: 10px;
+    border-radius: var(--radius-md);
     font-size: 1rem;
     box-sizing: border-box;
     transition: all 0.2s ease;
@@ -24,7 +24,7 @@ textarea {
 .neo-select {
     background: var(--bg-card);
     border: 1px solid var(--border-light);
-    border-radius: 10px;
+    border-radius: var(--radius-md);
     padding: var(--spacing-base) var(--spacing-md);
     font-size: 1rem;
     font-weight: 400;

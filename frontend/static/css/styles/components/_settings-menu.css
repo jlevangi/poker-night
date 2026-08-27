@@ -97,7 +97,7 @@
     font-weight: 400;
     cursor: pointer;
     transition: all 0.2s ease;
-    border-radius: 8px;
+    border-radius: var(--radius-md);
 }
 
 .neo-settings-close:hover {
@@ -114,7 +114,7 @@
     padding: var(--spacing-base) var(--spacing-md);
     background: var(--bg-card);
     border: 1px solid var(--border-light);
-    border-radius: 12px;
+    border-radius: var(--radius-lg);
     box-shadow: none;
     margin-bottom: 0;
 }
@@ -134,7 +134,7 @@
     background: var(--primary-color);
     color: var(--text-white);
     border: none;
-    border-radius: 8px;
+    border-radius: var(--radius-md);
     box-shadow: none;
     padding: 0.5rem 1rem;
     font-weight: 500;

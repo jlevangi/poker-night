@@ -38,7 +38,7 @@
     right: 0;
     background: var(--bg-content);
     border-top: 1px solid var(--border-light);
-    border-radius: 20px 20px 0 0;
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
     box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.25);
     z-index: calc(var(--z-nav) + 2);
     transform: translateY(100%);
@@ -79,7 +79,7 @@
     font-weight: 400;
     cursor: pointer;
     transition: all 0.2s ease;
-    border-radius: 8px;
+    border-radius: var(--radius-md);
 }
 
 .neo-more-close:hover {
@@ -113,7 +113,7 @@ button.neo-more-item {
     font-weight: 500;
     text-transform: none;
     letter-spacing: 0;
-    border-radius: 12px;
+    border-radius: var(--radius-lg);
     width: 100%;
     text-align: left;
     -webkit-tap-highlight-color: transparent !important;
@@ -169,7 +169,7 @@ button.neo-more-item {
 }
 @media (max-width: 480px) {
     .neo-more-menu {
-        border-radius: 16px 16px 0 0;
+        border-radius: var(--radius-card) var(--radius-card) 0 0;
     }
 }
 

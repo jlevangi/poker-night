@@ -137,7 +137,7 @@ button.neo-stat-card:active {
     padding: 1rem;
     margin-bottom: 0.5rem;
     transition: all 0.2s ease;
-    border-radius: 12px;
+    border-radius: var(--radius-card);
 }
 
 /* Touch devices — prevent stuck hover states; ensure real touch targets */

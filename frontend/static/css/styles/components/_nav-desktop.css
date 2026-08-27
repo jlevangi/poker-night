@@ -54,7 +54,7 @@ nav {
     text-decoration: none;
     cursor: pointer;
     transition: all 0.2s ease;
-    border-radius: 8px;
+    border-radius: var(--radius-md);
     -webkit-tap-highlight-color: transparent !important;
     outline: none;
     touch-action: manipulation;
