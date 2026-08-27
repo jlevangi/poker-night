@@ -42,7 +42,7 @@
    caption strip, not a second row of hero tiles. */
 .neo-stat-card--metric {
     text-align: left;
-    padding: 0.75rem 1rem;
+    padding: var(--spacing-base) var(--spacing-md);
     border-radius: 12px;
 }
 
@@ -50,7 +50,7 @@
 @media (max-width: 768px) {
     .neo-stats-grid {
         grid-template-columns: repeat(2, 1fr);
-        gap: 0.75rem;
+        gap: var(--spacing-base);
     }
 
     .neo-stat-value {
