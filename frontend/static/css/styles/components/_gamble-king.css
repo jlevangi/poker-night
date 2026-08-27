@@ -62,7 +62,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.25rem;
+    gap: var(--spacing-xs);
 }
 
 .neo-gamble-king-crown {
@@ -134,8 +134,8 @@ a.neo-gamble-king-name:focus-visible {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
-    gap: 0.5rem 2rem;
-    padding-top: 1rem;
+    gap: var(--spacing-sm) var(--spacing-xl);
+    padding-top: var(--spacing-md);
     border-top: 1px solid rgba(252, 211, 77, 0.22);
 }
 
@@ -163,7 +163,7 @@ a.neo-gamble-king-name:focus-visible {
 }
 
 .neo-gamble-king-empty {
-    margin-top: 0.5rem;
+    margin-top: var(--spacing-sm);
     font-size: 0.9375rem;
     color: rgba(248, 250, 252, 0.85);
     position: relative;
@@ -190,6 +190,6 @@ a.neo-gamble-king-name:focus-visible {
 
     /* Gap shrinks at <=480px (moved from themes/_modern-theme.css). */
     .neo-gamble-king-metrics {
-        gap: 0.5rem 1rem;
+        gap: var(--spacing-sm) var(--spacing-md);
     }
 }

@@ -92,7 +92,7 @@ header h1 {
     }
 
     header {
-        padding: 0.5rem 0.25rem;
+        padding: var(--spacing-sm) var(--spacing-xs);
     }
 }
 

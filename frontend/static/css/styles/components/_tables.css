@@ -64,7 +64,7 @@
 
 .neo-table--dense th {
     background: transparent;
-    padding: 0 0.5rem 0.5rem;
+    padding: 0 var(--spacing-sm) var(--spacing-sm);
     font-size: 0.6875rem;
     font-weight: 700;
     text-transform: uppercase;
@@ -73,7 +73,7 @@
 }
 
 .neo-table--dense td {
-    padding: 0.5rem;
+    padding: var(--spacing-sm);
     font-size: 1rem;
     text-align: right;
     white-space: nowrap;
@@ -98,9 +98,9 @@
     display: flex;
     align-items: baseline;
     justify-content: space-between;
-    gap: 0.5rem;
+    gap: var(--spacing-sm);
     flex-wrap: wrap;
-    margin-bottom: 0.5rem;
+    margin-bottom: var(--spacing-sm);
 }
 
 .neo-standings-head .section-title {
@@ -213,7 +213,7 @@
 @media (max-width: 480px) {
     .neo-table th,
     .neo-table td {
-        padding: 0.5rem 0.5rem;
+        padding: var(--spacing-sm) var(--spacing-sm);
         font-size: 0.875rem;
     }
 

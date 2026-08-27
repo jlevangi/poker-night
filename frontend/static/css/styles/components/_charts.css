@@ -31,7 +31,7 @@
     color: var(--text-primary);
     border-bottom: none;
     padding-bottom: 0;
-    margin: 0 0 0.5rem 0;
+    margin: 0 0 var(--spacing-sm) 0;
 }
 
 .neo-chart-subtitle {
@@ -151,7 +151,7 @@
     box-shadow: var(--neo-shadow-md);
     z-index: var(--z-modal, 2000);
     transform: translate(-50%, -100%);
-    margin-top: -0.5rem;
+    margin-top: calc(-1 * var(--spacing-sm));
     pointer-events: none;
     animation: neo-tooltip-appear 0.2s ease-out;
 }
@@ -242,7 +242,7 @@
     font-weight: var(--font-weight-bold);
     text-transform: uppercase;
     letter-spacing: 0.02em;
-    margin-bottom: 0.5rem;
+    margin-bottom: var(--spacing-sm);
     color: var(--text-secondary);
 }
 
@@ -313,7 +313,7 @@
 
     .stats-page .neo-stats-grid {
         grid-template-columns: repeat(2, 1fr) !important;
-        gap: 1rem !important;
+        gap: var(--spacing-md) !important;
     }
 
     .neo-session-info-grid {
@@ -352,7 +352,7 @@
     transition: all var(--transition-neo);
     min-height: 130px;
     justify-content: center;
-    gap: 0.5rem;
+    gap: var(--spacing-sm);
     position: relative;
 }
 
@@ -366,14 +366,14 @@
     font-weight: var(--font-weight-bold);
     text-transform: uppercase;
     letter-spacing: 0.02em;
-    margin-bottom: 0.25rem;
+    margin-bottom: var(--spacing-xs);
     color: inherit;
 }
 
 .neo-leaderboard-stat-value {
     font-size: 2rem;
     font-weight: var(--font-weight-black);
-    margin-bottom: 0.25rem;
+    margin-bottom: var(--spacing-xs);
     line-height: 1.2;
     color: inherit;
     overflow-wrap: anywhere;
@@ -388,7 +388,7 @@
 
 .neo-leaderboard-stat-explanation {
     font-size: 0.75rem;
-    margin-top: 0.25rem;
+    margin-top: var(--spacing-xs);
     line-height: 1.2;
     font-style: italic;
     opacity: 0.8;

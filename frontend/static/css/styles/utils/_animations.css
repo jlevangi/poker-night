@@ -13,7 +13,7 @@
 
 /* Update Notification Animations */
 .update-content {
-    padding: 1rem 1.5rem 1rem 1.5rem;
+    padding: var(--spacing-md) var(--spacing-lg) var(--spacing-md) var(--spacing-lg);
     text-align: center;
 }
 

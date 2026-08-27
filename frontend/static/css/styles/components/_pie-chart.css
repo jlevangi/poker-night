@@ -11,7 +11,7 @@
 /* ============================================================================ */
 
 .neo-pie-chart-container {
-    padding: 1.25rem 1rem;
+    padding: var(--spacing-neo) var(--spacing-md);
 }
 
 @keyframes fadeIn {
@@ -43,7 +43,7 @@
     display: flex;
     align-items: flex-start;
     justify-content: center;
-    gap: 1.5rem;
+    gap: var(--spacing-lg);
     flex-wrap: wrap;
 }
 
@@ -68,7 +68,7 @@
     align-items: center;
     justify-content: center;
     text-align: center;
-    padding: 1rem;
+    padding: var(--spacing-md);
 }
 
 .neo-pie-chart-center-label {
@@ -77,7 +77,7 @@
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--text-muted);
-    margin-bottom: 0.25rem;
+    margin-bottom: var(--spacing-xs);
 }
 
 .neo-pie-chart-center-value {
@@ -91,14 +91,14 @@
     font-size: 0.75rem;
     font-weight: 600;
     color: var(--text-secondary);
-    margin-top: 0.25rem;
+    margin-top: var(--spacing-xs);
 }
 
 .neo-pie-legend-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
     gap: var(--spacing-base);
-    margin-bottom: 0.5rem;
+    margin-bottom: var(--spacing-sm);
 }
 
 .neo-pie-legend-item {

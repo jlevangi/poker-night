@@ -22,10 +22,10 @@
     align-items: center;
     width: 75vw;
     max-width: 400px;
-    padding: 0.5rem;
-    gap: 0.25rem;
+    padding: var(--spacing-sm);
+    gap: var(--spacing-xs);
     border-radius: var(--radius-xl);
-    padding-bottom: max(0.5rem, env(safe-area-inset-bottom, 0));
+    padding-bottom: max(var(--spacing-sm), env(safe-area-inset-bottom, 0));
 }
 
 .neo-nav-mobile-btn {
@@ -36,7 +36,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0.5rem 0.5rem;
+    padding: var(--spacing-sm) var(--spacing-sm);
     cursor: pointer;
     transition: all 0.2s ease;
     height: 100%;

@@ -54,7 +54,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem 1.25rem;
+    padding: var(--spacing-md) var(--spacing-neo);
     border-bottom: 1px solid var(--border-light);
 }
 
@@ -90,10 +90,10 @@
 }
 
 .neo-more-body {
-    padding: 0.5rem;
+    padding: var(--spacing-sm);
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
+    gap: var(--spacing-xs);
 }
 
 .neo-more-item,
@@ -101,7 +101,7 @@ button.neo-more-item {
     display: flex;
     align-items: center;
     gap: var(--spacing-base);
-    padding: 1rem;
+    padding: var(--spacing-md);
     background: transparent;
     border: none;
     box-shadow: none;
@@ -149,7 +149,7 @@ button.neo-more-item {
 .neo-more-icon {
     font-size: 1.25rem;
     flex-shrink: 0;
-    width: 1.5rem;
+    width: var(--spacing-lg);
     text-align: center;
 }
 
@@ -165,7 +165,7 @@ button.neo-more-item {
 .neo-more-divider {
     height: 1px;
     background: var(--border-light);
-    margin: 0.25rem 0.5rem;
+    margin: var(--spacing-xs) var(--spacing-sm);
 }
 @media (max-width: 480px) {
     .neo-more-menu {
@@ -175,7 +175,7 @@ button.neo-more-item {
 
 @media (max-width: 480px) {
     .neo-more-body {
-        gap: 0.25rem;
+        gap: var(--spacing-xs);
     }
 }
 

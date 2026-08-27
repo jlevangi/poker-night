@@ -58,7 +58,7 @@ h2 {
 h3 {
     color: var(--text-primary);
     margin-top: var(--spacing-lg);
-    margin-bottom: 0.75rem;
+    margin-bottom: var(--spacing-base);
     font-size: 1.125rem;
 }
 

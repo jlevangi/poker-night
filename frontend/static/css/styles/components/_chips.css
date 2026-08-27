@@ -9,7 +9,7 @@
 .chip-neutral {
     display: inline-flex;
     align-items: center;
-    padding: 0.25rem 0.5rem;
+    padding: var(--spacing-xs) var(--spacing-sm);
     border-radius: var(--radius-pill);
     font-size: 0.75rem;
     font-weight: 700;
@@ -25,7 +25,7 @@
     gap: var(--spacing-xs);
     background: var(--casino-green);
     color: var(--text-white);
-    padding: 0.25rem 0.5rem;
+    padding: var(--spacing-xs) var(--spacing-sm);
     border-radius: var(--radius-pill);
     font-weight: 600;
     font-size: 0.75rem;
@@ -130,7 +130,7 @@
    dark, so no theme override is needed. */
 .neo-rsvp-badges {
     display: flex;
-    gap: 0.5rem;
+    gap: var(--spacing-sm);
     flex-wrap: wrap;
 }
 

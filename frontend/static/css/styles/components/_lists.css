@@ -16,7 +16,7 @@
 .list-card-text {
     font-weight: 600;
     color: inherit;
-    margin-bottom: 0.25rem;
+    margin-bottom: var(--spacing-xs);
     font-size: 1.125rem;
 }
 
@@ -31,7 +31,7 @@
    total.  Mirrors the dashboard hero's left-meta / right-headline language
    so the sessions list scans the same way the dashboard does. */
 .session-card {
-    gap: var(--spacing-md, 1rem);
+    gap: var(--spacing-md);
 }
 
 .session-card__meta {
@@ -45,7 +45,7 @@
 .session-card__when {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: var(--spacing-sm);
     flex-wrap: wrap;
 }
 
@@ -64,7 +64,7 @@
     letter-spacing: 0.04em;
     text-transform: uppercase;
     line-height: 1.5;
-    padding: 0.25rem 0.5rem;
+    padding: var(--spacing-xs) var(--spacing-sm);
     border-radius: var(--radius-pill);
     white-space: nowrap;
 }
