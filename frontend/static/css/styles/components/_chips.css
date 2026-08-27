@@ -137,7 +137,7 @@
 .neo-rsvp-badge {
     display: inline-flex;
     align-items: center;
-    padding: 0.25rem 0.75rem;
+    padding: var(--spacing-xs) var(--spacing-base);
     border-radius: var(--radius-pill);
     border: 1px solid transparent;
 }
