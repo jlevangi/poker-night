@@ -81,8 +81,8 @@ button:disabled {
 .strikes-increment-btn,
 .strikes-decrement-btn {
     box-sizing: border-box;
-    width: 32px;
-    height: 32px;
+    width: var(--spacing-xl);
+    height: var(--spacing-xl);
     margin: 0 var(--spacing-xs);
     padding: 0;
 }

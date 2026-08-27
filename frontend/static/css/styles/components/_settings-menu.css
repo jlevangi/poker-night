@@ -88,8 +88,8 @@
     background: transparent;
     color: var(--text-muted);
     border: none;
-    width: 36px;
-    height: 36px;
+    width: var(--spacing-xl);
+    height: var(--spacing-xl);
     display: flex;
     align-items: center;
     justify-content: center;
