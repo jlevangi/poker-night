@@ -97,7 +97,7 @@
 .neo-pie-legend-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-    gap: 0.75rem;
+    gap: var(--spacing-base);
     margin-bottom: 0.5rem;
 }
 
@@ -164,6 +164,6 @@
     .neo-pie-chart-center {
         width: 112px;
         height: 112px;
-        padding: 0.75rem;
+        padding: var(--spacing-base);
     }
 }

@@ -84,7 +84,7 @@
 }
 
 .neo-gamble-king-name {
-    margin-top: 0.75rem;
+    margin-top: var(--spacing-base);
     font-size: clamp(2.25rem, 6.5vw, 3.5rem);
     font-weight: 700;
     line-height: 1.05;
@@ -184,8 +184,8 @@ a.neo-gamble-king-name:focus-visible {
 /* <=480px: compact the hero. */
 @media (max-width: 480px) {
     .neo-gamble-king {
-        padding: 0.75rem;
-        margin-bottom: 0.75rem;
+        padding: var(--spacing-base);
+        margin-bottom: var(--spacing-base);
     }
 
     /* Gap shrinks at <=480px (moved from themes/_modern-theme.css). */
