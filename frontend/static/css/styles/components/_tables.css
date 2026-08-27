@@ -128,8 +128,8 @@
 }
 
 .neo-standings-table thead th {
-    padding-top: 0.375rem;
-    padding-bottom: 0.375rem;
+    padding-top: var(--spacing-xs);
+    padding-bottom: var(--spacing-xs);
     font-size: 0.65rem;
     font-weight: 700;
     text-transform: uppercase;
@@ -137,8 +137,8 @@
 }
 
 .neo-standings-table tbody td {
-    padding-top: 0.6rem;
-    padding-bottom: 0.6rem;
+    padding-top: var(--spacing-sm);
+    padding-bottom: var(--spacing-sm);
 }
 
 .neo-standings-rank {
@@ -159,7 +159,7 @@
     font-size: 0.9375rem;
     display: inline-flex;
     align-items: center;
-    gap: 0.4rem;
+    gap: var(--spacing-sm);
     overflow-wrap: anywhere;
 }
 

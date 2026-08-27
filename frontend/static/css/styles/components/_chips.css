@@ -22,7 +22,7 @@
 .neo-live-badge {
     display: inline-flex;
     align-items: center;
-    gap: 0.375rem;
+    gap: var(--spacing-xs);
     background: var(--casino-green);
     color: var(--text-white);
     padding: 0.25rem 0.5rem;
@@ -37,11 +37,11 @@
 .neo-upcoming-badge {
     display: inline-flex;
     align-items: center;
-    gap: 0.375rem;
+    gap: var(--spacing-xs);
     background: transparent;
     border: 1.5px solid rgba(245, 158, 11, 0.45);
     color: var(--casino-gold-dark);
-    padding: 0.2rem 0.5rem;
+    padding: var(--spacing-xs) var(--spacing-sm);
     border-radius: var(--radius-pill);
     font-weight: 700;
     font-size: 0.65rem;
@@ -56,8 +56,8 @@
 }
 
 .neo-upcoming-dot {
-    width: 0.45rem;
-    height: 0.45rem;
+    width: var(--spacing-sm);
+    height: var(--spacing-sm);
     border-radius: 50%;
     background: var(--casino-gold);
     display: inline-block;
@@ -90,8 +90,8 @@
 /* Pulsing dot inside the LIVE badge: the only moving thing on the page,
    and the one that should move. Neutralized by prefers-reduced-motion. */
 .neo-live-dot {
-    width: 0.45rem;
-    height: 0.45rem;
+    width: var(--spacing-sm);
+    height: var(--spacing-sm);
     border-radius: 50%;
     background: #fff;
     display: inline-block;
@@ -111,7 +111,7 @@
     align-items: center;
     font-size: 0.7rem;
     font-weight: 600;
-    padding: 0.125rem 0.5rem;
+    padding: var(--spacing-xs) var(--spacing-sm);
     border: 1px solid transparent;
     border-radius: var(--radius-pill);
     color: var(--text-white);
