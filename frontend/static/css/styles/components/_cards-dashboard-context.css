@@ -39,14 +39,14 @@
     /* Fix double borders and reduce whitespace on dashboard table */
     .ui-card {
         border: none !important;
-        padding: 0.75rem !important;
+        padding: var(--spacing-base) !important;
         margin-bottom: var(--spacing-md) !important;
         box-shadow: var(--shadow-card) !important;
     }
 
     .ui-card-header {
         padding-bottom: var(--spacing-sm) !important;
-        margin-bottom: 0.75rem !important;
+        margin-bottom: var(--spacing-base) !important;
     }
 }
 
@@ -71,8 +71,8 @@
 
 @media (max-width: 480px) {
     .neo-active-session-hero {
-        padding: 0.75rem 1rem;
-        margin-bottom: 0.75rem;
+        padding: var(--spacing-base) var(--spacing-md);
+        margin-bottom: var(--spacing-base);
     }
     .neo-card-eyebrow {
         font-size: 0.6rem;

@@ -139,14 +139,14 @@
 @media (max-width: 768px) {
     .neo-quick-actions {
         grid-template-columns: repeat(2, 1fr);
-        gap: 0.75rem;
+        gap: var(--spacing-base);
     }
 }
 /* <=480px: still two columns. */
 @media (max-width: 480px) {
     .neo-quick-actions {
         grid-template-columns: repeat(2, 1fr);
-        gap: 0.75rem;
+        gap: var(--spacing-base);
     }
 }
 /* <=360px: full-width tiles. */
