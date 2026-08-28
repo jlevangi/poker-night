@@ -118,6 +118,13 @@ class ProductionConfig(Config):
     
     DEBUG = False
 
+    def __init__(self):
+        if not os.environ.get('SECRET_KEY'):
+            raise RuntimeError('SECRET_KEY is required in production')
+        if not os.environ.get('ADMIN_PASSWORD_HASH'):
+            raise RuntimeError('ADMIN_PASSWORD_HASH is required in production')
+        super().__init__()
+
 
 class TestingConfig(Config):
     """Testing configuration."""

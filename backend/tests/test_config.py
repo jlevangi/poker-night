@@ -13,6 +13,7 @@ import os
 import shutil
 import tempfile
 import unittest
+from unittest.mock import patch
 
 from app import create_app
 from app.config import Config
@@ -56,6 +57,24 @@ class TestAppFactory(unittest.TestCase):
         """Create the application once for the entire test class."""
         cls.app = create_app(TestConfig)
         cls.client = cls.app.test_client()
+
+    def test_production_wsgi_factory(self):
+        from run import create_production_app
+
+        with patch.dict(os.environ, {
+            'SECRET_KEY': 'test-secret',
+            'ADMIN_PASSWORD_HASH': 'test-hash',
+        }):
+            app = create_production_app()
+            self.assertFalse(app.debug)
+            self.assertEqual(app.test_client().get('/').status_code, 200)
+
+    def test_production_requires_secrets(self):
+        from app.config import ProductionConfig
+
+        with patch.dict(os.environ, {}, clear=True):
+            with self.assertRaisesRegex(RuntimeError, 'SECRET_KEY'):
+                ProductionConfig()
 
     # -- Configuration -------------------------------------------------------
 

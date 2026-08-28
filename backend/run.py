@@ -21,6 +21,11 @@ from app import create_app
 from app.config import Config, DevelopmentConfig, ProductionConfig
 
 
+def create_production_app():
+    """Create the WSGI application used by the production container."""
+    return create_app(ProductionConfig)
+
+
 def parse_arguments() -> argparse.Namespace:
     """
     Parse command-line arguments.

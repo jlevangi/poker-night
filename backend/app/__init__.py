@@ -123,10 +123,7 @@ def setup_logging(app: Flask) -> None:
     logging.basicConfig(
         level=logging.INFO,
         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-        handlers=[
-            logging.FileHandler('poker_app.log'),
-            logging.StreamHandler()
-        ]
+        handlers=[logging.StreamHandler()]
     )
     
     logger = logging.getLogger(__name__)

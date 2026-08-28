@@ -14,14 +14,23 @@ __pycache__/
 *.pyd
 .Python
 
-# Logs
+# Logs and runtime data
 *.log
-
-# Data directory (should be mounted as volume)
+**/*.log
+*.db
+**/*.db
+poker_night.db*
+**/poker_night.db*
 poker_data/
 
-# Development
+# Development and local agent state
 .env
+.env.*
+env
+.beads/
+.agents/
+.codex/
+.worktrees/
 .vscode/
 .idea/
 

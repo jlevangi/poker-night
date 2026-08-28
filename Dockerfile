@@ -1,47 +1,26 @@
-# Use Python 3.12 slim image
-FROM python:3.12-slim
+FROM python:3.12-slim@sha256:09f7da3bc104798d0afb40bc08d23ab2da20a76130cec1f2ef170848f5d85217
 
-# Set environment variables
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
-    FLASK_APP=backend/run.py \
-    FLASK_ENV=production
+    PORT=5000
 
-# Set work directory
 WORKDIR /app
 
-# Install system dependencies
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends \
-        gcc \
-        python3-dev \
-    && rm -rf /var/lib/apt/lists/*
-
-# Copy requirements first for better caching
 COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt \
+    && adduser --disabled-password --gecos '' appuser \
+    && mkdir -p /app/poker_data \
+    && chown -R appuser:appuser /app
 
-# Install Python dependencies
-RUN pip install --no-cache-dir --upgrade pip \
-    && pip install --no-cache-dir -r requirements.txt
+COPY --chown=appuser:appuser backend backend
+COPY --chown=appuser:appuser frontend frontend
+COPY --chown=appuser:appuser version.txt .
 
-# Copy application code
-COPY . .
-
-# Create data directory and set as volume
-RUN mkdir -p poker_data
+USER appuser
+EXPOSE 5000
 VOLUME ["/app/poker_data"]
 
-# Create non-root user
-RUN adduser --disabled-password --gecos '' appuser \
-    && chown -R appuser:appuser /app
-USER appuser
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+    CMD python -c "import os, urllib.request; urllib.request.urlopen('http://127.0.0.1:' + os.environ.get('PORT', '5000') + '/', timeout=3)"
 
-# Expose port
-EXPOSE 5000
-
-# Health check
-HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost:5000/ || exit 1
-
-# Run the application
-CMD ["python", "backend/run.py", "--config", "production", "--port", "5000"]
+CMD ["gunicorn", "--chdir", "backend", "--bind", "0.0.0.0:5000", "--workers", "1", "--access-logfile", "-", "--error-logfile", "-", "run:create_production_app()"]
