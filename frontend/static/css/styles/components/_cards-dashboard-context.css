@@ -16,7 +16,7 @@
     font-size: 0.65rem;
     font-weight: 600;
     color: var(--text-muted);
-    margin-top: 0.125rem;
+    margin-top: var(--spacing-xs);
     text-transform: uppercase;
     letter-spacing: 0.03em;
 }
@@ -29,7 +29,7 @@
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    gap: 0.5rem;
+    gap: var(--spacing-sm);
     text-align: right;
     white-space: nowrap;
 }
@@ -39,14 +39,14 @@
     /* Fix double borders and reduce whitespace on dashboard table */
     .ui-card {
         border: none !important;
-        padding: 0.75rem !important;
+        padding: var(--spacing-base) !important;
         margin-bottom: var(--spacing-md) !important;
         box-shadow: var(--shadow-card) !important;
     }
 
     .ui-card-header {
         padding-bottom: var(--spacing-sm) !important;
-        margin-bottom: 0.75rem !important;
+        margin-bottom: var(--spacing-base) !important;
     }
 }
 
@@ -55,7 +55,7 @@
     display: block;
     color: inherit;
     text-decoration: none;
-    margin-bottom: 1rem;
+    margin-bottom: var(--spacing-md);
 }
 
 /* Card eyebrow: the "what kind of card is this" line next to the status
@@ -71,8 +71,8 @@
 
 @media (max-width: 480px) {
     .neo-active-session-hero {
-        padding: 0.75rem 1rem;
-        margin-bottom: 0.75rem;
+        padding: var(--spacing-base) var(--spacing-md);
+        margin-bottom: var(--spacing-base);
     }
     .neo-card-eyebrow {
         font-size: 0.6rem;

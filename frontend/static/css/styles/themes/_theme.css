@@ -122,8 +122,7 @@
     --text-header-muted: #475569;
 
     /* Shadow scale — single source (the legacy shadow-* names above
-       alias these, so every shadow inherits the dark-mode flip).
-       Step 3 removes the duplicate scale in _modern-theme.css. */
+       alias these, so every shadow inherits the dark-mode flip). */
     --neo-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
     --neo-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
     --neo-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
@@ -152,13 +151,13 @@
     /* Spacing */
     --spacing-xs: 0.25rem;
     --spacing-sm: 0.5rem;
+    --spacing-base: 0.75rem;
     --spacing-md: 1rem;
     --spacing-lg: 1.5rem;
     --spacing-xl: 2rem;
     --spacing-neo: 1.25rem;
 
-    /* Border Radius — single source. Step 3 removes the duplicate
-       scale in _modern-theme.css. */
+    /* Border Radius — single source. */
     --radius-sm: 6px;
     --radius-md: 10px;
     --radius-lg: 14px;
@@ -192,8 +191,7 @@
     --backdrop: rgba(15, 23, 42, 0.55);
     --bg-modal-header: var(--bg-secondary);
 
-    /* Z-Index — single source. Step 3 removes the duplicates in
-       _modern-theme.css. */
+    /* Z-Index — single source. */
     --z-modal: 2000;
     --z-nav: 1000;
 }

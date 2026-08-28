@@ -87,6 +87,6 @@
 
 @media (max-width: 768px) {
     .fade-in {
-        padding: 1rem 0.75rem !important;
+        padding: var(--spacing-md) var(--spacing-base) !important;
     }
 }

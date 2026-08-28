@@ -49,7 +49,7 @@
     padding: var(--spacing-neo);
     width: 90%;
     max-width: 450px;
-    max-height: calc(100dvh - 2rem);
+    max-height: calc(100dvh - var(--spacing-xl));
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     position: relative;
@@ -131,7 +131,7 @@
 
 
 .modal-subtitle {
-    margin: -0.75rem 0 0;
+    margin: calc(-1 * var(--spacing-base)) 0 0;
     text-align: center;
     font-size: 0.875rem;
     font-weight: 600;
@@ -142,7 +142,7 @@
     margin-top: var(--spacing-lg);
     display: flex;
     justify-content: flex-end;
-    gap: 0.75rem;
+    gap: var(--spacing-base);
 }
 
 .modal-actions a {
@@ -157,17 +157,17 @@
 @media (max-width: 700px) {
     .modal-overlay {
         align-items: flex-start;
-        padding: max(1rem, env(safe-area-inset-top)) 1rem max(1rem, env(safe-area-inset-bottom));
+        padding: max(var(--spacing-md), env(safe-area-inset-top)) var(--spacing-md) max(var(--spacing-md), env(safe-area-inset-bottom));
     }
 
     .modal-content {
         width: min(100%, 32rem);
-        max-height: calc(100dvh - max(2rem, env(safe-area-inset-top)) - max(1rem, env(safe-area-inset-bottom)));
+        max-height: calc(100dvh - max(var(--spacing-xl), env(safe-area-inset-top)) - max(var(--spacing-md), env(safe-area-inset-bottom)));
         margin-top: clamp(0rem, 7vh, 4rem);
     }
 
     .modal-header {
-        padding: 0.75rem 1rem;
+        padding: var(--spacing-base) var(--spacing-md);
     }
 }
 
@@ -182,7 +182,7 @@
    focus). Scoped to --compact so the picker search is untouched. */
 .modal-content--compact label {
     display: block;
-    margin-bottom: 0.25rem;
+    margin-bottom: var(--spacing-xs);
     font-weight: 500;
     font-size: 0.875rem;
     color: var(--text-secondary);
@@ -212,7 +212,7 @@
 }
 
 .discrepancy-alert p {
-    margin: 0 0 0.75rem;
+    margin: 0 0 var(--spacing-base);
     font-size: 1.125rem;
     font-weight: 600;
     color: var(--text-primary);

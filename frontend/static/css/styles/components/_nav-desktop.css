@@ -16,8 +16,8 @@ nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 0.75rem;
-    margin-bottom: 1.5rem;
+    gap: var(--spacing-base);
+    margin-bottom: var(--spacing-lg);
 }
 
 .detail-back-btn {
@@ -39,14 +39,14 @@ nav {
 .neo-desktop-nav {
     display: flex;
     justify-content: center;
-    gap: 0.25rem;
+    gap: var(--spacing-xs);
 }
 
 .neo-nav-btn {
     background: transparent;
     border: 1px solid transparent;
     color: var(--text-header-muted);
-    padding: 0.5rem 1rem;
+    padding: var(--spacing-sm) var(--spacing-md);
     font-weight: 500;
     font-size: 0.875rem;
     letter-spacing: 0;
@@ -54,7 +54,7 @@ nav {
     text-decoration: none;
     cursor: pointer;
     transition: all 0.2s ease;
-    border-radius: 8px;
+    border-radius: var(--radius-md);
     -webkit-tap-highlight-color: transparent !important;
     outline: none;
     touch-action: manipulation;

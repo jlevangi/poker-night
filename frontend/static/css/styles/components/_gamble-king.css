@@ -5,7 +5,7 @@
         linear-gradient(165deg, #14532D 0%, #0B3B21 48%, #062513 100%);
     border: 1px solid rgba(252, 211, 77, 0.5);
     box-shadow: var(--neo-shadow-lg), 0 0 44px rgba(245, 158, 11, 0.14), inset 0 0 0 1px rgba(252, 211, 77, 0.12);
-    padding: 1.5rem var(--spacing-neo) 1.375rem;
+    padding: var(--spacing-lg) var(--spacing-neo) var(--spacing-lg);
     margin-bottom: var(--spacing-neo);
     position: relative;
     overflow: hidden;
@@ -62,7 +62,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.25rem;
+    gap: var(--spacing-xs);
 }
 
 .neo-gamble-king-crown {
@@ -84,7 +84,7 @@
 }
 
 .neo-gamble-king-name {
-    margin-top: 0.75rem;
+    margin-top: var(--spacing-base);
     font-size: clamp(2.25rem, 6.5vw, 3.5rem);
     font-weight: 700;
     line-height: 1.05;
@@ -108,7 +108,7 @@ a.neo-gamble-king-name:focus-visible {
 
 .neo-gamble-king-lead {
     text-align: center;
-    margin: 1.125rem 0 1.25rem;
+    margin: var(--spacing-neo) 0 var(--spacing-neo);
 }
 
 .neo-gamble-king-lead-value {
@@ -122,7 +122,7 @@ a.neo-gamble-king-name:focus-visible {
 }
 
 .neo-gamble-king-lead-label {
-    margin-top: 0.375rem;
+    margin-top: var(--spacing-xs);
     font-size: 0.75rem;
     font-weight: 600;
     text-transform: uppercase;
@@ -134,8 +134,8 @@ a.neo-gamble-king-name:focus-visible {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
-    gap: 0.5rem 2rem;
-    padding-top: 1rem;
+    gap: var(--spacing-sm) var(--spacing-xl);
+    padding-top: var(--spacing-md);
     border-top: 1px solid rgba(252, 211, 77, 0.22);
 }
 
@@ -143,7 +143,7 @@ a.neo-gamble-king-name:focus-visible {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.125rem;
+    gap: var(--spacing-xs);
 }
 
 .neo-gamble-king-metric-value {
@@ -163,7 +163,7 @@ a.neo-gamble-king-name:focus-visible {
 }
 
 .neo-gamble-king-empty {
-    margin-top: 0.5rem;
+    margin-top: var(--spacing-sm);
     font-size: 0.9375rem;
     color: rgba(248, 250, 252, 0.85);
     position: relative;
@@ -184,12 +184,12 @@ a.neo-gamble-king-name:focus-visible {
 /* <=480px: compact the hero. */
 @media (max-width: 480px) {
     .neo-gamble-king {
-        padding: 0.75rem;
-        margin-bottom: 0.75rem;
+        padding: var(--spacing-base);
+        margin-bottom: var(--spacing-base);
     }
 
     /* Gap shrinks at <=480px (moved from themes/_modern-theme.css). */
     .neo-gamble-king-metrics {
-        gap: 0.5rem 1rem;
+        gap: var(--spacing-sm) var(--spacing-md);
     }
 }

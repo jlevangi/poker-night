@@ -134,10 +134,10 @@ button.neo-stat-card:active {
     background: var(--bg-card);
     border: 1px solid var(--border-light);
     box-shadow: none;
-    padding: 1rem;
-    margin-bottom: 0.5rem;
+    padding: var(--spacing-md);
+    margin-bottom: var(--spacing-sm);
     transition: all 0.2s ease;
-    border-radius: 12px;
+    border-radius: var(--radius-card);
 }
 
 /* Touch devices — prevent stuck hover states; ensure real touch targets */
